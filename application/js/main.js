@@ -1,1 +1,2 @@
-document.querySelector('#next-perfomance__btn').addEventListener('click', () => window.open('/next-perfomance', '_self'));
+document.querySelector('#registration').addEventListener('click', () => window.open('/reg', '_self'));
+

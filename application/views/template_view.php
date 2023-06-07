@@ -13,6 +13,9 @@
 </head> 
 <body>
 
+    <header>
+        <h3 class='text-center p-4 bg-success text-white'>Чаты avramenko_as@mail.ru</h3>
+    </header>
     <?php 
         include $content_view 
     ?>
