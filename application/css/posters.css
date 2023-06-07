@@ -1,0 +1,18 @@
+@media (max-width:1000px) {
+    .posters-img{
+        width: 550px;
+    }
+}
+@media (max-width:800px) {
+    .posters-img{
+        width: 400px;
+    }
+    .btn-size{
+        font-size: 75%;
+    }
+}
+@media (max-width:600px) {
+    .posters-img{
+        width: 350px;
+    }   
+}
