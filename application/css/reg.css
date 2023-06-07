@@ -1,0 +1,14 @@
+.input-clue{
+    position: absolute;
+    left: 103%;
+    top: 0;
+    color: red;
+    font-size: 0.9rem;
+    font-weight: bold;
+    width: 100%;
+    visibility: hidden;
+}
+
+.input-clue--active{
+    visibility: visible;
+}

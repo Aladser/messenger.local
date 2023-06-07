@@ -17,14 +17,19 @@ function validatePassword(password){
          return true;
 }
 
-const emailInput = document.querySelector('#regForm_emailInput');
-const passwordInput1 = document.querySelector('#regForm__passwordInput1');
-const passwordInput2 = document.querySelector('#regForm__passwordInput2');
-const regBtn = document.querySelector('#regForm__regBtn');
+const regBtn = document.querySelector('#reg-form__reg-btn');
+
+const emailInput = document.querySelector('#reg-form__email-input');
+const password1Input = document.querySelector('#reg-form__password1-input');
+const password2Input = document.querySelector('#reg-form__password2-input');
+
+const emailClue = document.querySelector('#reg-form_email-clue');
+const password1Clue = document.querySelector('#reg-form_password1-clue');
+const password2Clue = document.querySelector('#reg-form_password2-clue');
 
 // проверка ввода почты
 emailInput.addEventListener('input', function(){
-    if(validateEmail(this.value) && validatePassword(passwordInput1.value) && validatePassword(passwordInput2.value) && passwordInput1.value===passwordInput2.value){
+    if(validateEmail(this.value) && validatePassword(password1Input.value) && validatePassword(password2Input.value) && password1Input.value===password2Input.value){
         regBtn.disabled = false;
         this.style.outlineColor = 'green';
     }
@@ -35,8 +40,8 @@ emailInput.addEventListener('input', function(){
 });
 
 // ввод пароля
-passwordInput1.addEventListener('input', function(){
-    if(validatePassword(this.value) && validateEmail(emailInput.value) && validatePassword(passwordInput2.value) && this.value===passwordInput2.value){
+password1Input.addEventListener('input', function(){
+    if(validatePassword(this.value) && validateEmail(emailInput.value) && validatePassword(password2Input.value) && this.value===password2Input.value){
         regBtn.disabled = false;
         this.style.outlineColor = 'green';
     }
@@ -47,8 +52,8 @@ passwordInput1.addEventListener('input', function(){
 });
 
 // ввод пароля второго поля
-passwordInput2.addEventListener('input', function(){
-    if(validatePassword(this.value) && validateEmail(emailInput.value) && validatePassword(passwordInput1.value) && this.value===passwordInput1.value){
+password2Input.addEventListener('input', function(){
+    if(validatePassword(this.value) && validateEmail(emailInput.value) && validatePassword(password1Input.value) && this.value===password1Input.value){
         regBtn.disabled = false;
         this.style.outlineColor = 'green';
     }

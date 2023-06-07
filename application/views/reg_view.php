@@ -1,18 +1,26 @@
-<div class='newUserForm container text-center'>
+<div class='container text-center'>
+    <h3 class='mt-4 mb-4'>Регистрация нового пользователя</h3>
+    
+    <form class='reg-form' method="POST" action=''>
+        <div class='position-relative w-25 mx-auto'>
+            <input type="email" class="w-100 mb-2" id="reg-form__email-input"  placeholder="email">
+            <p class='input-clue border' id='reg-form_emai-clue'>Некорректный адрес электронной почты</p>
+        </div>
 
-    <h3 class=''>Регистрация нового пользователя</h3>
+        <div class='position-relative w-25 mx-auto'>
+            <input type="password" class="w-100 mb-2" id="reg-form__password1-input" placeholder="пароль">
+            <p class='input-clue border' id='reg-form_password1-clue'>Пароль должен обязательно содержать заглавные и прописные буквы, цифры</p>
+        </div>
 
-    <form class='regForm' method="POST" action=''>
-        <input type="email" class="w-25 mb-2" id="regForm_emailInput"  placeholder="email">
-        <br>
-        <input type="password" class="w-25 mb-2" id="regForm__passwordInput1" placeholder="пароль">
-        <br>
-        <input type="password" class="w-25 mb-2" id="regForm__passwordInput2" placeholder="подтвердите пароль">
+        <div class='position-relative w-25 mb-2 mx-auto'>
+            <input type="password" class="w-100 mb-2" id="reg-form__password2-input" placeholder="подтвердите пароль">
+            <p class='input-clue border' id='reg-form_password2-clue'>Пароли не совпадают</p>
+        </div>
 
         <div>
-            <input type="submit" class='btn btn-success w-25 mb-2' value="Регистрация" disabled id='regForm__regBtn'>
+            <input type="submit" class='btn btn-success w-25 mb-2' value="Регистрация" disabled id='reg-form__reg-btn'>
             <br>
-            <input type="button" class='btn btn-success w-25 mb-2' value="Назад" id='regForm__backBtn' >
+            <input type="button" class='btn btn-success w-25 mb-2' value="Назад" id='reg-form__backBtn' >
         </div>
     </form>
 </div>
