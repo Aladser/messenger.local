@@ -9,7 +9,7 @@
 
         <div class='position-relative w-25 mx-auto'>
             <input type="password" class="w-100 mb-2" id="reg-form__password1-input" placeholder="пароль (минимум 6 символов)">
-            <p class='input-clue' id='reg-form__password1-clue'>пароль должен обязательно содержать заглавные и прописные буквы, цифры</p>
+            <p class='input-clue' id='reg-form__password1-clue'>пароль должен обязательно содержать латинские заглавные и прописные буквы, цифры. Только латинские буквы</p>
         </div>
 
         <div class='position-relative w-25 mb-2 mx-auto'>
@@ -20,7 +20,7 @@
         <div>
             <input type="submit" class='btn btn-success w-25 mb-2' value="Регистрация" disabled id='reg-form__reg-btn'>
             <br>
-            <input type="button" class='btn btn-success w-25 mb-2' value="Назад" id='reg-form__backBtn' >
+            <input type="button" class='btn btn-success w-25 mb-2' value="Назад" id='reg-form__back-btn' >
         </div>
     </form>
 </div>

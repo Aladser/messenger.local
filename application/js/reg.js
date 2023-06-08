@@ -9,74 +9,56 @@ const emailClue = document.querySelector('#reg-form__emai-clue');
 const password1Clue = document.querySelector('#reg-form__password1-clue');
 const password2Clue = document.querySelector('#reg-form__password2-clue');
 
+document.querySelector('#reg-form__back-btn').onclick = () => window.open('/main', '_self'); // кнопка назад
+
 // валидация почты
 function validateEmail(email){
     let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    if(reg.test(email) == false) {
-       return false;
-    }
-    else 
-        return true;
+    return !(reg.test(email) == false);
 }
 
 // валидация пароля
 function validatePassword(password){
     let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-    if(passw.test(password) == false) {
-        return false;
-     }
-     else 
-         return true;
+    return !(passw.test(password) == false);
 }
 
-// проверка доступности кнопки регистрации
-function checkRegButton(){
-    regBtn.disabled = !(validateEmail(emailInput.value) && validatePassword(password1Input.value) && validatePassword(password2Input.value) && password1Input.value===password2Input.value);
-}
-
-// проверка ввода почты
-emailInput.addEventListener('input', function(){
-    let isValidEmail = validateEmail(this.value);
-    if(!isValidEmail && this.value.length>3){
-        this.style.outlineColor = 'red';
-        emailClue.classList.add('input-clue--active');
-    }
-    else{
-        this.style.outlineColor = 'black';
+//***** событие клика поля ввода данных *****
+function clickInputElement(input, clue, isPassword){
+    if(input.value !== ''){
         emailClue.classList.remove('input-clue--active');
-    }
-
-    checkRegButton();
-});
-
-// проверка ввода пароля
-password1Input.addEventListener('input', function(){
-    if(this.value.length === 0){
-        this.style.outlineColor = 'black';
         password1Clue.classList.remove('input-clue--active');
-    }
-    else if(!validatePassword(this.value)){
-        this.style.outlineColor = 'red';
-        password1Clue.classList.add('input-clue--active');
-    }
-    else{
-        this.style.outlineColor = 'black';
-        password1Clue.classList.remove('input-clue--active');
-    }
-
-    checkRegButton();
-});
-
-// ввод пароля второго поля
-password2Input.addEventListener('input', function(){
-    if(this.value !== password1Input.value){
-        this.style.outlineColor = 'red';
-        password2Clue.classList.add('input-clue--active');
-    }
-    else{
-        this.style.outlineColor = 'black';
         password2Clue.classList.remove('input-clue--active');
+        let clickRslt = isPassword ? validatePassword(input.value) : validateEmail(input.value);
+        if(!clickRslt){
+            clue.classList.add('input-clue--active');
+        }
     }
+}
 
-    checkRegButton();
-});
+emailInput.onclick = function(){clickInputElement(this, emailClue, false)};
+password1Input.onclick = function(){
+    clickInputElement(this, password1Clue, true);
+    password2Input.value = '';
+    regBtn.disabled = true;
+};
+password2Input.onclick = function(){clickInputElement(this, password2Clue, true)};
+
+//***** событие ввода данных *****
+function inputData(input, clue, isPassword){
+    let inputRslt = isPassword ? validatePassword(input.value) : validateEmail(input.value);
+    if(inputRslt){
+        input.style.outlineColor = 'black';
+        clue.classList.remove('input-clue--active');
+    }
+    else{
+        input.style.outlineColor = 'red';
+        clue.classList.add('input-clue--active');
+    }
+    regBtnEnabled = validateEmail(emailInput.value) && validatePassword(password1Input.value) && validatePassword(password2Input.value) && password1Input.value===password2Input.value;
+    regBtn.disabled = !regBtnEnabled;
+}
+
+emailInput.addEventListener('input', function(){inputData(this, emailClue, false);});
+password1Input.addEventListener('input', function(){inputData(this, password1Clue, true);});
+password2Input.addEventListener('input', function(){inputData(this, password2Clue, true);});
