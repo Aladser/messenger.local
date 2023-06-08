@@ -13,30 +13,33 @@ document.querySelector('#reg-form__back-btn').onclick = () => window.open('/main
 
 // валидация почты
 function validateEmail(email){
-    let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    return !(reg.test(email) == false);
+    let emailSymbols = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    return emailSymbols.test(email);
 }
 
 // валидация пароля
 function validatePassword(password){
-    let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-    return !(passw.test(password) == false);
+    let passwSymbols = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    return passwSymbols.test(password);
 }
 
 //***** событие клика поля ввода данных *****
 function clickInputElement(input, clue, isPassword){
-    if(input.value !== ''){
-        emailClue.classList.remove('input-clue--active');
-        password1Clue.classList.remove('input-clue--active');
-        password2Clue.classList.remove('input-clue--active');
-        let clickRslt = isPassword ? validatePassword(input.value) : validateEmail(input.value);
-        if(!clickRslt){
-            clue.classList.add('input-clue--active');
-        }
+    if(input.value === '') return;
+    emailClue.classList.remove('input-clue--active');
+    password1Clue.classList.remove('input-clue--active');
+    password2Clue.classList.remove('input-clue--active');
+    let clickRslt = isPassword ? validatePassword(input.value) : validateEmail(input.value);
+    if(!clickRslt){
+        clue.classList.add('input-clue--active');
     }
 }
 
-emailInput.onclick = function(){clickInputElement(this, emailClue, false)};
+emailInput.onclick = function(){
+    clickInputElement(this, emailClue, false);
+    password2Input.value = '';
+    regBtn.disabled = true;
+};
 password1Input.onclick = function(){
     clickInputElement(this, password1Clue, true);
     password2Input.value = '';
