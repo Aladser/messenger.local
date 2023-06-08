@@ -4,17 +4,17 @@
     <form class='reg-form' method="POST" action=''>
         <div class='position-relative w-25 mx-auto'>
             <input type="email" class="w-100 mb-2" id="reg-form__email-input"  placeholder="email">
-            <p class='input-clue border' id='reg-form_emai-clue'>Некорректный адрес электронной почты</p>
+            <p class='input-clue' id='reg-form__emai-clue'>введите адрес электронной почты</p>
         </div>
 
         <div class='position-relative w-25 mx-auto'>
-            <input type="password" class="w-100 mb-2" id="reg-form__password1-input" placeholder="пароль">
-            <p class='input-clue border' id='reg-form_password1-clue'>Пароль должен обязательно содержать заглавные и прописные буквы, цифры</p>
+            <input type="password" class="w-100 mb-2" id="reg-form__password1-input" placeholder="пароль (минимум 6 символов)">
+            <p class='input-clue' id='reg-form__password1-clue'>пароль должен обязательно содержать заглавные и прописные буквы, цифры</p>
         </div>
 
         <div class='position-relative w-25 mb-2 mx-auto'>
             <input type="password" class="w-100 mb-2" id="reg-form__password2-input" placeholder="подтвердите пароль">
-            <p class='input-clue border' id='reg-form_password2-clue'>Пароли не совпадают</p>
+            <p class='input-clue' id='reg-form__password2-clue'>пароли не совпадают</p>
         </div>
 
         <div>

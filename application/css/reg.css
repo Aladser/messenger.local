@@ -6,6 +6,8 @@
     font-size: 0.9rem;
     font-weight: bold;
     width: 100%;
+    border: 1px solid rgb(132, 132, 132);
+    box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.3);
     visibility: hidden;
 }
 
