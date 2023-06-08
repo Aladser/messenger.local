@@ -1,7 +1,7 @@
 <div class='container text-center'>
     <h3 class='mt-4 mb-4'>Регистрация нового пользователя</h3>
     
-    <form class='reg-form' method="POST" action=''>
+    <form class='reg-form' method="POST" action='/application/models/reg_model.php'>
         <div class='position-relative w-25 mx-auto'>
             <input type="email" class="w-100 mb-2" id="reg-form__email-input"  placeholder="email">
             <p class='input-clue' id='reg-form__emai-clue'>введите адрес электронной почты</p>

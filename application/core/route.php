@@ -10,7 +10,7 @@ class Route
         $action_name = 'index';
 
 		// добавляем префиксы
-		$model_name = 'model_'.$controller_name;
+		$model_name = $controller_name.'_model';
 		$controller_name = $controller_name.'_controller';
 		$action_name = 'action_'.$action_name;
 		// подцепляем файл с классом модели (файла модели может и не быть)
