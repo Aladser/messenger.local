@@ -1,6 +1,8 @@
 <?php
 
-class DB{
+echo 'DBQueryClass<br>';
+
+class DBQueryClass{
     private $dbConnection;
     private $host;
     private $nameDB;
@@ -12,6 +14,7 @@ class DB{
         $this->nameDB = $nameDB;
         $this->userDB = $userDB;
         $this->passwordDB = $passwordDB;
+        echo 'DB';
     }
 
     private function connect(){
