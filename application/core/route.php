@@ -4,6 +4,8 @@ class Route
     
 	public static function start()
 	{
+		// конфигурация
+		include 'ConfigClass.php';
 		// контроллер и действие по умолчанию
 		$routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
 		$controller_name = !empty($routes) ? $routes : 'Main';
