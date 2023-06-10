@@ -24,7 +24,8 @@ function validatePassword(password){
     return passwSymbols.test(password);
 }
 
-//***** событие клика поля ввода данных *****
+
+//***** событие клика поля ввода данных *****/
 function clickInputElement(input, clue, isPassword){
     if(input.value === '') return;
     emailClue.classList.remove('input-clue--active');
@@ -48,7 +49,8 @@ password1Input.onclick = function(){
 };
 password2Input.onclick = function(){clickInputElement(this, password2Clue, true)};
 
-//***** событие ввода данных *****
+
+//***** событие ввода данных *****/
 function inputData(input, clue, isPassword){
     let inputRslt = isPassword ? validatePassword(input.value) : validateEmail(input.value);
     if(inputRslt){
@@ -63,6 +65,7 @@ function inputData(input, clue, isPassword){
     regBtn.disabled = !regBtnEnabled;
 }
 
+
 //***** проверка существования пользователя и регистрация *****/
 document.querySelector('#reg-form').addEventListener('submit', function(e){
     e.preventDefault();
@@ -74,6 +77,7 @@ document.querySelector('#reg-form').addEventListener('submit', function(e){
         }
         else{
             regErrorPrg.classList.add('hidden');
+            alert('регистрация');
         }
     });
 });
