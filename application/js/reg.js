@@ -1,5 +1,6 @@
 //----- ПРОВЕРКА ПОЛЕЙ ВВОДА ПРИ РЕГИСТРАЦИИ -----
 const regBtn = document.querySelector('#reg-form__reg-btn');
+const regErrorPrg = document.querySelector('#reg-error');
 
 const emailInput = document.querySelector('#reg-form__email-input');
 const password1Input = document.querySelector('#reg-form__password1-input');
@@ -19,7 +20,7 @@ function validateEmail(email){
 
 // валидация пароля
 function validatePassword(password){
-    let passwSymbols = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    let passwSymbols = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,100}$/;
     return passwSymbols.test(password);
 }
 
@@ -61,6 +62,21 @@ function inputData(input, clue, isPassword){
     regBtnEnabled = validateEmail(emailInput.value) && validatePassword(password1Input.value) && validatePassword(password2Input.value) && password1Input.value===password2Input.value;
     regBtn.disabled = !regBtnEnabled;
 }
+
+//***** проверка существования пользователя и регистрация *****/
+document.querySelector('#reg-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    let form = new FormData(this);
+    e.target.reset(); // сбрасывает значения всех элементов в форме
+    fetch('/application/models/reg_model.php', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+        if(data == 1){
+            regErrorPrg.classList.remove('hidden');
+        }
+        else{
+            regErrorPrg.classList.add('hidden');
+        }
+    });
+});
 
 emailInput.addEventListener('input', function(){inputData(this, emailClue, false);});
 password1Input.addEventListener('input', function(){inputData(this, password1Clue, true);});

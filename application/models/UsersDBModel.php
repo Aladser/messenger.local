@@ -1,22 +1,25 @@
 <?php
+
 require_once('TableDBModel.php');
-echo 'UsersDBModel<br>';
 
 class UsersDBModel extends TableDBModel{
-    
+
     // проверить существование пользователя
     function existsUser($user){
-        $query = $this->db->query("select count(*) as count from db_users where user_login = '$user'");
+        $query = $this->db->query("select count(*) as count from users where user_email = '$user'");
         $count = $query->fetch(PDO::FETCH_ASSOC)['count'];
         return intval($count) === 1;
     }
 
     // проверка авторизации
     function isAuthentication($user, $password){
-        $query = $this->db->query("select user_password from db_users where user_login='$user'");
+        $query = $this->db->query("select user_password from users where user_email='$user'");
         $passhash = $query->fetch(PDO::FETCH_ASSOC)['user_password'];
-        return password_verify($password, $passhash);
+        return $password === $passhash;
+        //return password_verify($password, $passhash);
     }
+    
+
     
     // добавить нового пользователя
     function addUser($login, $password){

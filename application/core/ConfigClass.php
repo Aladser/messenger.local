@@ -1,6 +1,6 @@
 <?php
 
-require_once('db/DBQueryClass.php');
+require_once('DBQueryClass.php');
 
 class ConfigClass{
 	private const HOST_DB = 'localhost';
@@ -14,7 +14,7 @@ class ConfigClass{
 	}
 
 	function getDBQueryClass(){
-		return $DBQueryClass;
+		return $this->DBQueryClass;
 	}
 }
 
