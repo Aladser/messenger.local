@@ -20,7 +20,7 @@ function validateEmail(email){
 
 // валидация пароля
 function validatePassword(password){
-    let passwSymbols = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,100}$/;
+    let passwSymbols = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,1000}$/;
     return passwSymbols.test(password);
 }
 
@@ -72,13 +72,8 @@ document.querySelector('#reg-form').addEventListener('submit', function(e){
     let form = new FormData(this);
     e.target.reset(); // сбрасывает значения всех элементов в форме
     fetch('/application/models/reg_model.php', {method: 'POST', body: form}).then(response => response.text()).then(data => {
-        if(data == 1){
-            regErrorPrg.classList.remove('hidden');
-        }
-        else{
-            regErrorPrg.classList.add('hidden');
-            alert('регистрация');
-        }
+        regErrorPrg.classList.remove('hidden');
+        regErrorPrg.innerHTML = data;
     });
 });
 

@@ -1,5 +1,4 @@
 <?php
-
 require_once('DBQueryClass.php');
 
 class ConfigClass{
@@ -18,4 +17,4 @@ class ConfigClass{
 	}
 }
 
-$CONFIG = new ConfigClass(); 
+$CONFIG = new ConfigClass();                                                                                                                                                                                                                                                      
