@@ -1,15 +1,8 @@
 <?php
+
 require_once(dirname(__DIR__, 1).'/core/ConfigClass.php');
 require_once(dirname(__DIR__, 1).'/core/phpmailer/EMailSender.php');
 require_once('UsersDBModel.php');
-
-// функция авторизации
-function logIn($usersModel, $login){
-    // добавить хэш пользователю
-    $usersModel->addUserHash($login); 
-    $_SESSION['auth'] = 1;
-    $_SESSION['login'] = $login;
-}
 
 $users = new UsersDBModel($CONFIG->getDBQueryClass());
 
@@ -19,15 +12,17 @@ if(isset($_POST['registration'])){
         $email = $_POST['email'];
         $addUserRslt = $users->addUser($email, $_POST['password']);
         if($addUserRslt === 1) {
-            logIn($users, $email);
+            // хэш
+            $hash = md5($email . time());
+            $addHashRslt = $users->addUserHash($email, $hash);
+            //
+            $_SESSION['auth'] = 1;
+            $_SESSION['email'] = $email;
             $text = '
             <body>
-            <p>Что бы подтвердить Email, перейдите по <a href="http://example.com/confirmed.php?hash=' . 1234 . '">ссылка</a></p>
+            <p>Для подтверждения электронной почты перейдите по <a href="http://messenger.local/application/models/verify_email.php?email='.$email.'&hash='.$hash.'">ссылке</a></p>
             </body>
             ';
-            // хэш
-            
-            //
             echo $CONFIG->getEmailSender()->send('Месенджер: подтвердите e-mail', $text, $email);
         }
         else{

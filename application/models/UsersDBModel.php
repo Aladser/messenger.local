@@ -26,34 +26,21 @@ class UsersDBModel extends TableDBModel{
     }
 
     // добавить хэш пользователю
-    function addUserHash($email){
-        $hash = self::generateCode();
-        $this->db->query("UPDATE users SET user_hash='$hash' WHERE user_email='$email'");
-    }
-
-    // получить хэш пользователя
-    function getUserHash($email){
-        $query = $this->db->query("select user_hash from users where user_email = '$email'");
-        $hash = $query->fetch(PDO::FETCH_ASSOC)['user_hash'];
-        return $hash;
+    function addUserHash($email, $hash){
+        return $this->db->exec("UPDATE users SET user_hash='$hash' WHERE user_email='$email'");
     }
 
     // проверить хэш пользователя
-    function checkUserHash($login, $hash){
-        $query = $this->db->query("select count(*) as count from users where user_email = '$login' and user_hash='$hash'");
+    function checkUserHash($email, $hash){
+        $query = $this->db->query("select count(*) as count from users where user_email = '$email' and user_hash='$hash'");
         $hash = $query->fetch(PDO::FETCH_ASSOC)['count'];
         return intval($hash) === 1;
     }
 
-    // генерация случайной строки
-    static function generateCode($length=6) {
-        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789";
-        $code = "";
-        $clen = strlen($chars) - 1;
-        while (strlen($code) < $length) {
-            $code .= $chars[mt_rand(0,$clen)];
-        }
-        return $code;
+    // подтвердить почту
+    function confirmEmail($email){
+        $this->db->query("UPDATE users SET user_hash=NULL WHERE user_email='$email'");
+        return $this->db->exec("UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'");
     }
 
 }
