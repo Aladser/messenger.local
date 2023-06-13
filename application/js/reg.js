@@ -28,9 +28,11 @@ function validatePassword(password){
 //***** событие клика поля ввода данных *****/
 function clickInputElement(input, clue, isPassword){
     if(input.value === '') return;
+    // убирание выделения
     emailClue.classList.remove('input-clue--active');
     password1Clue.classList.remove('input-clue--active');
     password2Clue.classList.remove('input-clue--active');
+    // валидация данных
     let clickRslt = isPassword ? validatePassword(input.value) : validateEmail(input.value);
     if(!clickRslt){
         clue.classList.add('input-clue--active');
@@ -52,6 +54,7 @@ password2Input.onclick = function(){clickInputElement(this, password2Clue, true)
 
 //***** событие ввода данных *****/
 function inputData(input, clue, isPassword){
+    // валидация данных
     let inputRslt = isPassword ? validatePassword(input.value) : validateEmail(input.value);
     if(inputRslt){
         input.style.outlineColor = 'black';
@@ -61,22 +64,36 @@ function inputData(input, clue, isPassword){
         input.style.outlineColor = 'red';
         clue.classList.add('input-clue--active');
     }
+    // проверка доступности кнопки
     regBtnEnabled = validateEmail(emailInput.value) && validatePassword(password1Input.value) && validatePassword(password2Input.value) && password1Input.value===password2Input.value;
     regBtn.disabled = !regBtnEnabled;
 }
 
+emailInput.addEventListener('input', function(){inputData(this, emailClue, false);});
+password1Input.addEventListener('input', function(){inputData(this, password1Clue, true);});
+password2Input.addEventListener('input', function(){inputData(this, password2Clue, true);});
 
 //***** проверка существования пользователя и регистрация *****/
 document.querySelector('#reg-form').addEventListener('submit', function(e){
     e.preventDefault();
     let form = new FormData(this);
     e.target.reset(); // сбрасывает значения всех элементов в форме
-    fetch('/application/models/reg_model.php', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+    fetch('/application/models/reg_model.php', {method: 'POST', body: form}).then(response => response.json()).then(data => {
         regErrorPrg.classList.remove('hidden');
-        regErrorPrg.innerHTML = data;
+        if(data['result'] === 'user_exists'){
+            regErrorPrg.innerHTML = 'пользователь уже существует';
+            regErrorPrg.classList.remove('text-success');
+            regErrorPrg.classList.add('text-danger');
+        }
+        else if(data['result'] === 'add_user_error'){
+            regErrorPrg.innerHTML = 'серверная ошибка создания пользователя';
+            regErrorPrg.classList.remove('text-success');
+            regErrorPrg.classList.add('text-danger');
+        }
+        else{
+            regErrorPrg.innerHTML = 'Пользователь создан. Подтвердите ваши регистрационные данные по ссылке, указанной в письме, направленном на вашу почту';
+            regErrorPrg.classList.remove('text-danger');
+            regErrorPrg.classList.add('text-success');
+        }
     });
 });
-
-emailInput.addEventListener('input', function(){inputData(this, emailClue, false);});
-password1Input.addEventListener('input', function(){inputData(this, password1Clue, true);});
-password2Input.addEventListener('input', function(){inputData(this, password2Clue, true);});
