@@ -17,8 +17,7 @@ $users = new UsersDBModel($CONFIG->getDBQueryClass());
 if(isset($_POST['registration'])){
     if(!$users->existsUser($_POST['email'])){
         $email = $_POST['email'];
-        //$addUserRslt = $users->addUser($email, $_POST['password']);
-        $addUserRslt = 1; 
+        $addUserRslt = $users->addUser($email, $_POST['password']);
         if($addUserRslt === 1) {
             logIn($users, $email);
             $text = '
@@ -26,6 +25,9 @@ if(isset($_POST['registration'])){
             <p>Что бы подтвердить Email, перейдите по <a href="http://example.com/confirmed.php?hash=' . 1234 . '">ссылка</a></p>
             </body>
             ';
+            // хэш
+            
+            //
             echo $CONFIG->getEmailSender()->send('Месенджер: подтвердите e-mail', $text, $email);
         }
         else{

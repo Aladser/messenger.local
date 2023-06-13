@@ -19,8 +19,19 @@ class ConfigClass{
 	private $EMailSender;
 
 	function __construct(){
-		$this->DBQueryClass = new DBQueryClass(self::HOST_DB, self::NAME_DB, self::USER_DB, self::PASS_DB);
-		$this->EMailSender = new EMailSender(self::SMTP_SRV, self::EMAIL_USERNAME, self::EMAIL_PASSWORD, self::SMTP_SECURE, self::PORT, self::EMAIL_SENDER, self::EMAIL_SENDER_NAME);
+		$this->DBQueryClass = new DBQueryClass(self::HOST_DB, 
+			self::NAME_DB, 
+			self::USER_DB, 
+			self::PASS_DB
+		);
+		$this->EMailSender = new EMailSender(self::SMTP_SRV, 
+			self::EMAIL_USERNAME, 
+			self::EMAIL_PASSWORD, 
+			self::SMTP_SECURE, 
+			self::PORT, 
+			self::EMAIL_SENDER, 
+			self::EMAIL_SENDER_NAME
+		);
 	}
 
 	function getDBQueryClass(){
