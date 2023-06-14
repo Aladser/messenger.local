@@ -1,8 +1,29 @@
 <?php
+
+// сформировать имя класса из имени файла
+function getMVCClassName($name, $type){
+	if($type === 'Model' || $type === 'Controller'){
+		$name = explode('_', $name)[0]; // убирает _model или _controller
+		$name = str_replace('-',' ',$name);
+		$name = ucwords($name); //Преобразует в верхний регистр первый символ каждого слова в строке
+		$name = str_replace(' ','',$name);
+		$name = $name.$type;
+		return $name;
+	}
+	else
+		return null;
+}
+
 class Route
 {
 	public static function start()
 	{
+		// конфиг
+		$CONFIG = new ConfigClass();
+
+		// таблица пользователей
+		$users = new UsersDBModel($CONFIG->getDBQueryClass());
+
 		// контроллер и действие по умолчанию
 		$routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
 		$controller_name = !empty($routes) ? $routes : 'Main';
@@ -33,15 +54,16 @@ class Route
 			Route::ErrorPage404();
 		}
 
-		//**** создаем контроллер
-		// формирование имени класса
-		$controller_name = explode('_', $controller_name)[0]; // убирает _controller
-		$controller_name = str_replace('-',' ',$controller_name);
-		$controller_name = ucwords($controller_name); //Преобразует в верхний регистр первый символ каждого слова в строке
-		$controller_name = str_replace(' ','',$controller_name);
-		$controller_name = $controller_name.'_Controller';
+		//**** создаем модель, если существует
+		if(file_exists($model_path)){
+			$model_name = getMVCClassName($model_name, 'Model');
+			$model = new $model_name();
+		}
 
-		$controller = new $controller_name;
+		//**** создаем контроллер
+		$controller_name = getMVCClassName($controller_name, 'Controller');
+		$controller = file_exists($model_path) ? new $controller_name($model) : new $controller_name();
+
 		$action = $action_name;
 		if(method_exists($controller, $action))
 		{

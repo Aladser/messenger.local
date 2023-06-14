@@ -77,7 +77,10 @@ password2Input.addEventListener('input', function(){inputData(this, password2Clu
 document.querySelector('#reg-form').addEventListener('submit', function(e){
     e.preventDefault();
     let form = new FormData(this);
-    fetch('/application/models/reg_model.php', {method: 'POST', body: form}).then(response => response.json()).then(data => {
+    // Список пар ключ/значение
+    fetch('/reg-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+        console.log(data);
+        /*
         regErrorPrg.classList.remove('hidden');
         if(data['result'] === 'user_exists'){
             regErrorPrg.innerHTML = 'пользователь уже существует';
@@ -99,5 +102,6 @@ document.querySelector('#reg-form').addEventListener('submit', function(e){
             regErrorPrg.classList.add('text-success');
             e.target.reset(); // сбрасывает значения всех элементов в форме
         }
+        */
     });
 });

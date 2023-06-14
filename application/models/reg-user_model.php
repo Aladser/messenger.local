@@ -1,13 +1,15 @@
 <?php
 
-require_once(dirname(__DIR__, 1).'/core/ConfigClass.php');
-require_once(dirname(__DIR__, 1).'/core/phpmailer/EMailSender.php');
-require_once('UsersDBModel.php');
-
-$users = new UsersDBModel($CONFIG->getDBQueryClass());
+class RegUserModel extends Model
+{
+    function run(){
+        echo 'run() модели';
+    }
+}
 
 //***** РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ *****/
-if(isset($_POST['registration'])){
+/*
+if(isset($_POST['registration']) && $users){
     if(!$users->existsUser($_POST['email'])){
         $email = $_POST['email'];
         $addUserRslt = $users->addUser($email, $_POST['password']);
@@ -35,3 +37,4 @@ if(isset($_POST['registration'])){
         echo json_encode($data);
     }
 }
+*/

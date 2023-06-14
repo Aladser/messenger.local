@@ -1,6 +1,4 @@
 <?php
-require_once('DBQueryClass.php');
-require_once('phpmailer/EMailSender.php');
 
 class ConfigClass{
 	// подключение к БД
@@ -42,6 +40,4 @@ class ConfigClass{
 	function getEmailSender(){
 		return $this->EMailSender;
 	}
-}
-
-$CONFIG = new ConfigClass();                                                                                                                                                                                                                                                      
+}                                                                                                                                                                                                                                                      

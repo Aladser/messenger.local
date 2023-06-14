@@ -1,7 +1,5 @@
 <?php
 
-require_once('TableDBModel.php');
-
 class UsersDBModel extends TableDBModel{
 
     // проверить существование пользователя
