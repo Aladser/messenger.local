@@ -1,7 +1,6 @@
 <?php
 class Route
 {
-    
 	public static function start()
 	{
 		// контроллер и действие по умолчанию
@@ -13,6 +12,7 @@ class Route
 		$model_name = $controller_name.'_model';
 		$controller_name = $controller_name.'_controller';
 		$action_name = 'action_'.$action_name;
+		
 		// подцепляем файл с классом модели (файла модели может и не быть)
 		$model_file = strtolower($model_name).'.php';
 		$model_path = "application/models/".$model_file;
@@ -20,6 +20,7 @@ class Route
 		{
 			include "application/models/".$model_file;
 		}
+
 		// подцепляем файл с классом контроллера
 		$controller_file = strtolower($controller_name).'.php';
 		$controller_path = "application/controllers/".$controller_file;
@@ -31,11 +32,12 @@ class Route
 		{
 			Route::ErrorPage404();
 		}
+
 		//**** создаем контроллер
 		// формирование имени класса
-		$controller_name = explode('_', $controller_name)[0];
+		$controller_name = explode('_', $controller_name)[0]; // убирает _controller
 		$controller_name = str_replace('-',' ',$controller_name);
-		$controller_name = ucwords($controller_name);
+		$controller_name = ucwords($controller_name); //Преобразует в верхний регистр первый символ каждого слова в строке
 		$controller_name = str_replace(' ','',$controller_name);
 		$controller_name = $controller_name.'_Controller';
 
@@ -44,7 +46,7 @@ class Route
 		if(method_exists($controller, $action))
 		{
 			// вызываем действие контроллера
-			$controller->$action();
+			$controller->$action($modelData);
 		}
 		else
 		{

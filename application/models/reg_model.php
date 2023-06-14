@@ -20,7 +20,7 @@ if(isset($_POST['registration'])){
             $_SESSION['email'] = $email;
             $text = '
             <body>
-            <p>Для подтверждения электронной почты перейдите по <a href="http://messenger.local/application/models/verify_email.php?email='.$email.'&hash='.$hash.'">ссылке</a></p>
+            <p>Для подтверждения электронной почты перейдите по <a href="http://messenger.local/verify-email?email='.$email.'&hash='.$hash.'">ссылке</a></p>
             </body>
             ';
             echo $CONFIG->getEmailSender()->send('Месенджер: подтвердите e-mail', $text, $email);

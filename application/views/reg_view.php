@@ -28,5 +28,3 @@
         <p class='w-25 mx-auto text-danger fw-bolder hidden' id='reg-error'>Пользователь уже существует</p>
     </form>
 </div>
-
-<script type='text/javascript' src='application/js/reg.js'></script>

@@ -3,5 +3,3 @@
     <br>
     <input type="submit" class='btn btn-success' value='Регистрация' id='registration'>
 </div>
-
-<script type='text/javascript' src='application/js/main.js'></script>
