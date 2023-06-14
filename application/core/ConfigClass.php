@@ -18,12 +18,14 @@ class ConfigClass{
 	private $EMailSender; // класс отправки писем
 
 	function __construct(){
-		$this->DBQueryClass = new DBQueryClass(self::HOST_DB, 
+		$this->DBQueryClass = new DBQueryClass(
+			self::HOST_DB, 
 			self::NAME_DB, 
 			self::USER_DB, 
 			self::PASS_DB
 		);
-		$this->EMailSender = new EMailSender(self::SMTP_SRV, 
+		$this->EMailSender = new EMailSender(
+			self::SMTP_SRV, 
 			self::EMAIL_USERNAME, 
 			self::EMAIL_PASSWORD, 
 			self::SMTP_SECURE, 

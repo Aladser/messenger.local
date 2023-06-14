@@ -1,4 +1,5 @@
 //----- ПРОВЕРКА ПОЛЕЙ ВВОДА ПРИ РЕГИСТРАЦИИ -----
+// для уменьшения числа запросов к серверу валидация происходит на клиенте
 const regBtn = document.querySelector('#reg-form__reg-btn');
 const regErrorPrg = document.querySelector('#reg-error');
 

@@ -21,9 +21,6 @@ class Route
 		// конфиг
 		$CONFIG = new ConfigClass();
 
-		// таблица пользователей
-		$users = new UsersDBModel($CONFIG->getDBQueryClass());
-
 		// контроллер и действие по умолчанию
 		$routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
 		$controller_name = !empty($routes) ? $routes : 'Main';
@@ -32,22 +29,22 @@ class Route
 		// добавляем префиксы
 		$model_name = $controller_name.'_model';
 		$controller_name = $controller_name.'_controller';
-		$action_name = 'action_'.$action_name;
+		$action_name = "action_$action_name";
 		
 		// подцепляем файл с классом модели (файла модели может и не быть)
 		$model_file = strtolower($model_name).'.php';
-		$model_path = "application/models/".$model_file;
+		$model_path = "application/models/$model_file";
 		if(file_exists($model_path))
 		{
-			include "application/models/".$model_file;
+			include "application/models/$model_file";
 		}
 
 		// подцепляем файл с классом контроллера
 		$controller_file = strtolower($controller_name).'.php';
-		$controller_path = "application/controllers/".$controller_file;
+		$controller_path = "application/controllers/$controller_file";
 		if(file_exists($controller_path))
 		{
-			include "application/controllers/".$controller_file;
+			include "application/controllers/$controller_file";
 		}
 		else
 		{
@@ -57,7 +54,7 @@ class Route
 		//**** создаем модель, если существует
 		if(file_exists($model_path)){
 			$model_name = getMVCClassName($model_name, 'Model');
-			$model = new $model_name($users);
+			$model = new $model_name(new UsersDBModel($CONFIG->getDBQueryClass()));
 		}
 
 		//**** создаем контроллер

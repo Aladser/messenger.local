@@ -10,8 +10,6 @@ class RegUserModel extends Model
 
     function add(){
         echo 'add() модели';
-        echo '<br>';
-        var_dump($this->users);
     }
 }
 
