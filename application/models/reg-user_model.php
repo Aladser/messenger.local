@@ -2,14 +2,22 @@
 
 class RegUserModel extends Model
 {
-    function run(){
-        echo 'run() модели';
+	private $users;
+
+    function __construct($users){
+        $this->users = $users;
+    }
+
+    function add(){
+        echo 'add() модели';
+        echo '<br>';
+        var_dump($this->users);
     }
 }
 
 //***** РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ *****/
 /*
-if(isset($_POST['registration']) && $users){
+if(isset($_POST['registration'])){
     if(!$users->existsUser($_POST['email'])){
         $email = $_POST['email'];
         $addUserRslt = $users->addUser($email, $_POST['password']);

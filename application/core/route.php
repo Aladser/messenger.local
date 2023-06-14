@@ -57,7 +57,7 @@ class Route
 		//**** создаем модель, если существует
 		if(file_exists($model_path)){
 			$model_name = getMVCClassName($model_name, 'Model');
-			$model = new $model_name();
+			$model = new $model_name($users);
 		}
 
 		//**** создаем контроллер
