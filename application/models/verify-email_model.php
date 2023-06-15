@@ -1,15 +1,24 @@
 <?php
 
-$modelData = array();
-if(isset($_GET['hash'])){
-    if($users->checkUserHash($_GET['email'], $_GET['hash'])){
-        $users->confirmEmail($_GET['email']);
-        $modelData['srvResponse'] = 'Электронная почта подтверждена';
-        $modelData['refCSSStyle'] = 'link-success nav-link bg-success w-25 text-center text-light mx-auto';
+class VerifyEmailModel extends Model
+{
+	private $users;
+
+    public function __construct($CONFIG){
+        $this->users = new UsersDBModel($CONFIG->getDBQueryClass());
     }
-    else
-    {
-        $modelData['srvResponse'] = 'Ссылка недействительная или некорректная';
-        $modelData['refCSSStyle'] = 'link-success nav-link bg-warning w-25 text-center text-light mx-auto';
+
+    //***** ПРОВЕРИТЬ ХЭШ ПОЛЬЗОВАТЕЛЯ *****/
+    public function getData(){
+        $modelData = array();
+        if($this->users->checkUserHash($_GET['email'], $_GET['hash'])){
+            $this->users->confirmEmail($_GET['email']);
+            return 'Электронная почта подтверждена';
+        }
+        else
+        {
+            return 'Ссылка недействительная или некорректная';
+        }
     }
 }
+

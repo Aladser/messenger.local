@@ -1,4 +1,4 @@
 <br><br>
-<p class='h4 text-center'><?=$data['srvResponse']?></p>
+<p class='h4 text-center' id='message'><?=$data?></p>
 <br><br>
-<a class="<?=$data['refCSSStyle']?>" href="http://messenger.local">На главную</a>
+<a class="link-success nav-link w-25 text-center text-light mx-auto" id='back-btn' href="http://messenger.local">На главную</a>

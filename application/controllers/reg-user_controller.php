@@ -1,7 +1,7 @@
 <?php
     class RegUserController extends Controller { 
         function action_index() {
-            $this->model->add();
+            $this->model->getData();
         } 
     }
 ?>

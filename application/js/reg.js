@@ -25,10 +25,9 @@ function validatePassword(password){
     return passwSymbols.test(password);
 }
 
-
 //***** событие клика поля ввода данных *****/
 function clickInputElement(input, clue, isPassword){
-    if(input.value === '') return;
+    regErrorPrg.classList.add('hidden');
     // убирание выделения
     emailClue.classList.remove('input-clue--active');
     password1Clue.classList.remove('input-clue--active');
@@ -79,9 +78,8 @@ document.querySelector('#reg-form').addEventListener('submit', function(e){
     e.preventDefault();
     let form = new FormData(this);
     // Список пар ключ/значение
-    fetch('/reg-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
-        console.log(data);
-        /*
+    fetch('/reg-user', {method: 'POST', body: form}).then(response => response.json()).then(data => {
+        //console.log(data);
         regErrorPrg.classList.remove('hidden');
         if(data['result'] === 'user_exists'){
             regErrorPrg.innerHTML = 'пользователь уже существует';
@@ -103,6 +101,5 @@ document.querySelector('#reg-form').addEventListener('submit', function(e){
             regErrorPrg.classList.add('text-success');
             e.target.reset(); // сбрасывает значения всех элементов в форме
         }
-        */
     });
 });

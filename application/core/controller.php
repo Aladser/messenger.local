@@ -3,9 +3,9 @@ class Controller {
 	public $view;
 	public $model;
 	
-	function __construct($model_name=null)
+	function __construct($modelName=null)
 	{
 		$this->view = new View();
-		$this->model = is_null($model_name) ? null : $model_name;
+		$this->model = is_null($modelName) ? null : $modelName;
 	}
 }

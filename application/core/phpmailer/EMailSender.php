@@ -1,7 +1,4 @@
 <?php
-require 'PHPMailer.php';
-require 'SMTP.php';
-require 'Exception.php';
 
 class EMailSender{
     private $mail;

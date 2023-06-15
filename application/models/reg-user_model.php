@@ -3,44 +3,37 @@
 class RegUserModel extends Model
 {
 	private $users;
+    private $eMailSender;
 
-    function __construct($users){
-        $this->users = $users;
+    public function __construct($CONFIG){
+        $this->users = new UsersDBModel($CONFIG->getDBQueryClass());
+        $this->eMailSender = $CONFIG->getEmailSender();
     }
 
-    function add(){
-        echo 'add() модели';
-    }
-}
-
-//***** РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ *****/
-/*
-if(isset($_POST['registration'])){
-    if(!$users->existsUser($_POST['email'])){
-        $email = $_POST['email'];
-        $addUserRslt = $users->addUser($email, $_POST['password']);
-        if($addUserRslt === 1) {
-            // хэш
-            $hash = md5($email . time());
-            $addHashRslt = $users->addUserHash($email, $hash);
-            //
-            $_SESSION['auth'] = 1;
-            $_SESSION['email'] = $email;
-            $text = '
-            <body>
-            <p>Для подтверждения электронной почты перейдите по <a href="http://messenger.local/verify-email?email='.$email.'&hash='.$hash.'">ссылке</a></p>
-            </body>
-            ';
-            echo $CONFIG->getEmailSender()->send('Месенджер: подтвердите e-mail', $text, $email);
+    //***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
+    public function getData(){
+        if(!$this->users->existsUser($_POST['email'])){
+            $email = $_POST['email'];
+            $addUserRslt = $this->users->addUser($email, $_POST['password']);
+            if($addUserRslt === 1) {
+                $hash = md5($email . time());
+                $this->users->addUserHash($email, $hash);
+                $text = '
+                <body>
+                <p>Для подтверждения электронной почты перейдите по <a href="http://messenger.local/verify-email?email='.$email.'&hash='.$hash.'">ссылке</a></p>
+                </body>
+                ';
+                $data['result'] = $this->eMailSender->send('Месенджер: подтвердите e-mail', $text, $email);
+            }
+            else{
+                $data['result'] = 'add_user_error';
+            }
         }
         else{
-            $data['result'] = 'add_user_error';
-            echo json_encode($data);
+            $data['result'] = 'user_exists';
         }
-    }
-    else{
-        $data['result'] = 'user_exists';
+
         echo json_encode($data);
     }
 }
-*/
+
