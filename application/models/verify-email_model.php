@@ -1,11 +1,11 @@
 <?php
 
-class VerifyEmailModel extends Model
+class VerifyEmailModel extends \core\Model
 {
 	private $users;
 
     public function __construct($CONFIG){
-        $this->users = new UsersDBModel($CONFIG->getDBQueryClass());
+        $this->users = new \core\db\DBUsersTableModel($CONFIG->getDBQueryClass());
     }
 
     //***** ПРОВЕРИТЬ ХЭШ ПОЛЬЗОВАТЕЛЯ *****/

@@ -1,10 +1,13 @@
 <?php
 
+namespace core\db;
+use \PDO;
+
 // Класс модели таблицы БД
-class TableDBModel{
+class DBTableModel{
     protected $db;
 
-    function __construct(DBQueryClass $db){
+    function __construct(DBQueryCtl $db){
         $this->db = $db;
     }
 }

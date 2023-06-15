@@ -1,10 +1,12 @@
 <?php
 
+namespace core\phpmailer;
+
 class EMailSender{
     private $mail;
 
     function __construct($smtpSrv, $username, $password, $smtpSecure, $port, $emailSender, $emailSenderName){
-        $this->mail = new PHPMailer\PHPMailer\PHPMailer();
+        $this->mail = new PHPMailer();
 
         $this->mail->isSMTP();   
         $this->mail->CharSet = "UTF-8";

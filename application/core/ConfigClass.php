@@ -1,5 +1,7 @@
 <?php
 
+namespace core;
+
 class ConfigClass{
 	// подключение к БД
 	private const HOST_DB = 'localhost';
@@ -18,13 +20,13 @@ class ConfigClass{
 	private $EMailSender; // класс отправки писем
 
 	function __construct(){
-		$this->DBQueryClass = new DBQueryClass(
+		$this->DBQueryClass = new \core\db\DBQueryCtl(
 			self::HOST_DB, 
 			self::NAME_DB, 
 			self::USER_DB, 
 			self::PASS_DB
 		);
-		$this->EMailSender = new EMailSender(
+		$this->EMailSender = new \core\phpmailer\EMailSender(
 			self::SMTP_SRV, 
 			self::EMAIL_USERNAME, 
 			self::EMAIL_PASSWORD, 

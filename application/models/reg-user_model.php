@@ -1,12 +1,12 @@
 <?php
 
-class RegUserModel extends Model
+class RegUserModel extends \core\Model
 {
 	private $users;
     private $eMailSender;
 
     public function __construct($CONFIG){
-        $this->users = new UsersDBModel($CONFIG->getDBQueryClass());
+        $this->users = new \core\db\DBUsersTableModel($CONFIG->getDBQueryClass());
         $this->eMailSender = $CONFIG->getEmailSender();
     }
 

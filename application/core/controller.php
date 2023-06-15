@@ -1,4 +1,7 @@
 <?php
+
+namespace core;
+
 class Controller {
 	public $view;
 	public $model;

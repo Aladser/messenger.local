@@ -1,6 +1,8 @@
 <?php
 
-class DBQueryClass{
+namespace core\db;
+
+class DBQueryCtl{
     private $dbConnection;
     
     private $host;
@@ -17,10 +19,10 @@ class DBQueryClass{
 
     private function connect(){
         try{
-           $this->dbConnection = new PDO("mysql:dbname=$this->nameDB; host=$this->host", $this->userDB, $this->passwordDB, 
-            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+           $this->dbConnection = new \PDO("mysql:dbname=$this->nameDB; host=$this->host", $this->userDB, $this->passwordDB, 
+            array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
         }
-        catch(PDOException $e){
+        catch(\PDOException $e){
             die($e->getMessage());
         }
     }

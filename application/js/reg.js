@@ -78,8 +78,9 @@ document.querySelector('#reg-form').addEventListener('submit', function(e){
     e.preventDefault();
     let form = new FormData(this);
     // Список пар ключ/значение
-    fetch('/reg-user', {method: 'POST', body: form}).then(response => response.json()).then(data => {
-        //console.log(data);
+    fetch('/reg-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+        console.log(data);
+        data = JSON.parse(data);
         regErrorPrg.classList.remove('hidden');
         if(data['result'] === 'user_exists'){
             regErrorPrg.innerHTML = 'пользователь уже существует';

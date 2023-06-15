@@ -1,18 +1,6 @@
 <?php
 
-// сформировать имя класса из имени файла
-function getMVCClassName($name, $type){
-	if($type === 'Model' || $type === 'Controller'){
-		$name = explode('_', $name)[0]; // убирает _model или _controller
-		$name = str_replace('-',' ',$name);
-		$name = ucwords($name); //Преобразует в верхний регистр первый символ каждого слова в строке
-		$name = str_replace(' ','',$name);
-		$name = $name.$type;
-		return $name;
-	}
-	else
-		return null;
-}
+namespace core;
 
 class Route
 {
@@ -53,12 +41,12 @@ class Route
 
 		//**** создаем модель, если существует
 		if(file_exists($model_path)){
-			$model_name = getMVCClassName($model_name, 'Model');
+			$model_name = self::getMVCClassName($model_name, 'Model');
 			$model = new $model_name($CONFIG);
 		}
 
 		//**** создаем контроллер
-		$controller_name = getMVCClassName($controller_name, 'Controller');
+		$controller_name = self::getMVCClassName($controller_name, 'Controller');
 		$controller = file_exists($model_path) ? new $controller_name($model) : new $controller_name();
 
 		$action = $action_name;
@@ -73,7 +61,7 @@ class Route
 		}
 	}
 	
-	static function ErrorPage404()
+	public static function ErrorPage404()
 	{
 		$host = 'http://'.$_SERVER['HTTP_HOST'].'/';
 		header('HTTP/1.1 404 Not Found');
@@ -82,5 +70,18 @@ class Route
 		echo $host;
     }
 
+	// сформировать имя класса из имени файла
+	private static function getMVCClassName($name, $type){
+		if($type === 'Model' || $type === 'Controller'){
+			$name = explode('_', $name)[0]; // убирает _model или _controller
+			$name = str_replace('-',' ',$name);
+			$name = ucwords($name); //Преобразует в верхний регистр первый символ каждого слова в строке
+			$name = str_replace(' ','',$name);
+			$name = $name.$type;
+			return $name;
+		}
+		else
+			return null;
+	}
 }
 ?>

@@ -1,6 +1,9 @@
 <?php
 
-class UsersDBModel extends TableDBModel{
+namespace core\db;
+use \PDO;
+
+class DBUsersTableModel extends DBTableModel{
 
     // проверить существование пользователя
     function existsUser($email){
