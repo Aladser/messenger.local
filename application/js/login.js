@@ -17,8 +17,6 @@ passwordInput.addEventListener('input', function(){
     loginBtn.disabled = !(validateEmail(emailInput.value) && this.value !== '');
 });
 
-
-
 //***** авторизация и аутентификация *****/
 document.querySelector('#login-form').addEventListener('submit', function(e){
     e.preventDefault();
@@ -27,14 +25,15 @@ document.querySelector('#login-form').addEventListener('submit', function(e){
     fetch('/login-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
         console.log(data);
         data = JSON.parse(data);
-        loginErrorPrg.classList.remove('hidden');
         if(data['result'] === 'login_user'){
-            loginErrorPrg.innerHTML = 'Вход совершен';
+            window.open('/chats', '_self')
         }
         else if(data['result'] === 'login_user_wrong_password'){
+            loginErrorPrg.classList.remove('hidden');
             loginErrorPrg.innerHTML = 'Неверный пароль';
         }
         else{
+            loginErrorPrg.classList.remove('hidden');
             loginErrorPrg.innerHTML = 'Пользователь не существует';
         }
     });
