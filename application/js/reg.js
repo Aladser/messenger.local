@@ -61,6 +61,9 @@ emailInput.addEventListener('input', function(){inputData(this, emailClue, false
 password1Input.addEventListener('input', function(){inputData(this, password1Clue, true);});
 password2Input.addEventListener('input', function(){inputData(this, password2Clue, true);});
 
+
+
+
 //***** проверка существования пользователя и регистрация *****/
 document.querySelector('#reg-form').addEventListener('submit', function(e){
     e.preventDefault();

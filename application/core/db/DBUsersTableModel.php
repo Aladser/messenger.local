@@ -16,7 +16,6 @@ class DBUsersTableModel extends DBTableModel{
     function isAuthentication($email, $password){
         $query = $this->db->query("select user_password from users where user_email='$email'");
         $passhash = $query->fetch(PDO::FETCH_ASSOC)['user_password'];
-        //return $password === $passhash;
         return password_verify($password, $passhash);
     }
     

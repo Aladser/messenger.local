@@ -16,3 +16,15 @@ passwordInput.addEventListener('input', function(){
     this.style.outlineColor = this.value !== '';
     loginBtn.disabled = !(validateEmail(emailInput.value) && this.value !== '');
 });
+
+
+
+//***** авторизация и аутентификация *****/
+document.querySelector('#login-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    let form = new FormData(this);
+    // Список пар ключ/значение
+    fetch('/login-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+        console.log(data);
+    });
+});
