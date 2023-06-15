@@ -13,18 +13,6 @@ const password2Clue = document.querySelector('#reg-form__password2-clue');
 
 document.querySelector('#reg-form__back-btn').onclick = () => window.open('/main', '_self'); // кнопка назад
 
-// валидация почты
-function validateEmail(email){
-    let emailSymbols = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    return emailSymbols.test(email);
-}
-
-// валидация пароля
-function validatePassword(password){
-    let passwSymbols = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,1000}$/;
-    return passwSymbols.test(password);
-}
-
 //***** событие клика поля ввода данных *****/
 function clickInputElement(input, clue, isPassword){
     regErrorPrg.classList.add('hidden');

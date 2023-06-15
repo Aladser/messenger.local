@@ -1,7 +1,6 @@
 <?php
 
 namespace core\db;
-use \PDO;
 
 // Класс модели таблицы БД
 class DBTableModel{
