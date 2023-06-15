@@ -20,12 +20,12 @@
         </div>
 
         <div>
-            <input type="submit" class='btn btn-success w-25 mb-2' value="Регистрация" disabled id='reg-form__reg-btn'>
+            <input type="submit" class='btn w-25 mb-2 btn-bg-C4C4C4 text-white' value="Регистрация" disabled id='reg-form__reg-btn'>
             <br>
-            <input type="button" class='btn btn-success w-25 mb-2' value="Назад" id='reg-form__back-btn' >
+            <input type="button" class='btn w-25 mb-2 btn-bg-C4C4C4 text-white' value="Назад" id='reg-form__back-btn' >
         </div>
 
-        <p class='w-25 mx-auto text-danger fw-bolder hidden' id='reg-error'>Пользователь уже существует</p>
+        <p class='w-25 mx-auto fw-bolder text-dark-red hidden' id='reg-error'>Пользователь уже существует</p>
     </form>
 </div>
 

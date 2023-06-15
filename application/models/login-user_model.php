@@ -16,6 +16,8 @@ class LoginUserModel extends \core\Model
             if($loginUserRslt == 1) {
                 $_SESSION['auth'] = 1;
                 $_SESSION['email'] = $_POST['email'];
+                setcookie('auth', 1, time()+60*60*24, '/');
+                setcookie('email', $_POST['email'], time()+60*60*24, '/');
                 $data['result'] = 'login_user';
             }
             else{

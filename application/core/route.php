@@ -16,7 +16,7 @@ class Route
         $action_name = 'index';
 		
 		// авторизация сохраняется в куки и сессии. Если авторизация есть, то переход messenger.local -> messenger.local/chats
-		if( $controller_name === 'Main' && isset($_SESSION['auth']) ){
+		if( $controller_name === 'Main' && (isset($_SESSION['auth']) || isset($_COOKIE['auth'])) ){
 			header('Location: /chats');
 		}
 

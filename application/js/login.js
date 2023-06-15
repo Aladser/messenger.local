@@ -17,6 +17,9 @@ passwordInput.addEventListener('input', function(){
     loginBtn.disabled = !(validateEmail(emailInput.value) && this.value !== '');
 });
 
+
+
+
 //***** авторизация и аутентификация *****/
 document.querySelector('#login-form').addEventListener('submit', function(e){
     e.preventDefault();

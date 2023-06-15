@@ -13,13 +13,13 @@
         </div>
 
         <div>
-            <input type="submit" class='btn btn-success w-25 mb-2' value="Войти" disabled id='login-form__login-btn'>
+            <input type="submit" class='btn w-25 mb-2 btn-bg-C4C4C4 text-white' value="Войти" disabled id='login-form__login-btn'>
             <br>
-            <input type="button" class='btn btn-success w-25 mb-2' value="Назад" id='login-form__back-btn' >
+            <input type="button" class='btn w-25 mb-2 btn-bg-C4C4C4 text-white' value="Назад" id='login-form__back-btn' >
         </div>
     </form>
 
-    <p class='w-25 mx-auto text-danger fw-bolder hidden' id='login-error'>Пользователь уже существует</p>
+    <p class='w-25 mx-auto fw-bolder text-dark-red hidden' id='login-error'>Пользователь уже существует</p>
 </div>
 
 <script type='text/javascript' src="application/js/validation.js"></script>
