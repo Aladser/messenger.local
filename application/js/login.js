@@ -26,5 +26,16 @@ document.querySelector('#login-form').addEventListener('submit', function(e){
     // Список пар ключ/значение
     fetch('/login-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
         console.log(data);
+        data = JSON.parse(data);
+        loginErrorPrg.classList.remove('hidden');
+        if(data['result'] === 'login_user'){
+            loginErrorPrg.innerHTML = 'Вход совершен';
+        }
+        else if(data['result'] === 'login_user_wrong_password'){
+            loginErrorPrg.innerHTML = 'Неверный пароль';
+        }
+        else{
+            loginErrorPrg.innerHTML = 'Пользователь не существует';
+        }
     });
 });
