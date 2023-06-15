@@ -10,12 +10,12 @@ class LoginUserModel extends \core\Model
 
     //***** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ *****/
     public function getData(){
+        session_start();
         if($this->users->existsUser($_POST['email'])){
             $loginUserRslt = $this->users->isAuthentication($_POST['email'], $_POST['password']);
             if($loginUserRslt == 1) {
                 $_SESSION['auth'] = 1;
                 $_SESSION['email'] = $_POST['email'];
-                
                 $data['result'] = 'login_user';
             }
             else{

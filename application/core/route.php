@@ -6,6 +6,7 @@ class Route
 {
 	public static function start()
 	{
+		session_start();
 		// конфиг
 		$CONFIG = new ConfigClass();
 
@@ -13,6 +14,11 @@ class Route
 		$routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
 		$controller_name = !empty($routes) ? $routes : 'Main';
         $action_name = 'index';
+		
+		// авторизация сохраняется в куки и сессии. Если авторизация есть, то переход messenger.local -> messenger.local/chats
+		if( $controller_name === 'Main' && isset($_SESSION['auth']) ){
+			header('Location: /chats');
+		}
 
 		// добавляем префиксы
 		$model_name = $controller_name.'_model';
