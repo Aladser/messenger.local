@@ -7,8 +7,6 @@ class Route
 	public static function start()
 	{
 		session_start();
-		// конфиг
-		$CONFIG = new ConfigClass();
 
 		// контроллер и действие по умолчанию
 		$routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
@@ -52,7 +50,7 @@ class Route
 		//**** создаем модель, если существует
 		if(file_exists($model_path)){
 			$model_name = self::getMVCClassName($model_name, 'Model');
-			$model = new $model_name($CONFIG);
+			$model = new $model_name(new ConfigClass());
 		}
 
 		//**** создаем контроллер
