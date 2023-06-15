@@ -6,7 +6,7 @@ class RegUserModel extends \core\Model
     private $eMailSender;
 
     public function __construct($CONFIG){
-        $this->users = new \core\db\DBUsersTableModel($CONFIG->getDBQueryClass());
+        $this->users = new \core\db\DBUsersTableModel($CONFIG->getDBQueryCtl());
         $this->eMailSender = $CONFIG->getEmailSender();
     }
 

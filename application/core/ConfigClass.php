@@ -8,7 +8,7 @@ class ConfigClass{
 	private const NAME_DB = 'messenger';
 	private const USER_DB = 'admin';
 	private const PASS_DB = '@admin@';
-	private $DBQueryClass; // класс запросов к БД
+	private $DBQueryCtl; // класс запросов к БД
 	// настроцки почтового сервера
 	private const SMTP_SRV = 'smtp.mail.ru';
 	private const EMAIL_USERNAME = 'aladser@mail.ru';
@@ -20,7 +20,7 @@ class ConfigClass{
 	private $EMailSender; // класс отправки писем
 
 	function __construct(){
-		$this->DBQueryClass = new \core\db\DBQueryCtl(
+		$this->DBQueryCtl = new \core\db\DBQueryCtl(
 			self::HOST_DB, 
 			self::NAME_DB, 
 			self::USER_DB, 
@@ -37,8 +37,8 @@ class ConfigClass{
 		);
 	}
 
-	function getDBQueryClass(){
-		return $this->DBQueryClass;
+	function getDBQueryCtl(){
+		return $this->DBQueryCtl;
 	}
 
 	function getEmailSender(){
