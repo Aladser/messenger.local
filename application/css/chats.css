@@ -1,3 +1,58 @@
-.chats-container-height{
-    height: 90vh;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+.h-90{height: 90vh;}
+.p-0{padding: 0;}
+.split-word{word-wrap: break-word;}
+
+.chats{
+    font-family: 'Roboto', sans-serif;
+}
+.contacts{
+    width: 21%;
+}
+.messages{
+    width: 68%;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+.options{
+    width: 11%;
+    padding-left: 1.5rem;
+    padding-right: 1rem;
+    
+}
+.option{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+}
+
+@media (max-width: 1200px) {
+    .options{
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+@media (max-width: 1000px) {
+    .options{
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+        font-size: 80%;
+    }
+    .contacts{
+        font-size: 80%;
+    }
+    .chats{
+        font-size: 80%;
+    }
+}
+@media (max-width: 775px) {
+    .options{
+        font-size: 70%;
+    }
+}
+@media (max-width: 550px) {
+    .options{
+        font-size: 60%;
+    }
 }

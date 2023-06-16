@@ -5,7 +5,7 @@ class VerifyEmailModel extends \core\Model
 	private $users;
 
     public function __construct($CONFIG){
-        $this->users = new \core\db\DBUsersTableModel($CONFIG->getDBQueryCtl());
+        $this->users = new \core\db\UsersDBTableModel($CONFIG->getDBQueryCtl());
     }
 
     //***** ПРОВЕРИТЬ ХЭШ ПОЛЬЗОВАТЕЛЯ *****/
