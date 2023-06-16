@@ -1,12 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-.h-90{height: 90vh;}
+.h-80{height: 80vh;}
 .p-0{padding: 0;}
 .split-word{word-wrap: break-word;}
+
+.option-href{
+    text-decoration: none;
+    color: black;
+}
+.option-href:hover{
+    color: black;
+    font-weight: bolder;
+}
 
 .chats{
     font-family: 'Roboto', sans-serif;
 }
+
 .contacts{
     width: 21%;
 }
@@ -18,8 +28,7 @@
 .options{
     width: 11%;
     padding-left: 1.5rem;
-    padding-right: 1rem;
-    
+    padding-right: 1rem; 
 }
 .option{
     font-family: 'Roboto';

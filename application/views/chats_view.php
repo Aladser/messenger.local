@@ -1,4 +1,4 @@
-<div class='container chats h-90 bg-C4C4C4 p-0 d-flex'>
+<div class='container chats h-80 bg-C4C4C4 p-0 d-flex'>
     <div class='contacts pt-2 ps-2 pe-2'>
         <div class='split-word'>JohnJohnJohnJohnJohn</div>
         <div class='split-word'>MaryMaryMaryMaryMary</div>
@@ -29,8 +29,8 @@
         <div>Отправите сообщение</div>
     </div>
     <div class='options pt-2'>
-        <div class='option'>Профиль</div>
-        <div class='option'>Настройки</div>
-        <div class='option'>Выйти</div>
+        <div class='option'><a href="" class='option-href'>Профиль</a></div>
+        <div class='option'><a href="" class='option-href'>Настройки</a></div>
+        <div class='option'><a href="" class='option-href'>Выйти</a></div>
     </div>
 </div>
