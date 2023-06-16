@@ -1,8 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-.h-80{height: 80vh;}
-.p-0{padding: 0;}
-.split-word{word-wrap: break-word;}
+.h-80{
+    height: 80vh;
+}
+.w-10{
+    width:10%;
+}
+.w-90{
+    width:92%;
+}
+.p-0{
+    padding: 0;
+}
+.m-0{
+    margin: 0;
+}
+.split-word{
+    word-wrap: break-word;
+}
+.resize-none{
+    resize: none;
+}
 
 .option-href{
     text-decoration: none;
@@ -13,19 +31,17 @@
     font-weight: bolder;
 }
 
-.chats{
+.font-roboto{
     font-family: 'Roboto', sans-serif;
 }
 
-.contacts{
+.contacts-container{
     width: 21%;
 }
-.messages{
+.messages-container{
     width: 68%;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
 }
-.options{
+.options-container{
     width: 11%;
     padding-left: 1.5rem;
     padding-right: 1rem; 
@@ -37,18 +53,18 @@
 }
 
 @media (max-width: 1200px) {
-    .options{
+    .options-container{
         padding-left: 0.75rem;
         padding-right: 0.75rem;
     }
 }
 @media (max-width: 1000px) {
-    .options{
+    .options-container{
         padding-left: 0.25rem;
         padding-right: 0.25rem;
         font-size: 80%;
     }
-    .contacts{
+    .contacts-container{
         font-size: 80%;
     }
     .chats{
@@ -56,12 +72,12 @@
     }
 }
 @media (max-width: 775px) {
-    .options{
+    .options-container{
         font-size: 70%;
     }
 }
 @media (max-width: 550px) {
-    .options{
+    .options-container{
         font-size: 60%;
     }
 }
