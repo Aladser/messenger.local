@@ -15,14 +15,14 @@
     </div>
     
     <div class='messages-container pt-2 pe-2 border-start border-end border-dark position-relative padding-left-1dot5prcts padding-right-0dot75'>
-        <p class='mb-2'>Чат с пользователем aladser@mail.ru</p>
+        <p class='mb-2'>Чат с пользователем sendlyamobile@gmail.com</p>
 
         <div class='messages m-0'>
             <div class='msg'>
                 <table class='msg-table'>
                     <tr><td class='msg__text'>
-                        Штиль – ветер молчит.<br> Упал белой чайкой на дно. <br>
-                        Штиль – наш корабль забыт.<br> Один, в мире скованном сном...
+                        Штиль – ветер молчит. Упал белой чайкой на дно.
+                        Штиль – наш корабль забыт. Один, в мире скованном сном...
                     </td></tr>
                     <tr><td class='msg__time'>
                         20.06.203 10.30
@@ -45,8 +45,8 @@
             <div class='msg'>
                 <table class='msg-table'>
                     <tr><td class='msg__text'>
-                    Штиль сводит с ума.<br> Жара пахнет черной смолой.<br>
-                    Смерть одному лишь нужна.<br> И мы вернемся домой
+                    Штиль сводит с ума. Жара пахнет черной смолой.<br>
+                    Смерть одному лишь нужна. И мы вернемся домой
                     </td></tr>
                     <tr><td  class='msg__time'>
                         20.06.203 10.50
@@ -58,7 +58,7 @@
                 <table class='msg-table'>
                     <tr><td class='msg__text'>
                     Его кровь и плоть вновь насытит нас.<br>
-                    И за смерть ему может бог воздасть.
+                    И за смерть ему может бог воздаст.
                     </td></tr>
                     <tr><td  class='msg__time'>
                         20.06.203 10.50
@@ -69,8 +69,8 @@
             <div class='msg msg-contact'>
                 <table class='msg-table msg-table-contact'>
                     <tr><td class='msg__text'>
-                    Что нас ждёт, море хранит молчанье.<br> Жажда жить сушит сердца до дна.<br>
-                    Только жизнь здесь ничего не стоит.<br> Жизнь других, но не твоя!
+                    Что нас ждёт, море хранит молчанье. Жажда жить сушит сердца до дна.<br>
+                    Только жизнь здесь ничего не стоит. Жизнь других, но не твоя!
                     </td></tr>
                     <tr><td class='msg__time'>
                         20.06.203 11.00
@@ -81,9 +81,9 @@
             <div class='msg'>
                 <table class='msg-table'>
                     <tr><td class='msg__text'>
-                    Нет, гром не грянул с небес.<br>
+                    Нет, гром не грянул с небес.
                     Когда пили кровь как зверье.<br>
-                    Но нестерпимы стал блеск.<br>
+                    Но нестерпимы стал блеск.
                     Крест, что мы Южным зовем.
                     </td></tr>
                     <tr><td  class='msg__time'>

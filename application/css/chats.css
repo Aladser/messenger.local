@@ -32,6 +32,7 @@
 .messages{
     overflow-y: scroll;
     height: 85%;
+    padding-right: 0.5rem;
 }
 .msg-contact{
     display:flex;
