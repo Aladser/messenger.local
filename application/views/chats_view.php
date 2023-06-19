@@ -106,7 +106,7 @@
             </div>
         </div>
 
-        <div class='send-msg position-absolute bottom-0 mb-2 w-97'>
+        <div class='send-msg position-absolute bottom-0 mb-2'>
             <form id='add-msg' action="">
                 <div class='input-group d-flex justify-content-between'>
                     <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Наберите ваше сообщение здесь'></textarea>

@@ -71,13 +71,17 @@
     font-weight: 400;
 }
 
-
-
+.send-msg{
+    width: 97%;
+}
 
 @media (max-width: 1200px) {
     .options-container{
         padding-left: 0.75rem;
         padding-right: 0.75rem;
+    }
+    .send-msg{
+        width: 96.5%;
     }
 }
 @media (max-width: 1000px) {
@@ -97,9 +101,15 @@
     .options-container{
         font-size: 70%;
     }
+    .send-msg{
+        width: 95%;
+    }
 }
 @media (max-width: 550px) {
     .options-container{
         font-size: 60%;
+    }
+    .send-msg{
+        width: 94.8%;
     }
 }
