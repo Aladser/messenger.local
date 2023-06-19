@@ -31,7 +31,7 @@
             </div>
 
             <div class='msg msg-contact'>
-                <table class='msg-table'>
+                <table class='msg-table msg-table-contact'>
                     <tr><td class='msg__text'>
                         Между всех времён без имён и лиц<br>
                         мы уже не ждём, что проснётся бриз!
@@ -67,7 +67,7 @@
             </div>
 
             <div class='msg msg-contact'>
-                <table class='msg-table msg-contact'>
+                <table class='msg-table msg-table-contact'>
                     <tr><td class='msg__text'>
                     Что нас ждёт, море хранит молчанье.<br> Жажда жить сушит сердца до дна.<br>
                     Только жизнь здесь ничего не стоит.<br> Жизнь других, но не твоя!

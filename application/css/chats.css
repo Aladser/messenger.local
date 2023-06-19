@@ -41,6 +41,9 @@
     margin-bottom: 0.3rem;
     background-color: white;
 }
+.msg-table-contact{
+    background-color: #ddd;
+}
 .msg__text{
     padding-top: 0.4rem;
     padding-left: 0.4rem;
