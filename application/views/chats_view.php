@@ -119,6 +119,6 @@
     <div class='options-container pt-2'>
         <div class='option'><a href="" class='option-href'>Профиль</a></div>
         <div class='option'><a href="" class='option-href'>Настройки</a></div>
-        <div class='option'><a href="" class='option-href'>Выйти</a></div>
+        <div class='option'><a href="/quit" class='option-href'>Выйти</a></div>
     </div>
 </div>
