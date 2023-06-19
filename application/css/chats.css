@@ -38,9 +38,23 @@
 .contacts-container{
     width: 21%;
 }
+
 .messages-container{
     width: 68%;
 }
+.messages__msg{
+    float: right;
+    display: inline-block;
+    background-color: white;
+    margin-bottom: 0.3rem;
+    padding: 0.3rem;
+    padding-right: 3rem;
+    border-radius: 0.25rem;
+}
+.messages__owner-msg{
+    float: left;
+}
+
 .options-container{
     width: 11%;
     padding-left: 1.5rem;

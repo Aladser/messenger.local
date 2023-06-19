@@ -16,3 +16,7 @@
 .text-dark-red{
     color: rgba(158, 0, 0, 0.768);
 }
+
+.text-rgb66666{
+    color: #666666;
+}
