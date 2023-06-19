@@ -1,5 +1,6 @@
 <div class='container font-roboto h-80 bg-rgbc4c4c4 p-0 d-flex'>
     <div class='contacts pt-2 ps-2 pe-2'>
+        <input type="text" class='w-100 mb-2 form-control' placeholder='поиск контакта'>
         <div class='split-word'> 
             <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
             <span class='contact'>Andrei Avramenko</span> </div>
