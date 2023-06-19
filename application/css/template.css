@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 .hidden{
     visibility: hidden;
 }
 
-.bg-C4C4C4{
+.bg-rgbc4c4c4{
     background-color: #C4C4C4;
 }
 
@@ -17,6 +19,10 @@
     color: rgba(158, 0, 0, 0.768);
 }
 
-.text-rgb66666{
-    color: #666666;
+.font-roboto{
+    font-family: 'Roboto', sans-serif;
+}
+
+.m-0{
+    margin: 0;
 }

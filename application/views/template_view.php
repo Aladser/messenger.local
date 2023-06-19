@@ -14,7 +14,7 @@
 <body>
 
     <header>
-        <h3 class='text-center p-4 text-white bg-C4C4C4'>Месенджер</h3>
+        <h3 class='text-center p-4 text-white bg-rgbc4c4c4'>Месенджер</h3>
     </header>
     <?php 
         include $content_view 

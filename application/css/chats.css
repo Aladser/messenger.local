@@ -1,26 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+.h-80{height: 80vh;}
+.split-word{word-wrap: break-word;}
+.resize-none{resize: none;}
+.w-97{width: 97%;}
 
-.h-80{
-    height: 80vh;
+.padding-left-1dot5prcts{padding-left: 1.5%;}
+.padding-right-0dot75{padding-right: 0.8%;}
+
+
+.contacts{
+    width: 21%;
 }
-.w-10{
-    width:10%;
+.messages-container{
+    width: 68%;
 }
-.w-90{
-    width:92%;
+.options-container{
+    width: 11%;
+    padding-left: 1.5rem;
+    padding-right: 1rem; 
 }
-.p-0{
-    padding: 0;
-}
-.m-0{
-    margin: 0;
-}
-.split-word{
-    word-wrap: break-word;
-}
-.resize-none{
-    resize: none;
-}
+
 
 .option-href{
     text-decoration: none;
@@ -31,40 +29,46 @@
     font-weight: bolder;
 }
 
-.font-roboto{
-    font-family: 'Roboto', sans-serif;
+.messages{
+    overflow-y: scroll;
+    height: 85%;
 }
-
-.contacts-container{
-    width: 21%;
+.msg-contact{
+    display:flex;
+    justify-content:right;
 }
-
-.messages-container{
-    width: 68%;
-}
-.messages__msg{
-    float: right;
-    display: inline-block;
-    background-color: white;
+.msg-table{
     margin-bottom: 0.3rem;
-    padding: 0.3rem;
-    padding-right: 3rem;
-    border-radius: 0.25rem;
+    background-color: white;
 }
-.messages__owner-msg{
-    float: left;
+.msg__text{
+    padding-top: 0.4rem;
+    padding-left: 0.4rem;
+    padding-right: 3rem;
+}
+.msg__time{
+    padding-bottom: 0.4rem;
+    padding-left: 0.4rem;
+    padding-right: 3rem;
+    color: #666666;
 }
 
-.options-container{
-    width: 11%;
-    padding-left: 1.5rem;
-    padding-right: 1rem; 
+
+.img-btn{
+    height: 100%;
+    width: auto;
+    border: none;
+    background-size: cover;
 }
+
 .option{
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
 }
+
+
+
 
 @media (max-width: 1200px) {
     .options-container{
