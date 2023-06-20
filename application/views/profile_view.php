@@ -10,7 +10,7 @@
                     <td>aladser@mail.ru</td>
                 </tr>
                 <tr>
-                    <td>Nickname:</td>
+                    <td>nickname:</td>
                     <td>Aladser</td>
                 </tr>
             </table>
@@ -18,7 +18,7 @@
                 <input class="form-check-input" type="checkbox" id="hide-email-input">
                 <label class="form-check-label" for="hide-email-input">&nbsp; скрыть почту</label>
             </div>
-            <button class='btn btn-bg-C4C4C4 text-white w-100' id='save-profile-settings'>Сохранить</button>
+            <button class='btn btn-bg-C4C4C4 text-white w-100 hidden' id='save-profile-settings-btn'>Сохранить</button>
         </div>
         <div class='p-4 w-25'>
             <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2'>Изменить фото</button>
