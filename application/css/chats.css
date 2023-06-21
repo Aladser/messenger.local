@@ -38,8 +38,12 @@
 }
 
 .msg-contact{
+    display:-webkit-box;
+    display:-ms-flexbox;
     display:flex;
-    justify-content:right;
+    -webkit-box-pack:right;
+        -ms-flex-pack:right;
+            justify-content:right;
 }
 .msg-table{
     margin-bottom: 0.3rem;

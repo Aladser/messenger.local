@@ -1,12 +1,13 @@
 .profile-img-block{
-    height: 30%;
-    width: 30%;
+    height: 20rem;
+    width: 20rem;
 }
 
 .profile-img{
     width: 100%;
-    height: auto;
-    background-size: cover;
+    height: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
 }
 
 @media (max-width: 780px) {
