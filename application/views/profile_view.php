@@ -27,7 +27,7 @@
                 <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2 btn-profile' id='edit-photo-btn'>Изменить фото</button>
             </form>
             
-            <button class='btn btn-bg-C4C4C4 btn-profile text-white w-100 mb-2' id='btn-profile'>Установить nickname</button>
+            <button class='btn btn-bg-C4C4C4 btn-profile text-white w-100 mb-2' id='btn-edit-nickname'>Установить nickname</button>
         </div>
     </div>
 </div>

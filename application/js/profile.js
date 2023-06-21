@@ -7,7 +7,7 @@ let inputNickname = document.querySelector('#input-nickname');
 
 // изменение видимости кнопки сохранить при переключении чекбокса
 function changeHideEmailInputVisibility(input, btn){
-    let startState = input.checked; // изначальное состояние чекбокса
+    let startState = input.checked; // изначальное состояние чекбокса скрытия почты
     return function func(){
         if(input.checked !== startState){
             btn.classList.remove('hidden');
@@ -41,13 +41,13 @@ document.querySelector('#upload-file-form').onsubmit = e => {
 
 
 // установка nickname
-document.querySelector('#btn-profile').onclick = () => {
+document.querySelector('#btn-edit-nickname').onclick = () => {
     inputNickname.disabled = false;
     inputNickname.focus();
 }
 
 function writeNickname(input, btn){
-    let startValue = input.value;
+    let startValue = input.value; // изначальный никнейм
     return function func(){
         if(input.value !== startValue){
             btn.classList.remove('hidden');
@@ -58,4 +58,5 @@ function writeNickname(input, btn){
     }
 }
 inputNickname.oninput = writeNickname(inputNickname, saveBtn);
+
 inputNickname.onblur = () => inputNickname.disabled = true;
