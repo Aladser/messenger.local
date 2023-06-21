@@ -2,14 +2,14 @@
 
 class UploadFileModel extends \core\Model
 {
-
-    public function __construct($CONFIG=null){
+    public function __construct($CONFIG){
     }
 
     public function getData(){
-        var_dump($_POST);
-        echo '<br>';
-        var_dump($_FILES);
+        $fromPath = $_FILES['image']['tmp_name'];
+        $toPath =  dirname(__DIR__, 1).'\\data\\'.$_FILES['image']['name'];
+        $rslt = move_uploaded_file($fromPath, $toPath) ? 1 : 0;
+        echo $rslt == 1 ? 'application/data/'.$_FILES['image']['name'] : 0;
     }
 }
 

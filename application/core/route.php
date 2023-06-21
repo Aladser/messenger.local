@@ -8,6 +8,9 @@ class Route
 	{
 		session_start();
 
+		// чистка кэша изображений
+		foreach (glob('application/data/*') as $file) unlink($file);
+
 		// контроллер и действие по умолчанию
 		$routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
 		$controller_name = !empty($routes) ? $routes : 'Main';
@@ -18,7 +21,7 @@ class Route
 			header('Location: /chats');
 		}
 		// редирект messenger.local/chats без авторизации -> messenger.local
-		if($controller_name === 'chats' && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))){
+		if(($controller_name === 'chats' || $controller_name === 'profile') && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))){
 			header('Location: /Main');
 		}
 

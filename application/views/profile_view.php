@@ -1,7 +1,7 @@
 <div class='container font-roboto mt-4'>
     <div class='d-flex justify-content-center'>
         <div class='pe-4'>
-            <img src="application/images/ava_profile.png" class="rounded-circle" alt="Avatar" />
+            <img src="application/images/ava_profile.png" id='profile-img' class="profile-img rounded-circle" alt="Avatar" />
         </div>
         <div class='p-4'>
             <table class='table'>
@@ -28,8 +28,7 @@
             </form>
             
             <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2'>Установить nickname</button>
-            <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2'>Изменить пароль</button>
-            <button class='btn btn-bg-C4C4C4 text-white w-100'>Изменить фото</button>
+            <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2'>Изменить пароль</button>  <!-- на будущее -->
         </div>
     </div>
 </div>

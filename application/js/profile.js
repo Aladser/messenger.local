@@ -33,6 +33,8 @@ selectFileInput.onchange = () => {
 uploadFileForm.onsubmit = e => {
     e.preventDefault();
     if(selectFileInput.value !== ''){
-        fetch('/upload-file', {method: 'POST', body: new FormData(e.target)}).then(response => response.text()).then(data => console.log(data));
+        fetch('/upload-file', {method: 'POST', body: new FormData(e.target)}).then(response => response.text()).then(data => {
+            document.querySelector('#profile-img').src = data;
+        });
     }
 }
