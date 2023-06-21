@@ -1,6 +1,17 @@
+.profile-img-block{
+    height: 30%;
+    width: 30%;
+}
+
 .profile-img{
-    height: 100%;
-    width: auto;
-    border: none;
+    width: 100%;
+    height: auto;
     background-size: cover;
+}
+
+@media (max-width: 780px) {
+    .btn-profile{
+        font-size: 0.7rem;
+        padding-right: 4.5rem;
+    }
 }

@@ -12,4 +12,3 @@ class UploadFileModel extends \core\Model
         echo $rslt == 1 ? 'application/data/'.$_FILES['image']['name'] : 0;
     }
 }
-
