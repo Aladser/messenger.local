@@ -6,12 +6,12 @@ class RegUserModel extends \core\Model
     private $eMailSender;
 
     public function __construct($CONFIG){
-        $this->users = new \core\db\UsersDBTableModel($CONFIG->getDBQueryCtl());
+        $this->users = $CONFIG->getUsers();
         $this->eMailSender = $CONFIG->getEmailSender();
     }
 
     //***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
-    public function getData(){
+    public function run(){
         if(!$this->users->existsUser($_POST['email'])){
             $email = $_POST['email'];
             $addUserRslt = $this->users->addUser($email, $_POST['password']);

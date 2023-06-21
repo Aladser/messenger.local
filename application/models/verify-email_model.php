@@ -5,11 +5,11 @@ class VerifyEmailModel extends \core\Model
 	private $users;
 
     public function __construct($CONFIG){
-        $this->users = new \core\db\UsersDBTableModel($CONFIG->getDBQueryCtl());
+        $this->users = $CONFIG->getUsers();
     }
 
     //***** ПРОВЕРИТЬ ХЭШ ПОЛЬЗОВАТЕЛЯ *****/
-    public function getData(){
+    public function run(){
         $modelData = array();
         if($this->users->checkUserHash($_GET['email'], $_GET['hash'])){
             $this->users->confirmEmail($_GET['email']);

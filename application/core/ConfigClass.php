@@ -18,6 +18,7 @@ class ConfigClass{
 	private const EMAIL_SENDER = 'aladser@mail.ru';
 	private const EMAIL_SENDER_NAME = 'Messenger Admin';
 	private $EMailSender; // класс отправки писем
+	private $users; // пользователи
 
 	function __construct(){
 		$this->DBQueryCtl = new \core\db\DBQueryCtl(
@@ -35,6 +36,7 @@ class ConfigClass{
 			self::EMAIL_SENDER, 
 			self::EMAIL_SENDER_NAME
 		);
+		$this->users = new \core\db\UsersDBTableModel($this->DBQueryCtl);
 	}
 
 	function getDBQueryCtl(){
@@ -43,5 +45,9 @@ class ConfigClass{
 
 	function getEmailSender(){
 		return $this->EMailSender;
+	}
+
+	function getUsers(){
+		return $this->users;
 	}
 }                                                                                                                                                                                                                                                      

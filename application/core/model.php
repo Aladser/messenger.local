@@ -4,5 +4,5 @@ namespace core;
 
 abstract class Model
 {
-    abstract public function getData();
+    abstract public function run();
 }

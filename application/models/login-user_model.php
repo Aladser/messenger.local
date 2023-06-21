@@ -5,11 +5,11 @@ class LoginUserModel extends \core\Model
 	private $users;
 
     public function __construct($CONFIG){
-        $this->users = new \core\db\UsersDBTableModel($CONFIG->getDBQueryCtl());
+        $this->users = $CONFIG->getUsers();
     }
 
     //***** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ *****/
-    public function getData(){
+    public function run(){
         session_start();
         if($this->users->existsUser($_POST['email'])){
             $loginUserRslt = $this->users->checkUser($_POST['email'], $_POST['password']);
