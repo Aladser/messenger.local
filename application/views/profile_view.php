@@ -21,7 +21,12 @@
             <button class='btn btn-bg-C4C4C4 text-white w-100 hidden' id='save-profile-settings-btn'>Сохранить</button>
         </div>
         <div class='p-4 w-25'>
-            <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2'>Изменить фото</button>
+            <form method='post' id='upload-file-form' enctype="multipart/form-data">
+                <input type="file" id="select-file-input" name='image' class='hidden'>
+                <input type="submit" id='upload-file-btn' class='hidden'>
+                <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='edit-photo-btn'>Изменить фото</button>
+            </form>
+            
             <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2'>Установить nickname</button>
             <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2'>Изменить пароль</button>
             <button class='btn btn-bg-C4C4C4 text-white w-100'>Изменить фото</button>
