@@ -26,7 +26,6 @@ document.querySelector('#login-form').addEventListener('submit', function(e){
     let form = new FormData(this);
     // Список пар ключ/значение
     fetch('/login-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
-        console.log(data);
         data = JSON.parse(data);
         if(data['result'] === 'login_user'){
             window.open('/chats', '_self')
