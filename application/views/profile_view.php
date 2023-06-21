@@ -1,4 +1,4 @@
-<div class='container font-roboto mt-4'>
+<div class='container font-roboto mt-4' id='container-profile'>
     <div class='d-flex justify-content-center'>
         <div class='profile-img-block me-4'>
             <img src="application/images/ava_profile.png" id='profile-img' class="rounded-circle profile-img" alt="Avatar" />
@@ -11,7 +11,7 @@
                 </tr>
                 <tr>
                     <td>nickname:</td>
-                    <td>Aladser</td>
+                    <td><input type="text" class='input-nickname border-0' id='input-nickname' value='Aladser' disabled></td>
                 </tr>
             </table>
             <div class="form-check form-switch mb-3 d-flex justify-content-center">
@@ -27,8 +27,7 @@
                 <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2 btn-profile' id='edit-photo-btn'>Изменить фото</button>
             </form>
             
-            <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2 btn-profile'>Установить nickname</button>
-            <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2 btn-profile'>Изменить пароль</button>  <!-- на будущее -->
+            <button class='btn btn-bg-C4C4C4 btn-profile text-white w-100 mb-2' id='btn-profile'>Установить nickname</button>
         </div>
     </div>
 </div>

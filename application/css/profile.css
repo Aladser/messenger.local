@@ -1,6 +1,6 @@
 .profile-img-block{
-    height: 20rem;
-    width: 20rem;
+    height: 30%;
+    width: 30%;
 }
 
 .profile-img{
@@ -10,9 +10,14 @@
        object-fit: cover;
 }
 
+.input-nickname:disabled{
+    background-color: white;
+    color: black;
+}
+
 @media (max-width: 780px) {
     .btn-profile{
-        font-size: 0.7rem;
-        padding-right: 4.5rem;
+        font-size: 0.8rem;
+        padding-right: 5rem;
     }
 }

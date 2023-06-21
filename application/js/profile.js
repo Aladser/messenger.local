@@ -1,11 +1,12 @@
 let hideEmailInput = document.querySelector('#hide-email-input');
 let saveBtn = document.querySelector('#save-profile-settings-btn');
 let selectFileInput = document.querySelector('#select-file-input');
+let inputNickname = document.querySelector('#input-nickname');
 
 
 
 // изменение видимости кнопки сохранить при переключении чекбокса
-function changeHideEmailInputState(input, btn){
+function changeHideEmailInputVisibility(input, btn){
     let startState = input.checked; // изначальное состояние чекбокса
     return function func(){
         if(input.checked !== startState){
@@ -16,7 +17,7 @@ function changeHideEmailInputState(input, btn){
         }
     }
 }
-hideEmailInput.onchange = changeHideEmailInputState(hideEmailInput, saveBtn);
+hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn);
 
 
 
@@ -36,3 +37,25 @@ document.querySelector('#upload-file-form').onsubmit = e => {
         });
     }
 }
+
+
+
+// установка nickname
+document.querySelector('#btn-profile').onclick = () => {
+    inputNickname.disabled = false;
+    inputNickname.focus();
+}
+
+function writeNickname(input, btn){
+    let startValue = input.value;
+    return function func(){
+        if(input.value !== startValue){
+            btn.classList.remove('hidden');
+        }
+        else{
+            btn.classList.add('hidden');
+        }
+    }
+}
+inputNickname.oninput = writeNickname(inputNickname, saveBtn);
+inputNickname.onblur = () => inputNickname.disabled = true;
