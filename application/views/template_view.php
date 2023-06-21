@@ -8,7 +8,9 @@
         <link rel="icon" href="application/images/icon.png">
         <link rel="stylesheet" href="application/css/reset_styles.css"> 
         <link rel="stylesheet" href="application/css/template.css"> 
-        <link rel="stylesheet" href="application/css/<?=$content_css?>">   
+        <?php if($content_css !== ''): ?>
+            <link rel="stylesheet" href="application/css/<?=$content_css?>">
+        <?php endif; ?>
     </head> 
     <body>
 

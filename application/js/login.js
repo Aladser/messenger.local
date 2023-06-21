@@ -19,7 +19,6 @@ passwordInput.addEventListener('input', function(){
 
 
 
-
 //***** авторизация и аутентификация *****/
 document.querySelector('#login-form').addEventListener('submit', function(e){
     e.preventDefault();

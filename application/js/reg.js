@@ -13,6 +13,8 @@ const password2Clue = document.querySelector('#reg-form__password2-clue');
 
 document.querySelector('#reg-form__back-btn').onclick = () => window.open('/main', '_self'); // кнопка назад
 
+
+
 //***** событие клика поля ввода данных *****/
 function clickInputElement(input, clue, isPassword){
     regErrorPrg.classList.add('hidden');
@@ -40,6 +42,7 @@ password1Input.onclick = function(){
 password2Input.onclick = function(){clickInputElement(this, password2Clue, true)};
 
 
+
 //***** событие ввода данных *****/
 function inputData(input, clue, isPassword){
     // валидация данных
@@ -60,7 +63,6 @@ function inputData(input, clue, isPassword){
 emailInput.addEventListener('input', function(){inputData(this, emailClue, false);});
 password1Input.addEventListener('input', function(){inputData(this, password1Clue, true);});
 password2Input.addEventListener('input', function(){inputData(this, password2Clue, true);});
-
 
 
 
