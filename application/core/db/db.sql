@@ -9,3 +9,7 @@ create table users(
 );
 insert into users(user_email, user_nickname, user_password) values('aladser@mail.ru', 'admin', '@admin@');
 update users set user_email_confirmed = 1 where user_nickname = 'admin';
+
+alter table users add column user_hide_email int(1) default 0;
+alter table users add column user_photo varchar(255);
+ALTER TABLE users MODIFY user_nickname varchar(100) unique;

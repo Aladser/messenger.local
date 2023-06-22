@@ -2,6 +2,7 @@
 
 namespace core\db;
 
+/** класс БД таблицы пользователей */
 class UsersDBTableModel extends DBTableModel{
 
     // проверить существование пользователя
@@ -42,31 +43,44 @@ class UsersDBTableModel extends DBTableModel{
         return $this->db->exec("UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'");
     }
 
-    // изменить пользовательские данные
+    // получить пользовательские данные
+    function getUsersData($email){
+        $query = $this->db->query("select user_nickname, user_hide_email, user_photo from users where user_email = '$email'");
+        $dbData = $query->fetchAll();
+        $data['user-email'] = $email;
+        $data['user_nickname'] = $dbData[0]['user_nickname'];
+        $data['user_hide_email'] = $dbData[0]['user_hide_email'];
+        $data['user_photo'] = $dbData[0]['user_photo'];
+        return $data;
+    }
+
+
+    // сравнение новых данных и в БД
+    function isEqualData($data, $field, $email){
+        $query = $this->db->query("select $field from users WHERE user_email='$email'");
+        $dbData = $query->fetch(\PDO::FETCH_ASSOC)[$field];
+        return $data === $dbData;
+    }
+
+    // изменить пользовательские данные в Бд
     function setUserData($data){
         $rslt = false; 
         $email = $data['user_email']; 
+
+        // проверка уникальности никнейма
+        
+
         // запись никнейма
-        if($data['user_nickname'] !== ''){
-            $nickname = $data['user_nickname'];
-            $rslt  = $rslt | $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
-        }
+        $nickname = $data['user_nickname'];
+        $rslt = $this->isEqualData($nickname, 'user_nickname', $email) ? true : $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
+
         // запись скрытия почты
-        if($data['user_hide_email'] !== ''){
-            $userHideEmail = $data['user_hide_email'];
-            $rslt  = $rslt | $this->db->exec("update users set user_hide_email = '$userHideEmail' where user_email='$email'");
-        }
+        $hideEmail = $data['user_hide_email'];
+        $rslt = $this->isEqualData($hideEmail, 'user_hide_email', $email) ? true : $this->db->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
+
         // запись фото
-        if($data['user_photo'] !== ''){
-            $photo = $data['user_photo'];
-            $query = $this->db->query("select count(*) as count from users where user_email = '$email' and user_photo='$photo'");
-            $isImage = $query->fetch(\PDO::FETCH_ASSOC)['count'] == 1;
-            if(!$isImage){
-                $rslt  = $rslt | $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
-            }
-            else
-                return true;
-        }
+        $photo = $data['user_photo'];
+        $rslt = $this->isEqualData($photo, 'user_photo', $email) ? true : $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
 
         return $rslt;
     }

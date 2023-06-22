@@ -4,22 +4,25 @@
 <div class='container font-roboto mt-4 position-relative' id='container-profile'>
     <div class='d-flex justify-content-center'>
         <div class='profile-img-block me-4'>
-            <img src="application/images/ava_profile.png" id='profile-img' class="rounded-circle profile-img" alt="Avatar" />
+            <?php
+                $photo = is_null($data['user_photo']) ? "application/images/ava_profile.png" : 'application/data/profile_photos//'.$data['user_photo'];
+            ?>
+            <img src="<?=$photo?>" id='profile-img' class="rounded-circle profile-img" alt="Avatar" />
         </div>
         
         <div class='p-4'>
             <table class='table'>
                 <tr>
-                    <td>email:</td>
-                    <td>aladser@mail.ru</td>
+                    <td>почта:</td>
+                    <td><?= $data['user-email'] ?></td>
                 </tr>
                 <tr>
-                    <td>nickname:</td>
-                    <td><input type="text" class='input-nickname border-0' id='input-nickname' value='Aladser' disabled></td>
+                    <td>никнейм:</td>
+                    <td><input type="text" class='input-nickname border-0' id='input-nickname' value="<?= is_null($data['user_nickname']) ? '' : $data['user_nickname']?>" disabled></td>
                 </tr>
             </table>
             <div class="form-check form-switch mb-3 d-flex justify-content-center">
-                <input class="form-check-input" type="checkbox" id="hide-email-input">
+                <input class="form-check-input" type="checkbox" id="hide-email-input" <?=$data['user_hide_email']==1 ? 'checked' : '' ?> >
                 <label class="form-check-label" for="hide-email-input">&nbsp; скрыть почту</label>
             </div>
             <button class='btn btn-bg-C4C4C4 text-white w-100 hidden' id='save-profile-settings-btn'>Сохранить</button>

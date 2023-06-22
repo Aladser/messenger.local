@@ -75,15 +75,14 @@ inputNickname.onblur = () => inputNickname.disabled = true;
 // отправка изменений профиля на сервер
 saveBtn.addEventListener('click', ()=>{
     let data = new URLSearchParams();
-    data.set('user_nickname', originalNickName === inputNickname.value ? '' : inputNickname.value);
-    data.set('user_hide_email', originalIsHideEmail === hideEmailInput.checked ? '' : hideEmailInput.checked);
-    if(originalPhoto !== profileImg.src){
-        fpathArr = profileImg.src.split('/');
-        data.set('user_photo', originalPhoto === profileImg.src ? '' : fpathArr[fpathArr.length - 1]);
-    }
+    data.set('user_nickname', inputNickname.value);
+    data.set('user_hide_email', hideEmailInput.checked ? 1 : 0);
+    fpathArr = profileImg.src.split('/');
+    data.set('user_photo', fpathArr[fpathArr.length - 1]);
 
     fetch('/set-userdata', {method: 'POST', body: data}).then(r => r.text()).then(data => {
         console.log(data);
+        /*
         if(data == 0){
             prgError.classList.remove('hidden');
             prgError.innerHTML = 'серверная ошибка';
@@ -91,5 +90,6 @@ saveBtn.addEventListener('click', ()=>{
         else{
             prgError.classList.add('hidden');
         }
+        */
     });
 });
