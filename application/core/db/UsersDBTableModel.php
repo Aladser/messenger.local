@@ -42,4 +42,33 @@ class UsersDBTableModel extends DBTableModel{
         return $this->db->exec("UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'");
     }
 
+    // изменить пользовательские данные
+    function setUserData($data){
+        $rslt = false; 
+        $email = $data['user_email']; 
+        // запись никнейма
+        if($data['user_nickname'] !== ''){
+            $nickname = $data['user_nickname'];
+            $rslt  = $rslt | $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
+        }
+        // запись скрытия почты
+        if($data['user_hide_email'] !== ''){
+            $userHideEmail = $data['user_hide_email'];
+            $rslt  = $rslt | $this->db->exec("update users set user_hide_email = '$userHideEmail' where user_email='$email'");
+        }
+        // запись фото
+        if($data['user_photo'] !== ''){
+            $photo = $data['user_photo'];
+            $query = $this->db->query("select count(*) as count from users where user_email = '$email' and user_photo='$photo'");
+            $isImage = $query->fetch(\PDO::FETCH_ASSOC)['count'] == 1;
+            if(!$isImage){
+                $rslt  = $rslt | $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
+            }
+            else
+                return true;
+        }
+
+        return $rslt;
+    }
+
 }

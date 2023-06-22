@@ -1,8 +1,10 @@
-<div class='container font-roboto mt-4' id='container-profile'>
+<button class='btn btn-bg-C4C4C4 text-white position-absolute ms-2' id='btn-exit-profile'>Чаты</button>
+<div class='container font-roboto mt-4 position-relative' id='container-profile'>
     <div class='d-flex justify-content-center'>
         <div class='profile-img-block me-4'>
             <img src="application/images/ava_profile.png" id='profile-img' class="rounded-circle profile-img" alt="Avatar" />
         </div>
+        
         <div class='p-4'>
             <table class='table'>
                 <tr>
@@ -20,6 +22,7 @@
             </div>
             <button class='btn btn-bg-C4C4C4 text-white w-100 hidden' id='save-profile-settings-btn'>Сохранить</button>
         </div>
+
         <div class='p-4 w-25'>
             <form method='post' id='upload-file-form' enctype="multipart/form-data">
                 <input type="file" id="select-file-input" name='image' class='hidden'>
@@ -30,4 +33,5 @@
             <button class='btn btn-bg-C4C4C4 btn-profile text-white w-100 mb-2' id='btn-edit-nickname'>Установить nickname</button>
         </div>
     </div>
+    <p class='text-center text-danger fs-5 fw-bolder hidden' id='prg-error'>Ошибка</p>
 </div>

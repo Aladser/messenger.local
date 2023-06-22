@@ -1,7 +1,16 @@
-let hideEmailInput = document.querySelector('#hide-email-input');
-let saveBtn = document.querySelector('#save-profile-settings-btn');
-let selectFileInput = document.querySelector('#select-file-input');
-let inputNickname = document.querySelector('#input-nickname');
+const hideEmailInput = document.querySelector('#hide-email-input');
+const saveBtn = document.querySelector('#save-profile-settings-btn');
+const selectFileInput = document.querySelector('#select-file-input');
+const inputNickname = document.querySelector('#input-nickname');
+const profileImg = document.querySelector('#profile-img');
+const prgError = document.querySelector('#prg-error');
+
+// Исходные пользовательские данные
+const originalNickName = '';
+const originalIsHideEmail = false;
+const originalPhoto = '';
+
+document.querySelector('#btn-exit-profile').onclick = () => window.open('/chats', '_self');
 
 
 
@@ -60,3 +69,27 @@ function writeNickname(input, btn){
 inputNickname.oninput = writeNickname(inputNickname, saveBtn);
 
 inputNickname.onblur = () => inputNickname.disabled = true;
+
+
+
+// отправка изменений профиля на сервер
+saveBtn.addEventListener('click', ()=>{
+    let data = new URLSearchParams();
+    data.set('user_nickname', originalNickName === inputNickname.value ? '' : inputNickname.value);
+    data.set('user_hide_email', originalIsHideEmail === hideEmailInput.checked ? '' : hideEmailInput.checked);
+    if(originalPhoto !== profileImg.src){
+        fpathArr = profileImg.src.split('/');
+        data.set('user_photo', originalPhoto === profileImg.src ? '' : fpathArr[fpathArr.length - 1]);
+    }
+
+    fetch('/set-userdata', {method: 'POST', body: data}).then(r => r.text()).then(data => {
+        console.log(data);
+        if(data == 0){
+            prgError.classList.remove('hidden');
+            prgError.innerHTML = 'серверная ошибка';
+        }
+        else{
+            prgError.classList.add('hidden');
+        }
+    });
+});

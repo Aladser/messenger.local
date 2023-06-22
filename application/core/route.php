@@ -8,14 +8,11 @@ class Route
 	{
 		session_start();
 
-		// чистка кэша изображений
-		foreach (glob('application/data/*') as $file) unlink($file);
-
 		// контроллер и действие по умолчанию
 		$routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
 		$controller_name = !empty($routes) ? $routes : 'Main';
         $action_name = 'index';
-		
+
 		// авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> messenger.local/chats
 		if( $controller_name === 'Main' && (isset($_SESSION['auth']) || isset($_COOKIE['auth'])) ){
 			header('Location: /chats');
