@@ -10,8 +10,8 @@ const originalNickName = '';
 const originalIsHideEmail = false;
 const originalPhoto = '';
 
-document.querySelector('#btn-exit-profile').onclick = () => window.open('/chats', '_self');
-
+document.querySelector('#btn-back-profile').onclick = () => window.open('/chats', '_self');
+document.querySelector('#btn-exit-profile').onclick = () => window.open('/quit', '_self');
 
 
 // изменение видимости кнопки сохранить при переключении чекбокса

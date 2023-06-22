@@ -1,4 +1,6 @@
-<button class='btn btn-bg-C4C4C4 text-white position-absolute ms-2' id='btn-exit-profile'>Чаты</button>
+<button class='btn btn-bg-C4C4C4 text-white position-absolute ms-2' id='btn-back-profile'>Назад</button>
+<button class='btn btn-bg-C4C4C4 text-white position-absolute ms-2 mt-6' id='btn-exit-profile'>Выйти</button>
+
 <div class='container font-roboto mt-4 position-relative' id='container-profile'>
     <div class='d-flex justify-content-center'>
         <div class='profile-img-block me-4'>
