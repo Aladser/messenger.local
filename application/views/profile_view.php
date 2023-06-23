@@ -15,7 +15,7 @@
                 </tr>
                 <tr>
                     <td data-bs-toggle="tooltip">никнейм:</td>
-                    <td><input type="text" class='input-nickname border-0' id='input-nickname' value="<?= is_null($data['user_nickname']) ? '' : $data['user_nickname']?>" disabled></td>
+                    <td><input type="text" class='input-nickname' id='input-nickname' value="<?= is_null($data['user_nickname']) ? '' : $data['user_nickname']?>" disabled></td>
                 </tr>
             </table>
             <div class="form-check form-switch mb-3 d-flex justify-content-center">

@@ -7,9 +7,7 @@ class UsersDBTableModel extends DBTableModel{
 
     // проверить существование пользователя
     function existsUser($email){
-        $query = $this->db->query("select count(*) as count from users where user_email = '$email'");
-        $count = $query->fetch(\PDO::FETCH_ASSOC)['count'];
-        return intval($count) === 1;
+        return $this->db->query("select count(*) as count from users where user_email = '$email'")['count'] == 1;
     }
     
     // добавить нового пользователя
@@ -20,8 +18,7 @@ class UsersDBTableModel extends DBTableModel{
 
     // проверка авторизации
     function checkUser($email, $password){
-        $query = $this->db->query("select user_password from users where user_email='$email'");
-        $passhash = $query->fetch(\PDO::FETCH_ASSOC)['user_password'];
+        $passhash = $this->db->query("select user_password from users where user_email='$email'")['user_password'];
         return password_verify($password, $passhash);
     }
 
@@ -32,21 +29,19 @@ class UsersDBTableModel extends DBTableModel{
 
     // проверить хэш пользователя
     function checkUserHash($email, $hash){
-        $query = $this->db->query("select count(*) as count from users where user_email = '$email' and user_hash='$hash'");
-        $hash = $query->fetch(\PDO::FETCH_ASSOC)['count'];
-        return intval($hash) === 1;
+        $hash = $this->db->query("select count(*) as count from users where user_email = '$email' and user_hash='$hash'")['count'];
+        return $hash == 1;
     }
 
     // подтвердить почту
     function confirmEmail($email){
-        $this->db->query("UPDATE users SET user_hash=NULL WHERE user_email='$email'");
+        $this->db->exec("UPDATE users SET user_hash=NULL WHERE user_email='$email'");
         return $this->db->exec("UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'");
     }
 
     // получить пользовательские данные
     function getUsersData($email){
-        $query = $this->db->query("select user_nickname, user_hide_email, user_photo from users where user_email = '$email'");
-        $dbData = $query->fetchAll();
+        $dbData = $this->db->query("select user_nickname, user_hide_email, user_photo from users where user_email = '$email'", false);
         $data['user-email'] = $email;
         $data['user_nickname'] = $dbData[0]['user_nickname'];
         $data['user_hide_email'] = $dbData[0]['user_hide_email'];
@@ -57,8 +52,7 @@ class UsersDBTableModel extends DBTableModel{
 
     // сравнение новых данных и в БД
     function isEqualData($data, $field, $email){
-        $query = $this->db->query("select $field from users WHERE user_email='$email'");
-        $dbData = $query->fetch(\PDO::FETCH_ASSOC)[$field];
+        $dbData = $this->db->query("select $field from users WHERE user_email='$email'")[$field];
         return $data === $dbData;
     }
 
@@ -87,8 +81,7 @@ class UsersDBTableModel extends DBTableModel{
 
     // проверить уникальность никнейма
     function isUniqueNickname($nickname){
-        $query = $this->db->query("select count(*) as count from users where user_nickname='$nickname'");
-        return $query->fetch(\PDO::FETCH_ASSOC)['count'] == 0;
+        return $this->db->query("select count(*) as count from users where user_nickname='$nickname'")['count'] == 0;
     }
 
 }

@@ -31,12 +31,15 @@ class DBQueryCtl{
         $this->dbConnection = null;
     }
     
-    // Подготавливает и выполняет оператор SQL без заполнителей
-    function query($sql){
+    /**
+     *  Подготавливает и выполняет оператор SQL без заполнителей
+     *  $isOneValue: true - одно значение, false - несколько строк
+    */ 
+    function query($sql, $isOneValue=true){
         $this->connect();
-        $rslt = $this->dbConnection->query($sql);
+        $query = $this->dbConnection->query($sql);
         $this->disconnect();
-        return $rslt;
+        return $isOneValue ? $query->fetch(\PDO::FETCH_ASSOC) : $query->fetchAll(); 
     }
 
     //выполняет оператор SQL в одном вызове функции, возвращая количество строк, затронутых оператором
