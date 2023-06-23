@@ -1,6 +1,3 @@
-<button class='btn btn-bg-C4C4C4 text-white position-absolute ms-2' id='btn-back-profile'>Назад</button>
-<button class='btn btn-bg-C4C4C4 text-white position-absolute ms-2 mt-6' id='btn-exit-profile'>Выйти</button>
-
 <div class='container font-roboto mt-4 position-relative' id='container-profile'>
     <div class='d-flex justify-content-center'>
         <div class='profile-img-block me-4'>
@@ -17,7 +14,7 @@
                     <td><?= $data['user-email'] ?></td>
                 </tr>
                 <tr>
-                    <td>никнейм:</td>
+                    <td data-bs-toggle="tooltip">никнейм:</td>
                     <td><input type="text" class='input-nickname border-0' id='input-nickname' value="<?= is_null($data['user_nickname']) ? '' : $data['user_nickname']?>" disabled></td>
                 </tr>
             </table>
@@ -36,6 +33,7 @@
             </form>
             
             <button class='btn btn-bg-C4C4C4 btn-profile text-white w-100 mb-2' id='btn-edit-nickname'>Установить nickname</button>
+            <button class='btn btn-bg-C4C4C4 text-white w-100' id='btn-back-profile'>Назад</button>
         </div>
     </div>
     <p class='text-center text-danger fs-5 fw-bolder hidden' id='prg-error'>Ошибка</p>

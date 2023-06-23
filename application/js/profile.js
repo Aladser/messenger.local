@@ -5,15 +5,11 @@ const inputNickname = document.querySelector('#input-nickname');
 const profileImg = document.querySelector('#profile-img');
 const prgError = document.querySelector('#prg-error');
 
-// Исходные пользовательские данные
-const originalNickName = '';
-const originalIsHideEmail = false;
-const originalPhoto = '';
-
 document.querySelector('#btn-back-profile').onclick = () => window.open('/chats', '_self');
-document.querySelector('#btn-exit-profile').onclick = () => window.open('/quit', '_self');
 
 
+
+// ЧЕКБОКС
 // изменение видимости кнопки сохранить при переключении чекбокса
 function changeHideEmailInputVisibility(input, btn){
     let startState = input.checked; // изначальное состояние чекбокса скрытия почты
@@ -30,31 +26,14 @@ hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn
 
 
 
-// загрузка изображения на сервер
-document.querySelector('#edit-photo-btn').onclick = () => selectFileInput.click();
-
-selectFileInput.onchange = () => {
-    saveBtn.classList.remove('hidden');
-    document.querySelector('#upload-file-btn').click();
-}
-
-document.querySelector('#upload-file-form').onsubmit = e => {
-    e.preventDefault();
-    if(selectFileInput.value !== ''){
-        fetch('/upload-file', {method: 'POST', body: new FormData(e.target)}).then(response => response.text()).then(data => {
-            document.querySelector('#profile-img').src = data;
-        });
-    }
-}
-
-
-
-// установка nickname
+// НИКНЕЙМ
+// возможность записи нового никнейма
 document.querySelector('#btn-edit-nickname').onclick = () => {
     inputNickname.disabled = false;
     inputNickname.focus();
 }
 
+// ввод никнейма
 function writeNickname(input, btn){
     let startValue = input.value; // изначальный никнейм
     return function func(){
@@ -68,7 +47,63 @@ function writeNickname(input, btn){
 }
 inputNickname.oninput = writeNickname(inputNickname, saveBtn);
 
-inputNickname.onblur = () => inputNickname.disabled = true;
+// снятие фокуса с поля никнейма
+inputNickname.onblur = function(){
+    let originalNickname = inputNickname.value;
+    return function(){
+        if(inputNickname.classList.contains('input-nickname-error')){
+            inputNickname.value = originalNickname;
+            inputNickname.classList.remove('input-nickname-error');
+        }
+        inputNickname.disabled = true;
+    };
+}();
+
+// Проверка введенного никнейма
+function writeNickname(input, btn){
+    let startValue = input.value; // изначальный никнейм
+    return function func(){
+        if(input.value !== startValue){
+            let data = new URLSearchParams();
+            data.set('nickname', input.value);
+            fetch('/is-unique-nickname', {method:'post', body:data}).then(r=>r.text().then(data => {
+                if(data == 1){
+                    btn.classList.remove('hidden');
+                    inputNickname.classList.remove('input-nickname-error');
+                }
+                else{
+                    btn.classList.add('hidden');
+                    inputNickname.classList.add('input-nickname-error');   
+                }
+            }));
+        }
+        else{
+            btn.classList.add('hidden');
+        }
+    }
+}
+
+
+
+// ИЗОБРАЖЕНИЕ ПРОФИЛЯ
+document.querySelector('#edit-photo-btn').onclick = () => selectFileInput.click();
+// оправка формы на сервер
+selectFileInput.onchange = () => {
+    saveBtn.classList.remove('hidden');
+    document.querySelector('#upload-file-btn').click();
+}
+
+// установка фото профиля
+document.querySelector('#upload-file-form').onsubmit = e => {
+    e.preventDefault();
+    if(selectFileInput.value !== ''){
+        fetch('/upload-file', {method: 'POST', body: new FormData(e.target)}).then(response => response.text()).then(filename => {
+            let imgFile = filename != '' ? `application/data/temp/${filename}` : 'application/images/ava_profile.png';
+            document.querySelector('#profile-img').src = imgFile;
+            selectFileInput.value = ''; // очистка элемента выбора файлов
+        });
+    }
+}
 
 
 
@@ -81,15 +116,12 @@ saveBtn.addEventListener('click', ()=>{
     data.set('user_photo', fpathArr[fpathArr.length - 1]);
 
     fetch('/set-userdata', {method: 'POST', body: data}).then(r => r.text()).then(data => {
-        console.log(data);
-        /*
         if(data == 0){
-            prgError.classList.remove('hidden');
+            saveBtn.classList.remove('hidden');
             prgError.innerHTML = 'серверная ошибка';
         }
         else{
-            prgError.classList.add('hidden');
+            saveBtn.classList.add('hidden');
         }
-        */
     });
 });

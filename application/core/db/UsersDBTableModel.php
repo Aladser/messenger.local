@@ -85,4 +85,10 @@ class UsersDBTableModel extends DBTableModel{
         return $rslt;
     }
 
+    // проверить уникальность никнейма
+    function isUniqueNickname($nickname){
+        $query = $this->db->query("select count(*) as count from users where user_nickname='$nickname'");
+        return $query->fetch(\PDO::FETCH_ASSOC)['count'] == 0;
+    }
+
 }

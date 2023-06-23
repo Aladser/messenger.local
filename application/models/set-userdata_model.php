@@ -20,8 +20,10 @@ class SetUserDataModel extends \core\Model
         $filename = $_POST['user_photo'];
         $frompath = dirname(__DIR__, 1).'\\data\temp\\'.$filename;
         $topath = dirname(__DIR__, 1).'\\data\profile_photos\\'.$filename;
+        
         // если загружено новое изображение
         if(file_exists($frompath)){
+            foreach (glob("application/data/profile_photos/$email*") as $file) unlink($file); // удаление старых файлов профиля
             if(rename($frompath, $topath)){
                 $data['user_photo'] = $filename;
                 echo $this->users->setUserData($data) ? 1 : 0;
@@ -29,10 +31,13 @@ class SetUserDataModel extends \core\Model
             else{
                 echo 0;
             }
+            foreach (glob("application/data/temp/$email*") as $file) unlink($file);
         }
         else{
             $data['user_photo'] = $filename;
             echo $this->users->setUserData($data) ? 1 : 0;
         }
+
+        foreach(glob("application/data/temp/$email*") as $file) unlink($file);
     }
 }
