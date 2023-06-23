@@ -33,7 +33,7 @@
                 </table>
             </div>
 
-            <div class='msg msg-contact'>
+            <div class='msg d-flex justify-content-end'>
                 <table class='msg-table msg-table-contact'>
                     <tr><td class='msg__text'>
                         Между всех времён без имён и лиц<br>
@@ -71,7 +71,7 @@
                 </table>
             </div>
 
-            <div class='msg msg-contact'>
+            <div class='msg d-flex justify-content-end'>
                 <table class='msg-table msg-table-contact'>
                     <tr><td class='msg__text'>
                     Что нас ждёт, море хранит молчанье. <br>

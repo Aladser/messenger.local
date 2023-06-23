@@ -37,14 +37,7 @@
     width: 0;
 }
 
-.msg-contact{
-    display:-webkit-box;
-    display:-ms-flexbox;
-    display:flex;
-    -webkit-box-pack:right;
-        -ms-flex-pack:right;
-            justify-content:right;
-}
+
 .msg-table{
     margin-bottom: 0.3rem;
     background-color: white;
