@@ -48,12 +48,12 @@ class UsersDBTableModel extends DBTableModel{
     }
 
     // список пользователей
-    function getUsers($phrase){
+    function getUsers($phrase, $email){
         $sql = "
-        select user_nickname as username, user_photo from users where user_nickname  != '' and user_nickname is not null and user_nickname  like '%$phrase%'
+        select user_nickname as username, user_photo from users where user_nickname  != '' and user_nickname is not null and user_email != '$email' and user_nickname  like '%$phrase%'
         and user_email not in (select user_email from users where user_hide_email  = 0 and user_email  like '%$phrase%')
         union 
-        select user_email, user_photo as username from users where user_hide_email  = 0 and user_email  like '%$phrase%';
+        select user_email, user_photo as username from users where user_hide_email  = 0 and user_email != '$email' and user_email  like '%$phrase%';
         ";
         return $this->db->query($sql, false);
     }

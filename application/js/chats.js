@@ -13,7 +13,7 @@ function setAddContact(){
 
 // событие добавления контакта
 findContactsInput.addEventListener('input', function(){
-    fetch(`/find-contacts?user=${this.value}`, {method: 'get'}).then(r=>r.json()).then(data => {
+    fetch(`/find-contacts?userphrase=${this.value}`, {method: 'get'}).then(r=>r.json()).then(data => {
         contacts.innerHTML = '';
         //  отображение найденных контактов в списке контактов
         data.forEach(element => {

@@ -10,7 +10,9 @@ class FindContactsModel extends \core\Model
     }
 
     public function run(){
-        echo json_encode($this->users->getUsers($_GET['user']));
+        session_start();
+        $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
+        echo json_encode($this->users->getUsers($_GET['userphrase'], $email));
     }
 }
 
