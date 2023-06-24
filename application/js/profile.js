@@ -2,10 +2,9 @@ const hideEmailInput = document.querySelector('#hide-email-input');
 const saveBtn = document.querySelector('#save-profile-settings-btn');
 const selectFileInput = document.querySelector('#select-file-input');
 const inputNickname = document.querySelector('#input-nickname');
-const profileImg = document.querySelector('#profile-img');
 const prgError = document.querySelector('#prg-error');
 
-document.querySelector('#btn-back-profile').onclick = () => window.open('/chats', '_self');
+document.querySelector('#btn-back-profile').onclick = () => window.open('/back', '_self');
 
 
 
@@ -112,7 +111,7 @@ saveBtn.addEventListener('click', ()=>{
     let data = new URLSearchParams();
     data.set('user_nickname', inputNickname.value);
     data.set('user_hide_email', hideEmailInput.checked ? 1 : 0);
-    fpathArr = profileImg.src.split('/');
+    fpathArr = document.querySelector('#profile-img').src.split('/');
     data.set('user_photo', fpathArr[fpathArr.length - 1]);
 
     fetch('/set-userdata', {method: 'POST', body: data}).then(r => r.text()).then(data => {

@@ -18,6 +18,11 @@
     padding-right: 1rem; 
 }
 
+.contact-img-div{
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+}
 
 .option-href{
     text-decoration: none;

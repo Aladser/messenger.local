@@ -2,8 +2,10 @@
     <div class='contacts pt-2 ps-2 pe-2'>
         <input type="text" class='w-100 mb-2 form-control' placeholder='поиск контакта' id='find-contacts-input'>
         <div id='contacts'>
-            <div class='split-word'> 
-                <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
+            <div> 
+                <div class='contact-img-div'>
+                    <img class='pe-2 pb-2 img' src="application/data/profile_photos/aladser@gmail.com.1.png" alt="фото">
+                </div>
                 <span class='contact'>Andrei Avramenko</span> 
             </div>
             <div class='split-word'>

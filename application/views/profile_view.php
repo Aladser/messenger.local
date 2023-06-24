@@ -9,7 +9,7 @@
                 $photo = 'application/data/profile_photos//'.$data['user_photo'];
             }
             ?>
-            <img src="<?=$photo?>" id='profile-img' class="rounded-circle profile-img" alt="Avatar" />
+            <img src="<?=$photo?>" id='profile-img' class="rounded-circle img" alt="Avatar" />
         </div>
         
         <div class='p-4'>
