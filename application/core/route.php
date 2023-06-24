@@ -13,13 +13,14 @@ class Route
 		$controller_name = !empty($routes) ? $routes : 'Main';
         $action_name = 'index';
 
-		// авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> messenger.local/chats
+		// авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> /chats
 		if( $controller_name === 'Main' && (isset($_SESSION['auth']) || isset($_COOKIE['auth'])) ){
-			header('Location: /chats');
+			$controller_name = 'chats';
 		}
-		// редирект messenger.local/chats без авторизации -> messenger.local
+
+		// редирект /chats или /profile без авторизации -> messenger.local
 		if(($controller_name === 'chats' || $controller_name === 'profile') && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))){
-			header('Location: /Main');
+			$controller_name = 'Main';
 		}
 
 		// добавляем префиксы
