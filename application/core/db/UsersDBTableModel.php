@@ -82,15 +82,15 @@ class UsersDBTableModel extends DBTableModel{
 
         // запись никнейма
         $nickname = $data['user_nickname'];
-        $rslt = $this->isEqualData($nickname, 'user_nickname', $email) ? true : $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
+        $rslt |= $this->isEqualData($nickname, 'user_nickname', $email) ? true : $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
 
         // запись скрытия почты
         $hideEmail = $data['user_hide_email'];
-        $rslt = $this->isEqualData($hideEmail, 'user_hide_email', $email) ? true : $this->db->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
+        $rslt |= $this->isEqualData($hideEmail, 'user_hide_email', $email) ? true : $this->db->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
 
         // запись фото
         $photo = $data['user_photo'];
-        $rslt = $this->isEqualData($photo, 'user_photo', $email) ? true : $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
+        $rslt |= $this->isEqualData($photo, 'user_photo', $email) ? true : $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
 
         return $rslt;
     }

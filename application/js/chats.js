@@ -23,7 +23,7 @@ findContactsInput.addEventListener('input', function(){
 
             // контейнер изображения
             let contactImgDiv = document.createElement('div');
-            contactImgDiv.className = 'contact-img-div';
+            contactImgDiv.className = 'img-div';
 
             // фото профиля
             let img = document.createElement('img');

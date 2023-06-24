@@ -52,14 +52,23 @@ function writeNickname(input, btn){
         if(input.value !== startValue){
             let data = new URLSearchParams();
             data.set('nickname', input.value);
+
+            // пустое поле
+            if(input.value === ''){
+                btn.classList.add('hidden');
+                return;
+            }
+
             fetch('/is-unique-nickname', {method:'post', body:data}).then(r=>r.text().then(data => {
                 if(data == 1){
                     btn.classList.remove('hidden');
                     inputNickname.classList.remove('input-nickname-error');
+                    prgError.classList.add('hidden'); 
                 }
                 else{
                     btn.classList.add('hidden');
-                    inputNickname.classList.add('input-nickname-error');   
+                    inputNickname.classList.add('input-nickname-error');
+                    prgError.classList.remove('hidden');   
                 }
             }));
         }
@@ -77,6 +86,7 @@ inputNickname.onblur = function(){
         if(inputNickname.classList.contains('input-nickname-error')){
             inputNickname.value = originalNickname;
             inputNickname.classList.remove('input-nickname-error');
+            prgError.classList.add('hidden'); 
         }
         inputNickname.disabled = true;
     };

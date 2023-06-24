@@ -1,3 +1,11 @@
+.profile-container{
+    display: flex;
+    justify-content: center;
+}
+.options{
+    width: 15%;
+}
+
 .mt-6{
     margin-top: 3rem;
 }
@@ -5,13 +13,6 @@
 .profile-img-block{
     height: 20rem;
     width: 20rem;
-}
-
-@media (max-width: 780px) {
-    .btn-profile{
-        font-size: 0.8rem;
-        padding-right: 5rem;
-    }
 }
 
 .input-nickname{
@@ -27,4 +28,17 @@
 .input-nickname-error{
     border: 1px solid red;
     box-shadow: 2px 2px 1px 1px red;
+}
+
+@media (max-width: 780px) {
+    .profile-container{
+        display: block;
+    }
+    .options{
+        width: 50%;
+        margin: auto;
+    }
+    .profile-img-block{
+        margin: auto;
+    }
 }

@@ -19,10 +19,11 @@
 
 
 /* раздел контактов */
-.contact-img-div{
+.img-div{
     width: 2rem;
     height: 2rem;
-    display: inline-block;
+    display: none;
+    margin: auto;
 }
 
 .add-contact-btn:hover{
@@ -38,6 +39,11 @@
 .option-href:hover{
     color: black;
     font-weight: bolder;
+}
+.option{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
 }
 
 .messages{
@@ -77,12 +83,6 @@
     background-size: cover;
 }
 
-.option{
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 400;
-}
-
 .send-msg{
     width: 97%;
 }
@@ -115,6 +115,12 @@
     }
     .send-msg{
         width: 95%;
+    }
+    .img-div{
+        display: inline-block;
+    }
+    .option-name{
+        display: none;
     }
 }
 @media (max-width: 550px) {
