@@ -2,7 +2,10 @@
 
 namespace core\db;
 
-/** класс БД таблицы пользователей */
+/**
+ *  класс БД таблицы пользователей 
+ *  отвечает за все запросы в таблице пользователей
+*/
 class UsersDBTableModel extends DBTableModel{
 
     // проверить существование пользователя
@@ -39,8 +42,24 @@ class UsersDBTableModel extends DBTableModel{
         return $this->db->exec("UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'");
     }
 
+    // проверить уникальность никнейма
+    function isUniqueNickname($nickname){
+        return $this->db->query("select count(*) as count from users where user_nickname='$nickname'")['count'] == 0;
+    }
+
+    // список пользователей
+    function getUsers($phrase){
+        $sql = "
+        select user_nickname as username from users where user_nickname  != '' and user_nickname is not null and user_nickname  like '%$phrase%'
+        and user_email not in (select user_email from users where user_hide_email  = 0 and user_email  like '%$phrase%')
+        union 
+        select user_email as username from users where user_hide_email  = 0 and user_email  like '%$phrase%';
+        ";
+        return $this->db->query($sql, false);
+    }
+
     // получить пользовательские данные
-    function getUsersData($email){
+    function getUserData($email){
         $dbData = $this->db->query("select user_nickname, user_hide_email, user_photo from users where user_email = '$email'", false);
         $data['user-email'] = $email;
         $data['user_nickname'] = $dbData[0]['user_nickname'];
@@ -51,7 +70,7 @@ class UsersDBTableModel extends DBTableModel{
 
 
     // сравнение новых данных и в БД
-    function isEqualData($data, $field, $email){
+    private function isEqualData($data, $field, $email){
         $dbData = $this->db->query("select $field from users WHERE user_email='$email'")[$field];
         return $data === $dbData;
     }
@@ -60,9 +79,6 @@ class UsersDBTableModel extends DBTableModel{
     function setUserData($data){
         $rslt = false; 
         $email = $data['user_email']; 
-
-        // проверка уникальности никнейма
-        
 
         // запись никнейма
         $nickname = $data['user_nickname'];
@@ -78,10 +94,4 @@ class UsersDBTableModel extends DBTableModel{
 
         return $rslt;
     }
-
-    // проверить уникальность никнейма
-    function isUniqueNickname($nickname){
-        return $this->db->query("select count(*) as count from users where user_nickname='$nickname'")['count'] == 0;
-    }
-
 }

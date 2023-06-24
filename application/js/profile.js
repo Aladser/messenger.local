@@ -27,7 +27,7 @@ hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn
 
 
 // НИКНЕЙМ
-// возможность записи нового никнейма
+// активирует поле ввода нового никнейма
 document.querySelector('#btn-edit-nickname').onclick = () => {
     inputNickname.disabled = false;
     inputNickname.focus();
@@ -45,19 +45,6 @@ function writeNickname(input, btn){
         }
     }
 }
-inputNickname.oninput = writeNickname(inputNickname, saveBtn);
-
-// снятие фокуса с поля никнейма
-inputNickname.onblur = function(){
-    let originalNickname = inputNickname.value;
-    return function(){
-        if(inputNickname.classList.contains('input-nickname-error')){
-            inputNickname.value = originalNickname;
-            inputNickname.classList.remove('input-nickname-error');
-        }
-        inputNickname.disabled = true;
-    };
-}();
 
 // Проверка введенного никнейма
 function writeNickname(input, btn){
@@ -82,6 +69,19 @@ function writeNickname(input, btn){
         }
     }
 }
+inputNickname.oninput = writeNickname(inputNickname, saveBtn);
+
+// снятие фокуса с поля никнейма
+inputNickname.onblur = function(){
+    let originalNickname = inputNickname.value;
+    return function(){
+        if(inputNickname.classList.contains('input-nickname-error')){
+            inputNickname.value = originalNickname;
+            inputNickname.classList.remove('input-nickname-error');
+        }
+        inputNickname.disabled = true;
+    };
+}();
 
 
 

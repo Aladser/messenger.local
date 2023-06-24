@@ -1,18 +1,21 @@
 <div class='container font-roboto h-80 bg-c4c4c4 p-0 d-flex'>
     <div class='contacts pt-2 ps-2 pe-2'>
-        <input type="text" class='w-100 mb-2 form-control' placeholder='поиск контакта'>
-        <div class='split-word'> 
-            <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
-            <span class='contact'>Andrei Avramenko</span> </div>
-        <div class='split-word'>
-            <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
-            <span class='contact'>Denis Demin</span></div>
-        <div class='split-word'>
-            <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
-            <span class='contact'>Евгения Городецкая</span></div>
-        <div class='split-word'>
-            <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
-            <span class='contact'>Богдан Барабанщиков</span></div>
+        <input type="text" class='w-100 mb-2 form-control' placeholder='поиск контакта' id='find-contacts-input'>
+        <div id='contacts'>
+            <div class='split-word'> 
+                <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
+                <span class='contact'>Andrei Avramenko</span> 
+            </div>
+            <div class='split-word'>
+                <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
+                <span class='contact'>Denis Demin</span></div>
+            <div class='split-word'>
+                <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
+                <span class='contact'>Евгения Городецкая</span></div>
+            <div class='split-word'>
+                <img class='pe-2 pb-2' src="application/images/ava.png" alt="фото">
+                <span class='contact'>Богдан Барабанщиков</span></div>
+        </div>
     </div>
     
     <div class='messages-container pt-2 pe-2 border-start border-end border-dark position-relative padding-left-1dot5prcts padding-right-0dot75'>

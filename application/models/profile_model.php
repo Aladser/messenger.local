@@ -12,7 +12,7 @@ class ProfileModel extends \core\Model
     public function run(){
         session_start();
         $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
-        return $this->users->getUsersData($email);
+        return $this->users->getUserData($email);
     }
 }
 
