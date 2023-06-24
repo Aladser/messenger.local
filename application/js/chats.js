@@ -7,7 +7,7 @@ const contacts = document.querySelector('#contacts');
 // добавить контакт в БД
 function setAddContact(){
     return function(){
-        console.log('клик')
+        console.log('клик');
     };
 }
 
@@ -17,9 +17,11 @@ findContactsInput.addEventListener('input', function(){
         contacts.innerHTML = '';
         //  отображение найденных контактов в списке контактов
         data.forEach(element => {
+            // контейнер контакта
             let contact = document.createElement('div');
             contact.className = 'position-relative';
 
+            // контейнер изображения
             let contactImgDiv = document.createElement('div');
             contactImgDiv.className = 'contact-img-div';
 
@@ -39,6 +41,7 @@ findContactsInput.addEventListener('input', function(){
             contactImgDiv.appendChild(img);
             contact.appendChild(contactImgDiv);
 
+            // имя контакта
             let name = document.createElement('span');
             name.className = 'contact img';
             name.innerHTML = element['username'];
@@ -61,5 +64,5 @@ findContactsInput.addEventListener('input', function(){
 
 // снятие фокус с элемента поиска контактов
 findContactsInput.onblur = () => {
-    
+    contacts.innerHTML = '';
 };
