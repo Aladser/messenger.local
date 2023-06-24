@@ -6,25 +6,25 @@
                 <div class='img-div'>
                     <img class='pe-2 pb-2 img' src="application/data/profile_photos/aladser@gmail.com.1.png" alt="фото">
                 </div>
-                <span class='contact'>Andrei Avramenko</span>
+                <span class='contact text-break'>Andrei Avramenko</span>
             </div>
             <div class='position-relative'> 
                 <div class='img-div'>
                     <img class='pe-2 pb-2 img' src="application/images/ava.png" alt="фото">
                 </div>
-                <span class='contact'>Denis Demin</span>
+                <span class='contact text-break'>Denis Demin</span>
             </div>
             <div class='position-relative'> 
                 <div class='img-div'>
                     <img class='pe-2 pb-2 img' src="application/images/ava.png" alt="фото">
                 </div>
-                <span class='contact'>Евгения Городецкая</span>
+                <span class='contact text-break'>Евгения Городецкая</span>
             </div>
             <div class='position-relative'> 
                 <div class='img-div'>
                     <img class='pe-2 pb-2 img' src="application/images/ava.png" alt="фото">
                 </div>
-                <span class='contact'>Богдан Барабанщиков</span>
+                <span class='contact text-break'>Богдан Барабанщиков</span>
             </div>
         </div>
     </div>
@@ -139,19 +139,19 @@
     <div class='options-container pt-2'>
         <div class='option'>
             <a href="/profile" class='option-href contact-img-div'>
-                <div class='img-div'><img src="application/images/profile.png" class='img'></div>
+                <div class='option-img-div'><img src="application/images/profile.png" class='img'></div>
                 <span class='option-name'>Профиль</span>
             </a>
         </div>
         <div class='option'>
             <a href="" class='option-href contact-img-div'>
-                <div class='img-div'><img src="application/images/settings.png" class='img'></div>
+                <div class='option-img-div'><img src="application/images/settings.png" class='img'></div>
                 <span class='option-name'>Настройки</span>
             </a>
         </div>
         <div class='option'>
             <a href="/quit" class='option-href contact-img-div'>
-                <div class='img-div'><img src="application/images/exit.png" class='img'></div>
+                <div class='option-img-div'><img src="application/images/exit.png" class='img'></div>
                 <span class='option-name'>Выйти</span>
             </a>
         </div>

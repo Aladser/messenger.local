@@ -18,12 +18,23 @@
 }
 
 
-/* раздел контактов */
+/* изображения */
 .img-div{
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+}
+.option-img-div{
     width: 2rem;
     height: 2rem;
     display: none;
     margin: auto;
+}
+.img-btn{
+    height: 100%;
+    width: auto;
+    border: none;
+    background-size: cover;
 }
 
 .add-contact-btn:hover{
@@ -45,6 +56,7 @@
     font-style: normal;
     font-weight: 400;
 }
+
 
 .messages{
     overflow-y: scroll;
@@ -73,14 +85,6 @@
     padding-left: 0.4rem;
     padding-right: 3rem;
     color: #666666;
-}
-
-
-.img-btn{
-    height: 100%;
-    width: auto;
-    border: none;
-    background-size: cover;
 }
 
 .send-msg{
@@ -116,7 +120,7 @@
     .send-msg{
         width: 95%;
     }
-    .img-div{
+    .option-img-div{
         display: inline-block;
     }
     .option-name{

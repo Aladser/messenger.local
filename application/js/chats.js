@@ -43,7 +43,7 @@ findContactsInput.addEventListener('input', function(){
 
             // имя контакта
             let name = document.createElement('span');
-            name.className = 'contact img';
+            name.className = 'contact text-break';
             name.innerHTML = element['username'];
             contact.appendChild(name);
 
