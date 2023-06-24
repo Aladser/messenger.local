@@ -17,11 +17,19 @@
     padding-right: 1rem; 
 }
 
+
+/* раздел контактов */
 .contact-img-div{
     width: 2rem;
     height: 2rem;
     display: inline-block;
 }
+
+.add-contact-btn:hover{
+    cursor: pointer;
+    font-weight: bolder;
+}
+
 
 .option-href{
     text-decoration: none;

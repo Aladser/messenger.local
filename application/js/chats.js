@@ -6,7 +6,6 @@ findContactsInput.addEventListener('input', function(){
     fetch(`/find-contacts?user=${this.value}`, {method: 'get'}).then(r=>r.json()).then(data => {
         contacts.innerHTML = '';
         //  отображение найденных контактов в списке контактов
-        console.log(data);
         data.forEach(element => {
             let contact = document.createElement('div');
             contact.className = 'position-relative';
@@ -37,13 +36,9 @@ findContactsInput.addEventListener('input', function(){
 
             // кнопка добавить контакт
             let addContactBtn = document.createElement('div');
-            let addContactHref = document.createElement('a');
-            addContactBtn.className = 'position-absolute top-0 end-0';
-            addContactHref.className = 'text-decoration-none text-dark';
-            addContactHref.title = 'добавить в контакты';
-            addContactHref.innerHTML = '&#43;';
-            addContactHref.href = '';
-            addContactBtn.appendChild(addContactHref);
+            addContactBtn.className = 'add-contact-btn position-absolute top-0 end-0';
+            addContactBtn.title = 'добавить в контакты';
+            addContactBtn.innerHTML = '&#43';
             contact.appendChild(addContactBtn);
 
             contacts.appendChild(contact);
@@ -55,3 +50,7 @@ findContactsInput.addEventListener('input', function(){
 findContactsInput.onblur = () => {
     
 };
+
+document.querySelectorAll('.add-contact-btn').forEach( element =>{
+    console.log('клик');
+});
