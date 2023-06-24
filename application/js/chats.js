@@ -9,7 +9,7 @@ findContactsInput.addEventListener('input', function(){
         console.log(data);
         data.forEach(element => {
             let contact = document.createElement('div');
-            contact.className = 'split-word';
+            contact.className = 'position-relative';
 
             let contactImgDiv = document.createElement('div');
             contactImgDiv.className = 'contact-img-div';
@@ -35,6 +35,17 @@ findContactsInput.addEventListener('input', function(){
             name.innerHTML = element['username'];
             contact.appendChild(name);
 
+            // кнопка добавить контакт
+            let addContactBtn = document.createElement('div');
+            let addContactHref = document.createElement('a');
+            addContactBtn.className = 'position-absolute top-0 end-0';
+            addContactHref.className = 'text-decoration-none text-dark';
+            addContactHref.title = 'добавить в контакты';
+            addContactHref.innerHTML = '&#43;';
+            addContactHref.href = '';
+            addContactBtn.appendChild(addContactHref);
+            contact.appendChild(addContactBtn);
+
             contacts.appendChild(contact);
         });
     });
@@ -42,5 +53,5 @@ findContactsInput.addEventListener('input', function(){
 
 // снятие фокус с элемента поиска контактов
 findContactsInput.onblur = () => {
-    contacts.innerHTML = '';
+    
 };
