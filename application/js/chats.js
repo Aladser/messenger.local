@@ -51,13 +51,15 @@ findContactsInput.addEventListener('input', function(){
             name.innerHTML = element['username'];
             contact.appendChild(name);
 
-            // кнопка добавить контакт
-            let addContactBtn = document.createElement('div');
-            addContactBtn.className = 'add-contact-btn position-absolute top-0 end-0';
-            addContactBtn.title = 'добавить в контакты';
-            addContactBtn.innerHTML = '&#43';
-            addContactBtn.onclick = setAddContact(addContactBtn, element['username']); //добавление контакта в БД
-            contact.appendChild(addContactBtn);
+            // кнопка добавить контакт, если пользователь не является контактом
+            if(element['is_contact'] == 0){
+                let addContactBtn = document.createElement('div');
+                addContactBtn.className = 'add-contact-btn position-absolute top-0 end-0';
+                addContactBtn.title = 'добавить в контакты';
+                addContactBtn.innerHTML = '&#43';
+                addContactBtn.onclick = setAddContact(addContactBtn, element['username']); //добавление контакта в БД
+                contact.appendChild(addContactBtn);
+            }
 
             contacts.appendChild(contact);
         });
