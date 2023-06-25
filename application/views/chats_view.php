@@ -138,21 +138,21 @@
     </div>
     <div class='options-container pt-2'>
         <div class='option'>
-            <a href="/profile" class='option-href contact-img-div'>
-                <div class='option-img-div'><img src="application/images/profile.png" class='img'></div>
-                <span class='option-name'>Профиль</span>
+            <a href="/profile" class='option-link contact-img-div'>
+            <div class='option-img-div'><img src="application/images/profile.png" class='img'></div>
+            <span class='option-name'>Профиль</span>
             </a>
         </div>
         <div class='option'>
-            <a href="" class='option-href contact-img-div'>
-                <div class='option-img-div'><img src="application/images/settings.png" class='img'></div>
-                <span class='option-name'>Настройки</span>
+            <a href="" class='option-link contact-img-div'>
+            <div class='option-img-div'><img src="application/images/settings.png" class='img'></div>
+            <span class='option-name'>Настройки</span>
             </a>
         </div>
         <div class='option'>
-            <a href="/quit" class='option-href contact-img-div'>
-                <div class='option-img-div'><img src="application/images/exit.png" class='img'></div>
-                <span class='option-name'>Выйти</span>
+            <a href="/quit" class='option-link contact-img-div'>
+            <div class='option-img-div'><img src="application/images/exit.png" class='img'></div>
+            <span class='option-name'>Выйти</span>
             </a>
         </div>
 

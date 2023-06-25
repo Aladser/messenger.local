@@ -5,9 +5,13 @@ const contacts = document.querySelector('#contacts');
 
 // ПОИСК КОНТАКТОВ
 // добавить контакт в БД
-function setAddContact(){
+function setAddContact(btn, contact){
     return function(){
-        console.log('клик');
+        fetch(`/add-contact?contact=${contact}`, {method: 'get'}).then(r=>r.text()).then(data=>{
+            if(data == 1){
+                btn.style.display = 'none';
+            }
+        });
     };
 }
 
@@ -52,7 +56,7 @@ findContactsInput.addEventListener('input', function(){
             addContactBtn.className = 'add-contact-btn position-absolute top-0 end-0';
             addContactBtn.title = 'добавить в контакты';
             addContactBtn.innerHTML = '&#43';
-            addContactBtn.onclick = setAddContact();
+            addContactBtn.onclick = setAddContact(addContactBtn, element['username']); //добавление контакта в БД
             contact.appendChild(addContactBtn);
 
             contacts.appendChild(contact);
@@ -64,5 +68,5 @@ findContactsInput.addEventListener('input', function(){
 
 // снятие фокус с элемента поиска контактов
 findContactsInput.onblur = () => {
-    contacts.innerHTML = '';
+    //contacts.innerHTML = '';
 };
