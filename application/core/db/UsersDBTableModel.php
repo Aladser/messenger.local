@@ -72,8 +72,9 @@ class UsersDBTableModel extends DBTableModel{
             if(count($dbContacts) != 0){
                 $data [$i]['is_contact'] = array_search($users[$i]['user_id'], $contacts)===false ? 0 : 1;
             }
-            else
+            else{
                 $data [$i]['is_contact'] = 0;
+            }
         }
 
         return $data;
