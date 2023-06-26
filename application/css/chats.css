@@ -27,7 +27,7 @@
 /* изображения */
 .img-div{
     width: 2rem;
-    height: 2rem;
+    height: 1.6rem;
     display: inline-block;
 }
 .option-img-div{
@@ -46,6 +46,10 @@
 .add-contact-btn:hover{
     cursor: pointer;
     font-weight: bolder;
+}
+.contact:hover{
+    cursor: pointer;
+    background-color: #eee;
 }
 
 

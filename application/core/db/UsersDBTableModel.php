@@ -56,28 +56,7 @@ class UsersDBTableModel extends DBTableModel{
         union 
         select user_id, user_email, user_photo as username from users where user_hide_email  = 0 and user_email != '$email' and user_email  like '%$phrase%';
         ";
-        $users = $this->db->query($sql, false);
-
-        // контакты текущего пользователя
-        $dbContacts = $this->db->query("select contact_id from contacts where user_id=(select user_id from users where user_email='$email')", false);
-        if(count($dbContacts) != 0){
-            foreach($dbContacts as $contact) $contacts[] = intval($contact['contact_id']);
-        }
-
-
-        // данные: никнейм(почта), фото, является ли контактом
-        for($i=0; $i<count($users); $i++){
-            $data[$i]['username'] = $users[$i]['username'];
-            $data [$i]['user_photo'] = $users[$i]['user_photo'];
-            if(count($dbContacts) != 0){
-                $data [$i]['is_contact'] = array_search($users[$i]['user_id'], $contacts)===false ? 0 : 1;
-            }
-            else{
-                $data [$i]['is_contact'] = 0;
-            }
-        }
-
-        return $data;
+        return $users = $this->db->query($sql, false);
     }
 
     // получить пользовательские данные
