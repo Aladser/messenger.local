@@ -1,6 +1,7 @@
 const findContactsInput = document.querySelector('#find-contacts-input');
 const contacts = document.querySelector('#contacts');
-
+const username = document.querySelector('#username');
+const messages = document.querySelector('#messages');
 
 // ПОКАЗ КОНТАКТОВ-ЧАТОВ ПОЛЬЗОВАТЕЛЯ
 function showContacts(findInput, contacts){
@@ -22,6 +23,10 @@ function setAddContact(contact){
     return function(){
         fetch(`/add-contact?contact=${contact}`, {method: 'get'}).then(r=>r.text()).then(data=>{
             console.log(data);
+            if(data == 1){
+                messages.innerHTML = '';
+                username.innerHTML = contact;
+            }
         });
     };
 }
@@ -43,7 +48,7 @@ findContactsInput.addEventListener('input', function(){
 function createContact(element){
     // контейнер контакта
     let contact = document.createElement('div');
-    contact.className = 'contact position-relative mb-2';
+    contact.className = 'contact position-relative mb-2 pb-0dot5';
 
     // контейнер изображения
     let contactImgDiv = document.createElement('div');

@@ -8,9 +8,8 @@
     </div>
     
     <div class='messages-container pt-2 pe-2 border-start border-end border-dark position-relative padding-left-1dot5prcts padding-right-0dot75'>
-        <p class='mb-2'>Чат с пользователем sendlyamobile@gmail.com</p>
-
-        <div class='messages m-0'>
+        <p class='mb-2'>Чат с пользователем <span id='username'>sendlyamobile@gmail.com</span></p>
+        <div class='messages m-0' id='messages'>
             <div class='msg'>
                 <table class='msg-table'>
                     <tr><td class='msg__text'>
