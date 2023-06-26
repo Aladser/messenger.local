@@ -4,6 +4,12 @@
 .padding-left-1dot5prcts{padding-left: 1.5%;}
 .padding-right-0dot75{padding-right: 0.8%;}
 
+.top-20prcts{
+    top: 20%;
+}
+.end-2prcts{
+    right: 2%;
+}
 
 .contacts{
     width: 21%;

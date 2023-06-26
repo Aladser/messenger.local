@@ -1,5 +1,6 @@
 <?php
 
+//***** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ *****/
 class LoginUserModel extends \core\Model
 {
 	private $users;
@@ -8,7 +9,6 @@ class LoginUserModel extends \core\Model
         $this->users = $CONFIG->getUsers();
     }
 
-    //***** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ *****/
     public function run(){
         session_start();
         if($this->users->existsUser($_POST['email'])){

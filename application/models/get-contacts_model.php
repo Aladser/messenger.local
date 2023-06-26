@@ -1,7 +1,7 @@
 <?php
 
-/** Добавить контакт(чат) для пользователя */
-class AddContactModel extends \core\Model
+// Контакты пользователя
+class GetContactsModel extends \core\Model
 {
     private $contacts;
 
@@ -12,6 +12,6 @@ class AddContactModel extends \core\Model
     public function run(){
         session_start();
         $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
-        echo $this->contacts->addContact($_GET['contact'], $email) ;
+        echo json_encode($this->contacts->getContacts($email));
     }
 }

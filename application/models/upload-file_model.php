@@ -1,5 +1,6 @@
 <?php
 
+/** Загрузка временного изображения на сервер  */
 class UploadFileModel extends \core\Model
 {
     public function run(){

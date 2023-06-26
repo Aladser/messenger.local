@@ -1,6 +1,6 @@
 <?php
 
-/** поиск контактов */
+/** Поиск контактов пользователя */
 class FindContactsModel extends \core\Model
 {
 	private $users;

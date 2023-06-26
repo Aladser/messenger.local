@@ -1,8 +1,8 @@
 <?php
 
+//***** Выход пользователя из системы *****/
 class QuitModel extends \core\Model
 {
-    //***** Выход пользователя из системы *****/
     public function run(){
         session_start();
         setcookie("email", "", time()-3600, '/');

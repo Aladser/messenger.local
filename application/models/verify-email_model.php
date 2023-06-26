@@ -1,5 +1,6 @@
 <?php
 
+/** Подтверждение почты */
 class VerifyEmailModel extends \core\Model
 {
 	private $users;
@@ -8,7 +9,6 @@ class VerifyEmailModel extends \core\Model
         $this->users = $CONFIG->getUsers();
     }
 
-    //***** ПРОВЕРИТЬ ХЭШ ПОЛЬЗОВАТЕЛЯ *****/
     public function run(){
         $modelData = array();
         if($this->users->checkUserHash($_GET['email'], $_GET['hash'])){

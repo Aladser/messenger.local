@@ -1,5 +1,6 @@
 <?php
 
+//***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
 class RegUserModel extends \core\Model
 {
 	private $users;
@@ -10,7 +11,6 @@ class RegUserModel extends \core\Model
         $this->eMailSender = $CONFIG->getEmailSender();
     }
 
-    //***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
     public function run(){
         if(!$this->users->existsUser($_POST['email'])){
             $email = $_POST['email'];

@@ -1,32 +1,10 @@
 <div class='container font-roboto h-80 bg-c4c4c4 p-0 d-flex'>
     <div class='contacts pt-2 ps-2 pe-2'>
-        <input type="text" class='w-100 mb-2 form-control' placeholder='поиск контакта' id='find-contacts-input'>
-        <div id='contacts'>
-            <div class='position-relative'> 
-                <div class='img-div'>
-                    <img class='pe-2 pb-2 img' src="application/data/profile_photos/aladser@gmail.com.1.png" alt="фото">
-                </div>
-                <span class='contact text-break'>Andrei Avramenko</span>
-            </div>
-            <div class='position-relative'> 
-                <div class='img-div'>
-                    <img class='pe-2 pb-2 img' src="application/images/ava.png" alt="фото">
-                </div>
-                <span class='contact text-break'>Denis Demin</span>
-            </div>
-            <div class='position-relative'> 
-                <div class='img-div'>
-                    <img class='pe-2 pb-2 img' src="application/images/ava.png" alt="фото">
-                </div>
-                <span class='contact text-break'>Евгения Городецкая</span>
-            </div>
-            <div class='position-relative'> 
-                <div class='img-div'>
-                    <img class='pe-2 pb-2 img' src="application/images/ava.png" alt="фото">
-                </div>
-                <span class='contact text-break'>Богдан Барабанщиков</span>
-            </div>
+        <div class='position-relative'>
+            <input type="text" class='w-100 mb-2 form-control' placeholder='поиск контакта' id='find-contacts-input'>
+            <button class='position-absolute top-20prcts end-2prcts border-0 bg-white' id='reset-find-contacts-input' title='сбросить фильтр'>&#9747;</button>
         </div>
+        <div id='contacts'></div>
     </div>
     
     <div class='messages-container pt-2 pe-2 border-start border-end border-dark position-relative padding-left-1dot5prcts padding-right-0dot75'>
@@ -130,7 +108,7 @@
             <form id='add-msg' action="">
                 <div class='input-group d-flex justify-content-between'>
                     <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Наберите ваше сообщение здесь'></textarea>
-                    <button type="submit" class='img-btn'><img src="application/images/sendbtn.png"></button>
+                    <button type="submit" class='img-btn' title='Отправить'><img src="application/images/sendbtn.png"></button>
                 </div>
             </form>
         </div>
