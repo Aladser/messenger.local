@@ -127,7 +127,7 @@
             </a>
         </div>
         <div class='option'>
-            <a href="/quit" class='option-link contact-img-div'>
+            <a href="/main?logout=true" class='option-link contact-img-div'>
             <div class='option-img-div'><img src="application/images/exit.png" class='img'></div>
             <span class='option-name'>Выйти</span>
             </a>
