@@ -13,13 +13,6 @@ class Route
 		$controller_name = !empty($routes) ? $routes : 'Main';
         $action_name = 'index';
 
-		// Выход пользователя из системы
-		if(isset($_GET['logout'])){
-			setcookie("email", "", time()-3600, '/');
-			setcookie("auth", "", time()-3600, '/');
-			session_destroy();
-		}
-
 		// авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> /chats
 		if( $controller_name === 'Main' && (isset($_SESSION['auth']) || isset($_COOKIE['auth'])) ){
 			$controller_name = 'chats';
