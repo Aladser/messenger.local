@@ -13,15 +13,9 @@ class Route
 		$controller_name = !empty($routes) ? $routes : 'Main';
         $action_name = 'index';
 
-		// Выход пользователя из системы
-		if(isset($_GET['logout'])){
-			setcookie("email", "", time()-3600, '/');
-			setcookie("auth", "", time()-3600, '/');
-			session_destroy();
-		}
 
 		// авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> /chats
-		if( $controller_name === 'Main' && (isset($_SESSION['auth']) || isset($_COOKIE['auth'])) ){
+		if( $controller_name === 'Main' && (isset($_SESSION['auth']) || isset($_COOKIE['auth'])) && !isset($_GET['logout'])){
 			$controller_name = 'chats';
 		}
 
@@ -30,10 +24,12 @@ class Route
 			$controller_name = 'Main';
 		}
 
+
 		// добавляем префиксы
 		$model_name = $controller_name.'_model';
 		$controller_name = $controller_name.'_controller';
 		$action_name = "action_$action_name";
+		
 		
 		// подцепляем файл с классом модели (файла модели может и не быть)
 		$model_file = strtolower($model_name).'.php';
@@ -42,6 +38,7 @@ class Route
 		{
 			include "application/models/$model_file";
 		}
+
 
 		// подцепляем файл с классом контроллера
 		$controller_file = strtolower($controller_name).'.php';
@@ -52,14 +49,18 @@ class Route
 		}
 		else
 		{
+			$err = new View(); 
+			$err->generate('template_view.php', 'chats_view.php', 'chats.css', 'chats.js','Чаты'); 
 			Route::ErrorPage404();
 		}
+
 
 		//**** создаем модель, если существует
 		if(file_exists($model_path)){
 			$model_name = self::getMVCClassName($model_name, 'Model');
 			$model = new $model_name(new ConfigClass());
 		}
+
 
 		//**** создаем контроллер
 		$controller_name = self::getMVCClassName($controller_name, 'Controller');

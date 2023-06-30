@@ -38,7 +38,7 @@
             </form>
             
             <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='btn-edit-nickname'>Установить nickname</button>
-            <button class='btn btn-bg-C4C4C4 text-white w-100' id='btn-back-profile'><a href="/chats" class='text-decoration-none text-white'>Назад</a> </button>
+            <button class='btn btn-bg-C4C4C4 text-white w-100' id='btn-back-profile'>Назад</button>
         </div>
     </div>
     <p class='text-center text-danger fs-5 fw-bolder hidden' id='prg-error'>Логин занят</p>

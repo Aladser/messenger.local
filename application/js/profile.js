@@ -3,8 +3,7 @@ const saveBtn = document.querySelector('#save-profile-settings-btn');
 const selectFileInput = document.querySelector('#select-file-input');
 const inputNickname = document.querySelector('#input-nickname');
 const prgError = document.querySelector('#prg-error');
-
-document.querySelector('#btn-back-profile').onclick = () => window.open('/back', '_self');
+document.querySelector('#btn-back-profile').onclick = () => window.open('/chats', '_self'); // кпнопка назад
 
 
 
