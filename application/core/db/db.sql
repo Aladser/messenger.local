@@ -10,13 +10,13 @@ create table users(
         user_photo varchar(255),
         
 );
-insert into users(user_email, user_nickname, user_password) values('aladser@mail.ru', 'admin', 'Aa1111');
+insert into users(user_email, user_nickname, user_password) values('aladser@mail.ru', 'admin', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
 update users set user_email_confirmed = 1 where user_id = 1;
 
-"нескрытые почты"
 create view unhidden_emails as
 select user_email from users where user_hide_email  = 0;
 
+drop table if exists contacts;
 create table contacts(
 	id int auto_increment primary key,
 	user_id int not null,
