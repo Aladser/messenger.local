@@ -1,5 +1,5 @@
 # messenger.local
-*Месенджер**
+**Месенджер**
 
 * PHP 7.2
 * MySQL
