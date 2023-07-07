@@ -76,7 +76,7 @@ class Route
 		if(method_exists($controller, $action))
 		{
 			// вызываем действие контроллера
-			$controller->$action($modelData);
+			$controller->$action();
 		}
 		else
 		{
