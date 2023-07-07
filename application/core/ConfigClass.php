@@ -14,12 +14,15 @@ class ConfigClass{
 	private const EMAIL_USERNAME = 'aladser@mail.ru';
 	private const EMAIL_PASSWORD = 'BEt7tei0Nc2YhK4s1jix';
 	private const SMTP_SECURE = 'ssl';
-	private const PORT = 465;
+	private const SMTP_PORT = 465;
 	private const EMAIL_SENDER = 'aladser@mail.ru';
 	private const EMAIL_SENDER_NAME = 'Messenger Admin';
 	private $EMailSender; // класс отправки писем
 	private $users; // пользователи
 	private $contacts; // контакты пользователя
+	// демон вебсокета сообщений
+	public const CHAT_WS_PORT = 8888;
+	public const SITE_ADDR = '127.0.0.1';
 
 	function __construct(){
 		$this->DBQueryCtl = new \core\db\DBQueryCtl(
@@ -33,7 +36,7 @@ class ConfigClass{
 			self::EMAIL_USERNAME, 
 			self::EMAIL_PASSWORD, 
 			self::SMTP_SECURE, 
-			self::PORT, 
+			self::SMTP_PORT, 
 			self::EMAIL_SENDER, 
 			self::EMAIL_SENDER_NAME
 		);

@@ -22,7 +22,6 @@ document.querySelector('#reset-find-contacts-input').onclick = () => showContact
 function setAddContact(contact){
     return function(){
         fetch(`/add-contact?contact=${contact}`, {method: 'get'}).then(r=>r.text()).then(data=>{
-            console.log(data);
             if(data == 1){
                 messages.innerHTML = '';
                 username.innerHTML = contact;
@@ -80,3 +79,6 @@ function createContact(element){
 
     contacts.appendChild(contact);
 }
+
+messages.innerHTML = '';
+// СООБЩЕНИЯ
