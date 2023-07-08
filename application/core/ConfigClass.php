@@ -20,6 +20,7 @@ class ConfigClass{
 	private $EMailSender; // класс отправки писем
 	private $users; // пользователи
 	private $contacts; // контакты пользователя
+	private $connections; // соединения
 	// демон вебсокета сообщений
 	public const CHAT_WS_PORT = 8888;
 	public const SITE_ADDR = '127.0.0.1';
@@ -43,21 +44,12 @@ class ConfigClass{
 		
 		$this->users = new \core\db\UsersDBTableModel($this->DBQueryCtl);
 		$this->contacts = new \core\db\ContactsDBTableModel($this->DBQueryCtl);
+		$this->connections = new \core\db\ConnectionsDBTableModel($this->DBQueryCtl);
 	}
 
-	function getDBQueryCtl(){
-		return $this->DBQueryCtl;
-	}
-
-	function getEmailSender(){
-		return $this->EMailSender;
-	}
-
-	function getUsers(){
-		return $this->users;
-	}
-	
-	function getContacts(){
-		return $this->contacts;
-	}
+	function getDBQueryCtl(){return $this->DBQueryCtl;}
+	function getEmailSender(){return $this->EMailSender;}
+	function getUsers(){return $this->users;}
+	function getContacts(){return $this->contacts;}
+	function getConnections(){return $this->connections;}
 }                                                                                                                                                                                                                                                      
