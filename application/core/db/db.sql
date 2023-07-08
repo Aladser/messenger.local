@@ -23,6 +23,13 @@ create table contacts(
 	contact_id int not null
 );
 
+drop table if exists connections;
+create table connections(
+        connection_id int auto_increment primary key,
+        connection_ws_id int not null,
+        connection_username varchar(255) not null
+);
+
 "
 select user_nickname from users where user_nickname  != '' and user_nickname is not null and user_nickname  like '%ala%'
 and user_email not in (select user_email from users where user_hide_email  = 0 and user_email  like '%ala%')
