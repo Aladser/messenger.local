@@ -1,7 +1,7 @@
 # messenger.local
 **Месенджер**
 
-* PHP 7.2
+* PHP 8.1
 * MySQL
 * phpmailer
 * ratchet
