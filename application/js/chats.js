@@ -99,8 +99,8 @@ function message(data){
     let msgTimeTr = document.createElement('tr');
     let msgTimeTd = document.createElement('td');
 
-    msgBlock.className = data.author !== userHost ? 'msg d-flex justify-content-end' : 'msg';
-    msgTable.className = data.author !== userHost ? 'msg-table msg-table-contact' : 'msg-table';
+    msgBlock.className = data.author !== userHost.trim() ? 'msg d-flex justify-content-end' : 'msg';
+    msgTable.className = data.author !== userHost.trim() ? 'msg-table msg-table-contact' : 'msg-table';
     msgTextTd.className = 'msg__text';
     msgTimeTd.className = 'msg__time';
 
@@ -114,6 +114,13 @@ function message(data){
     msgBlock.appendChild(msgTable);
     chat.appendChild(msgBlock);
 }
+// удаление предыдущего системного сообщения
+function removeLastSystemMessage(){
+    let systemInfo = document.querySelector('.message-system');
+    if(systemInfo !== null){
+        chat.removeChild(systemInfo);
+    }
+}
 
 
 // вебсокет сообщений
@@ -123,17 +130,18 @@ webSocket.onmessage = function(e) {
     let data = JSON.parse(e.data);
     console.log(data);
 
-    // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения
-    if(data['onсonnection']){
+    // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
+    if(data.onсonnection){
         webSocket.send(JSON.stringify({
             'messageOnconnection': 1,
-            'author' : userHost,
-            'userId' : data['onсonnection']
+            'author' : userHost.trim(),
+            'userId' : data.onсonnection
         }));
     }
     // сообщение пользователям о подключении
-    else if(data['messageOnconnection'] && data.author !== userHost){
-        chat.innerHTML += `<p class="message-system">${data.author} в сети</p>`;
+    else if(data['messageOnconnection']){
+        removeLastSystemMessage();
+        chat.innerHTML += `<p class="message-system">${data.author !== userHost.trim() ? data.author : 'вы'} в сети</p>`;
     }
     // сообщения пользователей
     else if(data['message']){
@@ -148,7 +156,7 @@ function sendData(){
     if(messageInput.value !== '' && webSocket.readyState === 1){
         webSocket.send(JSON.stringify({
             'message': messageInput.value,
-            'author' : userHost
+            'author' : userHost.trim()
         }));
     }
     messageInput.value = '';
@@ -156,6 +164,7 @@ function sendData(){
 // событие отправки сообщения
 messageInput.onkeyup = event => {
     if(event.code === 'Enter'){
+        messageInput.value = messageInput.value.replace(/\n/g, '')
         sendData();
     }
 };

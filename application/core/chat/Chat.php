@@ -1,14 +1,12 @@
 <?php
  
- namespace core\chat;
-// Подключаем нужные компоненты
+namespace core\chat;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-// Создаём новый класс для обработки чата
+// Чат
 class Chat implements MessageComponentInterface {
-    private $clients; // Свойство для хранения всех подключенных пользователей
-    private $connectionsFile = __DIR__.'/connections.data'; // подключения пользователей
+    private $clients; // хранение всех подключенных пользователей
    
     public function __construct() {
         $this->clients = new \SplObjectStorage;
@@ -35,8 +33,9 @@ class Chat implements MessageComponentInterface {
         if($data->messageOnconnection){
             var_dump($data);
         }
-
-        echo "$msg\r\n";
+        else{
+            echo "$msg\r\n";
+        }
         foreach ($this->clients as $client) $client->send($msg);
     }
 
