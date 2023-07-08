@@ -1,5 +1,6 @@
 <?php
  
+ namespace core\chat;
 // Подключаем нужные компоненты
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
@@ -16,7 +17,7 @@ class Chat implements MessageComponentInterface {
    
     public function onOpen(ConnectionInterface $conn) {
         $this->clients->attach($conn); // добавление нового пользователя
-        $message = "{$this->user} в сети\r\n";
+        $message = "ON_CONNECTION\r\n";
         echo "$message";
         $message = json_encode([ 'system' => $message ]);
         foreach ($this->clients as $client) $client->send($message); // рассылаем пользователям сообщение 
@@ -24,7 +25,7 @@ class Chat implements MessageComponentInterface {
     
     public function onClose(ConnectionInterface $conn) {
         $this->clients->detach($conn); // Отключаем клиента
-        $message = "{$this->user} не в сети\r\n";
+        $message = "OFF_CONNECTION\r\n";
         echo $message;
         $message = json_encode([ 'system' => $message ]);
         foreach ($this->clients as $client) $client->send($message);

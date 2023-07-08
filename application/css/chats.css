@@ -1,3 +1,5 @@
+
+
 .h-80{
     height: 80vh;
 }
@@ -88,6 +90,11 @@
     width: 0;
 }
 
+.message-system{
+    font-size: 90%;
+    opacity: 0.75;
+    text-align: center;
+}
 
 .msg-table{
     margin-bottom: 0.3rem;
@@ -100,6 +107,7 @@
     padding-top: 0.4rem;
     padding-left: 0.4rem;
     padding-right: 3rem;
+    word-break: break-word
 }
 .msg__time{
     padding-bottom: 0.4rem;

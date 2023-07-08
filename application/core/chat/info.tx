@@ -1,0 +1,8 @@
+установка Ratchet
+
+cd C:\domains\messenger.local\application
+composer require cboden/ratchet
+
+запуск демона
+cd C:\domains\messenger.local\application\core\chat
+php chat-server.php

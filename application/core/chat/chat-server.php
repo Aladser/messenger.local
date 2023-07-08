@@ -1,9 +1,9 @@
 <?php
+    namespace core\chat;
     // Подключаем файл зависимостей
-    require "vendor/autoload.php";
-    // Подключаем файл с классом Chat 
-    require "Chat.php";
-    
+    require dirname(__DIR__, 2)."/vendor/autoload.php";
+    require 'Chat.php';
+
     // Подключаем все зависимости
     use Ratchet\Server\IoServer;
     use Ratchet\Http\HttpServer;
@@ -18,7 +18,8 @@
         ),
         8888
     );
-    
+
     // Запускаем сервер
     $server->run();
-?>
+
+

@@ -1,21 +1,23 @@
 const findContactsInput = document.querySelector('#find-contacts-input');
 const contacts = document.querySelector('#contacts');
 const username = document.querySelector('#username');
-const messages = document.querySelector('#messages');
+const chat = document.querySelector("#messages");
+const wsUri = 'ws://localhost:8888';
+const messageInput = document.querySelector("#message-input");
+const sendMsgBtn = document.querySelector("#send-msg-btn");
+const userHost = document.querySelector('#userhost-mail').innerHTML;
+
 
 // ПОКАЗ КОНТАКТОВ-ЧАТОВ ПОЛЬЗОВАТЕЛЯ
 function showContacts(findInput, contacts){
     fetch(`/get-contacts`, {method: 'get'}).then(r=>r.json()).then(data => {
         findInput.value = '';
         contacts.innerHTML = '';
-
-        if(data != null){
-            data.forEach(element => createContact(element));
-        }
+        if(data != null) data.forEach(element => createContact(element));
     }); 
 }
 showContacts(findContactsInput, contacts); // показ контактов-чатов при загрузке страницы
-document.querySelector('#reset-find-contacts-input').onclick = () => showContacts(findContactsInput, contacts); // отмена поиска контакта и отображение контактов
+document.querySelector('#reset-find-contacts-btn').onclick = () => showContacts(findContactsInput, contacts); // отмена поиска контакта и отображение контактов
 
 
 // ДОБАВИТЬ КОНТАКТ-ЧАТ ПОЛЬЗОВАТЕЛЮ В БД
@@ -23,7 +25,7 @@ function setAddContact(contact){
     return function(){
         fetch(`/add-contact?contact=${contact}`, {method: 'get'}).then(r=>r.text()).then(data=>{
             if(data == 1){
-                messages.innerHTML = '';
+                chat.innerHTML = '';
                 username.innerHTML = contact;
             }
         });
@@ -42,6 +44,7 @@ findContactsInput.addEventListener('input', function(){
         }
     });
 });
+
 
 // ОТРИСОВКА КОНТАКТА-ЧАТА
 function createContact(element){
@@ -80,5 +83,69 @@ function createContact(element){
     contacts.appendChild(contact);
 }
 
-messages.innerHTML = '';
-// СООБЩЕНИЯ
+
+
+
+//***** СООБЩЕНИЯ *****
+// вывод сообщения пользователя на экран
+function message(data){
+    let msgBlock = document.createElement('div');
+    let msgTable = document.createElement('table');
+    let msgTextTr = document.createElement('tr');
+    let msgTextTd = document.createElement('td');
+    let msgTimeTr = document.createElement('tr');
+    let msgTimeTd = document.createElement('td');
+
+    msgBlock.className = data.author !== userHost ? 'msg d-flex justify-content-end' : 'msg';
+    msgTable.className = data.author !== userHost ? 'msg-table msg-table-contact' : 'msg-table';
+    msgTextTd.className = 'msg__text';
+    msgTimeTd.className = 'msg__time';
+
+    msgTextTd.innerHTML = data.message;
+    msgTimeTd.innerHTML = '20.06.203 10.30';
+
+    msgTextTr.appendChild(msgTextTd);
+    msgTimeTr.appendChild(msgTimeTd);
+    msgTable.appendChild(msgTextTr);
+    msgTable.appendChild(msgTimeTr);
+    msgBlock.appendChild(msgTable);
+    chat.appendChild(msgBlock);
+}
+
+// вебсокет сообщений
+let webSocket = new WebSocket(wsUri);
+webSocket.onerror = function(error) {
+    chat.innerHTML += `<p class="message-system"> Ошибка подключения к серверу${error.message ? '. '+error.message : ''}</p>`;
+};
+webSocket.onmessage = function(e) {
+    let data = JSON.parse(e.data);
+
+    // системные сообщения
+    if(data['system']){
+        chat.innerHTML += `<p class="message-system">${data.system}</p>`;
+    }
+    // сообщения пользователей
+    else{
+        message(data);
+    }
+};
+
+
+// отправка данных на сервер
+function sendData(){
+    // непустые сообщения
+    if(messageInput.value !== '' && webSocket.readyState === 1){
+        webSocket.send(JSON.stringify({
+            'message': messageInput.value,
+            'author' : userHost
+        }));
+    }
+    messageInput.value = '';
+}
+// событие отправки сообщения
+messageInput.onkeyup = event => {
+    if(event.code === 'Enter'){
+        sendData();
+    }
+};
+sendMsgBtn.onclick = sendData;
