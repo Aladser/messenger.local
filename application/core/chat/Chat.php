@@ -7,10 +7,14 @@ use Ratchet\ConnectionInterface;
 // Чат
 class Chat implements MessageComponentInterface {
     private $clients; // хранение всех подключенных пользователей
+    private $usersTable; // таблица пользователей
+    private $connectionsTable; // таблица подключений
    
-    public function __construct() {
+    public function __construct($usersTable, $connectionsTable) {
         $this->clients = new \SplObjectStorage;
         $this->user = $user;
+        $this->usersTable = $usersTable;
+        $this->connectionsTable = $connectionsTable;
     }
    
     public function onOpen(ConnectionInterface $conn) {
@@ -31,8 +35,18 @@ class Chat implements MessageComponentInterface {
         // после соединения пользователь отправляет пакет с id подключения и именем. Данные записываются в БД
         $data = json_decode($msg);
         if($data->messageOnconnection){
-            var_dump($data);
+            $isAdded = $this->connectionsTable->addConnection( ['author'=>$data->author, 'userId'=>$data->userId] ) . "\n";
+            if($isAdded = 0){
+                echo "ошибка добавления соединения $data->userId ($data->author)\r\n";
+            }
+            else if($isAdded = 1){
+                echo "Соединение $data->userId ($data->author) добавлено\r\n";
+            }
+            else{
+                echo "Соединение $data->userId ($data->author) существует\r\n";
+            }
         }
+        // сообщение пользователя
         else{
             echo "$msg\r\n";
         }

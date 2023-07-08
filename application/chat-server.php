@@ -15,7 +15,7 @@
     $server = IoServer::factory(
         new HttpServer(
             new WsServer(
-                new Chat()
+                new Chat($users, $connections)
             )
         ),
         $CONFIG::CHAT_WS_PORT
