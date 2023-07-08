@@ -5,7 +5,9 @@ const chat = document.querySelector("#messages");
 const wsUri = 'ws://localhost:8888';
 const messageInput = document.querySelector("#message-input");
 const sendMsgBtn = document.querySelector("#send-msg-btn");
-const userHost = document.querySelector('#userhost-mail').innerHTML;
+const userHost = document.querySelector('#userhost-email').innerHTML; // имя пользователя-хоста
+
+
 
 
 //***** КОНТАКТЫ *****
@@ -113,20 +115,28 @@ function message(data){
     chat.appendChild(msgBlock);
 }
 
+
 // вебсокет сообщений
 let webSocket = new WebSocket(wsUri);
-webSocket.onerror = function(error) {
-    chat.innerHTML += `<p class="message-system"> Ошибка подключения к серверу${error.message ? '. '+error.message : ''}</p>`;
-};
+webSocket.onerror = error => chat.innerHTML += `<p class="message-system"> Ошибка подключения к серверу${error.message ? '. '+error.message : ''}</p>`;
 webSocket.onmessage = function(e) {
     let data = JSON.parse(e.data);
+    console.log(data);
 
-    // системные сообщения
-    if(data['system']){
-        chat.innerHTML += `<p class="message-system">${userHost} ${data.system == 'ON_CONNECTION' ? 'в сети' : 'не в сети'}</p>`;
+    // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения
+    if(data['onсonnection']){
+        webSocket.send(JSON.stringify({
+            'messageOnconnection': 1,
+            'author' : userHost,
+            'userId' : data['onсonnection']
+        }));
+    }
+    // сообщение пользователям о подключении
+    else if(data['messageOnconnection'] && data.author !== userHost){
+        chat.innerHTML += `<p class="message-system">${data.author} в сети</p>`;
     }
     // сообщения пользователей
-    else{
+    else if(data['message']){
         message(data);
     }
 };
