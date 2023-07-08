@@ -8,6 +8,7 @@ const sendMsgBtn = document.querySelector("#send-msg-btn");
 const userHost = document.querySelector('#userhost-mail').innerHTML;
 
 
+//***** КОНТАКТЫ *****
 // ПОКАЗ КОНТАКТОВ-ЧАТОВ ПОЛЬЗОВАТЕЛЯ
 function showContacts(findInput, contacts){
     fetch(`/get-contacts`, {method: 'get'}).then(r=>r.json()).then(data => {
@@ -122,7 +123,7 @@ webSocket.onmessage = function(e) {
 
     // системные сообщения
     if(data['system']){
-        chat.innerHTML += `<p class="message-system">${data.system}</p>`;
+        chat.innerHTML += `<p class="message-system">${userHost} ${data.system == 'ON_CONNECTION' ? 'в сети' : 'не в сети'}</p>`;
     }
     // сообщения пользователей
     else{

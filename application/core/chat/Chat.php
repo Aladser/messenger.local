@@ -17,16 +17,16 @@ class Chat implements MessageComponentInterface {
    
     public function onOpen(ConnectionInterface $conn) {
         $this->clients->attach($conn); // добавление нового пользователя
-        $message = "ON_CONNECTION\r\n";
-        echo "$message";
+        $message = "ON_CONNECTION";
+        echo "$message\n";
         $message = json_encode([ 'system' => $message ]);
         foreach ($this->clients as $client) $client->send($message); // рассылаем пользователям сообщение 
     }
     
     public function onClose(ConnectionInterface $conn) {
         $this->clients->detach($conn); // Отключаем клиента
-        $message = "OFF_CONNECTION\r\n";
-        echo $message;
+        $message = "OFF_CONNECTION";
+        echo "$message\n";
         $message = json_encode([ 'system' => $message ]);
         foreach ($this->clients as $client) $client->send($message);
     }
