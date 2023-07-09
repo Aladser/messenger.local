@@ -41,5 +41,8 @@
             <button class='btn btn-bg-C4C4C4 text-white w-100' id='btn-back-profile'>Назад</button>
         </div>
     </div>
-    <p class='text-center text-danger fs-5 fw-bolder hidden' id='prg-error'>Логин занят</p>
+    <br>
+    <p class='text-center text-danger fs-5 fw-bolder hidden' id='prg-error'></p>
 </div>
+
+<script type='text/javascript' src="application/js/validation.js"></script>

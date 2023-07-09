@@ -32,17 +32,6 @@ document.querySelector('#btn-edit-nickname').onclick = () => {
 }
 
 // ввод никнейма
-function writeNickname(input, btn){
-    let startValue = input.value; // изначальный никнейм
-    return function func(){
-        if(input.value !== startValue){
-            btn.classList.remove('hidden');
-        }
-        else{
-            btn.classList.add('hidden');
-        }
-    }
-}
 
 // Проверка введенного никнейма
 function writeNickname(input, btn){
@@ -52,10 +41,17 @@ function writeNickname(input, btn){
             let data = new URLSearchParams();
             data.set('nickname', input.value);
 
-            // пустое поле
-            if(input.value === ''){
+            // НЕ пустое поле или кириллица
+            if(input.value === '' || validateNickname(input.value)){
                 btn.classList.add('hidden');
+                inputNickname.classList.add('input-nickname-error');
+                prgError.classList.remove('hidden'); 
+                prgError.innerHTML = 'логин не должен содержать кирриллицу или быть пустым';
                 return;
+            }
+            else{
+                inputNickname.classList.remove('input-nickname-error');
+                prgError.classList.add('hidden'); 
             }
 
             fetch('/is-unique-nickname', {method:'post', body:data}).then(r=>r.text().then(data => {
@@ -67,7 +63,8 @@ function writeNickname(input, btn){
                 else{
                     btn.classList.add('hidden');
                     inputNickname.classList.add('input-nickname-error');
-                    prgError.classList.remove('hidden');   
+                    prgError.classList.remove('hidden');
+                    prgError.innerHTML = 'логин занят';   
                 }
             }));
         }
