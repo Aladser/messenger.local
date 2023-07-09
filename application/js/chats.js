@@ -1,6 +1,5 @@
 const findContactsInput = document.querySelector('#find-contacts-input');
 const contacts = document.querySelector('#contacts');
-const username = document.querySelector('#username');
 const chat = document.querySelector("#messages");
 const wsUri = 'ws://localhost:8888';
 const messageInput = document.querySelector("#message-input");
@@ -11,44 +10,6 @@ const userHost = document.querySelector('#userhost-email').innerHTML; // имя 
 
 
 //***** КОНТАКТЫ *****
-// ПОКАЗ КОНТАКТОВ-ЧАТОВ ПОЛЬЗОВАТЕЛЯ
-function showContacts(findInput, contacts){
-    fetch(`/get-contacts`, {method: 'get'}).then(r=>r.json()).then(data => {
-        findInput.value = '';
-        contacts.innerHTML = '';
-        if(data != null) data.forEach(element => createContact(element));
-    }); 
-}
-showContacts(findContactsInput, contacts); // показ контактов-чатов при загрузке страницы
-document.querySelector('#reset-find-contacts-btn').onclick = () => showContacts(findContactsInput, contacts); // отмена поиска контакта и отображение контактов
-
-
-// ДОБАВИТЬ КОНТАКТ-ЧАТ ПОЛЬЗОВАТЕЛЮ В БД
-function setAddContact(contact){
-    return function(){
-        fetch(`/add-contact?contact=${contact}`, {method: 'get'}).then(r=>r.text()).then(data=>{
-            if(data == 1){
-                chat.innerHTML = '';
-                username.innerHTML = contact;
-            }
-        });
-    };
-}
-
-
-// ПОИСК КОНТАКТОВ В БД
-findContactsInput.addEventListener('input', function(){
-    fetch(`/find-contacts?userphrase=${this.value}`, {method: 'get'}).then(r=>r.json()).then(data => {
-        contacts.innerHTML = '';
-
-        //  отображение найденных контактов в списке контактов
-        if(data != null){
-            data.forEach(element => createContact(element));
-        }
-    });
-});
-
-
 // ОТРИСОВКА КОНТАКТА-ЧАТА
 function createContact(element){
     // контейнер контакта
@@ -85,9 +46,44 @@ function createContact(element){
 
     contacts.appendChild(contact);
 }
+// ДОБАВИТЬ КОНТАКТ-ЧАТ ПОЛЬЗОВАТЕЛЮ В БД
+function setAddContact(contact){
+    return function(){
+        fetch(`/add-contact?contact=${contact}`, {method: 'get'}).then(r=>r.text()).then(data=>{
+            console.log(data);
+
+            if(data == 1){
+                chat.innerHTML = '';
+                document.querySelector('#contact-username').innerHTML = contact;
+            }
+        });
+    };
+}
 
 
+// ПОКАЗ КОНТАКТОВ-ЧАТОВ ПОЛЬЗОВАТЕЛЯ
+function showContacts(findInput, contacts){
+    fetch(`/get-contacts`, {method: 'get'}).then(r=>r.json()).then(data => {
+        findInput.value = '';
+        contacts.innerHTML = '';
+        if(data != null) data.forEach(element => createContact(element));
+    }); 
+}
+showContacts(findContactsInput, contacts); // показ контактов-чатов при загрузке страницы
+document.querySelector('#reset-find-contacts-btn').onclick = () => showContacts(findContactsInput, contacts); // отмена поиска контакта и отображение контактов
 
+// ПОИСК КОНТАКТОВ В БД
+findContactsInput.addEventListener('input', function(){
+    fetch(`/find-contacts?userphrase=${this.value}`, {method: 'get'}).then(r=>r.json()).then(data => {
+        contacts.innerHTML = '';
+
+        //  отображение найденных контактов в списке контактов
+        if(data != null){
+            data.forEach(element => createContact(element));
+        }
+    });
+});
+ 
 
 //***** СООБЩЕНИЯ *****
 // вывод сообщения пользователя на экран

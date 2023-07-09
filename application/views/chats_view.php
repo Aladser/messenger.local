@@ -8,7 +8,7 @@
     </div>
     
     <div class='messages-container pt-2 pe-2 border-start border-end border-dark position-relative padding-left-1dot5prcts padding-right-0dot75'>
-        <p class='mb-2'>Чат с пользователем <span id='username'>xxxxx</span></p>
+        <p class='mb-2'>Чат с пользователем <span id='contact-username'>xxxxx</span></p>
         <div class='messages m-0' id='messages'>
             <div class='msg'>
                 <table class='msg-table'>

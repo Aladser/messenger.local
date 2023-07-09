@@ -12,10 +12,11 @@ class ContactsDBTableModel extends DBTableModel{
         $user_id = $this->db->query("select user_id from users where user_email = '$email'")['user_id']; // кому добавлятиь контакт
 
         // id контакта. Учитывается, что в nickname может быть @
-        $contact_id = $this->db->query("select user_id from users where user_email = '$contact'")['user_id'];
-        if($contact_id == ''){
-            $contact_id = $this->db->query("select user_id from users where user_nickname = '$contact'")['user_id'];
+        $contact_id = $this->db->query("select user_id from users where user_email = '$contact'");
+        if(!$contact_id){
+            $contact_id = $this->db->query("select user_id from users where user_nickname = '$contact'");
         }
+        $contact_id = $contact_id['user_id'];
  
         // добавление контакта
         $isContact = $this->db->query("select id from contacts where user_id = $user_id and contact_id = $contact_id") != '';
