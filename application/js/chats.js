@@ -10,6 +10,18 @@ const userHost = document.querySelector('#userhost-email').innerHTML; // имя 
 
 
 //***** КОНТАКТЫ *****
+// ДОБАВИТЬ КОНТАКТ-ЧАТ ПОЛЬЗОВАТЕЛЮ В БД И ПОКАЗ  КОНТАКТОВ ВМЕСТЕ С НИМ
+function setAddContact(contact){
+    return function(){
+        fetch(`/add-contact?contact=${contact}`).then(r=>r.text()).then(data=>{
+            if(data == 1){
+                chat.innerHTML = '';
+                document.querySelector('#contact-username').innerHTML = contact;
+            }
+        });
+    };
+}
+
 // ОТРИСОВКА КОНТАКТА-ЧАТА
 function createContact(element){
     // контейнер контакта
@@ -18,14 +30,11 @@ function createContact(element){
     let img = document.createElement('img'); // фото профиля
     let name = document.createElement('span'); // имя контакта
 
-    contact.className = 'contact position-relative mb-2 pb-0dot5';
+    contact.className = 'contact position-relative mb-2';
     contactImgBlock.className = 'img-div';
-    img.className = 'pe-2 img';
+    img.className = 'img pe-2';
     
-    if(element['user_photo'] == 'ava_profile.png'){
-        img.src = 'application/images/ava.png';
-    }
-    else if(element['user_photo'] == null){
+    if(element['user_photo'] == 'ava_profile.png' || element['user_photo'] == null){
         img.src = 'application/images/ava.png';
     }
     else{
@@ -41,22 +50,10 @@ function createContact(element){
     contact.appendChild(name);
     contacts.appendChild(contact);
 }
-// ДОБАВИТЬ КОНТАКТ-ЧАТ ПОЛЬЗОВАТЕЛЮ В БД И ПОКАЗ  КОНТАКТОВ ВМЕСТЕ С НИМ
-function setAddContact(contact){
-    return function(){
-        fetch(`/add-contact?contact=${contact}`, {method: 'get'}).then(r=>r.text()).then(data=>{
-            if(data == 1){
-                chat.innerHTML = '';
-                document.querySelector('#contact-username').innerHTML = contact;
-            }
-        });
-    };
-}
-
 
 // ПОКАЗ КОНТАКТОВ-ЧАТОВ ПОЛЬЗОВАТЕЛЯ
 function showContacts(findInput, contacts){
-    fetch(`/get-contacts`, {method: 'get'}).then(r=>r.json()).then(data => {
+    fetch('/get-contacts').then(r=>r.json()).then(data => {
         findInput.value = '';
         contacts.innerHTML = '';
         if(data != null) data.forEach(element => createContact(element));
@@ -67,7 +64,7 @@ document.querySelector('#reset-find-contacts-btn').onclick = () => showContacts(
 
 // ПОИСК КОНТАКТОВ В БД
 findContactsInput.addEventListener('input', function(){
-    fetch(`/find-contacts?userphrase=${this.value}`, {method: 'get'}).then(r=>r.json()).then(data => {
+    fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
         contacts.innerHTML = '';
 
         //  отображение найденных контактов в списке контактов
@@ -132,6 +129,7 @@ webSocket.onmessage = function(e) {
         removeLastSystemMessage();
         chat.innerHTML += `<p class="message-system">${data.author !== userHost.trim() ? data.author : 'вы'} в сети</p>`;
     }
+    // сообщение пользователям о отключении
     else if(data.offсonnection){
         removeLastSystemMessage();
         chat.innerHTML += `<p class="message-system">${data.offсonnection !== userHost.trim() ? data.offсonnection : 'вы'} не в сети</p>`;

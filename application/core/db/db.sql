@@ -1,3 +1,4 @@
+# пользователи
 drop table if exists users;
 create table users(
         user_id int AUTO_INCREMENT PRIMARY KEY,
@@ -13,6 +14,7 @@ create table users(
 insert into users(user_email, user_nickname, user_password) values('aladser@mail.ru', 'admin', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
 update users set user_email_confirmed = 1 where user_id = 1;
 
+# виртуальная таблица неподтвержденных пользователей
 create view unhidden_emails as
 select user_email from users where user_hide_email  = 0;
 
@@ -23,6 +25,7 @@ create table contacts(
 	contact_id int not null
 );
 
+# соединения
 drop table if exists connections;
 create table connections(
         connection_id int auto_increment primary key,
@@ -30,21 +33,28 @@ create table connections(
         connection_username varchar(255) not null
 );
 
-"
-select user_nickname from users where user_nickname  != '' and user_nickname is not null and user_nickname  like '%ala%'
-and user_email not in (select user_email from users where user_hide_email  = 0 and user_email  like '%ala%')
-union 
-select user_email from users where user_hide_email  = 0 and user_email  like '%ala%';
+# список чатов
+drop table if exists chat;
+create table chat(
+	chat_id int auto_increment primary key,
+	chat_type varchar(100) check(chat_type = 'dialog' or chat_type = 'discussion')
+);
 
-select user_nickname as username, user_photo from users 
-where user_nickname!='' 
-and user_nickname is not null 
-and user_email!='sendlyamobile@gmail.com'
-and user_email not in (select * from unhidden_emails)
-and user_id in (select contact_id from contacts where user_id=(select user_id from users where user_email='sendlyamobile@gmail.com'))
-union 
-select user_email as username, user_photo from users 
-where user_hide_email=0 
-and user_email!='sendlyamobile@gmail.com'
-and user_id in (select contact_id from contacts where user_id=(select user_id from users where user_email='sendlyamobile@gmail.com'));
-"
+# участники чатов
+drop table if exists chat_participant;
+create table chat_participant(
+	chat_participant_id int auto_increment primary key,
+	chat_participant_chatid int references chat(chat_id),
+	chat_participant_userid int references user(user_id)
+);
+
+# сообщения чатов
+drop table if exists chat_message;
+create table chat_message(
+	chat_message_id int auto_increment primary key,
+	chat_message_chatid int references chat(chat_id),
+	chat_message_text text not null,
+	chat_message_user_creator int references user(user_id),
+	#chat_message_date datetime default '2000-01-01 00:00:00'
+	chat_message_date datetime default CURRENT_TIMESTAMP()
+);
