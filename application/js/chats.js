@@ -13,16 +13,15 @@ const userHost = document.querySelector('#userhost-email').innerHTML; // имя 
 // ОТРИСОВКА КОНТАКТА-ЧАТА
 function createContact(element){
     // контейнер контакта
-    let contact = document.createElement('div');
+    let contact = document.createElement('div');    // блок контакта
+    let contactImgBlock = document.createElement('div'); // блок изображения профиля
+    let img = document.createElement('img'); // фото профиля
+    let name = document.createElement('span'); // имя контакта
+
     contact.className = 'contact position-relative mb-2 pb-0dot5';
-
-    // контейнер изображения
-    let contactImgDiv = document.createElement('div');
-    contactImgDiv.className = 'img-div';
-
-    // фото профиля
-    let img = document.createElement('img');
+    contactImgBlock.className = 'img-div';
     img.className = 'pe-2 img';
+    
     if(element['user_photo'] == 'ava_profile.png'){
         img.src = 'application/images/ava.png';
     }
@@ -33,25 +32,19 @@ function createContact(element){
         img.src = `application/data/profile_photos/${element['user_photo']}`; 
     }
 
-    contactImgDiv.appendChild(img);
-    contact.appendChild(contactImgDiv);
-
-    // имя контакта
-    let name = document.createElement('span');
     name.className = 'text-break';
     name.innerHTML = element['username'];
-    contact.appendChild(name);
-
     contact.onclick = setAddContact(element['username']);
 
+    contactImgBlock.appendChild(img);
+    contact.appendChild(contactImgBlock);
+    contact.appendChild(name);
     contacts.appendChild(contact);
 }
-// ДОБАВИТЬ КОНТАКТ-ЧАТ ПОЛЬЗОВАТЕЛЮ В БД
+// ДОБАВИТЬ КОНТАКТ-ЧАТ ПОЛЬЗОВАТЕЛЮ В БД И ПОКАЗ  КОНТАКТОВ ВМЕСТЕ С НИМ
 function setAddContact(contact){
     return function(){
         fetch(`/add-contact?contact=${contact}`, {method: 'get'}).then(r=>r.text()).then(data=>{
-            console.log(data);
-
             if(data == 1){
                 chat.innerHTML = '';
                 document.querySelector('#contact-username').innerHTML = contact;
