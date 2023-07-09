@@ -15,19 +15,22 @@ class Chat implements MessageComponentInterface {
         $this->user = $user;
         $this->usersTable = $usersTable;
         $this->connectionsTable = $connectionsTable;
+        $this->connectionsTable->clearConnections();
     }
    
     public function onOpen(ConnectionInterface $conn) {
         $this->clients->attach($conn); // добавление нового пользователя
-        echo "ON_CONNECTION {$conn->resourceId}\n";
         $message = json_encode([ 'onсonnection' => $conn->resourceId ]);
         foreach ($this->clients as $client) $client->send($message); // рассылаем пользователям сообщение 
     }
     
     public function onClose(ConnectionInterface $conn) {
         $this->clients->detach($conn); // Отключаем клиента
-        echo "OFF_CONNECTION {$conn->resourceId}\n";
-        $message = json_encode([ 'offсonnection' => $conn->resourceId ]);
+        $userEmail = $this->connectionsTable->getConnectionUserEmail( $conn->resourceId );
+        $this->connectionsTable->removeConnection( $conn->resourceId );
+
+        echo "OFF_CONNECTION $userEmail\n";
+        $message = json_encode([ 'offсonnection' => $userEmail ]);
         foreach ($this->clients as $client) $client->send($message);
     }
 
@@ -35,15 +38,20 @@ class Chat implements MessageComponentInterface {
         // после соединения пользователь отправляет пакет с id подключения и именем. Данные записываются в БД
         $data = json_decode($msg);
         if($data->messageOnconnection){
-            $isAdded = $this->connectionsTable->addConnection( ['author'=>$data->author, 'userId'=>$data->userId] ) . "\n";
-            if($isAdded = 0){
-                echo "ошибка добавления соединения $data->userId ($data->author)\r\n";
-            }
-            else if($isAdded = 1){
-                echo "Соединение $data->userId ($data->author) добавлено\r\n";
-            }
-            else{
-                echo "Соединение $data->userId ($data->author) существует\r\n";
+            $isAdded = $this->connectionsTable->addConnection( ['author'=>$data->author, 'userId'=>$data->userId] );
+            $author = trim($data->author);
+            switch($isAdded){
+                case 0:
+                    echo "CONNECTION $author: ошибка\n";
+                    break;
+                case 1:
+                    echo "CONNECTION $author: добавлено\n";
+                    break;
+                case 2:
+                    echo "CONNECTION $author: уже существует\n";
+                    break;
+                default:
+                    echo "CONNECTION $author: не существует в БД\n";
             }
         }
         // сообщение пользователя

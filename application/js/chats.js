@@ -139,9 +139,13 @@ webSocket.onmessage = function(e) {
         }));
     }
     // сообщение пользователям о подключении
-    else if(data['messageOnconnection']){
+    else if(data.messageOnconnection){
         removeLastSystemMessage();
         chat.innerHTML += `<p class="message-system">${data.author !== userHost.trim() ? data.author : 'вы'} в сети</p>`;
+    }
+    else if(data.offсonnection){
+        removeLastSystemMessage();
+        chat.innerHTML += `<p class="message-system">${data.offсonnection !== userHost.trim() ? data.offсonnection : 'вы'} не в сети</p>`;
     }
     // сообщения пользователей
     else if(data['message']){
