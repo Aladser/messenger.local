@@ -9,33 +9,7 @@
     
     <div class='messages-container pt-2 pe-2 border-start border-end border-dark position-relative padding-left-1dot5prcts padding-right-0dot75'>
         <p class='mb-2'>Чат с пользователем <span id='contact-username'>xxxxx</span></p>
-        <div class='messages m-0' id='messages'>
-            <div class='msg'>
-                <table class='msg-table'>
-                    <tr><td class='msg__text'>
-                        Штиль – ветер молчит.
-                        Упал белой чайкой на дно.
-                        Штиль – наш корабль забыт.
-                        Один, в мире скованном сном...
-                    </td></tr>
-                    <tr><td class='msg__time'>
-                        20.06.203 10.30
-                    </td></tr>
-                </table>
-            </div>
-
-            <div class='msg d-flex justify-content-end'>
-                <table class='msg-table msg-table-contact'>
-                    <tr><td class='msg__text'>
-                        Между всех времён без имён и лиц<br>
-                        мы уже не ждём, что проснётся бриз!
-                    </td></tr>
-                    <tr><td  class='msg__time'>
-                        20.06.203 10.40
-                    </td></tr>
-                </table>
-            </div>
-        </div>
+        <div class='messages m-0' id='messages'></div>
 
         <div class='send-msg position-absolute bottom-0 mb-2'>
             <div class='input-group d-flex justify-content-between'>
@@ -68,4 +42,4 @@
     </div>
 </div>
 
-<script type='text/javascript' src="application/js/TimeInfo.js"></script>
+<input type="hidden" id='publicUsername' value=<?=$data['publicUsername']?>>

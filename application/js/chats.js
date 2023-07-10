@@ -4,9 +4,9 @@ const chat = document.querySelector("#messages");
 const wsUri = 'ws://localhost:8888';
 const messageInput = document.querySelector("#message-input");
 const sendMsgBtn = document.querySelector("#send-msg-btn");
-const userHost = document.querySelector('#userhost-email').innerHTML; // имя пользователя-хоста
 
-
+const clientUsername = document.querySelector('#userhost-email').innerHTML.trim(); // имя пользователя-клиента
+const publicClientUsername = document.querySelector('#publicUsername').value; // публичное имя пользователя-клиента
 
 
 //***** КОНТАКТЫ *****
@@ -85,8 +85,8 @@ function message(data){
     let msgTimeTr = document.createElement('tr');
     let msgTimeTd = document.createElement('td');
 
-    msgBlock.className = data.author !== userHost.trim() ? 'msg d-flex justify-content-end' : 'msg';
-    msgTable.className = data.author !== userHost.trim() ? 'msg-table msg-table-contact' : 'msg-table';
+    msgBlock.className = data.author !== clientUsername ? 'msg d-flex justify-content-end' : 'msg';
+    msgTable.className = data.author !== clientUsername ? 'msg-table msg-table-contact' : 'msg-table';
     msgTextTd.className = 'msg__text';
     msgTimeTd.className = 'msg__time';
 
@@ -120,24 +120,30 @@ webSocket.onmessage = function(e) {
     if(data.onсonnection){
         webSocket.send(JSON.stringify({
             'messageOnconnection': 1,
-            'author' : userHost.trim(),
+            'author' : clientUsername,
             'userId' : data.onсonnection
         }));
     }
-    // сообщение пользователям о подключении
+    // сообщение пользователям о подключении клиента
     else if(data.messageOnconnection){
         removeLastSystemMessage();
+        // подключение клиента
         if(data.author){
-            chat.innerHTML += `<p class="message-system">${data.author} в сети</p>`;
+            console.log(clientUsername);
+            console.log(publicClientUsername);
+            console.log(data.author);
+            let username = data.author===clientUsername || data.author===publicClientUsername ? 'вы' : data.author;
+            chat.innerHTML += `<p class="message-system">${username} в сети</p>`;
         }
+        // ошибки подключения
         else{
             chat.innerHTML += `<p class="message-system">${data.systeminfo}</p>`;
         }
     }
-    // сообщение пользователям о отключении
+    // сообщение пользователям об отключении
     else if(data.offсonnection){
         removeLastSystemMessage();
-        chat.innerHTML += `<p class="message-system">${data.offсonnection !== userHost.trim() ? data.offсonnection : 'вы'} не в сети</p>`;
+        chat.innerHTML += `<p class="message-system">${data.user} не в сети</p>`;
     }
     // сообщения пользователей
     else if(data['message']){
@@ -152,7 +158,7 @@ function sendData(){
     if(messageInput.value !== '' && webSocket.readyState === 1){
         webSocket.send(JSON.stringify({
             'message': messageInput.value,
-            'author' : userHost.trim()
+            'author' : clientUsername
         }));
     }
     messageInput.value = '';

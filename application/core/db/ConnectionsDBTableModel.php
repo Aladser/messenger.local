@@ -20,8 +20,9 @@ class ConnectionsDBTableModel extends DBTableModel{
         // поиск пользователя в БД
         $user = $this->db->query("select user_nickname, user_hide_email from users where user_email = '$user_email'"); // поиск пользователя
         if($user){
-             // поиск соединения в БД
-            $isConnection = $this->db->query("select count(*) as count from connections where connection_public_username = '$user_email'")['count'] > 0;
+            // поиск соединения в БД
+            $userNickname = $user['user_nickname'];
+            $isConnection = $this->db->query("select count(*) as count from connections where connection_public_username = '$user_email' or connection_public_username = '$userNickname'")['count'] > 0;
             // публичное имя пользователя
             $publicUsername = $user['user_hide_email']==="1" ? $user['user_nickname'] : $user_email;
             

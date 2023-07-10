@@ -30,7 +30,7 @@ class Chat implements MessageComponentInterface {
         $this->connectionsTable->removeConnection( $conn->resourceId );
 
         echo "CONNECTION $userEmail COMPLETED\n";
-        $message = json_encode([ 'offсonnection' => $userEmail ]);
+        $message = json_encode([ 'offсonnection' => 1, 'user' => $userEmail]);
         foreach ($this->clients as $client) $client->send($message);
     }
 
