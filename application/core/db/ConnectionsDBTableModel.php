@@ -16,27 +16,27 @@ class ConnectionsDBTableModel extends DBTableModel{
     */
     public function addConnection($data){
         $connection_ws_id = intval($data['userId']);
-        $connection_user_email = trim($data['author']);
+        $user_email = trim($data['author']);
         // поиск пользователя в БД
-        $isUser = $this->db->query("select count(*) as count from users where user_email = '{$connection_user_email}'")['count'] > 0;
+        $isUser = $this->db->query("select count(*) as count from users where user_email = '{$user_email}'")['count'] > 0;
         if($isUser){
-            $isConnection = $this->db->query("select count(*) as count from connections where connection_user_email = '$connection_user_email'")['count'] > 0;
+            $isConnection = $this->db->query("select count(*) as count from connections where connection_public_username = '$user_email'")['count'] > 0;
             if(!$isConnection){
-                $sql = "insert connections(connection_ws_id, connection_user_email) values($connection_ws_id, '$connection_user_email')";
-                return $this->db->exec($sql);
+                $sql = "insert connections(connection_ws_id, connection_public_username) values($connection_ws_id, '$user_email')";
+                return $this->db->exec($sql)== 1 ? "CONNECTION $user_email ESTABILISHED" : "CONNECTION $user_email ERROR";
             }
             else{
-                return 2;
+                return "CONNECTION $user_email ALREADY EXISTS";
             }
         }
         else{
-            return -1;
+            return "USER $user_email NO EXISTS";
         }
     }
 
-    // получить почту пользователя соединения
+    // получить публичное имя пользователя соединения
     public function getConnectionUserEmail($connId){
-        $sql = "select connection_user_email as conn_email from connections where connection_ws_id = $connId";
+        $sql = "select connection_public_username as conn_email from connections where connection_ws_id = $connId";
         return $this->db->query($sql)['conn_email'];
     }
 

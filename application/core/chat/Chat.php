@@ -29,7 +29,7 @@ class Chat implements MessageComponentInterface {
         $userEmail = $this->connectionsTable->getConnectionUserEmail( $conn->resourceId );
         $this->connectionsTable->removeConnection( $conn->resourceId );
 
-        echo "OFF_CONNECTION $userEmail\n";
+        echo "CONNECTION $userEmail COMPLETED\n";
         $message = json_encode([ 'offсonnection' => $userEmail ]);
         foreach ($this->clients as $client) $client->send($message);
     }
@@ -39,31 +39,18 @@ class Chat implements MessageComponentInterface {
         $data = json_decode($msg);
         if($data->messageOnconnection){
             $isAdded = $this->connectionsTable->addConnection( ['author'=>$data->author, 'userId'=>$data->userId] );
-            $author = trim($data->author);
-            switch($isAdded){
-                case 0:
-                    echo "CONNECTION $author: ошибка\n";
-                    break;
-                case 1:
-                    echo "CONNECTION $author: добавлено\n";
-                    break;
-                case 2:
-                    echo "CONNECTION $author: уже существует\n";
-                    break;
-                default:
-                    echo "CONNECTION $author: не существует в БД\n";
-            }
+            echo "$isAdded\n";
         }
         // сообщение пользователя
         else{
-            echo "$msg\r\n";
+            echo "$msg\n";
         }
         foreach ($this->clients as $client) $client->send($msg);
     }
 
     
     public function onError(ConnectionInterface $conn, \Exception $e) {
-        echo "ОШИБКА: {$e->getMessage()}\r\n";
+        echo "ERROR: {$e->getMessage()}\n";
         $conn->close();
     }
 }
