@@ -127,7 +127,12 @@ webSocket.onmessage = function(e) {
     // сообщение пользователям о подключении
     else if(data.messageOnconnection){
         removeLastSystemMessage();
-        chat.innerHTML += `<p class="message-system">${data.author !== userHost.trim() ? data.author : 'вы'} в сети</p>`;
+        if(data.author){
+            chat.innerHTML += `<p class="message-system">${data.author} в сети</p>`;
+        }
+        else{
+            chat.innerHTML += `<p class="message-system">${data.systeminfo}</p>`;
+        }
     }
     // сообщение пользователям о отключении
     else if(data.offсonnection){

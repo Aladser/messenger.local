@@ -18,19 +18,24 @@ class ConnectionsDBTableModel extends DBTableModel{
         $connection_ws_id = intval($data['userId']);
         $user_email = trim($data['author']);
         // поиск пользователя в БД
-        $isUser = $this->db->query("select count(*) as count from users where user_email = '{$user_email}'")['count'] > 0;
-        if($isUser){
+        $user = $this->db->query("select user_nickname, user_hide_email from users where user_email = '$user_email'"); // поиск пользователя
+        if($user){
+             // поиск соединения в БД
             $isConnection = $this->db->query("select count(*) as count from connections where connection_public_username = '$user_email'")['count'] > 0;
+            // публичное имя пользователя
+            $publicUsername = $user['user_hide_email']==="1" ? $user['user_nickname'] : $user_email;
+            
             if(!$isConnection){
-                $sql = "insert connections(connection_ws_id, connection_public_username) values($connection_ws_id, '$user_email')";
-                return $this->db->exec($sql)== 1 ? "CONNECTION $user_email ESTABILISHED" : "CONNECTION $user_email ERROR";
+                $sqlRslt = $this->db->exec("insert connections(connection_ws_id, connection_public_username) values($connection_ws_id, '$publicUsername')");
+                // при добавлении соединения возвращается публичное имя пользователя, иначе ошибка добавлении при неудаче
+                return $sqlRslt == 1 ? ['publicUsername' => $publicUsername] : ['systeminfo' => "$user_email: DATABASE ERROR"];
             }
             else{
-                return "CONNECTION $user_email ALREADY EXISTS";
+                return ['publicUsername' => $publicUsername]; // соединение уже есть в БД, возвращается публичное имя пользователя
             }
         }
         else{
-            return "USER $user_email NO EXISTS";
+            return ['systeminfo' => "USER $user_email NO EXISTS"]; // пользователь в Бд не существует
         }
     }
 

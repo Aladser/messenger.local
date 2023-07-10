@@ -35,16 +35,20 @@ class Chat implements MessageComponentInterface {
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
-        // после соединения пользователь отправляет пакет с id подключения и именем. Данные записываются в БД
+        // пакет о подключении. после соединения пользователь отправляет пакет с id подключения и именем. Данные записываются в БД
         $data = json_decode($msg);
         if($data->messageOnconnection){
-            $isAdded = $this->connectionsTable->addConnection( ['author'=>$data->author, 'userId'=>$data->userId] );
-            echo "$isAdded\n";
+            $rslt = $this->connectionsTable->addConnection( ['author'=>$data->author, 'userId'=>$data->userId] );
+            if($rslt['publicUsername']){
+                $data->author = $rslt['publicUsername'];
+            }
+            else{
+                $data = ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo];
+            }
+            $msg = json_encode($data);
         }
-        // сообщение пользователя
-        else{
-            echo "$msg\n";
-        }
+
+        echo "$msg\n";
         foreach ($this->clients as $client) $client->send($msg);
     }
 
