@@ -1,21 +1,19 @@
-<div class='container font-roboto h-80 bg-c4c4c4 p-0 d-flex'>
+<div class='container chat-container'>
     <div class='contacts pt-2 ps-2 pe-2'>
         <div class='position-relative'>
-            <input type="text" class='w-100 mb-2 form-control' placeholder='поиск контакта' id='find-contacts-input'>
+            <input type="text" class='find-contacts-input w-100 mb-2 form-control' placeholder='поиск контакта' id='find-contacts-input'>
             <button class='position-absolute top-20prcts end-2prcts border-0 bg-white' id='reset-find-contacts-btn' title='сбросить фильтр'>&#9747;</button>
         </div>
         <div id='contacts'></div>
     </div>
     
-    <div class='messages-container pt-2 pe-2 border-start border-end border-dark position-relative padding-left-1dot5prcts padding-right-0dot75'>
-        <p class='mb-2'>Чат с пользователем <span id='contact-username'>xxxxx</span></p>
-        <div class='messages m-0' id='messages'></div>
-
-        <div class='send-msg position-absolute bottom-0 mb-2'>
-            <div class='input-group d-flex justify-content-between'>
-                <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Наберите ваше сообщение здесь' id='message-input'></textarea>
-                <button type="submit" class='img-btn' title='Отправить' id="send-msg-btn"><img src="application/images/sendbtn.png"></button>
-            </div>
+    <div class='messages-container'>
+        <p class='messages-container__title' id='messages-container__title'>Чат с пользователем <span id='contact-username'></span></p>
+        <div class='messages' id='messages'></div>
+        <p class="message-system" id="message-system">Проверка подключения</p>                                   
+        <div class='input-group d-flex justify-content-between pb-2'>
+            <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Наберите ваше сообщение здесь' id='message-input'></textarea>
+            <button type="submit" class='img-btn' title='Отправить' id="send-msg-btn"><img src="application/images/sendbtn.png"></button>
         </div>
     </div>
 

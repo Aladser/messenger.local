@@ -1,28 +1,25 @@
-const findContactsInput = document.querySelector('#find-contacts-input');
 const contacts = document.querySelector('#contacts');
 const chat = document.querySelector("#messages");
-const wsUri = 'ws://localhost:8888';
+
+const findContactsInput = document.querySelector('#find-contacts-input');
 const messageInput = document.querySelector("#message-input");
 const sendMsgBtn = document.querySelector("#send-msg-btn");
+const systemMessagePrg = document.querySelector("#message-system");
 
 const clientUsername = document.querySelector('#userhost-email').innerHTML.trim(); // имя пользователя-клиента
 const publicClientUsername = document.querySelector('#publicUsername').value; // публичное имя пользователя-клиента
+const messagesContainerTitle = document.querySelector("#messages-container__title"); // заголовок контейнера сообщений
+const contactUsernamePrg= messagesContainerTitle.querySelector('#contact-username'); // элемент для показа имени контакта отображаемого чата
+
+const wsUri = 'ws://localhost:8888';
 
 
 //***** КОНТАКТЫ *****
-// ДОБАВИТЬ КОНТАКТ-ЧАТ ПОЛЬЗОВАТЕЛЮ В БД И ПОКАЗ  КОНТАКТОВ ВМЕСТЕ С НИМ
-function setAddContact(contact){
-    return function(){
-        fetch(`/add-contact?contact=${contact}`).then(r=>r.text()).then(data=>{
-            if(data == 1){
-                chat.innerHTML = '';
-                document.querySelector('#contact-username').innerHTML = contact;
-            }
-        });
-    };
-}
-
-// ОТРИСОВКА КОНТАКТА-ЧАТА
+/**
+ * показать контакт на странице
+ * @param {*} element данные контакта из БД
+ * @returns DOM-элемент контакта
+ */
 function createContact(element){
     // контейнер контакта
     let contact = document.createElement('div');    // блок контакта
@@ -33,6 +30,7 @@ function createContact(element){
     contact.className = 'contact position-relative mb-2';
     contactImgBlock.className = 'img-div';
     img.className = 'img pe-2';
+    name.className = 'contact__name';
     
     if(element['user_photo'] == 'ava_profile.png' || element['user_photo'] == null){
         img.src = 'application/images/ava.png';
@@ -41,7 +39,6 @@ function createContact(element){
         img.src = `application/data/profile_photos/${element['user_photo']}`; 
     }
 
-    name.className = 'text-break';
     name.innerHTML = element['username'];
     contact.onclick = setAddContact(element['username']);
 
@@ -49,6 +46,20 @@ function createContact(element){
     contact.appendChild(contactImgBlock);
     contact.appendChild(name);
     contacts.appendChild(contact);
+
+    return contact;
+}
+// ФУНКЦИЯ ДОБАВИТЬ КОНТАКТ В БД для события
+function setAddContact(contact){
+    return function(){
+        fetch(`/add-contact?contact=${contact}`).then(r=>r.text()).then(data=>{
+            if(data == 1){
+                chat.innerHTML = '';
+                contactUsernamePrg.innerHTML = contact;
+                // ОТОБРАЖЕНИЕ ЧАТА ---------<<
+            }
+        });
+    };
 }
 
 // ПОКАЗ КОНТАКТОВ-ЧАТОВ ПОЛЬЗОВАТЕЛЯ
@@ -56,9 +67,13 @@ function showContacts(findInput, contacts){
     fetch('/get-contacts').then(r=>r.json()).then(data => {
         findInput.value = '';
         contacts.innerHTML = '';
-        if(data != null) data.forEach(element => createContact(element));
+        if(data != null) data.forEach(element => {
+            createContact(element)
+        });
     }); 
 }
+
+
 showContacts(findContactsInput, contacts); // показ контактов-чатов при загрузке страницы
 document.querySelector('#reset-find-contacts-btn').onclick = () => showContacts(findContactsInput, contacts); // отмена поиска контакта и отображение контактов
 
@@ -66,7 +81,6 @@ document.querySelector('#reset-find-contacts-btn').onclick = () => showContacts(
 findContactsInput.addEventListener('input', function(){
     fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
         contacts.innerHTML = '';
-
         //  отображение найденных контактов в списке контактов
         if(data != null){
             data.forEach(element => createContact(element));
@@ -100,18 +114,11 @@ function message(data){
     msgBlock.appendChild(msgTable);
     chat.appendChild(msgBlock);
 }
-// удаление предыдущего системного сообщения
-function removeLastSystemMessage(){
-    let systemInfo = document.querySelector('.message-system');
-    if(systemInfo !== null){
-        chat.removeChild(systemInfo);
-    }
-}
 
-
+// ВЕБСОКЕТ
 // вебсокет сообщений
 let webSocket = new WebSocket(wsUri);
-webSocket.onerror = error => chat.innerHTML += `<p class="message-system"> Ошибка подключения к серверу${error.message ? '. '+error.message : ''}</p>`;
+webSocket.onerror = error => systemMessagePrg.innerHTML = `Ошибка подключения к серверу${error.message ? '. '+error.message : ''}`;
 webSocket.onmessage = function(e) {
     let data = JSON.parse(e.data);
     console.log(data);
@@ -126,24 +133,19 @@ webSocket.onmessage = function(e) {
     }
     // сообщение пользователям о подключении клиента
     else if(data.messageOnconnection){
-        removeLastSystemMessage();
         // подключение клиента
         if(data.author){
-            console.log(clientUsername);
-            console.log(publicClientUsername);
-            console.log(data.author);
-            let username = data.author===clientUsername || data.author===publicClientUsername ? 'вы' : data.author;
-            chat.innerHTML += `<p class="message-system">${username} в сети</p>`;
+            let username = data.author===clientUsername || data.author===publicClientUsername ? 'Вы' : data.author;
+            systemMessagePrg.innerHTML = `${username} в сети`;
         }
         // ошибки подключения
         else{
-            chat.innerHTML += `<p class="message-system">${data.systeminfo}</p>`;
+            systemMessagePrg.innerHTML = `${data.systeminfo}`;
         }
     }
     // сообщение пользователям об отключении
     else if(data.offсonnection){
-        removeLastSystemMessage();
-        chat.innerHTML += `<p class="message-system">${data.user} не в сети</p>`;
+        systemMessagePrg.innerHTML = `${data.user} не в сети`;
     }
     // сообщения пользователей
     else if(data['message']){
