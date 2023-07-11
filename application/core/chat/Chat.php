@@ -2,6 +2,7 @@
  
 namespace core\chat;
 use Ratchet\ConnectionInterface;
+date_default_timezone_set('Europe/Moscow');
 
 // Чат
 class Chat implements \Ratchet\MessageComponentInterface {
@@ -51,7 +52,7 @@ class Chat implements \Ratchet\MessageComponentInterface {
     /**
      * @param ConnectionInterface $from соединение
      * @param mixed $msg сообщение
-     * получить соообщений от клиентов
+     * получить соообщения от клиентов
      */
     public function onMessage(ConnectionInterface $from, $msg) {
         // после соединения пользователь отправляет пакет messageOnconnection
@@ -59,8 +60,13 @@ class Chat implements \Ratchet\MessageComponentInterface {
         if($data->messageOnconnection){
             $rslt = $this->connectionsTable->addConnection( ['author'=>$data->author, 'userId'=>$data->userId] ); // добавление соединения в БД
             $data->author = $rslt['publicUsername'] ? $rslt['publicUsername'] : ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo]; // имя пользователя или ошибка добавления
-            $msg = json_encode($data);
         }
+        // сообщение пользователя
+        else if($data->message){
+            $data->time = date('Y-m-d H:i:s');  // '2023-07-11 12:00:00'
+            
+        }
+        $msg = json_encode($data);
         echo "$msg\n";
         foreach ($this->clients as $client) $client->send($msg);
     }

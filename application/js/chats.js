@@ -127,7 +127,7 @@ function message(data){
     msgTimeTd.className = 'msg__time';
 
     msgTextTd.innerHTML = data.message;
-    msgTimeTd.innerHTML = '20.06.2023 10.30';
+    msgTimeTd.innerHTML = data.time;
 
     msgTextTr.appendChild(msgTextTd);
     msgTimeTr.appendChild(msgTimeTd);
@@ -144,7 +144,7 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = error => systemMessagePrg.innerHTML = `Ошибка подключения к серверу${error.message ? '. '+error.message : ''}`;
 webSocket.onmessage = function(e) {
     let data = JSON.parse(e.data);
-    // console.log(data);
+    //console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if(data.onсonnection){
@@ -172,6 +172,15 @@ webSocket.onmessage = function(e) {
     }
     // сообщения пользователей
     else{
+        // получение местного времени
+        // 2023.07.11 12:00:00
+        let timeInMs = Date.parse(data.time);
+        let newDate = new Date(timeInMs);
+        let timeZone = -newDate.getTimezoneOffset()/60; // текущий часовой пояс
+        timeInMs += (timeZone-3)*3600000;
+        newDate = new Date(timeInMs);
+        data.time = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
+
         message(data);
     }
 };
