@@ -1,16 +1,24 @@
 <?php
  
 namespace core\chat;
-use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
 // Чат
-class Chat implements MessageComponentInterface {
-    private $clients; // хранение всех подключенных пользователей
-    private $usersTable; // таблица пользователей
-    private $connectionsTable; // таблица подключений
+class Chat implements \Ratchet\MessageComponentInterface {
+    /**
+     * @var [SplObjectStorage;] хранение всех подключенных пользователей
+     */
+    private $clients;
+    /**
+     * @var [UsersDBTableModel] таблица пользователей
+     */
+    private $usersTable;
+    /**
+     * @var [ConnectionsDBTableModel]таблица подключений
+     */
+    private $connectionsTable;
    
-    public function __construct($usersTable, $connectionsTable) {
+    public function __construct(\core\db\UsersDBTableModel $usersTable, \core\db\ConnectionsDBTableModel $connectionsTable) {
         $this->clients = new \SplObjectStorage;
         $this->usersTable = $usersTable;
         $this->connectionsTable = $connectionsTable;
@@ -18,7 +26,8 @@ class Chat implements MessageComponentInterface {
     }
 
     /**
-     * Открыть соединение
+     * @param ConnectionInterface $conn соединение
+     * открыть соединение
      */
     public function onOpen(ConnectionInterface $conn) {
         $this->clients->attach($conn); // добавление клиента
@@ -27,6 +36,7 @@ class Chat implements MessageComponentInterface {
     }
     
     /**
+     * @param ConnectionInterface $conn соединение
      * Закрыть соединение
      */
     public function onClose(ConnectionInterface $conn) {
@@ -39,7 +49,9 @@ class Chat implements MessageComponentInterface {
     }
 
     /**
-     * получение соообщений от клиентов
+     * @param ConnectionInterface $from соединение
+     * @param mixed $msg сообщение
+     * получить соообщений от клиентов
      */
     public function onMessage(ConnectionInterface $from, $msg) {
         // после соединения пользователь отправляет пакет messageOnconnection
@@ -54,6 +66,8 @@ class Chat implements MessageComponentInterface {
     }
 
     /**
+     * @param ConnectionInterface $conn соединение
+     * @param \Exception $e ошибка
      * ошибка подключения
      */
     public function onError(ConnectionInterface $conn, \Exception $e) {

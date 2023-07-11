@@ -127,7 +127,7 @@ function message(data){
     msgTimeTd.className = 'msg__time';
 
     msgTextTd.innerHTML = data.message;
-    msgTimeTd.innerHTML = '20.06.203 10.30';
+    msgTimeTd.innerHTML = '20.06.2023 10.30';
 
     msgTextTr.appendChild(msgTextTd);
     msgTimeTr.appendChild(msgTimeTd);
