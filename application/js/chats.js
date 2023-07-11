@@ -55,6 +55,7 @@ function setAddContact(contact){
         fetch(`/add-contact?contact=${contact}`).then(r=>r.text()).then(data=>{
             if(data == 1){
                 chat.innerHTML = '';
+                messagesContainerTitle.classList.remove('invisible');
                 contactUsernamePrg.innerHTML = contact;
                 // ОТОБРАЖЕНИЕ ЧАТА ---------<<
             }
