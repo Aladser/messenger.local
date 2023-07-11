@@ -2,23 +2,18 @@
 
 namespace core\db;
 
-/*
+/**
  * класс БД таблицы соединений вебсокета
 */
 class ConnectionsDBTableModel extends DBTableModel{
-    /*
-        сохранить подключение в БД
-        возвращает:
-        0 - ошибка добавления
-        1 - добавлено соединение
-        2 - соединение существует
-        -1 - пользователь не существует (возможно, подмена)
+    /**
+     * сохранить подключение в БД
     */
     public function addConnection($data){
         $connection_ws_id = intval($data['userId']);
         $user_email = trim($data['author']);
         // поиск пользователя в БД
-        $user = $this->db->query("select user_nickname, user_hide_email from users where user_email = '$user_email'"); // поиск пользователя
+        $user = $this->db->query("select user_nickname, user_hide_email from users where user_email = '$user_email'");
         if($user){
             // поиск соединения в БД
             $userNickname = $user['user_nickname'];
@@ -28,31 +23,37 @@ class ConnectionsDBTableModel extends DBTableModel{
             
             if(!$isConnection){
                 $sqlRslt = $this->db->exec("insert connections(connection_ws_id, connection_public_username) values($connection_ws_id, '$publicUsername')");
-                // при добавлении соединения возвращается публичное имя пользователя, иначе ошибка добавлении при неудаче
+                // при добавлении соединения возвращается публичное имя пользователя или ошибка добавления
                 return $sqlRslt == 1 ? ['publicUsername' => $publicUsername] : ['systeminfo' => "$user_email: DATABASE ERROR"];
             }
             else{
-                return ['publicUsername' => $publicUsername]; // соединение уже есть в БД, возвращается публичное имя пользователя
+                return ['publicUsername' => $publicUsername]; // соединение уже есть в БД. Возвращается публичное имя пользователя
             }
         }
         else{
-            return ['systeminfo' => "USER $user_email NO EXISTS"]; // пользователь в Бд не существует
+            return ['systeminfo' => "USER $user_email NO EXISTS"]; // пользователь в БД не существует
         }
     }
 
-    // получить публичное имя пользователя соединения
-    public function getConnectionUserEmail($connId){
-        $sql = "select connection_public_username as conn_email from connections where connection_ws_id = $connId";
-        return $this->db->query($sql)['conn_email'];
+    /**
+     * получить публичное имя пользователя соединения
+    */ 
+    public function getConnectionPublicUsername($connId){
+        $sql = "select connection_public_username from connections where connection_ws_id = $connId";
+        return $this->db->query($sql)['connection_public_username'];
     }
 
-    // удаление закрытого соединения
+    /**
+     * удалить закрытое соединение из БД
+    */ 
     public function removeConnection($connId){
         return $this->db->exec("delete from connections where connection_ws_id = $connId");
     }
 
-    // очистка таблицы соединений
-    public function clearConnections(){
+    /**
+     * очистить таблицу соединений
+    */ 
+    public function removeConnections(){
         $this->db->exec('delete from connections');
         $this->db->exec('alter table connections AUTO_INCREMENT = 1');
     }

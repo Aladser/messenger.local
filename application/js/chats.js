@@ -1,24 +1,38 @@
 const contacts = document.querySelector('#contacts');
 const chat = document.querySelector("#messages");
-
 const findContactsInput = document.querySelector('#find-contacts-input');
 const messageInput = document.querySelector("#message-input");
 const sendMsgBtn = document.querySelector("#send-msg-btn");
+const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
+/**
+ * системное сообщение о состоянии подключений
+ */
 const systemMessagePrg = document.querySelector("#message-system");
-
-const clientUsername = document.querySelector('#userhost-email').innerHTML.trim(); // имя пользователя-клиента
-const publicClientUsername = document.querySelector('#publicUsername').value; // публичное имя пользователя-клиента
-const messagesContainerTitle = document.querySelector("#messages-container__title"); // заголовок контейнера сообщений
-const contactUsernamePrg= messagesContainerTitle.querySelector('#contact-username'); // элемент для показа имени контакта отображаемого чата
+/**
+ * почта пользователя-клиента
+ */
+const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();
+/**
+ * публичное имя пользователя-клиента
+ */
+const publicClientUsername = document.querySelector('#publicUsername').value;
+/**
+ * заголовок чата
+ */
+const messagesContainerTitle = document.querySelector("#messages-container__title");
+/**
+ * имя контакта в заголовке
+ */
+const contactUsernamePrg= messagesContainerTitle.querySelector('#contact-username');
 
 const wsUri = 'ws://localhost:8888';
 
 
 //***** КОНТАКТЫ *****
+
 /**
- * показать контакт на странице
+ * создать DOM-элемент контакта
  * @param {*} element данные контакта из БД
- * @returns DOM-элемент контакта
  */
 function createContact(element){
     // контейнер контакта
@@ -49,7 +63,11 @@ function createContact(element){
 
     return contact;
 }
-// ФУНКЦИЯ ДОБАВИТЬ КОНТАКТ В БД для события
+
+/**
+ * добавить контакт в БД и открыть чат с ним
+ * @param {*} contact публичное имя контата
+ */
 function setAddContact(contact){
     return function(){
         fetch(`/add-contact?contact=${contact}`).then(r=>r.text()).then(data=>{
@@ -57,41 +75,45 @@ function setAddContact(contact){
                 chat.innerHTML = '';
                 messagesContainerTitle.classList.remove('invisible');
                 contactUsernamePrg.innerHTML = contact;
-                // ОТОБРАЖЕНИЕ ЧАТА ---------<<
+                // >>------ ОТОБРАЖЕНИЕ ЧАТА ---------<<
             }
         });
     };
 }
 
-// ПОКАЗ КОНТАКТОВ-ЧАТОВ ПОЛЬЗОВАТЕЛЯ
+/**
+ * показать контакты пользователя
+ * @param {*} findInput поле поиска
+ * @param {*} contacts  контейнер отображения контактов
+ */
 function showContacts(findInput, contacts){
     fetch('/get-contacts').then(r=>r.json()).then(data => {
         findInput.value = '';
         contacts.innerHTML = '';
-        if(data != null) data.forEach(element => {
-            createContact(element)
-        });
+        if(data != null) data.forEach(element => createContact(element));
     }); 
 }
 
-
-showContacts(findContactsInput, contacts); // показ контактов-чатов при загрузке страницы
-document.querySelector('#reset-find-contacts-btn').onclick = () => showContacts(findContactsInput, contacts); // отмена поиска контакта и отображение контактов
+// показ контактов пользователя
+showContacts(findContactsInput, contacts);
+// сброс поиска контакта и показ контактов
+resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);
 
 // ПОИСК КОНТАКТОВ В БД
-findContactsInput.addEventListener('input', function(){
+findContactsInput.oninput = () => {
     fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
         contacts.innerHTML = '';
         //  отображение найденных контактов в списке контактов
-        if(data != null){
-            data.forEach(element => createContact(element));
-        }
+        if(data != null){data.forEach(element => createContact(element));}
     });
-});
+};
  
 
 //***** СООБЩЕНИЯ *****
-// вывод сообщения пользователя на экран
+/**
+ * вывести сообщение пользователя из вебсокета в браузере
+ * @param {*} data сообщение
+ */
 function message(data){
     let msgBlock = document.createElement('div');
     let msgTable = document.createElement('table');
@@ -116,13 +138,14 @@ function message(data){
     chat.appendChild(msgBlock);
 }
 
-// ВЕБСОКЕТ
-// вебсокет сообщений
+/**
+ * вебсокет сообщений
+ */
 let webSocket = new WebSocket(wsUri);
 webSocket.onerror = error => systemMessagePrg.innerHTML = `Ошибка подключения к серверу${error.message ? '. '+error.message : ''}`;
 webSocket.onmessage = function(e) {
     let data = JSON.parse(e.data);
-    console.log(data);
+    // console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if(data.onсonnection){
@@ -149,15 +172,16 @@ webSocket.onmessage = function(e) {
         systemMessagePrg.innerHTML = `${data.user} не в сети`;
     }
     // сообщения пользователей
-    else if(data['message']){
+    else{
         message(data);
     }
 };
 
-
-// отправка данных на сервер
+/**
+ * отправить сообщение на сервер
+ *  */
 function sendData(){
-    // непустые сообщения
+    // непустые сообщения и готовый к обмену сокет
     if(messageInput.value !== '' && webSocket.readyState === 1){
         webSocket.send(JSON.stringify({
             'message': messageInput.value,
