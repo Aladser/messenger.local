@@ -1,14 +1,17 @@
+/**
+ * скрытый элемент выбора файлов
+ */
+const selectFileInput = document.querySelector('#select-file-input');
 const hideEmailInput = document.querySelector('#hide-email-input');
 const saveBtn = document.querySelector('#save-profile-settings-btn');
-const selectFileInput = document.querySelector('#select-file-input');
 const inputNickname = document.querySelector('#input-nickname');
 const prgError = document.querySelector('#prg-error');
-document.querySelector('#btn-back-profile').onclick = () => window.open('/chats', '_self'); // кпнопка назад
+const editNicknameBtn = document.querySelector('#btn-edit-nickname');
+const editPhotoBtn = document.querySelector('#edit-photo-btn');
 
-
-
-// ЧЕКБОКС
-// изменение видимости кнопки сохранить при переключении чекбокса
+/**
+ * изменить видимость кнопки Сохранить при переключении чекбокса скрытия почты
+*/ 
 function changeHideEmailInputVisibility(input, btn){
     let startState = input.checked; // изначальное состояние чекбокса скрытия почты
     return function func(){
@@ -20,20 +23,10 @@ function changeHideEmailInputVisibility(input, btn){
         }
     }
 }
-hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn);
 
-
-
-// НИКНЕЙМ
-// активирует поле ввода нового никнейма
-document.querySelector('#btn-edit-nickname').onclick = () => {
-    inputNickname.disabled = false;
-    inputNickname.focus();
-}
-
-// ввод никнейма
-
-// Проверка введенного никнейма
+/**
+ * Проверить введенный никнейм
+*/ 
 function writeNickname(input, btn){
     let startValue = input.value; // изначальный никнейм
     return function func(){
@@ -41,41 +34,47 @@ function writeNickname(input, btn){
             let data = new URLSearchParams();
             data.set('nickname', input.value);
 
-            // НЕ пустое поле или кириллица
-            if(input.value === '' || validateNickname(input.value)){
+            // проверить никнейм на пустое поле или кириллицу
+            if(input.value === '' || input.value.search(/[А-яЁё]/) !== -1){
                 btn.classList.add('hidden');
                 inputNickname.classList.add('input-nickname-error');
                 prgError.classList.remove('hidden'); 
-                prgError.innerHTML = 'логин не должен содержать кирриллицу или быть пустым';
+                prgError.innerHTML = 'Логин не должен содержать кирриллицу или быть пустым';
                 return;
             }
+            // проверить уникальность никнейма
             else{
                 inputNickname.classList.remove('input-nickname-error');
-                prgError.classList.add('hidden'); 
+                prgError.classList.add('hidden');
+                fetch('/is-unique-nickname', {method:'post', body:data}).then(r=>r.text().then(data => {
+                    // никнейм уникален
+                    if(data == 1){
+                        btn.classList.remove('hidden');
+                        inputNickname.classList.remove('input-nickname-error');
+                        prgError.classList.add('hidden'); 
+                    }
+                    else{
+                        btn.classList.add('hidden');
+                        inputNickname.classList.add('input-nickname-error');
+                        prgError.classList.remove('hidden');
+                        prgError.innerHTML = 'Логин занят';   
+                    }
+                }));
             }
-
-            fetch('/is-unique-nickname', {method:'post', body:data}).then(r=>r.text().then(data => {
-                if(data == 1){
-                    btn.classList.remove('hidden');
-                    inputNickname.classList.remove('input-nickname-error');
-                    prgError.classList.add('hidden'); 
-                }
-                else{
-                    btn.classList.add('hidden');
-                    inputNickname.classList.add('input-nickname-error');
-                    prgError.classList.remove('hidden');
-                    prgError.innerHTML = 'логин занят';   
-                }
-            }));
         }
         else{
             btn.classList.add('hidden');
         }
     }
 }
-inputNickname.oninput = writeNickname(inputNickname, saveBtn);
 
-// снятие фокуса с поля никнейма
+// активирует поле ввода нового никнейма
+editNicknameBtn.onclick = () => {
+    inputNickname.disabled = false;
+    inputNickname.focus();
+}
+
+// снять фокус с поля никнейма
 inputNickname.onblur = function(){
     let originalNickname = inputNickname.value;
     return function(){
@@ -91,7 +90,7 @@ inputNickname.onblur = function(){
 
 
 // ИЗОБРАЖЕНИЕ ПРОФИЛЯ
-document.querySelector('#edit-photo-btn').onclick = () => selectFileInput.click();
+editPhotoBtn.onclick = () => selectFileInput.click();
 // оправка формы на сервер
 selectFileInput.onchange = () => {
     saveBtn.classList.remove('hidden');
@@ -130,3 +129,9 @@ saveBtn.addEventListener('click', ()=>{
         }
     });
 });
+
+// полная загрузка страницы
+window.onload = () =>{
+    hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn);
+    inputNickname.oninput = writeNickname(inputNickname, saveBtn);
+}

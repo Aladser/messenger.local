@@ -12,6 +12,11 @@ class ProfileModel extends \core\Model
     public function run(){
         session_start();
         $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
+
+        // удаление временных файлов текущего профиля
+        $tempDirPath = dirname(__DIR__, 1)."\data\\temp\\";
+        foreach(glob($tempDirPath.$email.'*') as $file) unlink($file);
+
         return $this->users->getUserData($email);
     }
 }

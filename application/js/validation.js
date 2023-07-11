@@ -9,9 +9,3 @@ function validatePassword(password){
     let passwSymbols = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,1000}$/;
     return passwSymbols.test(password);
 }
-
-// валидация без кириллицы
-function validateNickname(password){
-    let passwSymbols = /^[а-яА-ЯёЁ]+$/;
-    return passwSymbols.test(password);
-}

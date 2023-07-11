@@ -1,5 +1,3 @@
-document.querySelector('#login-form__back-btn').onclick = () => window.open('/main', '_self'); // кнопка назад
-
 const emailInput = document.querySelector('#login-form__email-input');
 const passwordInput = document.querySelector('#login-form__password-input');
 const loginBtn = document.querySelector('#login-form__login-btn');
@@ -24,8 +22,7 @@ document.querySelector('#login-form').addEventListener('submit', function(e){
     e.preventDefault();
     let form = new FormData(this);
     // Список пар ключ/значение
-    fetch('/login-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
-        data = JSON.parse(data);
+    fetch('/login-user', {method: 'POST', body: form}).then(response => response.json()).then(data => {
         if(data['result'] === 'login_user'){
             window.open('/chats', '_self')
         }

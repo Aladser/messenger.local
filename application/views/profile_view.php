@@ -15,11 +15,11 @@
         <div class='p-4'>
             <table class='table'>
                 <tr>
-                    <td>почта:</td>
+                    <td>Почта:</td>
                     <td><?= $data['user-email'] ?></td>
                 </tr>
                 <tr>
-                    <td data-bs-toggle="tooltip">никнейм:</td>
+                    <td data-bs-toggle="tooltip">Никнейм:</td>
                     <td><input type="text" class='input-nickname' id='input-nickname' value="<?= is_null($data['user_nickname']) ? '' : $data['user_nickname']?>" disabled></td>
                 </tr>
             </table>
@@ -32,13 +32,13 @@
 
         <div class='options mb-2'>
             <form method='post' id='upload-file-form' enctype="multipart/form-data">
-                <input type="file" id="select-file-input" name='image' class='hidden'>
+                <input type="file" id="select-file-input" accept="image/*" name='image' class='hidden'>
                 <input type="submit" id='upload-file-btn' class='hidden'>
                 <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='edit-photo-btn'>Изменить фото</button>
             </form>
             
             <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='btn-edit-nickname'>Установить nickname</button>
-            <button class='btn btn-bg-C4C4C4 text-white w-100' id='btn-back-profile'>Назад</button>
+            <a href="\chats" class='text-decoration-none'><div class='btn-bg-C4C4C4 text-white w-100 p-2 text-center'>Назад</div></a>
         </div>
     </div>
     <br>

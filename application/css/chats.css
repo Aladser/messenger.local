@@ -5,6 +5,11 @@
     background-color: #C4C4C4;
     font-family: 'Roboto', sans-serif;
 }
+.options-container{
+    width: 11%;
+    padding-left: 1.5rem;
+    padding-right: 1rem; 
+}
 
 .contacts{
     width: 21%;
@@ -71,32 +76,6 @@
     color: #666666;
 }
 
-.options-container{
-    width: 11%;
-    padding-left: 1.5rem;
-    padding-right: 1rem; 
-}
-
-/* изображения */
-.img-div{
-    width: 2rem;
-    height: 1.6rem;
-    display: inline-block;
-}
-.option-img-div{
-    width: 80%;
-    height: auto;
-    display: none;
-    margin: auto;
-    margin-bottom: 0.5rem;
-}
-.img-btn{
-    height: 100%;
-    width: auto;
-    border: none;
-    background-size: cover;
-}
-
 .option-link{
     text-decoration: none;
     color: black;
@@ -111,17 +90,30 @@
     font-weight: 400;
 }
 
-.send-msg{
-    width: 97%;
+/* изображения */
+.profile-img{
+    width: 2rem;
+    height: 1.6rem;
+    display: inline-block;
+}
+.option-img-block{
+    width: 80%;
+    height: auto;
+    margin: auto;
+    margin-bottom: 0.5rem;
+    display: none;
+}
+.send-btn-img{
+    height: 100%;
+    width: auto;
+    border: none;
+    background-size: cover;
 }
 
 @media (max-width: 1200px) {
     .options-container{
         padding-left: 0.75rem;
         padding-right: 0.75rem;
-    }
-    .send-msg{
-        width: 96.5%;
     }
 }
 @media (max-width: 1000px) {
@@ -150,7 +142,7 @@
     .send-msg{
         width: 95%;
     }
-    .option-img-div{
+    .option-img-block{
         display: inline-block;
     }
     .option-name{

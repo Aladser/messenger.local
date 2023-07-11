@@ -11,8 +11,6 @@ const emailClue = document.querySelector('#reg-form__emai-clue');
 const password1Clue = document.querySelector('#reg-form__password1-clue');
 const password2Clue = document.querySelector('#reg-form__password2-clue');
 
-document.querySelector('#reg-form__back-btn').onclick = () => window.open('/main', '_self'); // кнопка назад
-
 
 
 //***** событие клика поля ввода данных *****/

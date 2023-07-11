@@ -14,8 +14,7 @@
 
         <div>
             <input type="submit" class='btn w-25 mb-2 btn-bg-C4C4C4 text-white' value="Войти" disabled id='login-form__login-btn'>
-            <br>
-            <input type="button" class='btn w-25 mb-2 btn-bg-C4C4C4 text-white' value="Назад" id='login-form__back-btn' >
+            <a href="/main" class='text-decoration-none'><div class='mx-auto w-25 btn-bg-C4C4C4 text-white p-2'>Назад</div></a>
         </div>
     </form>
 
