@@ -100,14 +100,13 @@ showContacts(findContactsInput, contacts);
 resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);
 
 // ПОИСК КОНТАКТОВ В БД
-findContactsInput.oninput = () => {
+findContactsInput.addEventListener('input', function(){
     fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
         contacts.innerHTML = '';
         //  отображение найденных контактов в списке контактов
         if(data != null){data.forEach(element => createContact(element));}
     });
-};
- 
+});
 
 //***** СООБЩЕНИЯ *****
 /**
