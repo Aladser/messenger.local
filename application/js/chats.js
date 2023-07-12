@@ -28,13 +28,7 @@ const contactUsernamePrg= messagesContainerTitle.querySelector('#contact-usernam
 const wsUri = 'ws://localhost:8888';
 
 
-window.onload = () =>{
-    showContacts(findContactsInput, contacts); // показ контактов пользователя
-}
-
-
 //***** КОНТАКТЫ *****
-
 /**
  * создать DOM-элемент контакта
  * @param {*} element данные контакта из БД
@@ -98,7 +92,7 @@ function showContacts(findInput, contacts){
         if(data != null) data.forEach(element => createContact(element));
     }); 
 }
-
+showContacts(findContactsInput, contacts);
 
 
 // сброс поиска контакта и показ контактов
