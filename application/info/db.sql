@@ -25,7 +25,9 @@ drop table if exists contacts;
 create table contacts(
 	id int auto_increment primary key,
 	user_id int not null,
-	contact_id int not null
+	contact_id int not null,
+	CONSTRAINT contacts_fk_userid foreign key (user_id) references users(user_id) ON DELETE cascade,
+	CONSTRAINT contacts_fk_contactid foreign key (contact_id) references users(user_id) ON DELETE CASCADE
 );
 
 # -----соединения-----
