@@ -120,8 +120,8 @@ function message(data){
     let msgTimeTr = document.createElement('tr');
     let msgTimeTd = document.createElement('td');
 
-    msgBlock.className = data.author !== clientUsername ? 'msg d-flex justify-content-end' : 'msg';
-    msgTable.className = data.author !== clientUsername ? 'msg-table msg-table-contact' : 'msg-table';
+    msgBlock.className = data.fromuser !== publicClientUsername ? 'msg d-flex justify-content-end' : 'msg';
+    msgTable.className = data.fromuser !== publicClientUsername ? 'msg-table msg-table-contact' : 'msg-table';
     msgTextTd.className = 'msg__text';
     msgTimeTd.className = 'msg__time';
 
@@ -143,7 +143,7 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = error => systemMessagePrg.innerHTML = `Ошибка подключения к серверу${error.message ? '. '+error.message : ''}`;
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
-    //console.log(data);
+    console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if(data.onсonnection){
@@ -171,16 +171,19 @@ webSocket.onmessage = e => {
     }
     // сообщения пользователей
     else{
-        // получение местного времени
-        // 2023.07.11 12:00:00
-        let timeInMs = Date.parse(data.time);
-        let newDate = new Date(timeInMs);
-        let timeZone = -newDate.getTimezoneOffset()/60; // текущий часовой пояс
-        timeInMs += (timeZone-3)*3600000;
-        newDate = new Date(timeInMs);
-        data.time = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
+        // показ сообщений открытого чата
+        if((data.fromuser == publicClientUsername && data.touser == contactUsernamePrg.innerHTML) || (data.fromuser == contactUsernamePrg.innerHTML && data.touser == publicClientUsername)){
+            // получение местного времени
+            // 2023.07.11 12:00:00
+            let timeInMs = Date.parse(data.time);
+            let newDate = new Date(timeInMs);
+            let timeZone = -newDate.getTimezoneOffset()/60; // текущий часовой пояс
+            timeInMs += (timeZone-3)*3600000;
+            newDate = new Date(timeInMs);
+            data.time = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
 
-        message(data);
+            message(data);
+        }
     }
 };
 
@@ -188,11 +191,12 @@ webSocket.onmessage = e => {
  * отправить сообщение на сервер
  *  */
 function sendData(){
-    // непустые сообщения и готовый к обмену сокет
-    if(messageInput.value !== '' && webSocket.readyState === 1){
+    // непустые сообщения, готовый к обмену сокет, открытй чат
+    if(messageInput.value !== '' && webSocket.readyState === 1 && contactUsernamePrg.innerHTML!=''){
         webSocket.send(JSON.stringify({
             'message': messageInput.value,
-            'author' : clientUsername
+            'fromuser' : publicClientUsername,
+            'touser': contactUsernamePrg.innerHTML
         }));
     }
     messageInput.value = '';
