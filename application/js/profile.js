@@ -9,6 +9,11 @@ const prgError = document.querySelector('#prg-error');
 const editNicknameBtn = document.querySelector('#btn-edit-nickname');
 const editPhotoBtn = document.querySelector('#edit-photo-btn');
 
+window.onload = () =>{
+    hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn);
+    inputNickname.oninput = writeNickname(inputNickname, saveBtn);
+}
+
 /**
  * изменить видимость кнопки Сохранить при переключении чекбокса скрытия почты
 */ 
@@ -88,7 +93,6 @@ inputNickname.onblur = function(){
 }();
 
 
-
 // ИЗОБРАЖЕНИЕ ПРОФИЛЯ
 editPhotoBtn.onclick = () => selectFileInput.click();
 // оправка формы на сервер
@@ -96,7 +100,6 @@ selectFileInput.onchange = () => {
     saveBtn.classList.remove('hidden');
     document.querySelector('#upload-file-btn').click();
 }
-
 // установка фото профиля
 document.querySelector('#upload-file-form').onsubmit = e => {
     e.preventDefault();
@@ -108,7 +111,6 @@ document.querySelector('#upload-file-form').onsubmit = e => {
         });
     }
 }
-
 
 
 // отправка изменений профиля на сервер
@@ -129,9 +131,3 @@ saveBtn.addEventListener('click', ()=>{
         }
     });
 });
-
-// полная загрузка страницы
-window.onload = () =>{
-    hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn);
-    inputNickname.oninput = writeNickname(inputNickname, saveBtn);
-}

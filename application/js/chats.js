@@ -28,6 +28,11 @@ const contactUsernamePrg= messagesContainerTitle.querySelector('#contact-usernam
 const wsUri = 'ws://localhost:8888';
 
 
+window.onload = () =>{
+    showContacts(findContactsInput, contacts); // показ контактов пользователя
+}
+
+
 //***** КОНТАКТЫ *****
 
 /**
@@ -94,8 +99,8 @@ function showContacts(findInput, contacts){
     }); 
 }
 
-// показ контактов пользователя
-showContacts(findContactsInput, contacts);
+
+
 // сброс поиска контакта и показ контактов
 resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);
 
@@ -138,11 +143,11 @@ function message(data){
 }
 
 /**
- * вебсокет сообщений
+ * ВЕБСОКЕТ СООБЩЕНИЙ
  */
 let webSocket = new WebSocket(wsUri);
 webSocket.onerror = error => systemMessagePrg.innerHTML = `Ошибка подключения к серверу${error.message ? '. '+error.message : ''}`;
-webSocket.onmessage = function(e) {
+webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
     //console.log(data);
 
