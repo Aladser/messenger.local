@@ -46,8 +46,14 @@ class UsersDBTableModel extends DBTableModel{
         return $this->db->query("select count(*) as count from users where user_nickname='$nickname'")['count'] == 0;
     }
 
-    // получить публичное имя пользователя
-    public function getPublicUsername($userEmail){
+    // получить публичное имя пользователя из почты
+    public function getPublicUsername(int $userId){
+        $user = $this->db->query("select user_email, user_nickname, user_hide_email from users where user_email = $userId");
+        return $user['user_hide_email'] == 1 ? $user['user_nickname'] : $user['user_email'];
+    }
+
+    // получить публичное имя пользователя из почты
+    public function getPublicUsernameFromEmail(string $userEmail){
         $user = $this->db->query("select user_nickname, user_hide_email from users where user_email = '$userEmail'");
         return $user['user_hide_email'] == '1' ? $user['user_nickname'] : $userEmail;
     }

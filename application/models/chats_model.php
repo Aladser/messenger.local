@@ -12,7 +12,7 @@ class ChatsModel extends \core\Model
     public function run(){
         session_start();
         $userEmail = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
-        $publicUsername = $this->userTable->getPublicUsername($userEmail);
+        $publicUsername = $this->userTable->getPublicUsernameFromEmail($userEmail);
 
         // удаление временных файлов профиля, откуда был переход
         $tempDirPath = dirname(__DIR__, 1)."\data\\temp\\";

@@ -31,9 +31,10 @@ create table contacts(
 # -----соединения-----
 drop table if exists connections;
 create table connections(
-        connection_id int auto_increment primary key,
-        connection_ws_id int not null,
-        connection_username varchar(255) not null
+	connection_id int auto_increment primary key,
+	connection_ws_id int not null,
+	connection_userid int,
+	CONSTRAINT fk_userid foreign key (connection_userid) references users(user_id) ON DELETE CASCADE
 );
 
 # ---- чаты ----
@@ -63,7 +64,7 @@ create table chat_message(
 	chat_message_text text not null,
 	chat_message_user_creatorid int,
 	#chat_message_date datetime default '2000-01-01 00:00:00'
-	chat_message_date datetime default CURRENT_TIMESTAMP(),
+	chat_message_date not null,
 	CONSTRAINT check_message_chatid foreign key (chat_message_chatid) references chat(chat_id) ON DELETE cascade,
 	CONSTRAINT check_user_creator foreign key (chat_message_user_creatorid) references users(user_id) ON DELETE cascade
 );

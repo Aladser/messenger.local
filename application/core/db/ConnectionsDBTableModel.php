@@ -9,20 +9,19 @@ class ConnectionsDBTableModel extends DBTableModel{
     /**
      * сохранить подключение в БД
     */
-    public function addConnection($data){
+    public function addConnection(array $data){
         $connection_ws_id = intval($data['userId']);
         $user_email = trim($data['author']);
         // поиск пользователя в БД
-        $user = $this->db->query("select user_nickname, user_hide_email from users where user_email = '$user_email'");
+        $user = $this->db->query("select user_id, user_email, user_nickname, user_hide_email from users where user_email = '$user_email'");
         if($user){
             // поиск соединения в БД
-            $userNickname = $user['user_nickname'];
-            $isConnection = $this->db->query("select count(*) as count from connections where connection_public_username = '$user_email' or connection_public_username = '$userNickname'")['count'] > 0;
-            // публичное имя пользователя
-            $publicUsername = $user['user_hide_email']==="1" ? $user['user_nickname'] : $user_email;
+            $userId = $user['user_id'];
+            $publicUsername = $user['user_hide_email'] == 1 ? $user['user_nickname'] : $user['user_email'];
+            $isConnection = $this->db->query("select * from connections where connection_userid = $userId");
             
             if(!$isConnection){
-                $sqlRslt = $this->db->exec("insert connections(connection_ws_id, connection_public_username) values($connection_ws_id, '$publicUsername')");
+                $sqlRslt = $this->db->exec("insert connections(connection_ws_id, connection_userid) values($connection_ws_id, $userId)");
                 // при добавлении соединения возвращается публичное имя пользователя или ошибка добавления
                 return $sqlRslt == 1 ? ['publicUsername' => $publicUsername] : ['systeminfo' => "$user_email: DATABASE ERROR"];
             }
@@ -38,15 +37,16 @@ class ConnectionsDBTableModel extends DBTableModel{
     /**
      * получить публичное имя пользователя соединения
     */ 
-    public function getConnectionPublicUsername($connId){
-        $sql = "select connection_public_username from connections where connection_ws_id = $connId";
-        return $this->db->query($sql)['connection_public_username'];
+    public function getConnectionPublicUsername(int $connId){
+        $user = $this->db->query("select user_email, user_nickname, user_hide_email from users where user_id = (select connection_userid from connections where connection_ws_id = $connId)");
+        $publicUsername = $user['user_hide_email'] == 1 ? $user['user_nickname'] : $user['user_email'];
+        return $publicUsername;
     }
 
     /**
      * удалить закрытое соединение из БД
     */ 
-    public function removeConnection($connId){
+    public function removeConnection(int $connId){
         return $this->db->exec("delete from connections where connection_ws_id = $connId");
     }
 
