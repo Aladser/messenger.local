@@ -40,7 +40,7 @@ class DBQueryCtl{
     }
 
     // выполняет оператор SQL в одном вызове функции, возвращая количество строк, затронутых оператором
-    public function exec($sql, $out){
+    public function exec($sql){
         $this->connect();
         $rslt = $this->dbConnection->exec($sql);
         return $rslt;
