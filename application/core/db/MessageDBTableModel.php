@@ -23,4 +23,8 @@ class MessageDBTableModel extends DBTableModel{
         }
         return ['chatId'=>$query['chat_id'], 'chat'=>1];
     }
+
+    public function addMessage($message){
+        
+    }
 }

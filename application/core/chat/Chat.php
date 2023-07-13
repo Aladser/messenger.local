@@ -6,23 +6,16 @@ date_default_timezone_set('Europe/Moscow');
 
 // Чат
 class Chat implements \Ratchet\MessageComponentInterface {
-    /**
-     * @var [SplObjectStorage;] хранение всех подключенных пользователей
-     */
-    private $clients;
-    /**
-     * @var [UsersDBTableModel] таблица пользователей
-     */
-    private $usersTable;
-    /**
-     * @var [ConnectionsDBTableModel]таблица подключений
-     */
-    private $connectionsTable;
+    private $clients;           // хранение всех подключенных пользователей
+    private $usersTable;        // таблица пользователей
+    private $connectionsTable;  // таблица подключений
+    private $messageTable;      // таблица сообщений
    
-    public function __construct(\core\db\UsersDBTableModel $usersTable, \core\db\ConnectionsDBTableModel $connectionsTable) {
+    public function __construct(\core\db\UsersDBTableModel $usersTable, \core\db\ConnectionsDBTableModel $connectionsTable, \core\db\MessageDBTableModel $messageTable) {
         $this->clients = new \SplObjectStorage;
         $this->usersTable = $usersTable;
         $this->connectionsTable = $connectionsTable;
+        $this->messageTable = $messageTable;
         $this->connectionsTable->removeConnections(); // удаление старых соединений
     }
 
@@ -64,7 +57,7 @@ class Chat implements \Ratchet\MessageComponentInterface {
         // сообщение пользователя
         else if($data->message){
             $data->time = date('Y-m-d H:i:s');  // '2023-07-11 12:00:00'
-            
+            $this->messageTable->addMessage($data); // добавление сообщения в БД
         }
         $msg = json_encode($data);
         echo "$msg\n";

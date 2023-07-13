@@ -169,7 +169,8 @@ function sendData(){
         webSocket.send(JSON.stringify({
             'message': messageInput.value,
             'fromuser' : publicClientUsername,
-            'touser': contactUsernamePrg.innerHTML
+            'touser': contactUsernamePrg.innerHTML,
+            'idChat' : idChat.value
         }));
     }
     messageInput.value = '';
