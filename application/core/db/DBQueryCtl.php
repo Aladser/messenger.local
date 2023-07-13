@@ -31,10 +31,7 @@ class DBQueryCtl{
         $this->dbConnection = null;
     }
     
-    /**
-     *  Подготавливает и выполняет оператор SQL без заполнителей
-     *  $isOneValue: true - одно значение, false - несколько строк
-    */ 
+    //  подготавливает и выполняет оператор SQL без заполнителей
     public function query($sql, $isOneValue=true){
         $this->connect();
         $query = $this->dbConnection->query($sql);
@@ -42,11 +39,25 @@ class DBQueryCtl{
         return $isOneValue ? $query->fetch(\PDO::FETCH_ASSOC) : $query->fetchAll(); 
     }
 
-    //выполняет оператор SQL в одном вызове функции, возвращая количество строк, затронутых оператором
-    public function exec($sql){
+    // выполняет оператор SQL в одном вызове функции, возвращая количество строк, затронутых оператором
+    public function exec($sql, $out){
         $this->connect();
         $rslt = $this->dbConnection->exec($sql);
-        $this->disconnect();
         return $rslt;
+    }
+
+    // выполняет процедуру с возвращаемым результатом
+    /**
+     * @param mixed $sql выражение
+     * @param mixed $out выходная переменная, куда будет возвращен результат
+     * выполняет процедуру с возвращаемым результатом
+     */
+    public function executeProcedure($sql, $out){
+        $this->connect();
+        $stmt = $this->dbConnection->prepare($sql);
+        $stmt->execute();
+        $rslt =$this->dbConnection->query("select $out as info");
+        $this->disconnect();
+        return $rslt->fetch(\PDO::FETCH_ASSOC)['info'];
     }
 }

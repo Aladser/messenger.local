@@ -130,7 +130,7 @@ webSocket.onmessage = e => {
     else if(data.messageOnconnection){
         // подключение клиента
         if(data.author){
-            let username = data.author===clientUsername || data.author===publicClientUsername ? 'Вы' : data.author;
+            let username = data.author===publicClientUsername ? 'Вы' : data.author;
             systemMessagePrg.innerHTML = `${username} в сети`;
         }
         // ошибки подключения

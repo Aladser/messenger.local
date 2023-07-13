@@ -47,7 +47,7 @@ drop table if exists chat;
 # список чатов
 create table chat(
 	chat_id int auto_increment primary key,
-	chat_type varchar(10)
+	chat_type varchar(10) not null
 );
 
 # участники чатов
