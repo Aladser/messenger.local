@@ -19,7 +19,7 @@ class MessageDBTableModel extends DBTableModel{
 
         // создание диалога, если не существует
         if(!$query){
-            $chatId = $this->db->executeProcedure("call create_chat($user1Id, $user2Id, @info)", '@info');
+            $chatId = $this->db->executeProcedure("create_chat($user1Id, $user2Id, @info)", '@info');
             return ['chatId'=>$chatId, 'chat'=>1];
         }
 

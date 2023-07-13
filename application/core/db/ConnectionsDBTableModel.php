@@ -2,13 +2,9 @@
 
 namespace core\db;
 
-/**
- * класс БД таблицы соединений вебсокета
-*/
+// Класс БД таблицы соединений вебсокета
 class ConnectionsDBTableModel extends DBTableModel{
-    /**
-     * сохранить подключение в БД
-    */
+    // сохранить подключение в БД
     public function addConnection(array $data){
         $connection_ws_id = intval($data['userId']);
         $user_email = trim($data['author']);
@@ -17,7 +13,7 @@ class ConnectionsDBTableModel extends DBTableModel{
         if($user){
             // поиск соединения в БД
             $userId = $user['user_id'];
-            $publicUsername = $user['user_hide_email'] == 1 ? $user['user_nickname'] : $user['user_email'];
+            $publicUsername = $user['user_hide_email'] == 1 ? $user['user_nickname'] : $user['user_email']; 
             $isConnection = $this->db->query("select * from connections where connection_userid = $userId");
             
             if(!$isConnection){
@@ -34,25 +30,19 @@ class ConnectionsDBTableModel extends DBTableModel{
         }
     }
 
-    /**
-     * получить публичное имя пользователя соединения
-    */ 
+    // получить публичное имя пользователя соединения
     public function getConnectionPublicUsername(int $connId){
         $user = $this->db->query("select user_email, user_nickname, user_hide_email from users where user_id = (select connection_userid from connections where connection_ws_id = $connId)");
         $publicUsername = $user['user_hide_email'] == 1 ? $user['user_nickname'] : $user['user_email'];
         return $publicUsername;
     }
 
-    /**
-     * удалить закрытое соединение из БД
-    */ 
+    // удалить закрытое соединение из БД
     public function removeConnection(int $connId){
         return $this->db->exec("delete from connections where connection_ws_id = $connId");
     }
 
-    /**
-     * очистить таблицу соединений
-    */ 
+    // очистить таблицу соединений
     public function removeConnections(){
         $this->db->exec('delete from connections');
         $this->db->exec('alter table connections AUTO_INCREMENT = 1');

@@ -40,21 +40,22 @@ class DBQueryCtl{
     }
 
     // выполняет оператор SQL в одном вызове функции, возвращая количество строк, затронутых оператором
-    public function exec($sql, $out){
+    public function exec($sql){
         $this->connect();
         $rslt = $this->dbConnection->exec($sql);
+        $this->disconnect();
         return $rslt;
     }
 
     // выполняет процедуру с возвращаемым результатом
     /**
+     * выполняет процедуру с возвращаемым результатом
      * @param mixed $sql выражение
      * @param mixed $out выходная переменная, куда будет возвращен результат
-     * выполняет процедуру с возвращаемым результатом
      */
     public function executeProcedure($sql, $out){
         $this->connect();
-        $stmt = $this->dbConnection->prepare($sql);
+        $stmt = $this->dbConnection->prepare("call $sql");
         $stmt->execute();
         $rslt =$this->dbConnection->query("select $out as info");
         $this->disconnect();

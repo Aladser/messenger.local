@@ -45,10 +45,16 @@ function createContact(element){
     return contact;
 }
 
-// открыть чат с контактом и добавить контакт, чат в БД, если не существуют
+// Установить событие: Открыть чат с контактом и добавить контакт, чат в БД, если не существуют
+/**
+ * Установить событие: Открыть чат с контактом и добавить контакт, чат в БД, если не существуют
+ * 
+ * @param mixed данные контакта из БД
+ */
 function setGetMessages(contact){
     return function(){
         fetch(`/get-messages?contact=${contact}`).then(r=>r.json()).then(data=>{
+            //console.log(data);
             if(data.chat == 1){
                 idChat.value = data.chatId; // запись id чата в скрытый элемент
                 chat.innerHTML = '';
