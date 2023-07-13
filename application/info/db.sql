@@ -95,3 +95,21 @@ FOR EACH ROW
 END //
 delimiter ;
 
+# расширенная таблица чатов
+create view extended_chat as
+select chat.chat_id, chat.chat_type, chat_participant.chat_participant_userid from chat join chat_participant on chat.chat_id = chat_participant.chat_participant_chatid;
+
+# создать чат
+drop procedure create_chat;
+DELIMITER //
+CREATE PROCEDURE create_chat(
+	in user1 int,
+	in user2 int,
+	out chatid int
+)
+begin
+	insert into chat(chat_type) values('dialog');
+	select last_insert_id() into chatid;
+	insert into chat_participant(chat_participant_chatid, chat_participant_userid) values(chatid, user1), (chatid, user2);
+END//
+DELIMITER ;

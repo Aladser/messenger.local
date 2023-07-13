@@ -37,7 +37,6 @@ class UsersDBTableModel extends DBTableModel{
 
     // подтвердить почту
     public function confirmEmail($email){
-        $this->db->exec("UPDATE users SET user_hash=NULL WHERE user_email='$email'");
         return $this->db->exec("UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'");
     }
 
@@ -46,22 +45,22 @@ class UsersDBTableModel extends DBTableModel{
         return $this->db->query("select count(*) as count from users where user_nickname='$nickname'")['count'] == 0;
     }
 
-    // получить публичное имя пользователя из почты
+    // получить публичное имя пользователя из ID
     public function getPublicUsername(int $userId){
-        $user = $this->db->query("select user_email, user_nickname, user_hide_email from users where user_email = $userId");
+        $user = $this->db->query("select user_email, user_nickname, user_hide_email from users where user_id = $userId");
         return $user['user_hide_email'] == 1 ? $user['user_nickname'] : $user['user_email'];
     }
 
     // получить публичное имя пользователя из почты
     public function getPublicUsernameFromEmail(string $userEmail){
         $user = $this->db->query("select user_nickname, user_hide_email from users where user_email = '$userEmail'");
-        return $user['user_hide_email'] == '1' ? $user['user_nickname'] : $userEmail;
+        return $user['user_hide_email'] == 1 ? $user['user_nickname'] : $userEmail;
     }
 
-    // сравнение новых данных и в БД
-    private function isEqualData($data, $field, $email){
-        $dbData = $this->db->query("select $field from users WHERE user_email='$email'")[$field];
-        return $data === $dbData;
+    // получиь ID пользователя
+    public function getUserId(string $publicUserName){
+        $query = $this->db->query("select user_id from users where user_email = '$publicUserName' or user_nickname='$publicUserName'");
+        return $query['user_id'];
     }
 
     // список пользователей по шаблону почты или никнейма
@@ -104,5 +103,11 @@ class UsersDBTableModel extends DBTableModel{
         $rslt |= $this->isEqualData($photo, 'user_photo', $email) ? true : $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
 
         return $rslt;
+    }
+
+    // сравнение новых данных и в БД
+    private function isEqualData($data, $field, $email){
+        $dbData = $this->db->query("select $field from users WHERE user_email='$email'")[$field];
+        return $data === $dbData;
     }
 }

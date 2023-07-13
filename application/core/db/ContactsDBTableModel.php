@@ -8,14 +8,9 @@ namespace core\db;
 */
 class ContactsDBTableModel extends DBTableModel{
     // добавить контакт
-    function addContact($contact, $email){
-        // id пользователя-хоста
-        $user_id = $this->db->query("select user_id from users where user_email = '$email'")['user_id']; 
-        // id контакта
-        $contact_id = $this->db->query("select user_id from users where user_email = '$contact' or user_nickname = '$contact'")['user_id'];
-        // добавление контакта
-        $isContact = $this->db->query("select * from contacts where (cnt_user_id = $user_id and cnt_contact_id = $contact_id)");
-        return $isContact ? 1 :  $this->db->exec("insert into contacts(cnt_user_id, cnt_contact_id) values('$user_id','$contact_id')");
+    function addContact($contactId, $userId){
+        $isContact = $this->db->query("select * from contacts where (cnt_user_id = $userId and cnt_contact_id = $contactId)");
+        return $isContact ? 1 :  $this->db->exec("insert into contacts(cnt_user_id, cnt_contact_id) values($userId, $contactId)");
     }
 
     function getContacts($email){

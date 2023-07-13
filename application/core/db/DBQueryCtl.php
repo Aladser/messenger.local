@@ -10,7 +10,7 @@ class DBQueryCtl{
     private $userDB;
     private $passwordDB;
 
-    function __construct($host, $nameDB, $userDB, $passwordDB){
+    public function __construct($host, $nameDB, $userDB, $passwordDB){
         $this->host = $host;
         $this->nameDB = $nameDB;
         $this->userDB = $userDB;
@@ -35,7 +35,7 @@ class DBQueryCtl{
      *  Подготавливает и выполняет оператор SQL без заполнителей
      *  $isOneValue: true - одно значение, false - несколько строк
     */ 
-    function query($sql, $isOneValue=true){
+    public function query($sql, $isOneValue=true){
         $this->connect();
         $query = $this->dbConnection->query($sql);
         $this->disconnect();
@@ -43,7 +43,7 @@ class DBQueryCtl{
     }
 
     //выполняет оператор SQL в одном вызове функции, возвращая количество строк, затронутых оператором
-    function exec($sql){
+    public function exec($sql){
         $this->connect();
         $rslt = $this->dbConnection->exec($sql);
         $this->disconnect();

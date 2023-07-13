@@ -1,38 +1,20 @@
-const contacts = document.querySelector('#contacts');
-const chat = document.querySelector("#messages");
-const findContactsInput = document.querySelector('#find-contacts-input');
-const messageInput = document.querySelector("#message-input");
-const sendMsgBtn = document.querySelector("#send-msg-btn");
-const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
-/**
- * системное сообщение о состоянии подключений
- */
-const systemMessagePrg = document.querySelector("#message-system");
-/**
- * почта пользователя-клиента
- */
-const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();
-/**
- * публичное имя пользователя-клиента
- */
-const publicClientUsername = document.querySelector('#publicUsername').value;
-/**
- * заголовок чата
- */
-const messagesContainerTitle = document.querySelector("#messages-container__title");
-/**
- * имя контакта в заголовке
- */
-const contactUsernamePrg= messagesContainerTitle.querySelector('#contact-username');
-
-const wsUri = 'ws://localhost:8888';
+const contacts = document.querySelector('#contacts');                                   // контейнер контактов
+const chat = document.querySelector("#messages");                                       // контейнер сообщений
+const findContactsInput = document.querySelector('#find-contacts-input');               // поле поиска пользователя
+const messageInput = document.querySelector("#message-input");                          // поле ввода сообщения
+const sendMsgBtn = document.querySelector("#send-msg-btn");                             // кнопка отправить сообщение
+const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');        // кнопка сброса поиска пользователей
+const systemMessagePrg = document.querySelector("#message-system");                     // элемент для системных сообщений
+const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();      // почта пользователя-хоста
+const publicClientUsername = document.querySelector('#publicUsername').value;           // публичное имя пользователя-хоста
+const messagesContainerTitle = document.querySelector("#messages-container__title");    // заголовок чата
+const contactUsernamePrg= messagesContainerTitle.querySelector('#contact-username');    // элемент названия контакта
+const idChat = document.querySelector('#id-chat');                                      // id чата
+const wsUri = 'ws://localhost:8888';                                                    // адрес вебсокета
 
 
 //***** КОНТАКТЫ *****
-/**
- * создать DOM-элемент контакта
- * @param {*} element данные контакта из БД
- */
+// создать DOM-элемент контакта
 function createContact(element){
     // контейнер контакта
     let contact = document.createElement('div');    // блок контакта
@@ -53,7 +35,7 @@ function createContact(element){
     }
 
     name.innerHTML = element['username'];
-    contact.onclick = setAddContact(element['username']);
+    contact.onclick = setGetMessages(element['username']);
 
     contactImgBlock.appendChild(img);
     contact.appendChild(contactImgBlock);
@@ -63,14 +45,12 @@ function createContact(element){
     return contact;
 }
 
-/**
- * добавить контакт в БД и открыть чат с ним
- * @param {*} contact публичное имя контата
- */
-function setAddContact(contact){
+// открыть чат с контактом и добавить контакт, чат в БД, если не существуют
+function setGetMessages(contact){
     return function(){
-        fetch(`/add-contact?contact=${contact}`).then(r=>r.text()).then(data=>{
-            if(data == 1){
+        fetch(`/get-messages?contact=${contact}`).then(r=>r.json()).then(data=>{
+            if(data.chat == 1){
+                idChat.value = data.chatId; // запись id чата в скрытый элемент
                 chat.innerHTML = '';
                 messagesContainerTitle.classList.remove('invisible');
                 contactUsernamePrg.innerHTML = contact;
@@ -80,11 +60,7 @@ function setAddContact(contact){
     };
 }
 
-/**
- * показать контакты пользователя
- * @param {*} findInput поле поиска
- * @param {*} contacts  контейнер отображения контактов
- */
+// показать контакты пользователя
 function showContacts(findInput, contacts){
     fetch('/get-contacts').then(r=>r.json()).then(data => {
         findInput.value = '';
@@ -95,10 +71,10 @@ function showContacts(findInput, contacts){
 showContacts(findContactsInput, contacts);
 
 
-// сброс поиска контакта и показ контактов
+// сброс поиска пользователей и показ контактов
 resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);
 
-// ПОИСК КОНТАКТОВ В БД
+// поиск пользователей-контактов в БД
 findContactsInput.addEventListener('input', function(){
     fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
         contacts.innerHTML = '';
@@ -108,10 +84,7 @@ findContactsInput.addEventListener('input', function(){
 });
 
 //***** СООБЩЕНИЯ *****
-/**
- * вывести сообщение пользователя из вебсокета в браузере
- * @param {*} data сообщение
- */
+// вывести сообщение пользователя из вебсокета в браузере
 function message(data){
     let msgBlock = document.createElement('div');
     let msgTable = document.createElement('table');

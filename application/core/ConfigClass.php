@@ -21,6 +21,7 @@ class ConfigClass{
 	private $users; // пользователи
 	private $contacts; // контакты пользователя
 	private $connections; // соединения
+	private $messageDBTable; // БД таблица сообщений
 	// демон вебсокета сообщений
 	public const CHAT_WS_PORT = 8888;
 	public const SITE_ADDR = '127.0.0.1';
@@ -45,6 +46,7 @@ class ConfigClass{
 		$this->users = new \core\db\UsersDBTableModel($this->DBQueryCtl);
 		$this->contacts = new \core\db\ContactsDBTableModel($this->DBQueryCtl);
 		$this->connections = new \core\db\ConnectionsDBTableModel($this->DBQueryCtl);
+		$this->messageDBTable = new \core\db\MessageDBTableModel($this->DBQueryCtl);
 	}
 
 	function getDBQueryCtl(){return $this->DBQueryCtl;}
@@ -52,4 +54,5 @@ class ConfigClass{
 	function getUsers(){return $this->users;}
 	function getContacts(){return $this->contacts;}
 	function getConnections(){return $this->connections;}
+	function getMessageDBTable(){return $this->messageDBTable;}
 }                                                                                                                                                                                                                                                      

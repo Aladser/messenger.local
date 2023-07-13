@@ -1,5 +1,5 @@
 <?php
-    class AddContactController extends \core\Controller { 
+    class GetMessagesController extends \core\Controller { 
         function action_index() {
             $this->model->run();
         } 
