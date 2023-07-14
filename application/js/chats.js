@@ -3,144 +3,21 @@ const chat = document.querySelector("#messages");                               
 
 const contactNameTitle = document.querySelector('#contact-title');                      // элемент начальной подписи чата 
 const contactNameLabel = document.querySelector('#contact-username');                   // элемент имени контакта
-
-const findContactsInput = document.querySelector('#find-contacts-input');               // поле поиска пользователя
-const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');        // кнопка сброса поиска пользователей
 const systemMessagePrg = document.querySelector("#message-system");                     // элемент для системных сообщений
+const findContactsInput = document.querySelector('#find-contacts-input');               // поле поиска пользователя
+const messageInput = document.querySelector("#message-input");                          // поле ввода сообщения
+const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');        // кнопка сброса поиска пользователей
+const sendMsgBtn = document.querySelector("#send-msg-btn");                             // кнопка отправить сообщение
+
+const chatId = document.querySelector('#id-chat');                                      // id чата
+const wsUri = 'ws://localhost:8888';                                                    // адрес вебсокета
 const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();      // почта пользователя-хоста
 const publicClientUsername = document.querySelector('#publicUsername').value;           // публичное имя пользователя-хоста
-const chatId = document.querySelector('#id-chat');                                      // id чата
-const messageInput = document.querySelector("#message-input");                          // поле ввода сообщения
-const sendMsgBtn = document.querySelector("#send-msg-btn");                             // кнопка отправить сообщение
-const wsUri = 'ws://localhost:8888';                                                    // адрес вебсокета
 
 
-//***** КОНТАКТЫ *****
-/** создать DOM-элемент контакта
- * @param {*} element данные контакта из БД
- * @returns 
- */
-function createContact(element){
-    // контейнер контакта
-    let contact = document.createElement('div');    // блок контакта
-    let contactImgBlock = document.createElement('div'); // блок изображения профиля
-    let img = document.createElement('img'); // фото профиля
-    let name = document.createElement('span'); // имя контакта
-
-    contact.className = 'contact position-relative mb-2';
-    contactImgBlock.className = 'profile-img';
-    img.className = 'img pe-2';
-    name.className = 'contact__name';
-    
-    if(element['user_photo'] == 'ava_profile.png' || element['user_photo'] == null){
-        img.src = 'application/images/ava.png';
-    }
-    else{
-        img.src = `application/data/profile_photos/${element['user_photo']}`; 
-    }
-
-    name.innerHTML = element['username'];
-    contact.onclick = setGetMessages(element['username']);
-
-    contactImgBlock.appendChild(img);
-    contact.appendChild(contactImgBlock);
-    contact.appendChild(name);
-    contacts.appendChild(contact);
-
-    return contact;
-}
-
-/** показать контакты пользователя
- * @param {*} findInput поле поиска пользователей
- * @param {*} contacts поле контактов пользователя
- */
-function showContacts(findInput, contacts){
-    fetch('/get-contacts').then(r=>r.json()).then(data => {
-        findInput.value = '';
-        contacts.innerHTML = '';
-        if(data != null) data.forEach(element => createContact(element));
-    }); 
-}
-showContacts(findContactsInput, contacts);
-
-// сброс поиска пользователей и показ контактов
-resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);
-
-// поиск пользователей-контактов в БД
-findContactsInput.addEventListener('input', function(){
-    fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
-        contacts.innerHTML = '';
-        //  отображение найденных контактов в списке контактов
-        if(data != null){data.forEach(element => createContact(element));}
-    });
-});
-
-
-//***** СООБЩЕНИЯ *****
-// вывести сообщение пользователя из вебсокета в браузере
-function message(data){
-    let msgBlock = document.createElement('div');
-    let msgTable = document.createElement('table');
-    let msgTextTr = document.createElement('tr');
-    let msgTextTd = document.createElement('td');
-    let msgTimeTr = document.createElement('tr');
-    let msgTimeTd = document.createElement('td');
-
-    msgBlock.className = data.fromuser !== publicClientUsername ? 'msg d-flex justify-content-end' : 'msg';
-    msgTable.className = data.fromuser !== publicClientUsername ? 'msg-table msg-table-contact' : 'msg-table';
-    msgTextTd.className = 'msg__text';
-    msgTimeTd.className = 'msg__time';
-
-    msgTextTd.innerHTML = data.message;
-
-    // показ местного времени
-    // 2023.07.11 12:00:00
-    let timeInMs = Date.parse(data.time);
-    let newDate = new Date(timeInMs);
-    let timeZone = -newDate.getTimezoneOffset()/60; // текущий часовой пояс
-    timeInMs += (timeZone-3)*3600000;
-    newDate = new Date(timeInMs);
-    let localTime = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
-    msgTimeTd.innerHTML = localTime;
-
-    msgTextTr.appendChild(msgTextTd);
-    msgTimeTr.appendChild(msgTimeTd);
-    msgTable.appendChild(msgTextTr);
-    msgTable.appendChild(msgTimeTr);
-    msgBlock.appendChild(msgTable);
-    chat.appendChild(msgBlock);
-}
-
-/** Открыть чат с контактом, добавить контакт и чат в БД, если не существуют, показать сообщения
- * 
- * @param mixed данные контакта из БД
- */
-function setGetMessages(contact){
-    return function(){
-        fetch(`/get-messages?contact=${contact}`).then(r=>r.json()).then(data=>{
-            if(data){
-                chatId.value = data.chatId;  //сохранение id диалога на странице
-                chat.innerHTML = '';
-                
-                // заголовок чата
-                contactNameTitle.innerHTML = 'Чат с пользователем ';                 
-                contactNameLabel.innerHTML =  contact;
-                // дотсупность полей ввода                                                                                        
-                messageInput.disabled = false;  
-                sendMsgBtn.disabled = false;
-
-                data.messages.forEach(elem => message(elem));// сообщения
-            }
-        });
-    };
-}
-
-
-/**
- * ВЕБСОКЕТ СООБЩЕНИЙ
- */
+//----- ВЕБСОКЕТ СООБЩЕНИЙ -----
 let webSocket = new WebSocket(wsUri);
-webSocket.onerror = error => systemMessagePrg.innerHTML = `Ошибка подключения к серверу${error.message ? '. '+error.message : ''}`;
+webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
     //console.log(data);
@@ -178,9 +55,118 @@ webSocket.onmessage = e => {
     }
 };
 
-/**
- * отправить сообщение на сервер
- *  */
+
+/** создать DOM-элемент контакта
+ * @param {*} element данные контакта из БД
+ * @returns 
+ */
+function createContact(element){
+    // контейнер контакта
+    let contact = document.createElement('div');    // блок контакта
+    let contactImgBlock = document.createElement('div'); // блок изображения профиля
+    let img = document.createElement('img'); // фото профиля
+    let name = document.createElement('span'); // имя контакта
+
+    contact.className = 'contact position-relative mb-2';
+    contactImgBlock.className = 'profile-img';
+    img.className = 'img pe-2';
+    name.className = 'contact__name';
+    
+    if(element['user_photo'] == 'ava_profile.png' || element['user_photo'] == null){
+        img.src = 'application/images/ava.png';
+    }
+    else{
+        img.src = `application/data/profile_photos/${element['user_photo']}`; 
+    }
+
+    name.innerHTML = element['username'];
+    contact.onclick = setGetMessages(element['username']);
+
+    contactImgBlock.appendChild(img);
+    contact.appendChild(contactImgBlock);
+    contact.appendChild(name);
+    contacts.appendChild(contact);
+
+    return contact;
+}
+
+
+/** создать DOM-элемент сообщения 
+ * 
+*/
+function message(data){
+    let msgBlock = document.createElement('div');
+    let msgTable = document.createElement('table');
+    let msgTextTr = document.createElement('tr');
+    let msgTextTd = document.createElement('td');
+    let msgTimeTr = document.createElement('tr');
+    let msgTimeTd = document.createElement('td');
+
+    msgBlock.className = data.fromuser !== publicClientUsername ? 'msg d-flex justify-content-end' : 'msg';
+    msgTable.className = data.fromuser !== publicClientUsername ? 'msg-table msg-table-contact' : 'msg-table';
+    msgTextTd.className = 'msg__text';
+    msgTimeTd.className = 'msg__time';
+
+    msgTextTd.innerHTML = data.message;
+
+    // показ местного времени
+    // YYYY.MM.DD HH:ii:ss
+    let timeInMs = Date.parse(data.time);
+    let newDate = new Date(timeInMs);
+    let timeZone = -newDate.getTimezoneOffset()/60; // текущий часовой пояс
+    timeInMs += (timeZone-3)*3600000;
+    newDate = new Date(timeInMs);
+    let localTime = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
+    msgTimeTd.innerHTML = localTime;
+
+    msgTextTr.appendChild(msgTextTd);
+    msgTimeTr.appendChild(msgTimeTd);
+    msgTable.appendChild(msgTextTr);
+    msgTable.appendChild(msgTimeTr);
+    msgBlock.appendChild(msgTable);
+    chat.appendChild(msgBlock);
+}
+
+
+/** показать контакты клиента-пользователя
+ * @param {*} findInput поле поиска пользователей
+ * @param {*} contacts поле контактов пользователя
+ */
+function showContacts(findInput, contacts){
+    fetch('/get-contacts').then(r=>r.json()).then(data => {
+        findInput.value = '';
+        contacts.innerHTML = '';
+        if(data != null) data.forEach(element => createContact(element));
+    }); 
+}
+
+
+/** Открыть чат с контактом, добавить контакт и чат в БД, если не существуют, показать сообщения
+ * 
+ * @param mixed данные контакта из БД
+ */
+function setGetMessages(contact){
+    return function(){
+        fetch(`/get-messages?contact=${contact}`).then(r=>r.json()).then(data=>{
+            if(data){
+                chatId.value = data.chatId;  //сохранение id диалога на странице
+                chat.innerHTML = '';
+                
+                // заголовок чата
+                contactNameTitle.innerHTML = 'Чат с пользователем ';                 
+                contactNameLabel.innerHTML =  contact;
+                // дотсупность полей ввода                                                                                        
+                messageInput.disabled = false;  
+                sendMsgBtn.disabled = false;
+
+                data.messages.forEach(elem => message(elem));// сообщения
+            }
+        });
+    };
+}
+
+
+/** отправить сообщение на сервер */
 function sendData(){
     // непустые сообщения, готовый к обмену сокет, открытй чат
     console.log(chatId.value);
@@ -197,11 +183,26 @@ function sendData(){
 }
 
 
-// событие отправки сообщения
-messageInput.onkeyup = event => {
-    if(event.code === 'Enter'){
-        messageInput.value = messageInput.value.replace(/\n/g, '')
-        sendData();
-    }
-};
-sendMsgBtn.onclick = sendData;
+// ----- ЗАГРУЗКА СООБЩЕНИЙ -----
+window.addEventListener('load', () => {
+    showContacts(findContactsInput, contacts);                                      // показ контактов
+    resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts); // сброс поиска пользователей и показ контактов
+
+    // поиск пользователей-контактов в БД по введенному слову
+    findContactsInput.addEventListener('input', function(){
+        fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
+            contacts.innerHTML = '';
+            //  отображение найденных контактов в списке контактов
+            if(data != null){data.forEach(element => createContact(element));}
+        });
+    });
+
+    // отпускание клавиши при фокусе на поле ввода сообщения
+    messageInput.onkeyup = event => {
+        if(event.code === 'Enter'){
+            messageInput.value = messageInput.value.substring(0, messageInput.value.length-1);
+            sendData();
+        }
+    };
+    sendMsgBtn.onclick = sendData; // отправка сообщения по кнопке
+});
