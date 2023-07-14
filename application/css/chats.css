@@ -23,7 +23,7 @@
 .contact{
     border-radius: 3px;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: clip;
     white-space: nowrap;
 }
 .contact:hover{
