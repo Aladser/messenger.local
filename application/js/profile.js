@@ -1,10 +1,13 @@
-/**
- * скрытый элемент выбора файлов
- */
+/** скрытый элемент выбора файлов */
 const selectFileInput = document.querySelector('#select-file-input');
+/** блок чекбокса скрытия почты */
+const hideEmailInputBlock = document.querySelector('#hide-email-input-block');
+/** чекбокс скрытия почты */
 const hideEmailInput = document.querySelector('#hide-email-input');
+/** кнопка сохранения изменений */
 const saveBtn = document.querySelector('#save-profile-settings-btn');
-const inputNickname = document.querySelector('#input-nickname');
+/** элемент отображения никнейма */
+const inputNickname = document.querySelector('#input-nickname'); 
 const prgError = document.querySelector('#prg-error');
 const editNicknameBtn = document.querySelector('#btn-edit-nickname');
 const editPhotoBtn = document.querySelector('#edit-photo-btn');
@@ -12,11 +15,11 @@ const editPhotoBtn = document.querySelector('#edit-photo-btn');
 window.onload = () =>{
     hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn);
     inputNickname.oninput = writeNickname(inputNickname, saveBtn);
+    // скрыть кнопку скрытия почты, если пустой никнейм
+    if(inputNickname.value.trim() !== '') hideEmailInputBlock.classList.remove('d-none');          
 }
 
-/**
- * изменить видимость кнопки Сохранить при переключении чекбокса скрытия почты
-*/ 
+/** изменить видимость кнопки Сохранить при переключении чекбокса скрытия почты */ 
 function changeHideEmailInputVisibility(input, btn){
     let startState = input.checked; // изначальное состояние чекбокса скрытия почты
     return function func(){
@@ -29,9 +32,7 @@ function changeHideEmailInputVisibility(input, btn){
     }
 }
 
-/**
- * Проверить введенный никнейм
-*/ 
+/** проверить введенный никнейм */ 
 function writeNickname(input, btn){
     let startValue = input.value; // изначальный никнейм
     return function func(){
@@ -130,4 +131,6 @@ saveBtn.addEventListener('click', ()=>{
             saveBtn.classList.add('hidden');
         }
     });
+
+    if(inputNickname.value.trim() !== '') hideEmailInputBlock.classList.remove('d-none');  
 });

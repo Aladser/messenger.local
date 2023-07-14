@@ -20,10 +20,9 @@ class MessageDBTableModel extends DBTableModel{
         // создание диалога, если не существует
         if(!$query){
             $chatId = $this->db->executeProcedure("create_chat($user1Id, $user2Id, @info)", '@info');
-            return ['chatId'=>$chatId, 'chat'=>1];
+            return $chatId;
         }
-
-        return ['chatId'=>$query['chat_id'], 'chat'=>1];
+        return $query['chat_id'];
     }
 
     public function addMessage($msg){
@@ -32,7 +31,16 @@ class MessageDBTableModel extends DBTableModel{
         return $this->db->exec($sql);
     }
 
-    public function getMessages(){
-        
+    public function getMessages(int $chatId){
+        $sql = "
+            select chat_message_id as id, 
+            chat_message_chatid as chatId, 
+            getPublicUserName(user_email, user_nickname, user_hide_email) as fromuser, 
+            chat_message_text as message, 
+            chat_message_time as time
+            from chat_message join users on user_id = chat_message_creatorid
+            where chat_message_chatid = $chatId
+        ";
+        return $this->db->query($sql, false);
     }
 }

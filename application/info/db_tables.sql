@@ -1,4 +1,4 @@
-# ----- пользователи -----
+# -- пользователи --
 drop table if exists users;
 create table users(
         user_id int AUTO_INCREMENT PRIMARY KEY,
@@ -17,10 +17,7 @@ insert into users(user_email, user_nickname, user_password) values('lauxtec@gmai
 insert into users(user_email, user_nickname, user_password) values('sendlyamobile@gmail.com', 'Barashka', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
 update users set user_email_confirmed = 1 where user_id < 5;
 
-# виртуальная таблица неподтвержденных пользователей
-create view unhidden_emails as select user_email from users where user_hide_email  = 0;
-
-# -----контакты, с кем есть диалог-----
+# -- контакты пользователя --
 drop table if exists contacts;
 create table contacts(
 	id int auto_increment primary key,
@@ -30,7 +27,7 @@ create table contacts(
 	CONSTRAINT contacts_fk_contactid foreign key (contact_id) references users(user_id) ON DELETE CASCADE
 );
 
-# -----соединения-----
+# -- соединения --
 drop table if exists connections;
 create table connections(
 	connection_id int auto_increment primary key,
@@ -39,21 +36,18 @@ create table connections(
 	CONSTRAINT fk_userid foreign key (connection_userid) references users(user_id) ON DELETE CASCADE
 );
 
-# ----  ЧАТЫ  ----
+# --  ЧАТЫ  --
 drop table if exists chat_message;
 drop table if exists chat_participant;
 drop table if exists chat;
-drop trigger if exists check_chat_type;
-drop trigger if exists check_message;
-drop procedure if exists create_chat;
 
-# список чатов
+# -- список чатов --
 create table chat(
 	chat_id int auto_increment primary key,
 	chat_type varchar(10) not null
 );
 
-# участники чатов
+# -- участники чатов --
 create table chat_participant(
 	chat_participant_chatid int,
 	chat_participant_userid int,
@@ -62,7 +56,7 @@ create table chat_participant(
 	CONSTRAINT check_participant_userid foreign key (chat_participant_userid) references users(user_id) ON DELETE CASCADE
 );
 
-# сообщения чатов
+# -- сообщения чатов --
 create table chat_message(
 	chat_message_id int auto_increment primary key,
 	chat_message_chatid int,
@@ -73,40 +67,5 @@ create table chat_message(
 	CONSTRAINT check_message_creator foreign key (chat_message_creatorid) references users(user_id) ON DELETE cascade
 );
 
-# триггер на тип чата. Значение: "dialog" или "discussion"
-delimiter //
-CREATE TRIGGER check_chat_type BEFORE INSERT ON chat
-FOR EACH ROW
-begin
-   IF NEW.chat_type not in ('dialog', 'discussion') then
-	SIGNAL SQLSTATE '45000'
-	SET MESSAGE_TEXT = 'chat_type не равен dialog или discussion';
-   END if;
-end //
-delimiter ;
-
-# триггер на добавление сообщений. Значение:
-delimiter //
-CREATE TRIGGER check_message BEFORE INSERT ON chat_message
-FOR EACH ROW
-	BEGIN
-		if new.chat_message_creatorid not in (select chat_participant_userid from chat_participant where chat_participant_chatid=new.chat_message_chatid) then
-		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = 'пользователя нет в данном чате';
-	END IF;
-END //
-delimiter ;
-
-# процедура создать чат
-DELIMITER //
-CREATE PROCEDURE create_chat(
-	in user1 int,
-	in user2 int,
-	out chatid int
-)
-begin
-	insert into chat(chat_type) values('dialog');
-	select last_insert_id() into chatid;
-	insert into chat_participant(chat_participant_chatid, chat_participant_userid) values(chatid, user1), (chatid, user2);
-END//
-DELIMITER ;
+# -- виртуальная таблица неподтвержденных пользователей --
+create view unhidden_emails as select user_email from users where user_hide_email  = 0;

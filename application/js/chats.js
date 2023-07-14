@@ -9,7 +9,7 @@ const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
 const systemMessagePrg = document.querySelector("#message-system");                     // элемент для системных сообщений
 const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();      // почта пользователя-хоста
 const publicClientUsername = document.querySelector('#publicUsername').value;           // публичное имя пользователя-хоста
-const idChat = document.querySelector('#id-chat');                                      // id чата
+const chatId = document.querySelector('#id-chat');                                      // id чата
 const messageInput = document.querySelector("#message-input");                          // поле ввода сообщения
 const sendMsgBtn = document.querySelector("#send-msg-btn");                             // кнопка отправить сообщение
 const wsUri = 'ws://localhost:8888';                                                    // адрес вебсокета
@@ -50,27 +50,6 @@ function createContact(element){
     return contact;
 }
 
-/** Открыть чат с контактом и добавить контакт и чат в БД, если не существуют
- * 
- * @param mixed данные контакта из БД
- */
-function setGetMessages(contact){
-    return function(){
-        fetch(`/get-messages?contact=${contact}`).then(r=>r.json()).then(data=>{
-            if(data.chat == 1){
-                idChat.value = data.chatId;                                                                             // запись id чата в скрытый элемент
-                chat.innerHTML = '';                                                                                    // очистка текущего чата
-                contactNameTitle.innerHTML = 'Чат с пользователем ';                 
-                contactNameLabel.innerHTML =  contact;                                                                                             
-                messageInput.disabled = false;                                                                          // доступность поля ввода сообщения    
-                sendMsgBtn.disabled = false;                                                                            // доступность кнопки отправки сообщения
-                // >>------ ОТОБРАЖЕНИЕ ЧАТА ---------<<
-
-            }
-        });
-    };
-}
-
 /** показать контакты пользователя
  * @param {*} findInput поле поиска пользователей
  * @param {*} contacts поле контактов пользователя
@@ -84,7 +63,6 @@ function showContacts(findInput, contacts){
 }
 showContacts(findContactsInput, contacts);
 
-
 // сброс поиска пользователей и показ контактов
 resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);
 
@@ -96,6 +74,7 @@ findContactsInput.addEventListener('input', function(){
         if(data != null){data.forEach(element => createContact(element));}
     });
 });
+
 
 //***** СООБЩЕНИЯ *****
 // вывести сообщение пользователя из вебсокета в браузере
@@ -113,7 +92,16 @@ function message(data){
     msgTimeTd.className = 'msg__time';
 
     msgTextTd.innerHTML = data.message;
-    msgTimeTd.innerHTML = data.time;
+
+    // показ местного времени
+    // 2023.07.11 12:00:00
+    let timeInMs = Date.parse(data.time);
+    let newDate = new Date(timeInMs);
+    let timeZone = -newDate.getTimezoneOffset()/60; // текущий часовой пояс
+    timeInMs += (timeZone-3)*3600000;
+    newDate = new Date(timeInMs);
+    let localTime = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
+    msgTimeTd.innerHTML = localTime;
 
     msgTextTr.appendChild(msgTextTd);
     msgTimeTr.appendChild(msgTimeTd);
@@ -123,6 +111,31 @@ function message(data){
     chat.appendChild(msgBlock);
 }
 
+/** Открыть чат с контактом, добавить контакт и чат в БД, если не существуют, показать сообщения
+ * 
+ * @param mixed данные контакта из БД
+ */
+function setGetMessages(contact){
+    return function(){
+        fetch(`/get-messages?contact=${contact}`).then(r=>r.json()).then(data=>{
+            if(data){
+                chatId.value = data.chatId;  //сохранение id диалога на странице
+                chat.innerHTML = '';
+                
+                // заголовок чата
+                contactNameTitle.innerHTML = 'Чат с пользователем ';                 
+                contactNameLabel.innerHTML =  contact;
+                // дотсупность полей ввода                                                                                        
+                messageInput.disabled = false;  
+                sendMsgBtn.disabled = false;
+
+                data.messages.forEach(elem => message(elem));// сообщения
+            }
+        });
+    };
+}
+
+
 /**
  * ВЕБСОКЕТ СООБЩЕНИЙ
  */
@@ -130,7 +143,7 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = error => systemMessagePrg.innerHTML = `Ошибка подключения к серверу${error.message ? '. '+error.message : ''}`;
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
-    console.log(data);
+    //console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if(data.onсonnection){
@@ -160,15 +173,6 @@ webSocket.onmessage = e => {
     else{
         // показ сообщений открытого чата
         if((data.fromuser == publicClientUsername && data.touser == contactNameLabel.innerHTML) || (data.fromuser == contactNameLabel.innerHTML && data.touser == publicClientUsername)){
-            // получение местного времени
-            // 2023.07.11 12:00:00
-            let timeInMs = Date.parse(data.time);
-            let newDate = new Date(timeInMs);
-            let timeZone = -newDate.getTimezoneOffset()/60; // текущий часовой пояс
-            timeInMs += (timeZone-3)*3600000;
-            newDate = new Date(timeInMs);
-            data.time = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
-
             message(data);
         }
     }
@@ -179,17 +183,20 @@ webSocket.onmessage = e => {
  *  */
 function sendData(){
     // непустые сообщения, готовый к обмену сокет, открытй чат
+    console.log(chatId.value);
 
     if(messageInput.value !== '' && webSocket.readyState === 1 && contactNameLabel.innerHTML!=''){
         webSocket.send(JSON.stringify({
             'message':   messageInput.value,
             'fromuser' : publicClientUsername,
             'touser':    contactNameLabel.innerHTML,
-            'idChat' :   idChat.value
+            'idChat' :   chatId.value
         }));
     }
     messageInput.value = '';
 }
+
+
 // событие отправки сообщения
 messageInput.onkeyup = event => {
     if(event.code === 'Enter'){

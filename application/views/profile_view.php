@@ -23,7 +23,7 @@
                     <td><input type="text" class='input-nickname' id='input-nickname' value="<?= is_null($data['user_nickname']) ? '' : $data['user_nickname']?>" disabled></td>
                 </tr>
             </table>
-            <div class="form-check form-switch mb-3 d-flex justify-content-center">
+            <div class="form-check form-switch mb-3 d-flex justify-content-center d-none" id='hide-email-input-block'>
                 <input class="form-check-input" type="checkbox" id="hide-email-input" <?=$data['user_hide_email']==1 ? 'checked' : '' ?> >
                 <label class="form-check-label" for="hide-email-input">&nbsp; скрыть почту</label>
             </div>

@@ -72,7 +72,7 @@ class UsersDBTableModel extends DBTableModel{
         union 
         select user_id, user_email, user_photo as username from users where user_hide_email  = 0 and user_email != '$email' and user_email  like '%$phrase%';
         ";
-        return $users = $this->db->query($sql, false);
+        return $this->db->query($sql, false);
     }
 
     // получить пользовательские данные
