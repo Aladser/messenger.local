@@ -39,10 +39,13 @@ create table connections(
 	CONSTRAINT fk_userid foreign key (connection_userid) references users(user_id) ON DELETE CASCADE
 );
 
-# ---- чаты ----
+# ----  ЧАТЫ  ----
 drop table if exists chat_message;
 drop table if exists chat_participant;
 drop table if exists chat;
+drop trigger if exists check_chat_type;
+drop trigger if exists check_message;
+drop procedure if exists create_chat;
 
 # список чатов
 create table chat(
@@ -64,16 +67,15 @@ create table chat_message(
 	chat_message_id int auto_increment primary key,
 	chat_message_chatid int,
 	chat_message_text text not null,
-	chat_message_user_creatorid int,
-	#chat_message_date datetime default '2000-01-01 00:00:00'
-	chat_message_date not null,
+	chat_message_creatorid int,
+	chat_message_time datetime not null,
 	CONSTRAINT check_message_chatid foreign key (chat_message_chatid) references chat(chat_id) ON DELETE cascade,
-	CONSTRAINT check_user_creator foreign key (chat_message_user_creatorid) references users(user_id) ON DELETE cascade
+	CONSTRAINT check_message_creator foreign key (chat_message_creatorid) references users(user_id) ON DELETE cascade
 );
 
-# триггер на тип чата. значение: "dialog" или "discussion"
+# триггер на тип чата. Значение: "dialog" или "discussion"
 delimiter //
-CREATE TRIGGER check_type BEFORE INSERT ON chat
+CREATE TRIGGER check_chat_type BEFORE INSERT ON chat
 FOR EACH ROW
 begin
    IF NEW.chat_type not in ('dialog', 'discussion') then
@@ -83,24 +85,19 @@ begin
 end //
 delimiter ;
 
-# триггер на добавление сообщений. Проверяется, правильный ли пользователь
+# триггер на добавление сообщений. Значение:
 delimiter //
 CREATE TRIGGER check_message BEFORE INSERT ON chat_message
 FOR EACH ROW
 	BEGIN
-		if new.chat_message_user_creatorid not in (select chat_participant_userid from chat_participant where chat_participant_chatid=new.chat_message_chatid) then
+		if new.chat_message_creatorid not in (select chat_participant_userid from chat_participant where chat_participant_chatid=new.chat_message_chatid) then
 		SIGNAL SQLSTATE '45000'
 		SET MESSAGE_TEXT = 'пользователя нет в данном чате';
 	END IF;
 END //
 delimiter ;
 
-# расширенная таблица чатов
-create view extended_chat as
-select chat.chat_id, chat.chat_type, chat_participant.chat_participant_userid from chat join chat_participant on chat.chat_id = chat_participant.chat_participant_chatid;
-
-# создать чат
-drop procedure create_chat;
+# процедура создать чат
 DELIMITER //
 CREATE PROCEDURE create_chat(
 	in user1 int,

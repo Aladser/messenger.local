@@ -2,6 +2,7 @@
 
 namespace core\db;
 
+// Класс запросов в БД на основе PDO
 class DBQueryCtl{
     private $dbConnection;
     
@@ -49,7 +50,6 @@ class DBQueryCtl{
 
     // выполняет процедуру с возвращаемым результатом
     /**
-     * выполняет процедуру с возвращаемым результатом
      * @param mixed $sql выражение
      * @param mixed $out выходная переменная, куда будет возвращен результат
      */

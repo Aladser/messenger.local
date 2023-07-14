@@ -27,13 +27,12 @@ class MessageDBTableModel extends DBTableModel{
     }
 
     public function addMessage($msg){
-        /*
-            'message':
-            'fromuser': 
-            'touser': 
-            'idChat':
-            'time': 
-        */
-        //$this->db->exec("insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time) values($msg, $msg, $msg, $msg)");
+        $userId = $this->db->query("select user_id from users where user_email='$msg->fromuser' or user_nickname='$msg->fromuser'")['user_id'];
+        $sql = "insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time) values($msg->idChat, '$msg->message', $userId, '$msg->time')";
+        return $this->db->exec($sql);
+    }
+
+    public function getMessages(){
+        
     }
 }

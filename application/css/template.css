@@ -2,9 +2,6 @@
 .hidden{
     display:none;
 }
-.invisible{
-    visibility: hidden;
-}
 
 .bg-c4c4c4{
     background-color: #C4C4C4;
