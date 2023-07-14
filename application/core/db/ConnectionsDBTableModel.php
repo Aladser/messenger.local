@@ -32,8 +32,11 @@ class ConnectionsDBTableModel extends DBTableModel{
 
     // получить публичное имя пользователя соединения
     public function getConnectionPublicUsername(int $connId){
-        $user = $this->db->query("select user_email, user_nickname, user_hide_email from users where user_id = (select connection_userid from connections where connection_ws_id = $connId)");
-        $publicUsername = $user['user_hide_email'] == 1 ? $user['user_nickname'] : $user['user_email'];
+        $publicUsername = $this->db->query("
+            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
+            from users where user_id = (select connection_userid from connections 
+            where connection_ws_id = $connId)
+        ")['username'];
         return $publicUsername;
     }
 
