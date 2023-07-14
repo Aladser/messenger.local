@@ -68,6 +68,7 @@ function createContact(element){
     let name = document.createElement('span'); // имя контакта
 
     contact.className = 'contact position-relative mb-2';
+    contact.title = element['username'];
     contactImgBlock.className = 'profile-img';
     img.className = 'img pe-2';
     name.className = 'contact__name';
