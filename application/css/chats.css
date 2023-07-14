@@ -1,33 +1,31 @@
 .chat-container{
     height: 85vh;
-    display: flex;
-    padding: 0;
-    background-color: #C4C4C4;
-    font-family: 'Roboto', sans-serif;
 }
+
 .options-container{
-    width: 11%;
+    width: 12%;
     padding-left: 1.5rem;
     padding-right: 1rem; 
 }
+
 
 .contacts{
     width: 21%;
 }
 .messages{
-    overflow-y: scroll;
     height: 83.5%;
     padding-right: 0.5rem;
 }
+
 
 .contact{
     border-radius: 3px;
     overflow: hidden;
     text-overflow: clip;
     white-space: nowrap;
+    cursor: pointer;
 }
 .contact:hover{
-    cursor: pointer;
     background-color: #999;
 }
 .add-contact-btn:hover{
@@ -35,16 +33,24 @@
     font-weight: bolder;
 }
 
+.groups{
+    overflow-y: auto;
+    height: 43.5%;
+}
+.groups__item{
+    margin: 0;
+    margin-bottom: 0.25rem;
+    padding: 0.25rem;
+}
+.groups__item:hover{
+    cursor: pointer;
+    background-color: #999;
+}
+
 
 .messages-container{
-    width: 68%;
+    width: 67%;
     padding-left: 1rem;
-    padding-right: 0.5rem;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-    position: relative;
-    display: flex;
-    flex-direction: column;
 }
 .messages-container__title{
     margin-bottom: 0;
@@ -81,6 +87,7 @@
 .option-link{
     text-decoration: none;
     color: black;
+    cursor: pointer;
 }
 .option-link:hover{
     color: black;
