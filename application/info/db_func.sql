@@ -23,21 +23,6 @@ FOR EACH ROW
 END //
 delimiter ;
 
-
-# --процедура создать чат 
-DELIMITER //
-CREATE PROCEDURE create_chat(
-	in user1 int,
-	in user2 int,
-	out chatid int
-)
-begin
-	insert into chat(chat_type) values('dialog');
-	select last_insert_id() into chatid;
-	insert into chat_participant(chat_participant_chatid, chat_participant_userid) values(chatid, user1), (chatid, user2);
-END//
-DELIMITER ;
-
 # --функция получить публчное имя пользователя
 DELIMITER //
 CREATE FUNCTION getPublicUserName ( email varchar(100), nickname varchar(100), hide_email int(1) )
@@ -50,4 +35,39 @@ begin
 	   	return email;
 	END IF;
 END; //
+DELIMITER ;
+
+
+# --процедура создать чат 
+DROP PROCEDURE if exists create_dialog;
+DELIMITER //
+CREATE PROCEDURE create_dialog(
+	in user1 int,
+	in user2 int,
+	out chatid int
+)
+begin
+	insert into chat(chat_type) values('dialog');
+	select last_insert_id() into chatid;
+	insert into chat_participant(chat_participant_chatid, chat_participant_userid) values(chatid, user1), (chatid, user2);
+END//
+DELIMITER ;
+
+
+# --процедура создать групповой чат--
+DROP PROCEDURE if exists create_discussion;
+DELIMITER //
+CREATE PROCEDURE create_discussion(
+	in userhost int,
+	out discid int
+)
+begin
+	insert into chat(chat_type) values('discussion');	# чат
+	select last_insert_id() into @chatid;					
+	insert into chat_participant(chat_participant_chatid, chat_participant_userid) values(@chatid, userhost); #пользователи чата
+	insert into chat_discussion(chat_discussion_chatid, chat_discussion_creatorid) values(@chatid, userhost); # групповой чат
+	select last_insert_id() into discid;
+	select count(*) into @count from chat_discussion where chat_discussion_creatorid = userhost;						  # номер групповго чата пользователя
+	update chat_discussion set chat_discussion_name = concat('Групповой чат ', userhost, @count) where chat_discussion_chatid = @chatid; 			  # название группового чата
+END//
 DELIMITER ;

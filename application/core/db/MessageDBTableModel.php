@@ -19,10 +19,15 @@ class MessageDBTableModel extends DBTableModel{
 
         // создание диалога, если не существует
         if(!$query){
-            $chatId = $this->db->executeProcedure("create_chat($user1Id, $user2Id, @info)", '@info');
+            $chatId = $this->db->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
             return $chatId;
         }
         return $query['chat_id'];
+    }
+
+    // создать групповой чат
+    public function createDiscussion($userHost, $name=null){
+        
     }
 
     public function addMessage($msg){

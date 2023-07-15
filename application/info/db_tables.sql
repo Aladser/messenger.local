@@ -40,6 +40,7 @@ create table connections(
 drop table if exists chat_message;
 drop table if exists chat_participant;
 drop table if exists chat;
+drop table if exists chat_discussion;
 
 # -- список чатов --
 create table chat(
@@ -69,3 +70,14 @@ create table chat_message(
 
 # -- виртуальная таблица неподтвержденных пользователей --
 create view unhidden_emails as select user_email from users where user_hide_email  = 0;
+
+
+# -- групповой чат --
+create table chat_discussion(
+	chat_discussion_id int auto_increment primary key,
+	chat_discussion_chatid int,
+	chat_discussion_creatorid int,
+	chat_discussion_name varchar(30),
+	CONSTRAINT check_discussion_chatid foreign key (chat_discussion_chatid) references chat(chat_id) ON DELETE cascade,
+	CONSTRAINT check_discussion_creatorid foreign key (chat_discussion_creatorid) references users(user_id) ON DELETE cascade
+);

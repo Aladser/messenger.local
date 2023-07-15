@@ -10,8 +10,6 @@
             <p class='groups__item'>Групповой чат 1</p>
             <p class='groups__item'>Групповой чат 2</p>
             <p class='groups__item'>Групповой чат 3</p>
-            <p class='groups__item'>Групповой чат 4</p>
-            <p class='groups__item'>Групповой чат 5</p>
         </div>
     </div>
     
