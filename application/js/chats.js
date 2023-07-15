@@ -108,6 +108,13 @@ function message(data){
     msgTextTd.className = 'msg__text';
     msgTimeTd.className = 'msg__time';
 
+    // показ переводов строки на странице
+    let brIndex = data.message.indexOf('\n');
+    while(brIndex > -1){
+        data.message = data.message.replace('\n', '<br>');
+        brIndex = data.message.indexOf('\n');
+    }
+
     msgTextTd.innerHTML = data.message;
 
     // показ местного времени
@@ -170,8 +177,6 @@ function setGetMessages(contact){
 /** отправить сообщение на сервер */
 function sendData(){
     // непустые сообщения, готовый к обмену сокет, открытй чат
-    console.log(chatId.value);
-
     if(messageInput.value !== '' && webSocket.readyState === 1 && contactNameLabel.innerHTML!=''){
         webSocket.send(JSON.stringify({
             'message':   messageInput.value,
@@ -198,12 +203,20 @@ window.addEventListener('load', () => {
         });
     });
 
-    // отпускание клавиши при фокусе на поле ввода сообщения
+    let pressedKeys = []; // массив нажатых клавиш
+    messageInput.onkeydown = event => pressedKeys.push(event.code); // нажатие клавиши
+    sendMsgBtn.onclick = sendData;      // отправка сообщения по кнопке
+    // отпускание клавиши при вводе сообщения
     messageInput.onkeyup = event => {
-        if(event.code === 'Enter'){
+        // перевод строки
+        if(event.code === 'Enter' && pressedKeys.indexOf('ControlLeft') != -1){
+            messageInput.value += '\n';
+        }
+        // отправка сообщения по Enter
+        else if(event.code === 'Enter'){
             messageInput.value = messageInput.value.substring(0, messageInput.value.length-1);
             sendData();
         }
+        pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
-    sendMsgBtn.onclick = sendData; // отправка сообщения по кнопке
 });

@@ -22,7 +22,8 @@
         <div class='messages overflow-auto' id='messages'></div>
         <p class="message-system" id="message-system">Проверка подключения</p>                                   
         <div class='input-group d-flex justify-content-between pb-2'>
-            <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Наберите ваше сообщение здесь' id='message-input' disabled></textarea>
+            <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Ctrl+Enter - перевод строки 
+Enter - отправка сообщения' id='message-input' disabled></textarea>
             <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn" disabled><img src="application/images/sendbtn.png"></button>
         </div>
     </div>
