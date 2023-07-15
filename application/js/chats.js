@@ -13,6 +13,7 @@ const chatId = document.querySelector('#id-chat');                              
 const wsUri = 'ws://localhost:8888';                                                    // адрес вебсокета
 const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();      // почта пользователя-хоста
 const publicClientUsername = document.querySelector('#publicUsername').value;           // публичное имя пользователя-хоста
+const createGroupOption = document.querySelector('#create-group-option');               // кнопка создать групповой чат
 
 
 //----- ВЕБСОКЕТ СООБЩЕНИЙ -----
@@ -206,6 +207,7 @@ window.addEventListener('load', () => {
     let pressedKeys = []; // массив нажатых клавиш
     messageInput.onkeydown = event => pressedKeys.push(event.code); // нажатие клавиши
     sendMsgBtn.onclick = sendData;      // отправка сообщения по кнопке
+
     // отпускание клавиши при вводе сообщения
     messageInput.onkeyup = event => {
         // перевод строки
@@ -219,4 +221,7 @@ window.addEventListener('load', () => {
         }
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
+
+    // создать группу
+    createGroupOption.onclick = () => console.log('createGroupOption клик');
 });

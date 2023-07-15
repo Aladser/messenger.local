@@ -36,13 +36,13 @@ Enter - отправка сообщения' id='message-input' disabled></texta
             </a>
         </div>
         <div class='option'>
-            <a href="" class='option-link'>
-            <div class='option-img-block'><img src="application/images/settings.png" class='img' title='Настройки'></div>
-            <span class='option-name'>Настройки</span>
-            </a>
+            <div class='option-link'>
+                <div class='option-img-block'><img src="application/images/settings.png" class='img' title='Настройки'></div>
+                <span class='option-name'>Настройки</span>
+            </div>
         </div>
         <div class='option'>
-            <div class='option-link'>
+            <div class='option-link' id='create-group-option'>
                 <div class='option-img-block'><img src="application/images/group.png" class='img' title='Создать группу'></div>
                 <span class='option-name'>Создать группу</span>
             </div>
