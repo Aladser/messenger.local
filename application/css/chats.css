@@ -26,7 +26,7 @@
     cursor: pointer;
 }
 .contact:hover{
-    background-color: #999;
+    font-weight: bolder;
 }
 .add-contact-btn:hover{
     cursor: pointer;
@@ -41,10 +41,10 @@
     margin: 0;
     margin-bottom: 0.25rem;
     padding: 0.25rem;
+    cursor: pointer;
 }
 .groups__item:hover{
-    cursor: pointer;
-    background-color: #999;
+    font-weight: bolder;
 }
 
 

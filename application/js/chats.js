@@ -169,6 +169,7 @@ function setGetMessages(contact){
                 sendMsgBtn.disabled = false;
 
                 data.messages.forEach(elem => message(elem));// сообщения
+                chat.scrollTo(0, chat.scrollHeight); // прокрутка сообщений в конец
             }
         });
     };
