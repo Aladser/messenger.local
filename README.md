@@ -1,7 +1,7 @@
 # messenger.local
 **Месенджер**
 
-![Окно чатов](/application/images/demo.png)
+![Окно чатов](/application/images/demo1.png)
 
 Используемые модули:
 * PHP 8.1
