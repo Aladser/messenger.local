@@ -26,7 +26,7 @@ const clientnameBlock = document.querySelector('#userhost');
 /** почта пользователя-хоста */
 const clientUsername = clientnameBlock.innerHTML.trim();
 /** публичное имя пользователя-хоста */
-const publicClientUsername = clientnameBlock.getAttribute('data-serid');
+const publicClientUsername = clientnameBlock.getAttribute('data-user-publicname');
 
 /** кнопка создать групповой чат */
 const createGroupOption = document.querySelector('#create-group-option'); 
@@ -78,6 +78,9 @@ webSocket.onmessage = e => {
 
 /** создать DOM-элемент сообщения */
 function message(data){
+    console.log(data.fromuser);
+    console.log(publicClientUsername);
+
     let msgBlock = document.createElement('div');
     let msgTable = document.createElement('table');
     let msgTextTr = document.createElement('tr');
@@ -231,7 +234,6 @@ function setGetMessages(element, type){
 function sendData(){
     // непустые сообщения, готовый к обмену сокет, открытй чат
     if(messageInput.value !== '' && webSocket.readyState === 1 && chatNameLabel.innerHTML!=''){
-        console.log(chatId);
         webSocket.send(JSON.stringify({
             'message':   messageInput.value,
             'fromuser' : publicClientUsername,
