@@ -5,12 +5,7 @@
             <button class='position-absolute bg-white text-dark top-0 end-0 border-0 mt-1 me-2' id='reset-find-contacts-btn' title='сбросить фильтр'>&#9747;</button>
         </div>
         <div class='h-50 border-bottom border-dark overflow-auto' id='contacts'></div>
-
-        <div id='group-chats' class='groups pt-2 text-center'>
-            <p class='groups__item'>Групповой чат 1</p>
-            <p class='groups__item'>Групповой чат 2</p>
-            <p class='groups__item'>Групповой чат 3</p>
-        </div>
+        <div class='groups pt-2 text-center' id='group-chats' ></div>
     </div>
     
     <div class='messages-container border-start border-end border-dark d-flex flex-column pe-2'>

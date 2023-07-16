@@ -25,11 +25,18 @@ class MessageDBTableModel extends DBTableModel{
         return $query['chat_id'];
     }
 
-    // создать групповой чат
-    public function createDiscussion($userHost, $name=null){
-        
+
+    /** создать групповой чат
+     * @param int $userHostId
+     * 
+     * @return [type] id группового чата
+     */
+    public function createDiscussion(int $userHostId){
+        $groupId = $this->db->executeProcedure("create_discussion($userHostId, @info)", '@info');
+        return $this->db->query("select chat_id, chat_name, chat_creatorid from chat where chat_id = $groupId");
     }
 
+    /** добавить сообщение в БД */
     public function addMessage($msg){
         $userId = $this->db->query("select user_id from users where user_email='$msg->fromuser' or user_nickname='$msg->fromuser'")['user_id'];
         $sql = "insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time) values($msg->idChat, '$msg->message', $userId, '$msg->time')";

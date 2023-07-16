@@ -1,5 +1,6 @@
 const contacts = document.querySelector('#contacts');                                   // контейнер контактов
 const chat = document.querySelector("#messages");                                       // контейнер сообщений
+const groupChatsContainer = document.querySelector("#group-chats");                     // контейнер групповых чатов
 
 const contactNameTitle = document.querySelector('#contact-title');                      // элемент начальной подписи чата 
 const contactNameLabel = document.querySelector('#contact-username');                   // элемент имени контакта
@@ -211,11 +212,11 @@ window.addEventListener('load', () => {
 
     // отпускание клавиши при вводе сообщения
     messageInput.onkeyup = event => {
-        // перевод строки
+        // перевод строки, если Ctrl+Enter
         if(event.code === 'Enter' && pressedKeys.indexOf('ControlLeft') != -1){
             messageInput.value += '\n';
         }
-        // отправка сообщения по Enter
+        // отправка сообщения, если Enter
         else if(event.code === 'Enter'){
             messageInput.value = messageInput.value.substring(0, messageInput.value.length-1);
             sendData();
@@ -223,6 +224,21 @@ window.addEventListener('load', () => {
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
 
-    // создать группу
-    createGroupOption.onclick = () => console.log('createGroupOption клик');
+    // Кнопка "Создать группу"
+    createGroupOption.onclick = () => {
+        fetch('/create-group').then(r=>r.json()).then(data => {
+
+            let groupsItem = document.createElement('div');
+            let groupsItemName = document.createElement('div');
+
+            groupsItem.className = 'groups__item';
+
+            groupsItem.setAttribute('data-id', data.chat_id);
+            groupsItem.setAttribute('data-creatorid', data.chat_creatorid);
+            groupsItemName.innerHTML = data.chat_name;
+
+            groupsItem.appendChild(groupsItemName);
+            groupChatsContainer.appendChild(groupsItem);
+        });
+    }
 });
