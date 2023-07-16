@@ -10,15 +10,13 @@
     
     <div class='messages-container border-start border-end border-dark d-flex flex-column pe-2'>
         <p class='messages-container__title'>
-            <span id='contact-title'>Выберите чат</span>
-            <span id='contact-username'></span>
+            <span id='chat-title'>Выберите чат</span>
+            <span id='chat-username'></span>
         </p>
-        <input type="hidden" id='id-chat'>
         <div class='messages overflow-auto' id='messages'></div>
         <p class="message-system" id="message-system">Проверка подключения</p>                                   
         <div class='input-group d-flex justify-content-between pb-2'>
-            <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Ctrl+Enter - перевод строки 
-Enter - отправка сообщения' id='message-input' disabled></textarea>
+            <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Сообщение' id='message-input' disabled></textarea>
             <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn" disabled><img src="application/images/sendbtn.png"></button>
         </div>
     </div>

@@ -2,15 +2,15 @@ const contacts = document.querySelector('#contacts');                           
 const chat = document.querySelector("#messages");                                       // контейнер сообщений
 const groupChatsContainer = document.querySelector("#group-chats");                     // контейнер групповых чатов
 
-const contactNameTitle = document.querySelector('#contact-title');                      // элемент начальной подписи чата 
-const contactNameLabel = document.querySelector('#contact-username');                   // элемент имени контакта
+const chatNameTitle = document.querySelector('#chat-title');                            // элемент начальной подписи чата 
+const chatNameLabel = document.querySelector('#chat-username');                         // элемент имени контакта
+
 const systemMessagePrg = document.querySelector("#message-system");                     // элемент для системных сообщений
 const findContactsInput = document.querySelector('#find-contacts-input');               // поле поиска пользователя
 const messageInput = document.querySelector("#message-input");                          // поле ввода сообщения
 const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');        // кнопка сброса поиска пользователей
 const sendMsgBtn = document.querySelector("#send-msg-btn");                             // кнопка отправить сообщение
 
-const chatId = document.querySelector('#id-chat');                                      // id чата
 const wsUri = 'ws://localhost:8888';                                                    // адрес вебсокета
 const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();      // почта пользователя-хоста
 const publicClientUsername = document.querySelector('#publicUsername').value;           // публичное имя пользователя-хоста
@@ -51,7 +51,7 @@ webSocket.onmessage = e => {
     // сообщения пользователей
     else{
         // показ сообщений открытого чата
-        if((data.fromuser == publicClientUsername && data.touser == contactNameLabel.innerHTML) || (data.fromuser == contactNameLabel.innerHTML && data.touser == publicClientUsername)){
+        if((data.fromuser == publicClientUsername && data.touser == chatNameLabel.innerHTML) || (data.fromuser == chatNameLabel.innerHTML && data.touser == publicClientUsername)){
             message(data);
         }
     }
@@ -163,24 +163,24 @@ function showContacts(findInput, contacts){
 }
 
 
-/** Открыть чат с контактом, добавить контакт и чат в БД, если не существуют, показать сообщения
+/** Открыть чат диалога с контактом или группы
  * 
- * @param mixed данные контакта из БД
- */
-function setGetMessages(contact){
+ *  добавить контакт и диалог в БД, если не существуют
+ * */
+function setGetMessages(element, type='dialog'){
     return function(){
-        fetch(`/get-messages?contact=${contact}`).then(r=>r.json()).then(data=>{
+        let url = type==='dialog' ? '/get-messages?contact='+element : '';
+
+        fetch(url).then(r=>r.json()).then(data=>{
             if(data){
-                chatId.value = data.chatId;  //сохранение id диалога на странице
                 chat.innerHTML = '';
-                
-                // заголовок чата
-                contactNameTitle.innerHTML = 'Чат с пользователем ';                 
-                contactNameLabel.innerHTML =  contact;
-                // дотсупность полей ввода                                                                                        
+                chatNameLabel.setAttribute('data-chatid', data.chatId);
+                if(type === 'dialog'){
+                    chatNameTitle.innerHTML = 'Чат с пользователем '; 
+                    chatNameLabel.innerHTML =  element;
+                }                                                                                       
                 messageInput.disabled = false;  
                 sendMsgBtn.disabled = false;
-
                 data.messages.forEach(elem => message(elem));// сообщения
                 chat.scrollTo(0, chat.scrollHeight); // прокрутка сообщений в конец
             }
@@ -192,12 +192,12 @@ function setGetMessages(contact){
 /** отправить сообщение на сервер */
 function sendData(){
     // непустые сообщения, готовый к обмену сокет, открытй чат
-    if(messageInput.value !== '' && webSocket.readyState === 1 && contactNameLabel.innerHTML!=''){
+    if(messageInput.value !== '' && webSocket.readyState === 1 && chatNameLabel.innerHTML!=''){
         webSocket.send(JSON.stringify({
             'message':   messageInput.value,
             'fromuser' : publicClientUsername,
-            'touser':    contactNameLabel.innerHTML,
-            'idChat' :   chatId.value
+            'touser':    chatNameLabel.innerHTML,
+            'idChat' :   chatNameLabel.getAttribute('data-chatid')
         }));
     }
     messageInput.value = '';
