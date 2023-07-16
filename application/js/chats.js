@@ -20,10 +20,14 @@ const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
 const sendMsgBtn = document.querySelector("#send-msg-btn");
 /** адрес вебсокета */
 const wsUri = 'ws://localhost:8888';
+
+/** элемент имени клиента-пользователя*/
+const clientnameBlock = document.querySelector('#userhost');
 /** почта пользователя-хоста */
-const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();
+const clientUsername = clientnameBlock.innerHTML.trim();
 /** публичное имя пользователя-хоста */
-const publicClientUsername = document.querySelector('#publicUsername').value;
+const publicClientUsername = clientnameBlock.getAttribute('data-serid');
+
 /** кнопка создать групповой чат */
 const createGroupOption = document.querySelector('#create-group-option'); 
 /** текущий тип чата*/

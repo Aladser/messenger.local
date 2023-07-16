@@ -49,5 +49,3 @@
 
     </div>
 </div>
-
-<input type="hidden" id='publicUsername' value=<?=$data['publicUsername']?>>
