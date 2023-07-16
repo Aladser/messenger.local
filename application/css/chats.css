@@ -83,6 +83,17 @@
     padding-right: 3rem;
     color: #666666;
 }
+.msg__author{
+    padding-bottom: 0.4rem;
+    padding-right: 0.4rem;
+    padding-left: 3rem;
+    float: right;
+    font-size: 80%;
+}
+
+.chat-username{
+    font-weight: bolder;
+}
 
 .option-link{
     text-decoration: none;

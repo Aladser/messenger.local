@@ -16,6 +16,8 @@ const clientUsername = document.querySelector('#userhost-email').innerHTML.trim(
 const publicClientUsername = document.querySelector('#publicUsername').value;           // публичное имя пользователя-хоста
 const createGroupOption = document.querySelector('#create-group-option');               // кнопка создать групповой чат
 
+let chatType = null;                                                                    // тип чата
+let chatId = null;                                                                      // id Чата
 
 //----- ВЕБСОКЕТ СООБЩЕНИЙ -----
 let webSocket = new WebSocket(wsUri);
@@ -57,58 +59,7 @@ webSocket.onmessage = e => {
     }
 };
 
-
-/** создать DOM-элемент контакта */
-function createContactDOMElement(element){
-    // контейнер контакта
-    let contact = document.createElement('div');    // блок контакта
-    let contactImgBlock = document.createElement('div'); // блок изображения профиля
-    let img = document.createElement('img'); // фото профиля
-    let name = document.createElement('span'); // имя контакта
-
-    contact.className = 'contact position-relative mb-2';
-    contact.title = element['username'];
-    contactImgBlock.className = 'profile-img';
-    img.className = 'img pe-2';
-    name.className = 'contact__name';
-    
-    if(element['user_photo'] == 'ava_profile.png' || element['user_photo'] == null){
-        img.src = 'application/images/ava.png';
-    }
-    else{
-        img.src = `application/data/profile_photos/${element['user_photo']}`; 
-    }
-
-    name.innerHTML = element['username'];
-    contact.onclick = setGetMessages(element['username']);
-
-    contactImgBlock.append(img);
-    contact.append(contactImgBlock);
-    contact.append(name);
-    contacts.append(contact);
-
-    return contact;
-}
-
-/** Создать DOM-элемент группы в списке групп*/
-function createGroupDOMElement(group, place='END'){
-    let groupsItem = document.createElement('div');
-    let groupsItemName = document.createElement('div');
-
-    groupsItem.className = 'groups__item';
-
-    groupsItem.setAttribute('data-id', group.chat_id);
-    groupsItem.setAttribute('data-creatorid', group.chat_creatorid);
-    groupsItemName.innerHTML = group.chat_name;
-
-    groupsItem.append(groupsItemName);
-    if(place === 'START') groupChatsContainer.prepend(groupsItem);
-    else groupChatsContainer.append(groupsItem);
-}
-
-/** создать DOM-элемент сообщения 
- * 
-*/
+/** создать DOM-элемент сообщения */
 function message(data){
     let msgBlock = document.createElement('div');
     let msgTable = document.createElement('table');
@@ -141,12 +92,69 @@ function message(data){
     let localTime = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
     msgTimeTd.innerHTML = localTime;
 
-    msgTextTr.appendChild(msgTextTd);
-    msgTimeTr.appendChild(msgTimeTd);
-    msgTable.appendChild(msgTextTr);
-    msgTable.appendChild(msgTimeTr);
-    msgBlock.appendChild(msgTable);
-    chat.appendChild(msgBlock);
+    msgTextTr.append(msgTextTd);
+    msgTimeTr.append(msgTimeTd);
+    msgTable.append(msgTextTr);
+    msgTable.append(msgTimeTr);
+
+    // показ автора сообщения в групповом чате
+    if(chatType === 'discussion'){
+        let msgAuthorTr = document.createElement('tr');
+        let msgAuthorTd = document.createElement('td');
+        msgAuthorTd.className = 'msg__author';
+        msgAuthorTd.innerHTML = data.fromuser;
+        msgAuthorTr.append(msgAuthorTd);
+        msgTable.append(msgAuthorTr);
+    }
+
+    msgBlock.append(msgTable);
+    chat.append(msgBlock);
+}
+
+/** создать DOM-элемент контакта */
+function createContactDOMElement(element){
+    // контейнер контакта
+    let contact = document.createElement('div');    // блок контакта
+    let contactImgBlock = document.createElement('div'); // блок изображения профиля
+    let img = document.createElement('img'); // фото профиля
+    let name = document.createElement('span'); // имя контакта
+
+    contact.className = 'contact position-relative mb-2';
+    contact.title = element['username'];
+    contactImgBlock.className = 'profile-img';
+    img.className = 'img pe-2';
+    name.className = 'contact__name';
+
+    img.src = (element['user_photo'] == 'ava_profile.png' || element['user_photo'] == null) ? 'application/images/ava.png' : `application/data/profile_photos/${element['user_photo']}`;
+    name.innerHTML = element['username'];
+    contact.onclick = setGetMessages(element['username'], 'dialog');
+
+    contactImgBlock.append(img);
+    contact.append(contactImgBlock);
+    contact.append(name);
+    contacts.append(contact);
+}
+
+
+/** создать DOM-элемент группы в списке групп
+ * 
+ * @param {*} group БД данные группы
+ * @param {*} place куда добавить: START - начало списка, END - конец
+ */
+function createGroupDOMElement(group, place='END'){
+    let groupsItem = document.createElement('div');
+    let groupsItemName = document.createElement('div');
+
+    groupsItem.className = 'groups__item';
+
+    groupsItem.setAttribute('data-id', group.chat_id);
+    // groupsItem.setAttribute('data-creatorid', group.chat_creatorid); // создатель чата
+    groupsItemName.innerHTML = group.chat_name;
+    groupsItem.onclick = setGetMessages({'chat_id':group.chat_id, 'chat_name':group.chat_name}, 'discussion');
+
+    groupsItem.append(groupsItemName);
+    if(place === 'START') groupChatsContainer.prepend(groupsItem);
+    else if(place === 'END') groupChatsContainer.append(groupsItem);
 }
 
 
@@ -167,18 +175,27 @@ function showContacts(findInput, contacts){
  * 
  *  добавить контакт и диалог в БД, если не существуют
  * */
-function setGetMessages(element, type='dialog'){
+function setGetMessages(element, type){
     return function(){
-        let url = type==='dialog' ? '/get-messages?contact='+element : '';
+        let url;
+        switch(type){
+            case 'dialog':
+                url = '/get-messages?contact='+element;
+                break;
+            case 'discussion':
+                url = '/get-messages?discussionid='+element.chat_id;
+                break;
+            default:
+                return;
+        }
 
         fetch(url).then(r=>r.json()).then(data=>{
             if(data){
+                chatType = data.type;
                 chat.innerHTML = '';
-                chatNameLabel.setAttribute('data-chatid', data.chatId);
-                if(type === 'dialog'){
-                    chatNameTitle.innerHTML = 'Чат с пользователем '; 
-                    chatNameLabel.innerHTML =  element;
-                }                                                                                       
+                chatId = data.chatId;
+                chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение '; 
+                chatNameLabel.innerHTML = type==='dialog' ? element : element.chat_name;                                                                                      
                 messageInput.disabled = false;  
                 sendMsgBtn.disabled = false;
                 data.messages.forEach(elem => message(elem));// сообщения
@@ -193,11 +210,12 @@ function setGetMessages(element, type='dialog'){
 function sendData(){
     // непустые сообщения, готовый к обмену сокет, открытй чат
     if(messageInput.value !== '' && webSocket.readyState === 1 && chatNameLabel.innerHTML!=''){
+        console.log(chatId);
         webSocket.send(JSON.stringify({
             'message':   messageInput.value,
             'fromuser' : publicClientUsername,
             'touser':    chatNameLabel.innerHTML,
-            'idChat' :   chatNameLabel.getAttribute('data-chatid')
+            'idChat' :   chatId
         }));
     }
     messageInput.value = '';

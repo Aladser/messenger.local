@@ -39,7 +39,7 @@ class MessageDBTableModel extends DBTableModel{
     // возвращает групповые чаты пользователя
     public function getDiscussions(int $userHostId){
         return $this->db->query("
-        select chat_id, chat_name       
+        select chat_id, chat_name, chat_creatorid       
         from chat_participant
         join chat on chat_participant.chat_participant_chatid = chat.chat_id
         where chat_type = 'discussion' and chat_participant_userid = $userHostId

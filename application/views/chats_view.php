@@ -11,7 +11,7 @@
     <div class='messages-container border-start border-end border-dark d-flex flex-column pe-2'>
         <p class='messages-container__title'>
             <span id='chat-title'>Выберите чат</span>
-            <span id='chat-username'></span>
+            <span class='chat-username' id='chat-username'></span>
         </p>
         <div class='messages overflow-auto' id='messages'></div>
         <p class="message-system" id="message-system">Проверка подключения</p>                                   
