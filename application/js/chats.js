@@ -1,25 +1,38 @@
-const contacts = document.querySelector('#contacts');                                   // контейнер контактов
-const chat = document.querySelector("#messages");                                       // контейнер сообщений
-const groupChatsContainer = document.querySelector("#group-chats");                     // контейнер групповых чатов
+/** контейнер контактов */
+const contacts = document.querySelector('#contacts');
+/** контейнер сообщений */
+const chat = document.querySelector("#messages");
+/** контейнер групповых чатов */
+const groupChatsContainer = document.querySelector("#group-chats");
+/** элемент начальной подписи чата */
+const chatNameTitle = document.querySelector('#chat-title');
+/** элемент имени контакта */
+const chatNameLabel = document.querySelector('#chat-username');
+/** элемент для системных сообщений */
+const systemMessagePrg = document.querySelector("#message-system");
+/** поле поиска пользователя */
+const findContactsInput = document.querySelector('#find-contacts-input');
+/** поле ввода сообщения */
+const messageInput = document.querySelector("#message-input");
+/** кнопка сброса поиска пользователей */
+const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
+/** кнопка отправить сообщение */
+const sendMsgBtn = document.querySelector("#send-msg-btn");
+/** адрес вебсокета */
+const wsUri = 'ws://localhost:8888';
+/** почта пользователя-хоста */
+const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();
+/** публичное имя пользователя-хоста */
+const publicClientUsername = document.querySelector('#publicUsername').value;
+/** кнопка создать групповой чат */
+const createGroupOption = document.querySelector('#create-group-option'); 
+/** текущий тип чата*/
+let chatType = null;
+/** текущий id чата*/
+let chatId = null;
 
-const chatNameTitle = document.querySelector('#chat-title');                            // элемент начальной подписи чата 
-const chatNameLabel = document.querySelector('#chat-username');                         // элемент имени контакта
 
-const systemMessagePrg = document.querySelector("#message-system");                     // элемент для системных сообщений
-const findContactsInput = document.querySelector('#find-contacts-input');               // поле поиска пользователя
-const messageInput = document.querySelector("#message-input");                          // поле ввода сообщения
-const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');        // кнопка сброса поиска пользователей
-const sendMsgBtn = document.querySelector("#send-msg-btn");                             // кнопка отправить сообщение
-
-const wsUri = 'ws://localhost:8888';                                                    // адрес вебсокета
-const clientUsername = document.querySelector('#userhost-email').innerHTML.trim();      // почта пользователя-хоста
-const publicClientUsername = document.querySelector('#publicUsername').value;           // публичное имя пользователя-хоста
-const createGroupOption = document.querySelector('#create-group-option');               // кнопка создать групповой чат
-
-let chatType = null;                                                                    // тип чата
-let chatId = null;                                                                      // id Чата
-
-//----- ВЕБСОКЕТ СООБЩЕНИЙ -----
+/** ----- ВЕБСОКЕТ СООБЩЕНИЙ -----*/
 let webSocket = new WebSocket(wsUri);
 webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
@@ -158,16 +171,18 @@ function createGroupDOMElement(group, place='END'){
 }
 
 
-/** показать контакты клиента-пользователя
- * @param {*} findInput поле поиска пользователей
- * @param {*} contacts поле контактов пользователя
- */
-function showContacts(findInput, contacts){
+/** показать контакты пользователя-клиента*/
+function showContacts(){
     fetch('/get-contacts').then(r=>r.json()).then(data => {
-        findInput.value = '';
+        findContactsInput.value = '';
         contacts.innerHTML = '';
-        if(data != null) data.forEach(element => createContactDOMElement(element));
+        data.forEach(element => createContactDOMElement(element));
     }); 
+}
+
+/** показать групповые чаты пользователя-клиента */
+function showGroups(){
+    fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => createGroupDOMElement(elem))); 
 }
 
 
@@ -177,19 +192,21 @@ function showContacts(findInput, contacts){
  * */
 function setGetMessages(element, type){
     return function(){
-        let url;
-        switch(type){
-            case 'dialog':
-                url = '/get-messages?contact='+element;
-                break;
-            case 'discussion':
-                url = '/get-messages?discussionid='+element.chat_id;
-                break;
-            default:
-                return;
+        const urlParams = new URLSearchParams();
+        if(type === 'dialog'){
+            urlParams.set('contact', element);
         }
-
-        fetch(url).then(r=>r.json()).then(data=>{
+        else if(type === 'discussion'){
+            urlParams.set('discussionid', element.chat_id);
+            // показ участников группового чата
+            
+        }
+        else{
+            return;
+        }
+       
+        // показ сообщений
+        fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
             if(data){
                 chatType = data.type;
                 chat.innerHTML = '';
@@ -224,17 +241,20 @@ function sendData(){
 
 // ----- ЗАГРУЗКА СООБЩЕНИЙ -----
 window.addEventListener('load', () => {
-    showContacts(findContactsInput, contacts);                                                                                      // показ контактов
-    fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => createGroupDOMElement(elem)));                         // показ групповых чатов                            
-    resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);                                                 // сброс поиска пользователей и показ контактов 
-    createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => createGroupDOMElement(data, 'START'));  // кнопка "Создать группу"
-    let pressedKeys = [];                                                                                                           // массив нажатых клавиш
-    messageInput.onkeydown = event => pressedKeys.push(event.code);                                                                 // нажатие клавиши
-    sendMsgBtn.onclick = sendData;                                                                                                  // отправка сообщения по кнопке
+    resetFindContactsBtn.onclick = () => showContacts();
+    showContacts();                                                                                                                 
+    showGroups();                                                                                                                   
+
+    createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => createGroupDOMElement(data, 'START'));
+    let pressedKeys = [];                                           // массив нажатых клавиш
+    messageInput.onkeydown = event => pressedKeys.push(event.code); // нажатие клавиши
+    sendMsgBtn.onclick = sendData;
 
     // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
     findContactsInput.addEventListener('input', function(){
-        fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
+        const urlParams = new URLSearchParams();
+        urlParams.set('userphrase', this.value);
+        fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
             contacts.innerHTML = '';
             if(data != null){data.forEach(element => createContactDOMElement(element));}
         });

@@ -12,7 +12,7 @@ class FindContactsModel extends \core\Model
     public function run(){
         session_start();
         $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
-        echo json_encode($this->users->getUsers($_GET['userphrase'], $email));
+        echo json_encode($this->users->getUsers($_POST['userphrase'], $email));
     }
 }
 
