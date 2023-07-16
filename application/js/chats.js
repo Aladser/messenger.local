@@ -206,25 +206,21 @@ function sendData(){
 
 // ----- ЗАГРУЗКА СООБЩЕНИЙ -----
 window.addEventListener('load', () => {
-    // показ контактов
-    showContacts(findContactsInput, contacts);
-    // показ групповых чатов
-    fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => createGroupDOMElement(elem)));                              
-    // сброс поиска пользователей и показ контактов 
-    resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);
+    showContacts(findContactsInput, contacts);                                                                                      // показ контактов
+    fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => createGroupDOMElement(elem)));                         // показ групповых чатов                            
+    resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);                                                 // сброс поиска пользователей и показ контактов 
+    createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => createGroupDOMElement(data, 'START'));  // кнопка "Создать группу"
+    let pressedKeys = [];                                                                                                           // массив нажатых клавиш
+    messageInput.onkeydown = event => pressedKeys.push(event.code);                                                                 // нажатие клавиши
+    sendMsgBtn.onclick = sendData;                                                                                                  // отправка сообщения по кнопке
 
-    // поиск пользователей-контактов в БД по введенному слову
+    // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
     findContactsInput.addEventListener('input', function(){
         fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
             contacts.innerHTML = '';
-            //  отображение найденных контактов в списке контактов
             if(data != null){data.forEach(element => createContactDOMElement(element));}
         });
     });
-
-    let pressedKeys = []; // массив нажатых клавиш
-    messageInput.onkeydown = event => pressedKeys.push(event.code); // нажатие клавиши
-    sendMsgBtn.onclick = sendData;      // отправка сообщения по кнопке
 
     // отпускание клавиши при вводе сообщения
     messageInput.onkeyup = event => {
@@ -239,7 +235,4 @@ window.addEventListener('load', () => {
         }
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
-
-    // Кнопка "Создать группу"
-    createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => createGroupDOMElement(data, 'START'));
 });
