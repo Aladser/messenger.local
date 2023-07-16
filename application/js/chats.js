@@ -58,11 +58,8 @@ webSocket.onmessage = e => {
 };
 
 
-/** создать DOM-элемент контакта
- * @param {*} element данные контакта из БД
- * @returns 
- */
-function createContact(element){
+/** создать DOM-элемент контакта */
+function createContactDOMElement(element){
     // контейнер контакта
     let contact = document.createElement('div');    // блок контакта
     let contactImgBlock = document.createElement('div'); // блок изображения профиля
@@ -85,14 +82,29 @@ function createContact(element){
     name.innerHTML = element['username'];
     contact.onclick = setGetMessages(element['username']);
 
-    contactImgBlock.appendChild(img);
-    contact.appendChild(contactImgBlock);
-    contact.appendChild(name);
-    contacts.appendChild(contact);
+    contactImgBlock.append(img);
+    contact.append(contactImgBlock);
+    contact.append(name);
+    contacts.append(contact);
 
     return contact;
 }
 
+/** Создать DOM-элемент группы в списке групп*/
+function createGroupDOMElement(group, place='END'){
+    let groupsItem = document.createElement('div');
+    let groupsItemName = document.createElement('div');
+
+    groupsItem.className = 'groups__item';
+
+    groupsItem.setAttribute('data-id', group.chat_id);
+    groupsItem.setAttribute('data-creatorid', group.chat_creatorid);
+    groupsItemName.innerHTML = group.chat_name;
+
+    groupsItem.append(groupsItemName);
+    if(place === 'START') groupChatsContainer.prepend(groupsItem);
+    else groupChatsContainer.append(groupsItem);
+}
 
 /** создать DOM-элемент сообщения 
  * 
@@ -146,7 +158,7 @@ function showContacts(findInput, contacts){
     fetch('/get-contacts').then(r=>r.json()).then(data => {
         findInput.value = '';
         contacts.innerHTML = '';
-        if(data != null) data.forEach(element => createContact(element));
+        if(data != null) data.forEach(element => createContactDOMElement(element));
     }); 
 }
 
@@ -194,15 +206,19 @@ function sendData(){
 
 // ----- ЗАГРУЗКА СООБЩЕНИЙ -----
 window.addEventListener('load', () => {
-    showContacts(findContactsInput, contacts);                                      // показ контактов
-    resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts); // сброс поиска пользователей и показ контактов
+    // показ контактов
+    showContacts(findContactsInput, contacts);
+    // показ групповых чатов
+    fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => createGroupDOMElement(elem)));                              
+    // сброс поиска пользователей и показ контактов 
+    resetFindContactsBtn.onclick = () => showContacts(findContactsInput, contacts);
 
     // поиск пользователей-контактов в БД по введенному слову
     findContactsInput.addEventListener('input', function(){
         fetch(`/find-contacts?userphrase=${this.value}`).then(r=>r.json()).then(data => {
             contacts.innerHTML = '';
             //  отображение найденных контактов в списке контактов
-            if(data != null){data.forEach(element => createContact(element));}
+            if(data != null){data.forEach(element => createContactDOMElement(element));}
         });
     });
 
@@ -225,20 +241,5 @@ window.addEventListener('load', () => {
     };
 
     // Кнопка "Создать группу"
-    createGroupOption.onclick = () => {
-        fetch('/create-group').then(r=>r.json()).then(data => {
-
-            let groupsItem = document.createElement('div');
-            let groupsItemName = document.createElement('div');
-
-            groupsItem.className = 'groups__item';
-
-            groupsItem.setAttribute('data-id', data.chat_id);
-            groupsItem.setAttribute('data-creatorid', data.chat_creatorid);
-            groupsItemName.innerHTML = data.chat_name;
-
-            groupsItem.appendChild(groupsItemName);
-            groupChatsContainer.appendChild(groupsItem);
-        });
-    }
+    createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => createGroupDOMElement(data, 'START'));
 });

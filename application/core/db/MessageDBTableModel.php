@@ -36,6 +36,11 @@ class MessageDBTableModel extends DBTableModel{
         return $this->db->query("select chat_id, chat_name, chat_creatorid from chat where chat_id = $groupId");
     }
 
+    // возвращает групповые чаты пользователя
+    public function getDiscussions(int $userHostId){
+        return $this->db->query("select chat_id, chat_name, chat_creatorid from chat where chat_creatorid = $userHostId", false);
+    }
+
     /** добавить сообщение в БД */
     public function addMessage($msg){
         $userId = $this->db->query("select user_id from users where user_email='$msg->fromuser' or user_nickname='$msg->fromuser'")['user_id'];
