@@ -1,5 +1,12 @@
+/** элемент имени клиента-пользователя*/
+const clientnameBlock = document.querySelector('#userhost');
+/** почта пользователя-хоста */
+const clientUsername = clientnameBlock.innerHTML.trim();
+/** публичное имя пользователя-хоста */
+const publicClientUsername = clientnameBlock.getAttribute('data-user-publicname');
+
 /** контейнер контактов */
-const contacts = document.querySelector('#contacts');
+const contactsContainer = document.querySelector('#contacts');
 /** контейнер сообщений */
 const chat = document.querySelector("#messages");
 /** контейнер групповых чатов */
@@ -20,20 +27,17 @@ const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
 const sendMsgBtn = document.querySelector("#send-msg-btn");
 /** адрес вебсокета */
 const wsUri = 'ws://localhost:8888';
-
-/** элемент имени клиента-пользователя*/
-const clientnameBlock = document.querySelector('#userhost');
-/** почта пользователя-хоста */
-const clientUsername = clientnameBlock.innerHTML.trim();
-/** публичное имя пользователя-хоста */
-const publicClientUsername = clientnameBlock.getAttribute('data-user-publicname');
-
 /** кнопка создать групповой чат */
 const createGroupOption = document.querySelector('#create-group-option'); 
+
 /** текущий тип чата*/
 let chatType = null;
 /** текущий id чата*/
 let chatId = null;
+/** список участников выбранной группы */
+let groupContacts = [];
+/** создатель группового чата*/
+let discussionCreatorName = null;
 
 
 /** ----- ВЕБСОКЕТ СООБЩЕНИЙ -----*/
@@ -68,12 +72,13 @@ webSocket.onmessage = e => {
     }
     // показ сообщений открытого чата
     else{
-        if(chatId === data.chatId) message(data);
+        if(chatId === data.chatId) appendMessage(data);
     }
 };
 
+
 /** создать DOM-элемент сообщения */
-function message(data){
+function appendMessage(data){
     let msgBlock = document.createElement('div');
     let msgTable = document.createElement('table');
     let msgTextTr = document.createElement('tr');
@@ -124,6 +129,7 @@ function message(data){
     chat.append(msgBlock);
 }
 
+
 /** создать DOM-элемент контакта */
 function appendContactDOMElement(element){
     // контейнер контакта
@@ -145,11 +151,12 @@ function appendContactDOMElement(element){
     contactImgBlock.append(img);
     contact.append(contactImgBlock);
     contact.append(name);
-    contacts.append(contact);
+
+    contactsContainer.append(contact);
 }
 
 
-/** показать участника группового чата */
+/** добавить DOM участника группового чата */
 function appendGroupContactDOMElement(parent, child){
     let contact = document.createElement('p');
     contact.className = 'group__contact';
@@ -185,9 +192,9 @@ function appendGroupDOMElement(group, place='END'){
 function showContacts(){
     fetch('/get-contacts').then(r=>r.json()).then(data => {
         findContactsInput.value = '';
-        contacts.innerHTML = '';
+        contactsContainer.innerHTML = '';
         data.forEach(element => appendContactDOMElement(element));
-    }); 
+    });
 }
 
 
@@ -211,14 +218,36 @@ function setGetMessages(domElement, bdData, type){
             urlParams.set('discussionid', bdData.chat_id);
             // показ участников группового чата
             fetch('/get-group-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
-                let groupContactsElement = document.querySelector('.group__contacts');
-                let groupContactsElementParent = groupContactsElement ? groupContactsElement.parentNode : null;
-                if(groupContactsElement) groupContactsElementParent.removeChild(groupContactsElement);
+                let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
+                let groupContactsElementParent = groupContactsElement ? groupContactsElement.parentNode : null; // родитель существующего списка контактов групы
+                if(groupContactsElement) groupContactsElementParent.removeChild(groupContactsElement);  // удаление существующего списка контактов групы
 
-                let prtBlock = document.createElement('div');
+                // создание DOM-списка участников группового чата
+                let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
                 prtBlock.className = 'group__contacts';
                 domElement.append(prtBlock);
-                data.forEach(prt => appendGroupContactDOMElement(prtBlock, prt));
+                groupContacts = [];
+                data.participants.forEach(prt => {
+                    appendGroupContactDOMElement(prtBlock, prt);
+                    groupContacts.push(prt.publicname);
+                });
+
+                discussionCreatorName = data.creatorName;
+
+                // удаление кнопок добавления в группу у контактов-неучастников предыдущей группы
+                contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
+                // добавить новые кнопки добавления в группу у контактов-неучастников выбранной группы
+                let contacts = [];
+                contactsContainer.querySelectorAll('.contact').forEach(cnt => {
+                    cntName = cnt.lastChild.innerHTML;
+                    if(!groupContacts.includes(cntName)){
+                        let plus = document.createElement('div');
+                        plus.className = 'contact-addgroup position-absolute top-0 end-0';
+                        plus.innerHTML = '+';
+                        cnt.append(plus);
+                    }
+                    contacts.push(cntName);
+                });
             });
         }
         else{
@@ -235,7 +264,7 @@ function setGetMessages(domElement, bdData, type){
                 chatNameLabel.innerHTML = type==='dialog' ? bdData : bdData.chat_name;                                                                                      
                 messageInput.disabled = false;  
                 sendMsgBtn.disabled = false;
-                data.messages.forEach(elem => message(elem));// сообщения
+                data.messages.forEach(elem => appendMessage(elem));// сообщения
                 chat.scrollTo(0, chat.scrollHeight); // прокрутка сообщений в конец
             }
         });
@@ -275,7 +304,7 @@ window.addEventListener('load', () => {
         const urlParams = new URLSearchParams();
         urlParams.set('userphrase', this.value);
         fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
-            contacts.innerHTML = '';
+            contactsContainer.innerHTML = '';
             if(data != null){data.forEach(element => appendContactDOMElement(element));}
         });
     });
