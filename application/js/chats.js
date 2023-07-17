@@ -36,7 +36,7 @@ let chatType = null;
 let chatId = null;
 /** список участников выбранной группы */
 let groupContacts = [];
-/** создатель группового чата*/
+/** создатель группового чата {заготовка на будущее}*/
 let discussionCreatorName = null;
 
 
@@ -156,16 +156,6 @@ function appendContactDOMElement(element){
 }
 
 
-/** добавить DOM участника группового чата */
-function appendGroupContactDOMElement(parent, child){
-    let contact = document.createElement('p');
-    contact.className = 'group__contact';
-    contact.innerHTML = child.publicname;
-    contact.setAttribute('data-id', child.user_id);
-    parent.append(contact);
-}
-
-
 /** создать DOM-элемент группы в списке групп
  * 
  * @param {*} group БД данные группы
@@ -203,6 +193,7 @@ function showGroups(){
     fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => appendGroupDOMElement(elem))); 
 }
 
+
 /** удаление DOM участников предыдущего выбранного группового чата */
 function removeDOMGroupPatricipants(){
     let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
@@ -211,10 +202,29 @@ function removeDOMGroupPatricipants(){
     contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
 }
 
+
+/** отправить сообщение на сервер */
+function sendData(){
+    // непустые сообщения, готовый к обмену сокет, открытй чат
+    if(messageInput.value !== '' && webSocket.readyState === 1 && chatNameLabel.innerHTML!=''){
+        webSocket.send(JSON.stringify({
+            'message':   messageInput.value,
+            'fromuser' : publicClientUsername,
+            'touser':    chatNameLabel.innerHTML,
+            'chatId' :   chatId,
+            'chatType': chatType
+        }));
+    }
+    messageInput.value = '';
+}
+
 /** ОТКРЫТЬ ЧАТ ДИАЛОГА ИЛИ ГРУППОВОГО ЧАТА
  * 
- *  добавить контакт и диалог в БД, если не существуют
- * */
+ * @param {*} domElement DOM-элемент контакта или чата
+ * @param {*} bdData данные элемента из БД
+ * @param {*} type тип диалога
+ * @returns 
+ */
 function setGetMessages(domElement, bdData, type){
     return function(){
         const urlParams = new URLSearchParams();
@@ -233,14 +243,12 @@ function setGetMessages(domElement, bdData, type){
                 domElement.append(prtBlock);
                 groupContacts = [];
                 data.participants.forEach(prt => {
-                    appendGroupContactDOMElement(prtBlock, prt);
+                    prtBlock.innerHTML += `<p class='group__contact' data-id=${prt.user_i}>${prt.publicname}</p>`;
                     groupContacts.push(prt.publicname);
                 });
 
-                discussionCreatorName = data.creatorName;
+                discussionCreatorName = data.creatorName; // {заготовка на будущее}
 
-                // удаление кнопок добавления в группу у контактов-неучастников предыдущей группы
-                contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
                 // добавить новые кнопки добавления в группу у контактов-неучастников выбранной группы
                 let contacts = [];
                 contactsContainer.querySelectorAll('.contact').forEach(cnt => {
@@ -250,6 +258,18 @@ function setGetMessages(domElement, bdData, type){
                         plus.className = 'contact-addgroup position-absolute top-0 end-0';
                         plus.innerHTML = '+';
                         plus.title = 'добавить в групповой чат';
+
+                        // добавить пользователя в группу
+                        plus.onclick = e =>{
+                            let username = e.target.parentNode.childNodes[1].innerHTML;
+                            e.stopPropagation();
+                            console.log('user ' + username);
+                            console.log('чат ' + bdData.chat_id);
+                            ////////////////////////////////
+                            // добавить пользователя в группу
+                            ///////////////////////////////
+                        }
+
                         cnt.append(plus);
                     }
                     contacts.push(cntName);
@@ -278,27 +298,11 @@ function setGetMessages(domElement, bdData, type){
 }
 
 
-/** отправить сообщение на сервер */
-function sendData(){
-    // непустые сообщения, готовый к обмену сокет, открытй чат
-    if(messageInput.value !== '' && webSocket.readyState === 1 && chatNameLabel.innerHTML!=''){
-        webSocket.send(JSON.stringify({
-            'message':   messageInput.value,
-            'fromuser' : publicClientUsername,
-            'touser':    chatNameLabel.innerHTML,
-            'chatId' :   chatId,
-            'chatType': chatType
-        }));
-    }
-    messageInput.value = '';
-}
-
-
 // ----- ЗАГРУЗКА СООБЩЕНИЙ -----
 window.addEventListener('load', () => {
-    resetFindContactsBtn.onclick = () => showContacts();
-    showContacts();                                                                                                                 
-    showGroups();                                                                                                                   
+    resetFindContactsBtn.onclick = showContacts;
+    showContacts();
+    showGroups();
 
     createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => appendGroupDOMElement(data, 'START'));
     let pressedKeys = [];                                           // массив нажатых клавиш
