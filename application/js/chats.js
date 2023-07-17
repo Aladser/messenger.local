@@ -203,6 +203,13 @@ function showGroups(){
     fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => appendGroupDOMElement(elem))); 
 }
 
+/** удаление DOM участников предыдущего выбранного группового чата */
+function removeDOMGroupPatricipants(){
+    let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
+    if(groupContactsElement) groupContactsElement.parentNode.removeChild(groupContactsElement);  // удаление существующего списка контактов группы
+    // удаление кнопок добавления в группу у контактов-неучастников предыдущей группы
+    contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
+}
 
 /** ОТКРЫТЬ ЧАТ ДИАЛОГА ИЛИ ГРУППОВОГО ЧАТА
  * 
@@ -213,19 +220,13 @@ function setGetMessages(domElement, bdData, type){
         const urlParams = new URLSearchParams();
         if(type === 'dialog'){
             urlParams.set('contact', bdData);
-            // удаление участников группового чата, если до этого был выбран чат
-            let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
-            if(groupContactsElement) groupContactsElement.parentNode.removeChild(groupContactsElement);  // удаление существующего списка контактов группы
-            // удаление кнопок добавления в группу у контактов-неучастников предыдущей группы
-            contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
+            removeDOMGroupPatricipants();
         }
         else if(type === 'discussion'){
             urlParams.set('discussionid', bdData.chat_id);
             // показ участников группового чата
             fetch('/get-group-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
-                let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
-                if(groupContactsElement) groupContactsElement.parentNode.removeChild(groupContactsElement);  // удаление существующего списка контактов группы
-
+                removeDOMGroupPatricipants();
                 // создание DOM-списка участников группового чата
                 let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
                 prtBlock.className = 'group__contacts';
@@ -303,6 +304,7 @@ window.addEventListener('load', () => {
     let pressedKeys = [];                                           // массив нажатых клавиш
     messageInput.onkeydown = event => pressedKeys.push(event.code); // нажатие клавиши
     sendMsgBtn.onclick = sendData;
+    findContactsInput.onclick = removeDOMGroupPatricipants;         // клик на поле поиска пользователей
 
     // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
     findContactsInput.addEventListener('input', function(){
