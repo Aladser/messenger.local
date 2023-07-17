@@ -25,4 +25,13 @@ class ContactsDBTableModel extends DBTableModel{
         ";
         return $this->db->query($sql, false);
     }
+
+    function getGroupContacts($groupId){
+        $sql = "
+        select user_id, getPublicUserName(user_email, user_nickname, user_hide_email) as publicname from chat_participant 
+        join users on chat_participant.chat_participant_userid = users.user_id
+        where chat_participant_chatid = $groupId
+        ";
+        return $this->db->query($sql, false);
+    }
 }

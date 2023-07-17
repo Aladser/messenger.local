@@ -53,7 +53,7 @@ class Chat implements MessageComponentInterface {
         // сообщение пользователя
         else if($data->message){
             $data->time = date('Y-m-d H:i:s');
-            $this->messageTable->addMessage($data);
+            // $this->messageTable->addMessage($data);
         }
 
         $msg = json_encode($data);
