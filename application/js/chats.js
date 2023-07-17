@@ -243,7 +243,7 @@ function setGetMessages(domElement, bdData, type){
                 domElement.append(prtBlock);
                 groupContacts = [];
                 data.participants.forEach(prt => {
-                    prtBlock.innerHTML += `<p class='group__contact' data-id=${prt.user_i}>${prt.publicname}</p>`;
+                    prtBlock.innerHTML += `<p class='group__contact'>${prt.publicname}</p>`;
                     groupContacts.push(prt.publicname);
                 });
 
@@ -261,13 +261,21 @@ function setGetMessages(domElement, bdData, type){
 
                         // добавить пользователя в группу
                         plus.onclick = e =>{
-                            let username = e.target.parentNode.childNodes[1].innerHTML;
-                            e.stopPropagation();
-                            console.log('user ' + username);
-                            console.log('чат ' + bdData.chat_id);
-                            ////////////////////////////////
-                            // добавить пользователя в группу
-                            ///////////////////////////////
+                            let username = e.target.parentNode.childNodes[1].innerHTML; // имя пользователя
+                            e.stopPropagation();    // прекратить всплытие событий
+
+                            const urlParams2 = new URLSearchParams();
+                            urlParams2.set('discussionid', bdData.chat_id);
+                            urlParams2.set('username', username);
+                            fetch('add-group-contact', {method: 'POST', body: urlParams2}).then(r=>r.text()).then(data => {
+                                if(data == 1){
+                                    e.target.parentNode.lastChild.remove();
+                                    domElement.lastChild.innerHTML += `<p class='group__contact'>${username}</p>`;
+                                }
+                                else{
+                                    console.log(data);
+                                }
+                            });
                         }
 
                         cnt.append(plus);
