@@ -213,14 +213,18 @@ function setGetMessages(domElement, bdData, type){
         const urlParams = new URLSearchParams();
         if(type === 'dialog'){
             urlParams.set('contact', bdData);
+            // удаление участников группового чата, если до этого был выбран чат
+            let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
+            if(groupContactsElement) groupContactsElement.parentNode.removeChild(groupContactsElement);  // удаление существующего списка контактов группы
+            // удаление кнопок добавления в группу у контактов-неучастников предыдущей группы
+            contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
         }
         else if(type === 'discussion'){
             urlParams.set('discussionid', bdData.chat_id);
             // показ участников группового чата
             fetch('/get-group-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
                 let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
-                let groupContactsElementParent = groupContactsElement ? groupContactsElement.parentNode : null; // родитель существующего списка контактов групы
-                if(groupContactsElement) groupContactsElementParent.removeChild(groupContactsElement);  // удаление существующего списка контактов групы
+                if(groupContactsElement) groupContactsElement.parentNode.removeChild(groupContactsElement);  // удаление существующего списка контактов группы
 
                 // создание DOM-списка участников группового чата
                 let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
@@ -244,6 +248,7 @@ function setGetMessages(domElement, bdData, type){
                         let plus = document.createElement('div');
                         plus.className = 'contact-addgroup position-absolute top-0 end-0';
                         plus.innerHTML = '+';
+                        plus.title = 'добавить в групповой чат';
                         cnt.append(plus);
                     }
                     contacts.push(cntName);
