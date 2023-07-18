@@ -38,6 +38,8 @@ const editMsgBtn = document.querySelector('#edit-msg');
 const resendMsgBtn = document.querySelector('#resend-msg');
 /** кнопка контекстного меню удалить*/
 const removeMsgBtn = document.querySelector('#remove-msg');
+/** элементы контекстного меню*/
+const contextMenuElements = ['msg__text', 'msg__time', 'msg__table', 'msg__author'];
 
 /** текущий тип чата*/
 let chatType = null;
@@ -315,6 +317,28 @@ function removeDOMGroupPatricipants(){
     contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
 }
 
+/** скрыть контекстное меню*/
+function hideContextMenu(){
+    contextMenu.style.left = '0px';
+    contextMenu.style.top = '1000px';
+    contextMenu.style.display = 'none';
+}
+
+/** изменить сообщение */
+function editMessage(){
+    console.log('edit');
+    hideContextMenu();
+}
+/** удалить сообщение  */
+function removeMessage(){
+    console.log('remove');
+    hideContextMenu();
+}
+/** переотправить сообщение */
+function resendMessage(){
+    console.log('resend');
+    hideContextMenu();
+}
 
 // ----- загрузка DOM дерева -----
 window.addEventListener('DOMContentLoaded', () => {
@@ -355,24 +379,23 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // показать контекстное меню сообщения
     window.oncontextmenu = event => {
-        if(['msg__text', 'msg__time', 'msg__table'].includes(event.target.className)){
+        if(contextMenuElements.includes(event.target.className) || contextMenuElements.includes(event.target.parentNode.className)){
             contextMenu.style.left = event.pageX+'px';
             contextMenu.style.top = event.pageY+'px';
             contextMenu.style.display = 'block';
         }
+        else{
+            hideContextMenu();
+        }
     };
     // нажать пункт контекстного меню сообщения
     window.onclick = event => {
-        if(event.target.className !== 'list-group-item'){
-            contextMenu.style.left = '0px';
-            contextMenu.style.top = '1000px';
-            contextMenu.style.display = 'none';
-        }
+        if(event.target.className !== 'list-group-item') hideContextMenu();
     };
     // прокрутка диалога, удаление контекстного меню сообщения
-    chat.onscroll = () => {
-        contextMenu.style.left = '0px';
-        contextMenu.style.top = '1000px';
-        contextMenu.style.display = 'none';
-      };
+    chat.onscroll = hideContextMenu;
+
+    editMsgBtn.onclick = editMessage;
+    removeMsgBtn.onclick = removeMessage;
+    resendMsgBtn.onclick = resendMessage;
 });
