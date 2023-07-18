@@ -30,6 +30,15 @@ const wsUri = 'ws://localhost:8888';
 /** кнопка создать групповой чат */
 const createGroupOption = document.querySelector('#create-group-option'); 
 
+/** контекстное меню */
+const contextMenu = document.querySelector('#context-menu');
+/** кнопка контекстного меню редактировать*/
+const editMsgBtn = document.querySelector('#edit-msg');
+/** кнопка контекстного меню переслать */
+const resendMsgBtn = document.querySelector('#resend-msg');
+/** кнопка контекстного меню удалить*/
+const removeMsgBtn = document.querySelector('#remove-msg');
+
 /** текущий тип чата*/
 let chatType = null;
 /** текущий id чата*/
@@ -87,7 +96,7 @@ function appendMessage(data){
     let msgTimeTd = document.createElement('td');
 
     msgBlock.className = data.fromuser !== publicClientUsername ? 'msg d-flex justify-content-end' : 'msg';
-    msgTable.className = data.fromuser !== publicClientUsername ? 'msg-table msg-table-contact' : 'msg-table';
+    msgTable.className = data.fromuser !== publicClientUsername ? 'msg__table msg__table-contact' : 'msg__table';
     msgTextTd.className = 'msg__text';
     msgTimeTd.className = 'msg__time';
 
@@ -194,15 +203,6 @@ function showGroups(){
 }
 
 
-/** удаление DOM участников предыдущего выбранного группового чата */
-function removeDOMGroupPatricipants(){
-    let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
-    if(groupContactsElement) groupContactsElement.parentNode.removeChild(groupContactsElement);  // удаление существующего списка контактов группы
-    // удаление кнопок добавления в группу у контактов-неучастников предыдущей группы
-    contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
-}
-
-
 /** отправить сообщение на сервер */
 function sendData(){
     // непустые сообщения, готовый к обмену сокет, открытй чат
@@ -217,6 +217,7 @@ function sendData(){
     }
     messageInput.value = '';
 }
+
 
 /** ОТКРЫТЬ ЧАТ ДИАЛОГА ИЛИ ГРУППОВОГО ЧАТА
  * 
@@ -306,8 +307,17 @@ function setGetMessages(domElement, bdData, type){
 }
 
 
-// ----- ЗАГРУЗКА СООБЩЕНИЙ -----
-window.addEventListener('load', () => {
+/** удаление DOM участников предыдущего выбранного группового чата */
+function removeDOMGroupPatricipants(){
+    let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
+    if(groupContactsElement) groupContactsElement.parentNode.removeChild(groupContactsElement);  // удаление существующего списка контактов группы
+    // удаление кнопок добавления в группу у контактов-неучастников предыдущей группы
+    contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
+}
+
+
+// ----- загрузка DOM дерева -----
+window.addEventListener('DOMContentLoaded', () => {
     resetFindContactsBtn.onclick = showContacts;
     showContacts();
     showGroups();
@@ -316,7 +326,7 @@ window.addEventListener('load', () => {
     let pressedKeys = [];                                           // массив нажатых клавиш
     messageInput.onkeydown = event => pressedKeys.push(event.code); // нажатие клавиши
     sendMsgBtn.onclick = sendData;
-    findContactsInput.onclick = removeDOMGroupPatricipants;         // клик на поле поиска пользователей
+    document.oncontextmenu = function() {return false;}; // запрет контекстного меню
 
     // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
     findContactsInput.addEventListener('input', function(){
@@ -341,4 +351,28 @@ window.addEventListener('load', () => {
         }
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
+
+
+    // показать контекстное меню сообщения
+    window.oncontextmenu = event => {
+        if(['msg__text', 'msg__time', 'msg__table'].includes(event.target.className)){
+            contextMenu.style.left = event.pageX+'px';
+            contextMenu.style.top = event.pageY+'px';
+            contextMenu.style.display = 'block';
+        }
+    };
+    // нажать пункт контекстного меню сообщения
+    window.onclick = event => {
+        if(event.target.className !== 'list-group-item'){
+            contextMenu.style.left = '0px';
+            contextMenu.style.top = '1000px';
+            contextMenu.style.display = 'none';
+        }
+    };
+    // прокрутка диалога, удаление контекстного меню сообщения
+    chat.onscroll = () => {
+        contextMenu.style.left = '0px';
+        contextMenu.style.top = '1000px';
+        contextMenu.style.display = 'none';
+      };
 });

@@ -13,8 +13,11 @@
             <span id='chat-title'>Выберите чат</span>
             <span class='chat-username' id='chat-username'></span>
         </p>
-        <div class='messages overflow-auto' id='messages'></div>
-        <p class="message-system" id="message-system">Проверка подключения</p>                                   
+        
+        <div class='messages' id='messages'>
+        </div>
+
+        <p class="messages-container__system" id="message-system">Проверка подключения</p>                                   
         <div class='input-group d-flex justify-content-between pb-2'>
             <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Сообщение' id='message-input' disabled></textarea>
             <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn" disabled><img src="application/images/sendbtn.png"></button>
@@ -48,4 +51,12 @@
         </div>
 
     </div>
+</div>
+
+<div class='context-menu' id='context-menu'>
+    <ul class='list-group m-0'>
+    <li class='list-group-item' id='edit-msg'>Редактировать</li>
+    <li class='list-group-item' id='resend-msg'>Переслать</li>
+    <li class='list-group-item' id='remove-msg'>Удалить</li>
+    </ul>
 </div>
