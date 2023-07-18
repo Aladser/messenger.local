@@ -416,7 +416,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // нажатия левой кнопкой мыши
     window.onclick = event => {
-        if(event.target.parentNode.id !== 'send-msg-btn') messageInput.value = ''; // очистка поля ввода сообщения, если не нажата кнопка отправки сообщения
+        if(event.target.parentNode.id !== 'send-msg-btn' && event.target.className !== 'list-group-item') messageInput.value = ''; // очистка поля ввода сообщения, если не нажата кнопка отправки сообщения
         if(event.target.className !== 'list-group-item') hideContextMenu();
     };
     chat.onscroll = hideContextMenu; // скрыть контекстное меню сообщения при прокрутке диалога
