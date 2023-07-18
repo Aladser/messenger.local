@@ -58,9 +58,15 @@ class MessageDBTableModel extends DBTableModel{
         return $this->db->exec($sql);
     }
 
+
+    /** возвращает сообшения диалога
+     * @param int $chatId
+     * 
+     * @return [type] массив сообщений
+     */
     public function getMessages(int $chatId){
         $sql = "
-            select chat_message_id as id, 
+            select chat_message_id, 
             chat_message_chatid as chatId, 
             getPublicUserName(user_email, user_nickname, user_hide_email) as fromuser, 
             chat_message_text as message, 

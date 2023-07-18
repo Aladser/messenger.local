@@ -9,37 +9,40 @@ const publicClientUsername = clientnameBlock.getAttribute('data-user-publicname'
 const contactsContainer = document.querySelector('#contacts');
 /** контейнер сообщений */
 const chat = document.querySelector("#messages");
-/** контейнер групповых чатов */
-const groupChatsContainer = document.querySelector("#group-chats");
 /** элемент начальной подписи чата */
 const chatNameTitle = document.querySelector('#chat-title');
 /** элемент имени контакта */
 const chatNameLabel = document.querySelector('#chat-username');
-/** элемент для системных сообщений */
-const systemMessagePrg = document.querySelector("#message-system");
+/** кнопка создать групповой чат */
+const createGroupOption = document.querySelector('#create-group-option'); 
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
+/** контейнер групповых чатов */
+const groupChatsContainer = document.querySelector("#group-chats");
 /** поле ввода сообщения */
 const messageInput = document.querySelector("#message-input");
 /** кнопка сброса поиска пользователей */
 const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
 /** кнопка отправить сообщение */
 const sendMsgBtn = document.querySelector("#send-msg-btn");
+/** элемент для системных сообщений */
+const systemMessagePrg = document.querySelector("#message-system");
 /** адрес вебсокета */
 const wsUri = 'ws://localhost:8888';
-/** кнопка создать групповой чат */
-const createGroupOption = document.querySelector('#create-group-option'); 
 
 /** контекстное меню */
 const contextMenu = document.querySelector('#context-menu');
+/** элементы контекстного меню*/
+const contextMenuElements = ['msg__text', 'msg__time', 'msg__tr-author', 'msg__author'];
 /** кнопка контекстного меню редактировать*/
 const editMsgBtn = document.querySelector('#edit-msg');
-/** кнопка контекстного меню переслать */
-const resendMsgBtn = document.querySelector('#resend-msg');
 /** кнопка контекстного меню удалить*/
 const removeMsgBtn = document.querySelector('#remove-msg');
-/** элементы контекстного меню*/
-const contextMenuElements = ['msg__text', 'msg__time', 'msg__table', 'msg__author'];
+/** кнопка контекстного меню переслать */
+const resendMsgBtn = document.querySelector('#resend-msg');
+
+/** выбранное сообщение */
+let selectedMessageData = null;
 
 /** текущий тип чата*/
 let chatType = null;
@@ -49,6 +52,8 @@ let chatId = null;
 let groupContacts = [];
 /** создатель группового чата {заготовка на будущее}*/
 let discussionCreatorName = null;
+/** тип отправляемого сообщения*/
+let messageType = 'NEW';
 
 
 /** ----- ВЕБСОКЕТ СООБЩЕНИЙ -----*/
@@ -56,6 +61,7 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
+    console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if(data.onсonnection){
@@ -90,27 +96,6 @@ webSocket.onmessage = e => {
 
 /** создать DOM-элемент сообщения */
 function appendMessage(data){
-    let msgBlock = document.createElement('div');
-    let msgTable = document.createElement('table');
-    let msgTextTr = document.createElement('tr');
-    let msgTextTd = document.createElement('td');
-    let msgTimeTr = document.createElement('tr');
-    let msgTimeTd = document.createElement('td');
-
-    msgBlock.className = data.fromuser !== publicClientUsername ? 'msg d-flex justify-content-end' : 'msg';
-    msgTable.className = data.fromuser !== publicClientUsername ? 'msg__table msg__table-contact' : 'msg__table';
-    msgTextTd.className = 'msg__text';
-    msgTimeTd.className = 'msg__time';
-
-    // показ переводов строки на странице
-    let brIndex = data.message.indexOf('\n');
-    while(brIndex > -1){
-        data.message = data.message.replace('\n', '<br>');
-        brIndex = data.message.indexOf('\n');
-    }
-
-    msgTextTd.innerHTML = data.message;
-
     // показ местного времени
     // YYYY.MM.DD HH:ii:ss
     let timeInMs = Date.parse(data.time);
@@ -119,22 +104,22 @@ function appendMessage(data){
     timeInMs += (timeZone-3)*3600000;
     newDate = new Date(timeInMs);
     let localTime = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
-    msgTimeTd.innerHTML = localTime;
-
-    msgTextTr.append(msgTextTd);
-    msgTimeTr.append(msgTimeTd);
-    msgTable.append(msgTextTr);
-    msgTable.append(msgTimeTr);
-
-    // показ автора сообщения в групповом чате
-    if(chatType === 'discussion'){
-        let msgAuthorTr = document.createElement('tr');
-        let msgAuthorTd = document.createElement('td');
-        msgAuthorTd.className = 'msg__author';
-        msgAuthorTd.innerHTML = data.fromuser;
-        msgAuthorTr.append(msgAuthorTd);
-        msgTable.append(msgAuthorTr);
+    // показ переводов строки на странице
+    let brIndex = data.message.indexOf('\n');
+    while(brIndex > -1){
+        data.message = data.message.replace('\n', '<br>');
+        brIndex = data.message.indexOf('\n');
     }
+
+    let msgBlock = document.createElement('div');
+    let msgTable = document.createElement('table');
+    msgBlock.className = data.fromuser !== publicClientUsername ? 'msg d-flex justify-content-end' : 'msg';
+    msgTable.className = data.fromuser !== publicClientUsername ? 'msg__table msg__table-contact' : 'msg__table';
+    msgBlock.setAttribute('data-chat_message_id', data.chat_message_id);
+
+    msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`;
+    msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;
+    if(chatType === 'discussion') msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.fromuser}</td></tr>`;     // показ автора сообщения в групповом чате
 
     msgBlock.append(msgTable);
     chat.append(msgBlock);
@@ -214,7 +199,8 @@ function sendData(){
             'fromuser' : publicClientUsername,
             'touser':    chatNameLabel.innerHTML,
             'chatId' :   chatId,
-            'chatType': chatType
+            'chatType': chatType,
+            'messageType' : messageType
         }));
     }
     messageInput.value = '';
@@ -294,13 +280,17 @@ function setGetMessages(domElement, bdData, type){
         // показ сообщений
         fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
             if(data){
-                chatType = data.type;
                 chat.innerHTML = '';
+
+                chatType = data.type;
                 chatId = data.chatId;
+
                 chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение '; 
-                chatNameLabel.innerHTML = type==='dialog' ? bdData : bdData.chat_name;                                                                                      
+                chatNameLabel.innerHTML = type==='dialog' ? bdData : bdData.chat_name; 
+
                 messageInput.disabled = false;  
                 sendMsgBtn.disabled = false;
+
                 data.messages.forEach(elem => appendMessage(elem));// сообщения
                 chat.scrollTo(0, chat.scrollHeight); // прокрутка сообщений в конец
             }
@@ -317,6 +307,7 @@ function removeDOMGroupPatricipants(){
     contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
 }
 
+
 /** скрыть контекстное меню*/
 function hideContextMenu(){
     contextMenu.style.left = '0px';
@@ -324,21 +315,33 @@ function hideContextMenu(){
     contextMenu.style.display = 'none';
 }
 
+
 /** изменить сообщение */
 function editMessage(){
     console.log('edit');
+    console.log(selectedMessageData);
+    messageType = 'EDIT';
     hideContextMenu();
 }
+
+
 /** удалить сообщение  */
 function removeMessage(){
     console.log('remove');
+    console.log(selectedMessageData);
+    messageType = 'REMOVE';
     hideContextMenu();
 }
+
+
 /** переотправить сообщение */
 function resendMessage(){
     console.log('resend');
+    console.log(selectedMessageData);
+    messageType = 'RESEND';
     hideContextMenu();
 }
+
 
 // ----- загрузка DOM дерева -----
 window.addEventListener('DOMContentLoaded', () => {
@@ -376,13 +379,27 @@ window.addEventListener('DOMContentLoaded', () => {
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
 
+    // потеря фокуса с элемента ввода сообщения
+    messageInput.onblur = function(){
+        this.value = '';
+        messageType = 'NEW';
+    };
 
     // показать контекстное меню сообщения
     window.oncontextmenu = event => {
-        if(contextMenuElements.includes(event.target.className) || contextMenuElements.includes(event.target.parentNode.className)){
+        // клик на элементах сообщения
+        if(contextMenuElements.includes(event.target.className)){
+            // координаты меню
             contextMenu.style.left = event.pageX+'px';
             contextMenu.style.top = event.pageY+'px';
             contextMenu.style.display = 'block';
+             
+            if(['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)){
+                selectedMessageData = event.target.parentNode.parentNode;
+            }
+            else{
+                selectedMessageData = event.target.parentNode;
+            }
         }
         else{
             hideContextMenu();
@@ -392,7 +409,7 @@ window.addEventListener('DOMContentLoaded', () => {
     window.onclick = event => {
         if(event.target.className !== 'list-group-item') hideContextMenu();
     };
-    // прокрутка диалога, удаление контекстного меню сообщения
+    // удаление контекстного меню сообщения при прокрутке диалога
     chat.onscroll = hideContextMenu;
 
     editMsgBtn.onclick = editMessage;
