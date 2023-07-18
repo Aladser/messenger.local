@@ -43,8 +43,6 @@ const resendMsgBtn = document.querySelector('#resend-msg');
 
 /** выбранное сообщение */
 let selectedMessage = null;
-let selectedMessageId = null;
-
 /** текущий тип чата*/
 let chatType = null;
 /** текущий id чата*/
@@ -53,10 +51,8 @@ let chatId = null;
 let groupContacts = [];
 /** создатель группового чата {заготовка на будущее}*/
 let discussionCreatorName = null;
-/** тип отправляемого сообщения*/
-let messageType = 'NEW';
-/** id изменяемого или удаляемого сообщения */
-let msgId = null;
+/** флаг измененного сообщения */
+let isEditMessage = false;
 
 
 /** ----- ВЕБСОКЕТ СООБЩЕНИЙ -----*/
@@ -64,7 +60,6 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
-    console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if(data.onсonnection){
@@ -92,15 +87,47 @@ webSocket.onmessage = e => {
     }
     // показ сообщений открытого чата
     else{
-        if(chatId === data.chatId){
-            
+        if(chatId === data.chatId){    
             appendMessage(data);
         } 
     }
 };
 
 
-/** создать DOM-элемент сообщения */
+/** Отправить сообщение на сервер
+ * @param message текст сообщения
+ * @param messageType тип сообщения: NEW, EDIT, REMOVE или RESEND
+ */
+function sendData(message, messageType){
+    console.log(message);
+    console.log(messageInput.value);
+    // проверка типа сообщения
+    if( !['NEW', 'EDIT', 'REMOVE', 'RESEND'].includes(messageType) ){
+        throw 'sendData(msgType): неверный аргумент msgType';
+    }
+    // проверка сокета
+    if(webSocket.readyState !== 1){
+        throw 'sendData(msgType): вебсокет не готов к обмену сообщениями';
+    }
+    // изменение типа сообщения для редактированных сообщений
+    if(isEditMessage){
+        messageType = 'EDIT';
+        isEditMessage = false;
+    }  
+    // отправка сообщения на сервер
+    if(message!==''){
+        data = {'message':message, 'fromuser':publicClientUsername, 'chatId':chatId,'chatType':chatType,'messageType':messageType};
+         // для старых сообщений добавляется id сообщения
+        if(['EDIT', 'REMOVE', 'RESEND'].includes(messageType)){
+            data.msgId = selectedMessage.getAttribute('data-chat_message_id');
+        }
+        webSocket.send(JSON.stringify(data));
+    }
+    messageInput.value = '';
+}
+
+
+/** создать DOM-элемент сообщения чата*/
 function appendMessage(data){
     // показ местного времени
     // YYYY.MM.DD HH:ii:ss
@@ -132,7 +159,7 @@ function appendMessage(data){
 }
 
 
-/** создать DOM-элемент контакта */
+/** создать DOM-элемент контакта списка контактов*/
 function appendContactDOMElement(element){
     // контейнер контакта
     let contact = document.createElement('div');    // блок контакта
@@ -158,7 +185,7 @@ function appendContactDOMElement(element){
 }
 
 
-/** создать DOM-элемент группы в списке групп
+/** создать DOM-элемент группы списка групп
  * 
  * @param {*} group БД данные группы
  * @param {*} place куда добавить: START - начало списка, END - конец
@@ -191,27 +218,7 @@ function showContacts(){
 
 
 /** показать групповые чаты пользователя-клиента */
-function showGroups(){
-    fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => appendGroupDOMElement(elem))); 
-}
-
-
-/** отправить сообщение на сервер */
-function sendData(){
-    // непустые сообщения, готовый к обмену сокет, открытй чат
-    if(messageInput.value !== '' && webSocket.readyState === 1 && chatNameLabel.innerHTML!=''){
-        webSocket.send(JSON.stringify({
-            'message':   messageInput.value,
-            'fromuser' : publicClientUsername,
-            'touser':    chatNameLabel.innerHTML,
-            'chatId' :   chatId,
-            'chatType': chatType,
-            'messageType' : messageType,
-            'selectedMessageId': selectedMessageId
-        }));
-    }
-    messageInput.value = '';
-}
+const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => appendGroupDOMElement(elem))); 
 
 
 /** ОТКРЫТЬ ЧАТ ДИАЛОГА ИЛИ ГРУППОВОГО ЧАТА
@@ -226,13 +233,13 @@ function setGetMessages(domElement, bdData, type){
         const urlParams = new URLSearchParams();
         if(type === 'dialog'){
             urlParams.set('contact', bdData);
-            removeDOMGroupPatricipants();
+            removeGroupPatricipantDOMElements();
         }
         else if(type === 'discussion'){
             urlParams.set('discussionid', bdData.chat_id);
             // показ участников группового чата
             fetch('/get-group-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
-                removeDOMGroupPatricipants();
+                removeGroupPatricipantDOMElements();
                 // создание DOM-списка участников группового чата
                 let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
                 prtBlock.className = 'group__contacts';
@@ -306,12 +313,12 @@ function setGetMessages(domElement, bdData, type){
 }
 
 
-/** удаление DOM участников предыдущего выбранного группового чата */
-function removeDOMGroupPatricipants(){
-    let groupContactsElement = document.querySelector('.group__contacts'); // поиск существующего списка контактов групы
-    if(groupContactsElement) groupContactsElement.parentNode.removeChild(groupContactsElement);  // удаление существующего списка контактов группы
-    // удаление кнопок добавления в группу у контактов-неучастников предыдущей группы
-    contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.parentNode.removeChild(cnt));
+/** удаление DOM узлов участников текущего выбранного группового чата */
+function removeGroupPatricipantDOMElements(){
+    let groupContactsElement = document.querySelector('.group__contacts');
+    if(groupContactsElement) groupContactsElement.remove();
+    // удаление кнопок добавления в группу у контактов-неучастников
+    contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.remove());
 }
 
 
@@ -325,32 +332,33 @@ function hideContextMenu(){
 
 /** изменить сообщение */
 function editMessage(){
-    console.log('edit');
-    console.log(selectedMessageId);
-    messageType = 'EDIT';
+    isEditMessage = true;
     hideContextMenu();
+    messageInput.value = selectedMessage.querySelector('.msg__text').innerHTML;
+    messageInput.focus();
 }
 
 
 /** удалить сообщение  */
 function removeMessage(){
-    console.log('remove');
-    console.log(selectedMessageId);
-    messageType = 'REMOVE';
+    let msg = selectedMessage.querySelector('.msg__text').innerHTML;
+    sendData(msg, 'REMOVE');
+    selectedMessage = null;
     hideContextMenu();
 }
 
 
 /** переотправить сообщение */
 function resendMessage(){
-    console.log('resend');
-    console.log(selectedMessageId);
-    messageType = 'RESEND';
+    let msg = selectedMessage.querySelector('.msg__text').innerHTML;
+    sendData(msg, 'RESEND');
+    selectedMessage = null;
     hideContextMenu();
 }
 
 
-// ----- загрузка DOM дерева -----
+
+
 window.addEventListener('DOMContentLoaded', () => {
     resetFindContactsBtn.onclick = showContacts;
     showContacts();
@@ -359,7 +367,6 @@ window.addEventListener('DOMContentLoaded', () => {
     createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => appendGroupDOMElement(data, 'START'));
     let pressedKeys = [];                                           // массив нажатых клавиш
     messageInput.onkeydown = event => pressedKeys.push(event.code); // нажатие клавиши
-    sendMsgBtn.onclick = sendData;
     document.oncontextmenu = function() {return false;}; // запрет контекстного меню
 
     // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
@@ -372,6 +379,8 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    //----- ОТПРАВКА СООБЩЕНИЯ -----
+    sendMsgBtn.onclick = () => sendData(messageInput.value, 'NEW');
     // отпускание клавиши при вводе сообщения
     messageInput.onkeyup = event => {
         // перевод строки, если Ctrl+Enter
@@ -380,22 +389,21 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         // отправка сообщения, если Enter
         else if(event.code === 'Enter'){
-            messageInput.value = messageInput.value.substring(0, messageInput.value.length-1);
-            sendData();
+            sendData(messageInput.value.substring(0, messageInput.value.length-1), 'NEW');
         }
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
 
+
     // потеря фокуса элемента ввода сообщения
     messageInput.onblur = function(){
         this.value = '';
-        messageType = 'NEW';
-        selectedMessageId = null;
+        selectedMessage = null;
     };
 
     // показать контекстное меню сообщения
     window.oncontextmenu = event => {
-        // клик на элементах сообщения
+        // клик на сообщении
         if(contextMenuElements.includes(event.target.className)){
             // координаты меню
             contextMenu.style.left = event.pageX+'px';
@@ -408,7 +416,6 @@ window.addEventListener('DOMContentLoaded', () => {
             else{
                 selectedMessage = event.target.parentNode.parentNode.parentNode;
             }
-            selectedMessageId = selectedMessage.getAttribute('data-chat_message_id')
 
         }
         else{
@@ -419,8 +426,7 @@ window.addEventListener('DOMContentLoaded', () => {
     window.onclick = event => {
         if(event.target.className !== 'list-group-item') hideContextMenu();
     };
-    // удаление контекстного меню сообщения при прокрутке диалога
-    chat.onscroll = hideContextMenu;
+    chat.onscroll = hideContextMenu; // скрыть контекстное меню сообщения при прокрутке диалога
 
     editMsgBtn.onclick = editMessage;
     removeMsgBtn.onclick = removeMessage;

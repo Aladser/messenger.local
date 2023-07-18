@@ -50,10 +50,12 @@ class Chat implements MessageComponentInterface {
             $rslt = $this->connectionsTable->addConnection( ['author'=>$data->author, 'userId'=>$data->userId] ); // добавление соединения в БД
             $data->author = $rslt['publicUsername'] ? $rslt['publicUsername'] : ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo]; // имя пользователя или ошибка добавления
         }
-        // сообщение пользователя
+        // новое сообщение пользователя
         else if($data->message){
-            $data->time = date('Y-m-d H:i:s');
-            $this->messageTable->addMessage($data);
+            if($data->messageType == 'NEW'){
+                $data->time = date('Y-m-d H:i:s');
+                $this->messageTable->addMessage($data);
+            }
         }
 
         $msg = json_encode($data);
