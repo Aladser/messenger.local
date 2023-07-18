@@ -42,7 +42,8 @@ const removeMsgBtn = document.querySelector('#remove-msg');
 const resendMsgBtn = document.querySelector('#resend-msg');
 
 /** выбранное сообщение */
-let selectedMessageData = null;
+let selectedMessage = null;
+let selectedMessageId = null;
 
 /** текущий тип чата*/
 let chatType = null;
@@ -54,6 +55,8 @@ let groupContacts = [];
 let discussionCreatorName = null;
 /** тип отправляемого сообщения*/
 let messageType = 'NEW';
+/** id изменяемого или удаляемого сообщения */
+let msgId = null;
 
 
 /** ----- ВЕБСОКЕТ СООБЩЕНИЙ -----*/
@@ -89,7 +92,10 @@ webSocket.onmessage = e => {
     }
     // показ сообщений открытого чата
     else{
-        if(chatId === data.chatId) appendMessage(data);
+        if(chatId === data.chatId){
+            
+            appendMessage(data);
+        } 
     }
 };
 
@@ -200,7 +206,8 @@ function sendData(){
             'touser':    chatNameLabel.innerHTML,
             'chatId' :   chatId,
             'chatType': chatType,
-            'messageType' : messageType
+            'messageType' : messageType,
+            'selectedMessageId': selectedMessageId
         }));
     }
     messageInput.value = '';
@@ -319,7 +326,7 @@ function hideContextMenu(){
 /** изменить сообщение */
 function editMessage(){
     console.log('edit');
-    console.log(selectedMessageData);
+    console.log(selectedMessageId);
     messageType = 'EDIT';
     hideContextMenu();
 }
@@ -328,7 +335,7 @@ function editMessage(){
 /** удалить сообщение  */
 function removeMessage(){
     console.log('remove');
-    console.log(selectedMessageData);
+    console.log(selectedMessageId);
     messageType = 'REMOVE';
     hideContextMenu();
 }
@@ -337,7 +344,7 @@ function removeMessage(){
 /** переотправить сообщение */
 function resendMessage(){
     console.log('resend');
-    console.log(selectedMessageData);
+    console.log(selectedMessageId);
     messageType = 'RESEND';
     hideContextMenu();
 }
@@ -379,10 +386,11 @@ window.addEventListener('DOMContentLoaded', () => {
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
 
-    // потеря фокуса с элемента ввода сообщения
+    // потеря фокуса элемента ввода сообщения
     messageInput.onblur = function(){
         this.value = '';
         messageType = 'NEW';
+        selectedMessageId = null;
     };
 
     // показать контекстное меню сообщения
@@ -395,11 +403,13 @@ window.addEventListener('DOMContentLoaded', () => {
             contextMenu.style.display = 'block';
              
             if(['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)){
-                selectedMessageData = event.target.parentNode.parentNode;
+                selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode;
             }
             else{
-                selectedMessageData = event.target.parentNode;
+                selectedMessage = event.target.parentNode.parentNode.parentNode;
             }
+            selectedMessageId = selectedMessage.getAttribute('data-chat_message_id')
+
         }
         else{
             hideContextMenu();

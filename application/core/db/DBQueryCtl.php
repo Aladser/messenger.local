@@ -57,6 +57,7 @@ class DBQueryCtl{
         $this->connect();
         $stmt = $this->dbConnection->prepare("call $sql");
         $stmt->execute();
+        $stmt->closeCursor();
         $rslt =$this->dbConnection->query("select $out as info");
         $this->disconnect();
         return $rslt->fetch(\PDO::FETCH_ASSOC)['info'];

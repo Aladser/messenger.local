@@ -63,8 +63,8 @@ CREATE PROCEDURE create_discussion(
 begin
 	insert into chat(chat_type, chat_creatorid) values('discussion', userhost);
 	select last_insert_id() into chatid;	
-	insert into chat_participant(chat_participant_chatid, chat_participant_userid) values(chatid, userhost); 		 # добавить пользователя-хоста чата
-	select count(*) into @count from chat where chat_creatorid = userhost;						  				 	# номер группового чата пользователя
-	update chat set chat_name = concat('Групповой чат ', userhost, @count) where chat_id = chatid; 					# добавить название группового чата
+	insert into chat_participant(chat_participant_chatid, chat_participant_userid) values(chatid, userhost); 		 # пользователи чата
+	select count(*) into @count from chat where chat_creatorid = userhost and chat_type = 'discussion';				 # номер групповго чата пользователя
+	update chat set chat_name = concat('Групповой чат ', userhost, @count) where chat_id = chatid; 					 # название группового чата
 END//
 DELIMITER ;
