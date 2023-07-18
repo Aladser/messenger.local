@@ -10,12 +10,16 @@ class Chat implements MessageComponentInterface {
     private $clients;           // хранение всех подключенных пользователей
     private $connectionsTable;  // таблица подключений
     private $messageTable;      // таблица сообщений
+    private $logFile;
+    private $logfileContent;
    
     public function __construct(\core\db\ConnectionsDBTableModel $connectionsTable, \core\db\MessageDBTableModel $messageTable) {
         $this->clients = new \SplObjectStorage;
         $this->connectionsTable = $connectionsTable;
         $this->messageTable = $messageTable;
         $this->connectionsTable->removeConnections(); // удаление старых соединений
+        $this->logFile = dirname(__DIR__, 1).'/logs.txt';
+        file_put_contents($this->logFile, "");
     }
 
     /** открыть соединение
@@ -34,7 +38,7 @@ class Chat implements MessageComponentInterface {
         $this->clients->detach($conn);
         $publicUsername = $this->connectionsTable->getConnectionPublicUsername( $conn->resourceId ); // публичное имя клиента
         $this->connectionsTable->removeConnection( $conn->resourceId ); // удаление соединения из БД
-        echo "Connection $publicUsername completed\n";
+        $this->writeLog("Connection $publicUsername completed");
         $message = json_encode([ 'offсonnection' => 1, 'user' => $publicUsername]);
         foreach ($this->clients as $client) $client->send($message); 
     }
@@ -59,7 +63,7 @@ class Chat implements MessageComponentInterface {
         }
 
         $msg = json_encode($data);
-        echo "$msg\n";
+        $this->writeLog($msg);
         foreach ($this->clients as $client) $client->send($msg);
     }
 
@@ -68,7 +72,14 @@ class Chat implements MessageComponentInterface {
      * @param \Exception $e ошибка
      */
     public function onError(ConnectionInterface $conn, \Exception $e) {
-        echo "error: {$e->getMessage()}\n";
+        $this->writeLog("error: {$e->getMessage()}");
         $conn->close();
+    }
+
+    /** Запись логов
+     * @param mixed $message лог
+     */
+    public function writeLog($message){
+        file_put_contents($this->logFile, $message."\n", FILE_APPEND | LOCK_EX);
     }
 }
