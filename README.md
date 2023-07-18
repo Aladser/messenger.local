@@ -4,6 +4,7 @@
 ![Окно чатов](/application/images/demo.png)
 
 Используемые модули:
+* Open Server Panel
 * PHP 8.1
 * MySQL
 * phpmailer
