@@ -99,8 +99,6 @@ webSocket.onmessage = e => {
  * @param messageType тип сообщения: NEW, EDIT, REMOVE или RESEND
  */
 function sendData(message, messageType){
-    console.log(message);
-    console.log(messageInput.value);
     // проверка типа сообщения
     if( !['NEW', 'EDIT', 'REMOVE', 'RESEND'].includes(messageType) ){
         throw 'sendData(msgType): неверный аргумент msgType';
@@ -149,6 +147,7 @@ function appendMessage(data){
     msgBlock.className = data.fromuser !== publicClientUsername ? 'msg d-flex justify-content-end' : 'msg';
     msgTable.className = data.fromuser !== publicClientUsername ? 'msg__table msg__table-contact' : 'msg__table';
     msgBlock.setAttribute('data-chat_message_id', data.chat_message_id);
+    msgBlock.setAttribute('data-fromuser', data.fromuser);
 
     msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`;
     msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;
@@ -337,8 +336,6 @@ function editMessage(){
     messageInput.value = selectedMessage.querySelector('.msg__text').innerHTML;
     messageInput.focus();
 }
-
-
 /** удалить сообщение  */
 function removeMessage(){
     let msg = selectedMessage.querySelector('.msg__text').innerHTML;
@@ -346,8 +343,6 @@ function removeMessage(){
     selectedMessage = null;
     hideContextMenu();
 }
-
-
 /** переотправить сообщение */
 function resendMessage(){
     let msg = selectedMessage.querySelector('.msg__text').innerHTML;
@@ -375,7 +370,7 @@ window.addEventListener('DOMContentLoaded', () => {
         urlParams.set('userphrase', this.value);
         fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
             contactsContainer.innerHTML = '';
-            if(data != null){data.forEach(element => appendContactDOMElement(element));}
+            data.forEach(element => appendContactDOMElement(element));
         });
     });
 
@@ -394,14 +389,7 @@ window.addEventListener('DOMContentLoaded', () => {
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
 
-
-    // потеря фокуса элемента ввода сообщения
-    messageInput.onblur = function(){
-        this.value = '';
-        selectedMessage = null;
-    };
-
-    // показать контекстное меню сообщения
+    // нажатия правой кнопкой мыши
     window.oncontextmenu = event => {
         // клик на сообщении
         if(contextMenuElements.includes(event.target.className)){
@@ -417,13 +405,18 @@ window.addEventListener('DOMContentLoaded', () => {
                 selectedMessage = event.target.parentNode.parentNode.parentNode;
             }
 
+            let msgUserhost = selectedMessage.getAttribute('data-fromuser');
+            editMsgBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
+            removeMsgBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
         }
         else{
             hideContextMenu();
         }
     };
-    // нажать пункт контекстного меню сообщения
+
+    // нажатия левой кнопкой мыши
     window.onclick = event => {
+        if(event.target.parentNode.id !== 'send-msg-btn') messageInput.value = ''; // очистка поля ввода сообщения, если не нажата кнопка отправки сообщения
         if(event.target.className !== 'list-group-item') hideContextMenu();
     };
     chat.onscroll = hideContextMenu; // скрыть контекстное меню сообщения при прокрутке диалога
