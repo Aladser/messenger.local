@@ -1,9 +1,28 @@
 {"messageOnconnection":1,"author":"Admin","userId":62}
-{"message":"\u0410\u0434\u043c\u0438\u043d","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-18 17:56:25"}
+{"chat_message_id":"42","chatId":"1","messageType":"REMOVE"}
+{"message":"1","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-19 02:45:26","chat_message_id":43}
 Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","userId":104}
-{"message":"\u041d\u0435 \n\u0410\u0434\u043c\u0438","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"EDIT","msgId":"12"}
-{"message":"\u041d\u0435 \u0430\u0434\u043c\u0438\u043d","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-18 17:56:41"}
-{"message":"\u041d\u0435 <br>\u0410\u0434\u043c\u0438","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"REMOVE","msgId":"undefined"}
-{"message":"\u041d\u0435 \u0430\u0434\u043c\u0438\u043d","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"RESEND","msgId":"undefined"}
+{"messageOnconnection":1,"author":"Admin","userId":108}
+{"message":"2","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-19 02:46:22","chat_message_id":44}
+{"chat_message_id":"43","chatId":"1","chat_message_text":"111","chat_message_time":"2023-07-19 02:45:26","messageType":"EDIT"}
+Connection Admin completed
+{"messageOnconnection":1,"author":"Admin","userId":125}
+{"chat_message_id":"44","chatId":"1","chat_message_text":"222","chat_message_time":"2023-07-19 02:46:22","messageType":"EDIT"}
+{"messageOnconnection":1,"author":"Admin","userId":135}
+{"messageOnconnection":1,"author":"Lauxtec","userId":135}
+Connection Lauxtec completed
+{"messageOnconnection":1,"author":"Admin","userId":148}
+{"messageOnconnection":1,"author":"Lauxtec","userId":148}
+Connection Lauxtec completed
+{"messageOnconnection":1,"author":"Admin","userId":161}
+{"messageOnconnection":1,"author":"Aladser","userId":161}
+{"message":"333","fromuser":"Aladser","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-19 02:47:28","chat_message_id":45}
+{"chat_message_id":"45","chatId":"1","chat_message_text":"3","chat_message_time":"2023-07-19 02:47:28","messageType":"EDIT"}
+{"message":"4","fromuser":"Aladser","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-19 02:47:36","chat_message_id":46}
+{"chat_message_id":"46","chatId":"1","chat_message_text":"444","chat_message_time":"2023-07-19 02:47:36","messageType":"EDIT"}
+{"chat_message_id":"46","chatId":"1","messageType":"REMOVE"}
+{"chat_message_id":"45","chatId":"1","messageType":"REMOVE"}
+{"chat_message_id":"44","chatId":"1","messageType":"REMOVE"}
+{"chat_message_id":"43","chatId":"1","messageType":"REMOVE"}
+Connection Aladser completed
 Connection Admin completed

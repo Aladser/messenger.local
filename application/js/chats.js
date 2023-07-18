@@ -60,6 +60,7 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
+    // console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if(data.onсonnection){
@@ -87,8 +88,21 @@ webSocket.onmessage = e => {
     }
     // показ сообщений открытого чата
     else{
-        if(chatId === data.chatId){    
-            appendMessage(data);
+        if(chatId == data.chatId){
+            // изменение сообщения
+            if(data.messageType === 'EDIT'){
+                let messageDOMElem = document.querySelector(`[data-chat_message_id="${data.chat_message_id}"]`);
+                messageDOMElem.querySelector('.msg__text').innerHTML = data.chat_message_text;
+            }
+            // удаление сообщения
+            else if(data.messageType === 'REMOVE'){
+                let messageDOMElem = document.querySelector(`[data-chat_message_id="${data.chat_message_id}"]`);
+                messageDOMElem.remove();
+            }
+            // новое сообщение   
+            else{
+                appendMessage(data);
+            } 
         } 
     }
 };
@@ -104,9 +118,11 @@ function sendData(message, messageType){
         throw 'sendData(msgType): неверный аргумент msgType';
     }
     // проверка сокета
+    /*
     if(webSocket.readyState !== 1){
         throw 'sendData(msgType): вебсокет не готов к обмену сообщениями';
     }
+    */
     // изменение типа сообщения для редактированных сообщений
     if(isEditMessage){
         messageType = 'EDIT';
@@ -257,7 +273,7 @@ function setGetMessages(domElement, bdData, type){
                     cntName = cnt.lastChild.innerHTML;
                     if(!groupContacts.includes(cntName)){
                         let plus = document.createElement('div');
-                        plus.className = 'contact-addgroup position-absolute top-0 end-0';
+                        plus.className = 'contact-addgroup';
                         plus.innerHTML = '+';
                         plus.title = 'добавить в групповой чат';
 

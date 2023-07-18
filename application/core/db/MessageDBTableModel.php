@@ -25,12 +25,7 @@ class MessageDBTableModel extends DBTableModel{
         return $query['chat_id'];
     }
 
-
-    /** создать групповой чат
-     * @param int $userHostId
-     * 
-     * @return [type] id группового чата
-     */
+    // создать групповой чат
     public function createDiscussion(int $userHostId){
         $groupId = $this->db->executeProcedure("create_discussion($userHostId, @info)", '@info');
         return $this->db->query("select chat_id, chat_name, chat_creatorid from chat where chat_id = $groupId");
@@ -46,24 +41,38 @@ class MessageDBTableModel extends DBTableModel{
         ", false);
     }
 
+    // возвращает создателя группового чата
     public function getDiscussionCreatorId($chatId){
         $sql = "select chat_creatorid from chat where chat_id = $chatId";
         return $this->db->query($sql)['chat_creatorid'];
     }
 
-    /** добавить сообщение в БД */
+    // добавить сообщение
     public function addMessage($msg){
         $userId = $this->db->query("select user_id from users where user_email='$msg->fromuser' or user_nickname='$msg->fromuser'")['user_id'];
         $sql = "insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time) values($msg->chatId, '$msg->message', $userId, '$msg->time')";
-        return $this->db->exec($sql);
+        $this->db->exec($sql);
+        $sql = "select chat_message_id from chat_message where chat_message_chatid = $msg->chatId and chat_message_text = '$msg->message' and chat_message_time = '$msg->time'";
+        return intval($this->db->query($sql)['chat_message_id']);
     }
 
+    // изменить сообщение
+    public function editMessage(string $msg, int $msgId){
+        $this->db->exec("update chat_message set chat_message_text = '$msg' where chat_message_id = $msgId");
+        $rslt = $this->db->query("select chat_message_id, chat_message_chatid as chatId, chat_message_text, chat_message_time from chat_message where chat_message_id = $msgId");
+        $rslt['messageType'] = 'EDIT';
+        return $rslt;
+    }
 
-    /** возвращает сообшения диалога
-     * @param int $chatId
-     * 
-     * @return [type] массив сообщений
-     */
+    // удалить сообщение
+    public function removeMessage(int $msgId){
+        $rslt = $this->db->query("select chat_message_id, chat_message_chatid as chatId from chat_message where chat_message_id = $msgId");
+        $this->db->exec("delete from chat_message where chat_message_id = $msgId");
+        $rslt['messageType'] = 'REMOVE';
+        return $rslt;
+    }
+
+    // возвращает сообшения диалога
     public function getMessages(int $chatId){
         $sql = "
             select chat_message_id, 

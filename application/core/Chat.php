@@ -58,11 +58,18 @@ class Chat implements MessageComponentInterface {
         else if($data->message){
             if($data->messageType == 'NEW'){
                 $data->time = date('Y-m-d H:i:s');
-                $this->messageTable->addMessage($data);
+                $data->chat_message_id = $this->messageTable->addMessage($data);
+            }
+            else if($data->messageType == 'EDIT'){
+                $data = $this->messageTable->editMessage($data->message, $data->msgId);
+            }
+            else if($data->messageType == 'REMOVE'){
+                $data = $this->messageTable->removeMessage($data->msgId);
             }
         }
 
         $msg = json_encode($data);
+        echo $msg."\n";
         $this->writeLog($msg);
         foreach ($this->clients as $client) $client->send($msg);
     }

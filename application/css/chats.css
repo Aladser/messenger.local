@@ -50,6 +50,14 @@
     font-weight: bolder;
     background-color: #bbb;
 }
+.contact-addgroup{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 10px;
+    opacity: 0.7;
+}
 .add-contact-btn:hover{
     cursor: pointer;
     font-weight: bolder;
