@@ -48,6 +48,10 @@
     white-space: nowrap;
     cursor: pointer;
 }
+.contact-recipient{
+    background-color: #bbb;
+    color: white;
+}
 .contact:hover{
     font-weight: bolder;
     background-color: #bbb;
@@ -150,6 +154,15 @@
     padding-left: 3rem;
     float: right;
     font-size: 80%;
+}
+.message-forward{
+    font-size: 90%;
+    opacity: 0.8;
+}
+.msg__forwarding{
+    padding-top: 0.2rem;
+    font-size: 90%;
+    opacity: 0.75;
 }
 
 .chat-username{

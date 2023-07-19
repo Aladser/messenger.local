@@ -53,7 +53,7 @@ class MessageDBTableModel extends DBTableModel{
         $sql = "insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time) values($msg->chatId, '$msg->message', $userId, '$msg->time')";
         $this->db->exec($sql);
         $sql = "select chat_message_id from chat_message where chat_message_chatid = $msg->chatId and chat_message_text = '$msg->message' and chat_message_time = '$msg->time'";
-        return intval($this->db->query($sql)['chat_message_id']);
+        return $this->db->query($sql)['chat_message_id'];
     }
 
     // изменить сообщение

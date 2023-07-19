@@ -4,13 +4,14 @@
     
     // Объявляем сервер
     $CONFIG = new core\ConfigClass();
+    $users = $CONFIG->getUsers();
     $connections = $CONFIG->getConnections();
     $messages = $CONFIG->getMessageDBTable();
 
     $server = Ratchet\Server\IoServer::factory(
         new Ratchet\Http\HttpServer(
             new Ratchet\WebSocket\WsServer(
-                new core\Chat($connections, $messages)
+                new core\Chat($connections, $messages, $users)
             )
         ),
         $CONFIG::CHAT_WS_PORT

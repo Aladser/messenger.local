@@ -10,13 +10,16 @@ class Chat implements MessageComponentInterface {
     private $clients;           // хранение всех подключенных пользователей
     private $connectionsTable;  // таблица подключений
     private $messageTable;      // таблица сообщений
+    private $usersTable;      // таблица сообщений
     private $logFile;
     private $logfileContent;
    
-    public function __construct(\core\db\ConnectionsDBTableModel $connectionsTable, \core\db\MessageDBTableModel $messageTable) {
+    public function __construct(\core\db\ConnectionsDBTableModel $connectionsTable, \core\db\MessageDBTableModel $messageTable, \core\db\UsersDBTableModel $usersTable){
         $this->clients = new \SplObjectStorage;
         $this->connectionsTable = $connectionsTable;
         $this->messageTable = $messageTable;
+        $this->usersTable = $usersTable;
+
         $this->connectionsTable->removeConnections(); // удаление старых соединений
         $this->logFile = dirname(__DIR__, 1).'/logs.txt';
         file_put_contents($this->logFile, "");
@@ -66,10 +69,26 @@ class Chat implements MessageComponentInterface {
             else if($data->messageType == 'REMOVE'){
                 $data = $this->messageTable->removeMessage($data->msgId);
             }
+            else if($data->messageType == 'RESEND'){
+                $data->time = date('Y-m-d H:i:s');
+
+                // добавляем Переслано один раз для переотправленных сообщений
+                if(mb_strripos($data->message, "<div class=\"msg__forwarding\">Переслано</div>") === false){
+                    $data->message = "<div class=\"msg__forwarding\">Переслано</div>" . $data->message;
+                }
+
+                // определяем чат, куда добавить
+                $fromUserId = $this->usersTable->getUserId($data->fromuser);
+                $toUserId = $this->usersTable->getUserId($data->touser);
+                $data->chatId = $this->messageTable->getDialogId($fromUserId, $toUserId)."\n";
+
+
+                $data->chat_message_id = $this->messageTable->addMessage($data);
+            }
         }
 
         $msg = json_encode($data);
-        echo $msg."\n";
+        //echo $msg."\n";
         $this->writeLog($msg);
         foreach ($this->clients as $client) $client->send($msg);
     }

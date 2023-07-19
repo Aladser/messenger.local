@@ -11,7 +11,7 @@ const contactsContainer = document.querySelector('#contacts');
 const chat = document.querySelector("#messages");
 /** элемент начальной подписи чата */
 const chatNameTitle = document.querySelector('#chat-title');
-/** элемент имени контакта */
+/** С кем открыт чат */
 const chatNameLabel = document.querySelector('#chat-username');
 /** кнопка создать групповой чат */
 const createGroupOption = document.querySelector('#create-group-option'); 
@@ -31,25 +31,29 @@ const systemMessagePrg = document.querySelector("#message-system");
 const wsUri = 'ws://localhost:8888';
 
 /** блок кнопок пересылки сообщения  */
-const resendBtnBlock = document.querySelector('#btn-resend-block');
+const forwardBtnBlock = document.querySelector('#btn-resend-block');
 /** кнопка пересылки сообщения */
-const resendtBtn = document.querySelector('#btn-resend');
+const forwardBtn = document.querySelector('#btn-resend');
 /** кнопка отмены пересылки сообщения */
-const resetResendtBtn = document.querySelector('#btn-resend-reset');
+const resetForwardtBtn = document.querySelector('#btn-resend-reset');
 
 /** контекстное меню */
 const contextMenu = document.querySelector('#context-menu');
-/** элементы контекстного меню*/
+/** DOM-элементы контекстного меню*/
 const contextMenuElements = ['msg__text', 'msg__time', 'msg__tr-author', 'msg__author'];
-/** кнопка контекстного меню редактировать*/
+/** кнопка контекстного меню: Редактировать*/
 const editContextMenuMsgBtn = document.querySelector('#edit-msg');
-/** кнопка контекстного меню удалить*/
+/** кнопка контекстного меню: Удалить*/
 const removeContextMenuMsgBtn = document.querySelector('#remove-msg');
-/** кнопка контекстного меню переслать */
-const resendContextMenuMsgBtn = document.querySelector('#resend-msg');
+/** кнопка контекстного меню: Переслать */
+const forwardContextMenuMsgBtn = document.querySelector('#resend-msg');
 
-/** выбранное сообщение */
+/** Выбранное сообщение */
 let selectedMessage = null;
+/** DOM-элемент получателя пересланного письма*/
+let forwardedMessageRecipientElement = null;
+/** имя получателя пересланного письма*/
+let forwardedMessageRecipientName = null;
 /** текущий тип чата*/
 let chatType = null;
 /** текущий id чата*/
@@ -60,6 +64,8 @@ let groupContacts = [];
 let discussionCreatorName = null;
 /** флаг измененного сообщения */
 let isEditMessage = false;
+/** флаг пересылаемого сообщения*/
+let isForwaredMessage = false;
 
 
 /** ----- ВЕБСОКЕТ СООБЩЕНИЙ -----*/
@@ -120,17 +126,14 @@ webSocket.onmessage = e => {
  * @param messageType тип сообщения: NEW, EDIT, REMOVE или RESEND
  */
 function sendData(message, messageType){
-    if(messageType == 'RESEND'){
-        console.log('RESEND');
-        return;
-    }
-
     // проверка типа сообщения
     if( !['NEW', 'EDIT', 'REMOVE', 'RESEND'].includes(messageType) ){
+        alert('sendData(msgType): неверный аргумент msgType');
         throw 'sendData(msgType): неверный аргумент msgType';
     }
     // проверка сокета
     if(webSocket.readyState !== 1){
+        alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
         throw 'sendData(msgType): вебсокет не готов к обмену сообщениями';
     }
     // изменение типа сообщения для редактированных сообщений
@@ -144,6 +147,13 @@ function sendData(message, messageType){
          // для старых сообщений добавляется id сообщения
         if(['EDIT', 'REMOVE', 'RESEND'].includes(messageType)){
             data.msgId = selectedMessage.getAttribute('data-chat_message_id');
+        }
+        // пересылка сообщения
+        if(messageType == 'RESEND'){
+            data.touser = forwardedMessageRecipientName;
+            data.creator = selectedMessage.getAttribute('data-fromuser');
+            delete data['chatId'];
+            delete data['msgId'];
         }
         webSocket.send(JSON.stringify(data));
     }
@@ -175,6 +185,9 @@ function appendMessage(data){
     msgBlock.setAttribute('data-chat_message_id', data.chat_message_id);
     msgBlock.setAttribute('data-fromuser', data.fromuser);
 
+    if(chatType==='dialog' && data.fromuser!==publicClientUsername && data.fromuser!==chatNameLabel.innerHTML){
+        msgTable.innerHTML += `<tr><td class='msg__forwarding'>Переслано</td></tr>`;
+    }
     msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`;
     msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;
     if(chatType === 'discussion') msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.fromuser}</td></tr>`;     // показ автора сообщения в групповом чате
@@ -233,16 +246,6 @@ function appendGroupDOMElement(group, place='END'){
 }
 
 
-/** показать контакты пользователя-клиента*/
-function showContacts(){
-    fetch('/get-contacts').then(r=>r.json()).then(data => {
-        findContactsInput.value = '';
-        contactsContainer.innerHTML = '';
-        data.forEach(element => appendContactDOMElement(element));
-    });
-}
-
-
 /** показать групповые чаты пользователя-клиента */
 const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => appendGroupDOMElement(elem))); 
 
@@ -256,6 +259,21 @@ const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => dat
  */
 function setGetMessages(domElement, bdData, type){
     return function(){
+        // если пересылается сообщение
+        if(isForwaredMessage){
+            // выбран контакт, кому переадресуется сообщение
+            let contactNameElem = domElement.querySelector('.contact__name');
+            if(contactNameElem){
+                forwardedMessageRecipientElement = domElement;
+                forwardedMessageRecipientName = contactNameElem.innerHTML.trim();      
+                let contactRecipient = document.querySelector('.contact-recipient');
+                if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
+                domElement.classList.add('contact-recipient');
+            } 
+            return;
+        }
+
+        // если открывается диалог или обсуждение для открытия переписки
         const urlParams = new URLSearchParams();
         if(type === 'dialog'){
             urlParams.set('contact', bdData);
@@ -317,7 +335,7 @@ function setGetMessages(domElement, bdData, type){
             return;
         }
        
-        // показ сообщений
+        // показ сообщений диалога или чата
         fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
             if(data){
                 chat.innerHTML = '';
@@ -348,10 +366,23 @@ function removeGroupPatricipantDOMElements(){
 }
 
 
-/** Переотравить сообщение */
-function resendMessage(){
-    console.log('пересылка сообщения');
-    resendBtnBlock.classList.remove('btn-resend-block_active');
+/** Переотправить сообщение */
+function forwardMessage(){
+    forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
+    sendData(selectedMessage.querySelector('.msg__text').innerHTML, 'RESEND');
+    forwardedMessageRecipientElement.classList.remove('contact-recipient'); // убрать выделение
+
+    isForwaredMessage = null;
+    forwardedMessageRecipientElement = null;
+}
+/** Отменяет пересылку сообщения */
+function resetForwardMessage(){
+    forwardBtnBlock.classList.remove('btn-resend-block_active');
+    isForwaredMessage = null;
+    forwardedMessageRecipient = null;
+    selectedMessage = null;
+    let contactRecipient = document.querySelector('.contact-recipient');
+    if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
 }
 
 
@@ -362,27 +393,36 @@ function hideContextMenu(){
     contextMenu.style.top = '1000px';
     contextMenu.style.display = 'none';
 }
-/** изменить сообщение */
+/** контекстное меню: изменить сообщение */
 function editMessageContextMenu(){
     isEditMessage = true;
     hideContextMenu();
     messageInput.value = selectedMessage.querySelector('.msg__text').innerHTML;
     messageInput.focus();
 }
-/** удалить сообщение  */
+/** контекстное меню: удалить сообщение  */
 function removeMessageContextMenu(){
     let msg = selectedMessage.querySelector('.msg__text').innerHTML;
     sendData(msg, 'REMOVE');
     selectedMessage = null;
     hideContextMenu();
 }
-/** переотправить сообщение */
-function resendMessageContextMenu(){
+/** контекстное меню: переотправить сообщение */
+function forwardMessageContextMenu(){
     hideContextMenu();
-    resendBtnBlock.classList.add('btn-resend-block_active');
+    isForwaredMessage = true;
+    forwardBtnBlock.classList.add('btn-resend-block_active');
 }
 
 
+/** показать контакты пользователя-клиента*/
+function showContacts(){
+    fetch('/get-contacts').then(r=>r.json()).then(data => {
+        findContactsInput.value = '';
+        contactsContainer.innerHTML = '';
+        data.forEach(element => appendContactDOMElement(element));
+    });
+}
 
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -452,9 +492,11 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     chat.onscroll = hideContextMenu; // скрыть контекстное меню сообщения при прокрутке диалога
+
     editContextMenuMsgBtn.onclick = editMessageContextMenu;
     removeContextMenuMsgBtn.onclick = removeMessageContextMenu;
-    resendContextMenuMsgBtn.onclick = resendMessageContextMenu;
-    resendtBtn.onclick = resendMessage;
-    resetResendtBtn.onclick = () => resendBtnBlock.classList.remove('btn-resend-block_active');
+    forwardContextMenuMsgBtn.onclick = forwardMessageContextMenu;
+
+    forwardBtn.onclick = forwardMessage;
+    resetForwardtBtn.onclick = resetForwardMessage;
 });
