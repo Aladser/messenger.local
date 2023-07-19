@@ -69,7 +69,7 @@ class Chat implements MessageComponentInterface {
             else if($data->messageType == 'REMOVE'){
                 $data = $this->messageTable->removeMessage($data->msgId);
             }
-            else if($data->messageType == 'RESEND'){
+            else if($data->messageType == 'FORWARD'){
                 $data->time = date('Y-m-d H:i:s');
 
                 // добавляем Переслано один раз для переотправленных сообщений

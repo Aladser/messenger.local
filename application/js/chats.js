@@ -1,9 +1,9 @@
 /** элемент имени клиента-пользователя*/
-const clientnameBlock = document.querySelector('#userhost');
+const clientnameBlock = document.querySelector('#clientuser');
 /** почта пользователя-хоста */
 const clientUsername = clientnameBlock.innerHTML.trim();
 /** публичное имя пользователя-хоста */
-const publicClientUsername = clientnameBlock.getAttribute('data-user-publicname');
+const publicClientUsername = clientnameBlock.getAttribute('data-clientuser-publicname');
 
 /** контейнер контактов */
 const contactsContainer = document.querySelector('#contacts');
@@ -123,11 +123,11 @@ webSocket.onmessage = e => {
 
 /** Отправить сообщение на сервер
  * @param message текст сообщения
- * @param messageType тип сообщения: NEW, EDIT, REMOVE или RESEND
+ * @param messageType тип сообщения: NEW, EDIT, REMOVE или FORWARD
  */
 function sendData(message, messageType){
     // проверка типа сообщения
-    if( !['NEW', 'EDIT', 'REMOVE', 'RESEND'].includes(messageType) ){
+    if( !['NEW', 'EDIT', 'REMOVE', 'FORWARD'].includes(messageType) ){
         alert('sendData(msgType): неверный аргумент msgType');
         throw 'sendData(msgType): неверный аргумент msgType';
     }
@@ -145,11 +145,11 @@ function sendData(message, messageType){
     if(message!==''){
         data = {'message':message, 'fromuser':publicClientUsername, 'chatId':chatId,'chatType':chatType,'messageType':messageType};
          // для старых сообщений добавляется id сообщения
-        if(['EDIT', 'REMOVE', 'RESEND'].includes(messageType)){
+        if(['EDIT', 'REMOVE', 'FORWARD'].includes(messageType)){
             data.msgId = selectedMessage.getAttribute('data-chat_message_id');
         }
         // пересылка сообщения
-        if(messageType == 'RESEND'){
+        if(messageType == 'FORWARD'){
             data.touser = forwardedMessageRecipientName;
             data.creator = selectedMessage.getAttribute('data-fromuser');
             delete data['chatId'];
@@ -371,7 +371,7 @@ function removeGroupPatricipantDOMElements(){
 /** Переотправить сообщение */
 function forwardMessage(){
     forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
-    sendData(selectedMessage.querySelector('.msg__text').innerHTML, 'RESEND');
+    sendData(selectedMessage.querySelector('.msg__text').innerHTML, 'FORWARD');
     forwardedMessageRecipientElement.classList.remove('contact-recipient'); // убрать выделение
 
     isForwaredMessage = null;
