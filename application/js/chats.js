@@ -237,7 +237,7 @@ function appendGroupDOMElement(group, place='END'){
     groupsItem.className = 'group';
     groupsItemName.className = 'group__title';
 
-    groupsItem.setAttribute('data-id', group.chat_id);
+    groupsItem.setAttribute('data-group-id', group.chat_id);
     groupsItem.title = group.chat_name;
     groupsItemName.innerHTML = group.chat_name;
     groupsItem.addEventListener('click', setGetMessages(groupsItem, {'chat_id':group.chat_id, 'chat_name':group.chat_name}, 'discussion'));
