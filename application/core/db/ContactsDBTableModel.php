@@ -18,15 +18,11 @@ class ContactsDBTableModel extends DBTableModel{
 
     // получить контакты пользователя
     function getContacts($userId){
-        $sql = "
-        select user_nickname as username, user_photo from users 
-        where user_hide_email = 1 
-        and user_id in (select cnt_contact_id from contacts where cnt_user_id=$userId)
-        union 
-        select user_email as username, user_photo from users 
-        where user_hide_email = 0
-        and user_id in (select cnt_contact_id from contacts where cnt_user_id=$userId)
-        ";
+        $sql = "select chat_id, user_id, getPublicUserName(user_email, user_nickname, user_hide_email) as username, user_photo from chat join chat_participant on chat_participant_chatid = chat_id
+        join users on chat_participant_userid = user_id
+        where chat_type = 'dialog'
+        and chat_id in (select chat_participant_chatid from chat_participant where chat_participant_userid = $userId)
+        and user_id != $userId";
         return $this->db->query($sql, false);
     }
 

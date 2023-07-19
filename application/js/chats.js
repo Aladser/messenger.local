@@ -73,7 +73,7 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
-    // console.log(data);
+    console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if(data.onсonnection){
@@ -206,14 +206,16 @@ function appendContactDOMElement(element){
     let name = document.createElement('span'); // имя контакта
 
     contact.className = 'contact position-relative mb-2';
-    contact.title = element['username'];
+    contact.title = element.username;
     contactImgBlock.className = 'profile-img';
     img.className = 'img pe-2';
     name.className = 'contact__name';
 
-    img.src = (element['user_photo'] == 'ava_profile.png' || element['user_photo'] == null) ? 'application/images/ava.png' : `application/data/profile_photos/${element['user_photo']}`;
-    name.innerHTML = element['username'];
-    contact.addEventListener('click', setGetMessages(contact, element['username'], 'dialog'));
+    img.src = (element.user_photo == 'ava_profile.png' || element.user_photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${element.user_photo}`;
+    name.innerHTML = element.username;
+    contact.addEventListener('click', setGetMessages(contact, element.username, 'dialog'));
+    contact.setAttribute('data-user_id', element.user_id);
+    contact.setAttribute('data-chat_id', element.chat_id);
 
     contactImgBlock.append(img);
     contact.append(contactImgBlock);

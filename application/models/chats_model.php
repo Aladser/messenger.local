@@ -13,11 +13,12 @@ class ChatsModel extends \core\Model
         session_start();
         $userEmail = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
         $publicUsername = $this->userTable->getPublicUsernameFromEmail($userEmail);
+        $userId = $this->userTable->getUserId($userEmail);
 
         // удаление временных файлов профиля, откуда был переход
         $tempDirPath = dirname(__DIR__, 1)."\data\\temp\\";
         foreach(glob($tempDirPath.$userEmail.'*') as $file) unlink($file);
 
-        return ['user-email' => $userEmail, 'publicUsername' => $publicUsername];
+        return ['user-email' => $userEmail, 'publicUsername' => $publicUsername, 'userhostId' => $userId];
     }
 }
