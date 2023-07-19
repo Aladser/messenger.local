@@ -40,7 +40,7 @@ const resetForwardtBtn = document.querySelector('#btn-resend-reset');
 /** контекстное меню */
 const contextMenu = document.querySelector('#context-menu');
 /** DOM-элементы контекстного меню*/
-const contextMenuElements = ['msg__text', 'msg__time', 'msg__tr-author', 'msg__author'];
+const contextMenuElements = ['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forwarding'];
 /** кнопка контекстного меню: Редактировать*/
 const editContextMenuMsgBtn = document.querySelector('#edit-msg');
 /** кнопка контекстного меню: Удалить*/
@@ -471,6 +471,9 @@ window.addEventListener('DOMContentLoaded', () => {
              
             if(['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)){
                 selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode;
+            }
+            else if(event.target.className === 'msg__forwarding'){
+                selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode.parentNode;
             }
             else{
                 selectedMessage = event.target.parentNode.parentNode.parentNode;
