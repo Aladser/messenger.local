@@ -18,7 +18,7 @@
             <?php if(!is_null($data) ): ?>
                 <?php if(isset($data['publicUsername'])): ?>
                     <h3 class='text-center p-4 text-white bg-c4c4c4'>Месенджер<span id='userhost' data-user-publicname=<?=$data['publicUsername']?>> <?=$data['user-email']?></span></h3>
-                <?php else: ?>
+                <?php elseif(isset($data['user-email'])): ?>
                     <h3 class='text-center p-4 text-white bg-c4c4c4'>Месенджер<span id='userhost'> <?=$data['user-email']?></span></h3>
                 <?php endif; ?>
             <?php else: ?>

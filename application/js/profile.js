@@ -24,10 +24,10 @@ function changeHideEmailInputVisibility(input, btn){
     let startState = input.checked; // изначальное состояние чекбокса скрытия почты
     return function func(){
         if(input.checked !== startState){
-            btn.classList.remove('hidden');
+            btn.classList.remove('d-none');
         }
         else{
-            btn.classList.add('hidden');
+            btn.classList.add('d-none');
         }
     }
 }
@@ -42,34 +42,34 @@ function writeNickname(input, btn){
 
             // проверить никнейм на пустое поле или кириллицу
             if(input.value === '' || input.value.search(/[А-яЁё]/) !== -1){
-                btn.classList.add('hidden');
+                btn.classList.add('d-none');
                 inputNickname.classList.add('input-nickname-error');
-                prgError.classList.remove('hidden'); 
+                prgError.classList.remove('d-none'); 
                 prgError.innerHTML = 'Логин не должен содержать кирриллицу или быть пустым';
                 return;
             }
             // проверить уникальность никнейма
             else{
                 inputNickname.classList.remove('input-nickname-error');
-                prgError.classList.add('hidden');
+                prgError.classList.add('d-none');
                 fetch('/is-unique-nickname', {method:'post', body:data}).then(r=>r.text().then(data => {
                     // никнейм уникален
                     if(data == 1){
-                        btn.classList.remove('hidden');
+                        btn.classList.remove('d-none');
                         inputNickname.classList.remove('input-nickname-error');
-                        prgError.classList.add('hidden'); 
+                        prgError.classList.add('d-none'); 
                     }
                     else{
-                        btn.classList.add('hidden');
+                        btn.classList.add('d-none');
                         inputNickname.classList.add('input-nickname-error');
-                        prgError.classList.remove('hidden');
+                        prgError.classList.remove('d-none');
                         prgError.innerHTML = 'Логин занят';   
                     }
                 }));
             }
         }
         else{
-            btn.classList.add('hidden');
+            btn.classList.add('d-none');
         }
     }
 }
@@ -87,7 +87,7 @@ inputNickname.onblur = function(){
         if(inputNickname.classList.contains('input-nickname-error')){
             inputNickname.value = originalNickname;
             inputNickname.classList.remove('input-nickname-error');
-            prgError.classList.add('hidden'); 
+            prgError.classList.add('d-none'); 
         }
         inputNickname.disabled = true;
     };
@@ -98,7 +98,7 @@ inputNickname.onblur = function(){
 editPhotoBtn.onclick = () => selectFileInput.click();
 // оправка формы на сервер
 selectFileInput.onchange = () => {
-    saveBtn.classList.remove('hidden');
+    saveBtn.classList.remove('d-none');
     document.querySelector('#upload-file-btn').click();
 }
 // установка фото профиля
@@ -124,11 +124,11 @@ saveBtn.addEventListener('click', ()=>{
 
     fetch('/set-userdata', {method: 'POST', body: data}).then(r => r.text()).then(data => {
         if(data == 0){
-            saveBtn.classList.remove('hidden');
+            saveBtn.classList.remove('d-none');
             prgError.innerHTML = 'серверная ошибка';
         }
         else{
-            saveBtn.classList.add('hidden');
+            saveBtn.classList.add('d-none');
         }
     });
 

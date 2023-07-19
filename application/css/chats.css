@@ -1,7 +1,6 @@
 .chat-container{
     height: 85vh;
 }
-
 .options-container{
     width: 12%;
     padding-left: 1.5rem;
@@ -19,6 +18,8 @@
     position: relative;
 }
 
+
+/* контекстное меню */
 .context-menu { 
     background-color: #C4C4C4; 
         -moz-box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
@@ -38,6 +39,7 @@
 .context-menu li:hover{
     background-color: #C4C4C4;
 }
+
 
 .contact{
     border-radius: 3px;
@@ -63,6 +65,26 @@
     font-weight: bolder;
 }
 
+
+/** кнопки пересылки сообщений */
+.btn-resend-block{
+    display: none;
+}
+.btn-resend-block_active{
+    justify-content: space-around;
+    display: flex;
+}
+.btn-resend{
+    border: 1px solid black;
+    width: 7rem;
+    padding: 0.25rem 0;
+    background-color: #C4C4C4;
+}
+.btn-resend:hover{
+    background-color: #B4B4B4;
+}
+
+
 .groups{
     overflow-y: auto;
     height: 43.5%;
@@ -72,6 +94,7 @@
     padding: 0.4rem;
     padding-bottom: 0.2rem;
     cursor: pointer;
+    white-space: nowrap;
 }
 .group__title:hover{
     font-weight: bolder;
@@ -161,12 +184,21 @@
     margin-bottom: 0.5rem;
     display: none;
 }
+.btn-resend__img-block{
+    width: 30%;
+    height: auto;
+    margin: auto;
+    margin-bottom: 0.5rem;
+    display: none;
+}
 .send-btn-img{
     height: 100%;
     width: auto;
     border: none;
     background-size: cover;
 }
+
+
 
 
 @media (max-width: 1200px) {
@@ -193,6 +225,12 @@
     .contact__name{
         font-size: 80%;
     }
+    .btn-resend{
+        font-size: 80%;
+    }
+    .group{
+        font-size: 80%;
+    }
 }
 @media (max-width: 775px) {
     .options-container{
@@ -205,6 +243,16 @@
         display: inline-block;
     }
     .option-name{
+        display: none;
+    }
+    
+    .btn-resend{
+        border: none;
+    }
+    .btn-resend__img-block{
+        display: inline-block;
+    }
+    .btn-resend__name{
         display: none;
     }
 }

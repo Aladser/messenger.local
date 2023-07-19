@@ -1,28 +1,9 @@
 {"messageOnconnection":1,"author":"Admin","userId":62}
-{"chat_message_id":"42","chatId":"1","messageType":"REMOVE"}
-{"message":"1","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-19 02:45:26","chat_message_id":43}
+{"message":"1","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-19 07:23:50","chat_message_id":52}
+{"chat_message_id":"52","chatId":"1","chat_message_text":"111","chat_message_time":"2023-07-19 07:23:50","messageType":"EDIT"}
 Connection Admin completed
 {"messageOnconnection":1,"author":"Admin","userId":108}
-{"message":"2","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-19 02:46:22","chat_message_id":44}
-{"chat_message_id":"43","chatId":"1","chat_message_text":"111","chat_message_time":"2023-07-19 02:45:26","messageType":"EDIT"}
+{"chat_message_id":"52","chatId":"1","messageType":"REMOVE"}
 Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","userId":125}
-{"chat_message_id":"44","chatId":"1","chat_message_text":"222","chat_message_time":"2023-07-19 02:46:22","messageType":"EDIT"}
-{"messageOnconnection":1,"author":"Admin","userId":135}
-{"messageOnconnection":1,"author":"Lauxtec","userId":135}
-Connection Lauxtec completed
-{"messageOnconnection":1,"author":"Admin","userId":148}
-{"messageOnconnection":1,"author":"Lauxtec","userId":148}
-Connection Lauxtec completed
-{"messageOnconnection":1,"author":"Admin","userId":161}
-{"messageOnconnection":1,"author":"Aladser","userId":161}
-{"message":"333","fromuser":"Aladser","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-19 02:47:28","chat_message_id":45}
-{"chat_message_id":"45","chatId":"1","chat_message_text":"3","chat_message_time":"2023-07-19 02:47:28","messageType":"EDIT"}
-{"message":"4","fromuser":"Aladser","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-19 02:47:36","chat_message_id":46}
-{"chat_message_id":"46","chatId":"1","chat_message_text":"444","chat_message_time":"2023-07-19 02:47:36","messageType":"EDIT"}
-{"chat_message_id":"46","chatId":"1","messageType":"REMOVE"}
-{"chat_message_id":"45","chatId":"1","messageType":"REMOVE"}
-{"chat_message_id":"44","chatId":"1","messageType":"REMOVE"}
-{"chat_message_id":"43","chatId":"1","messageType":"REMOVE"}
-Connection Aladser completed
+{"messageOnconnection":1,"author":"Admin","userId":121}
 Connection Admin completed

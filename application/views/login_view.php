@@ -18,7 +18,7 @@
         </div>
     </form>
 
-    <p class='w-25 mx-auto fw-bolder text-dark-red hidden' id='login-error'>Пользователь уже существует</p>
+    <p class='w-25 mx-auto fw-bolder text-dark-red d-none' id='login-error'>Пользователь уже существует</p>
 </div>
 
 <script type='text/javascript' src="application/js/validation.js"></script>

@@ -30,16 +30,23 @@ const systemMessagePrg = document.querySelector("#message-system");
 /** адрес вебсокета */
 const wsUri = 'ws://localhost:8888';
 
+/** блок кнопок пересылки сообщения  */
+const resendBtnBlock = document.querySelector('#btn-resend-block');
+/** кнопка пересылки сообщения */
+const resendtBtn = document.querySelector('#btn-resend');
+/** кнопка отмены пересылки сообщения */
+const resetResendtBtn = document.querySelector('#btn-resend-reset');
+
 /** контекстное меню */
 const contextMenu = document.querySelector('#context-menu');
 /** элементы контекстного меню*/
 const contextMenuElements = ['msg__text', 'msg__time', 'msg__tr-author', 'msg__author'];
 /** кнопка контекстного меню редактировать*/
-const editMsgBtn = document.querySelector('#edit-msg');
+const editContextMenuMsgBtn = document.querySelector('#edit-msg');
 /** кнопка контекстного меню удалить*/
-const removeMsgBtn = document.querySelector('#remove-msg');
+const removeContextMenuMsgBtn = document.querySelector('#remove-msg');
 /** кнопка контекстного меню переслать */
-const resendMsgBtn = document.querySelector('#resend-msg');
+const resendContextMenuMsgBtn = document.querySelector('#resend-msg');
 
 /** выбранное сообщение */
 let selectedMessage = null;
@@ -113,16 +120,19 @@ webSocket.onmessage = e => {
  * @param messageType тип сообщения: NEW, EDIT, REMOVE или RESEND
  */
 function sendData(message, messageType){
+    if(messageType == 'RESEND'){
+        console.log('RESEND');
+        return;
+    }
+
     // проверка типа сообщения
     if( !['NEW', 'EDIT', 'REMOVE', 'RESEND'].includes(messageType) ){
         throw 'sendData(msgType): неверный аргумент msgType';
     }
     // проверка сокета
-    /*
     if(webSocket.readyState !== 1){
         throw 'sendData(msgType): вебсокет не готов к обмену сообщениями';
     }
-    */
     // изменение типа сообщения для редактированных сообщений
     if(isEditMessage){
         messageType = 'EDIT';
@@ -213,6 +223,7 @@ function appendGroupDOMElement(group, place='END'){
     groupsItemName.className = 'group__title';
 
     groupsItem.setAttribute('data-id', group.chat_id);
+    groupsItem.title = group.chat_name;
     groupsItemName.innerHTML = group.chat_name;
     groupsItem.addEventListener('click', setGetMessages(groupsItem, {'chat_id':group.chat_id, 'chat_name':group.chat_name}, 'discussion'));
 
@@ -337,34 +348,38 @@ function removeGroupPatricipantDOMElements(){
 }
 
 
+/** Переотравить сообщение */
+function resendMessage(){
+    console.log('пересылка сообщения');
+    resendBtnBlock.classList.remove('btn-resend-block_active');
+}
+
+
+// ----- Контекстное меню
 /** скрыть контекстное меню*/
 function hideContextMenu(){
     contextMenu.style.left = '0px';
     contextMenu.style.top = '1000px';
     contextMenu.style.display = 'none';
 }
-
-
 /** изменить сообщение */
-function editMessage(){
+function editMessageContextMenu(){
     isEditMessage = true;
     hideContextMenu();
     messageInput.value = selectedMessage.querySelector('.msg__text').innerHTML;
     messageInput.focus();
 }
 /** удалить сообщение  */
-function removeMessage(){
+function removeMessageContextMenu(){
     let msg = selectedMessage.querySelector('.msg__text').innerHTML;
     sendData(msg, 'REMOVE');
     selectedMessage = null;
     hideContextMenu();
 }
 /** переотправить сообщение */
-function resendMessage(){
-    let msg = selectedMessage.querySelector('.msg__text').innerHTML;
-    sendData(msg, 'RESEND');
-    selectedMessage = null;
+function resendMessageContextMenu(){
     hideContextMenu();
+    resendBtnBlock.classList.add('btn-resend-block_active');
 }
 
 
@@ -422,8 +437,8 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             let msgUserhost = selectedMessage.getAttribute('data-fromuser');
-            editMsgBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
-            removeMsgBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
+            editContextMenuMsgBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
+            removeContextMenuMsgBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
         }
         else{
             hideContextMenu();
@@ -435,9 +450,11 @@ window.addEventListener('DOMContentLoaded', () => {
         if(event.target.parentNode.id !== 'send-msg-btn' && event.target.className !== 'list-group-item') messageInput.value = ''; // очистка поля ввода сообщения, если не нажата кнопка отправки сообщения
         if(event.target.className !== 'list-group-item') hideContextMenu();
     };
-    chat.onscroll = hideContextMenu; // скрыть контекстное меню сообщения при прокрутке диалога
 
-    editMsgBtn.onclick = editMessage;
-    removeMsgBtn.onclick = removeMessage;
-    resendMsgBtn.onclick = resendMessage;
+    chat.onscroll = hideContextMenu; // скрыть контекстное меню сообщения при прокрутке диалога
+    editContextMenuMsgBtn.onclick = editMessageContextMenu;
+    removeContextMenuMsgBtn.onclick = removeMessageContextMenu;
+    resendContextMenuMsgBtn.onclick = resendMessageContextMenu;
+    resendtBtn.onclick = resendMessage;
+    resetResendtBtn.onclick = () => resendBtnBlock.classList.remove('btn-resend-block_active');
 });

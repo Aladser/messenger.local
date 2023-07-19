@@ -15,7 +15,7 @@ const password2Clue = document.querySelector('#reg-form__password2-clue');
 
 //***** событие клика поля ввода данных *****/
 function clickInputElement(input, clue, isPassword){
-    regErrorPrg.classList.add('hidden');
+    regErrorPrg.classList.add('d-none');
     // убирание выделения
     emailClue.classList.remove('input-clue--active');
     password1Clue.classList.remove('input-clue--active');
@@ -72,7 +72,7 @@ document.querySelector('#reg-form').addEventListener('submit', function(e){
     fetch('/reg-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
         console.log(data);
         data = JSON.parse(data);
-        regErrorPrg.classList.remove('hidden');
+        regErrorPrg.classList.remove('d-none');
         if(data['result'] === 'user_exists'){
             regErrorPrg.innerHTML = 'пользователь уже существует';
             regErrorPrg.classList.remove('text-success');

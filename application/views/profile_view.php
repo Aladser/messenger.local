@@ -27,13 +27,13 @@
                 <input class="form-check-input" type="checkbox" id="hide-email-input" <?=$data['user_hide_email']==1 ? 'checked' : '' ?> >
                 <label class="form-check-label" for="hide-email-input">&nbsp; скрыть почту</label>
             </div>
-            <button class='btn btn-bg-C4C4C4 text-white w-100 hidden' id='save-profile-settings-btn'>Сохранить</button>
+            <button class='btn btn-bg-C4C4C4 text-white w-100 d-none' id='save-profile-settings-btn'>Сохранить</button>
         </div>
 
         <div class='options mb-2'>
             <form method='post' id='upload-file-form' enctype="multipart/form-data">
-                <input type="file" id="select-file-input" accept="image/*" name='image' class='hidden'>
-                <input type="submit" id='upload-file-btn' class='hidden'>
+                <input type="file" id="select-file-input" accept="image/*" name='image' class='d-none'>
+                <input type="submit" id='upload-file-btn' class='d-none'>
                 <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='edit-photo-btn'>Изменить фото</button>
             </form>
             
@@ -42,7 +42,7 @@
         </div>
     </div>
     <br>
-    <p class='text-center text-danger fs-5 fw-bolder hidden' id='prg-error'></p>
+    <p class='text-center text-danger fs-5 fw-bolder d-none' id='prg-error'></p>
 </div>
 
 <script type='text/javascript' src="application/js/validation.js"></script>

@@ -27,11 +27,11 @@ document.querySelector('#login-form').addEventListener('submit', function(e){
             window.open('/chats', '_self')
         }
         else if(data['result'] === 'login_user_wrong_password'){
-            loginErrorPrg.classList.remove('hidden');
+            loginErrorPrg.classList.remove('d-none');
             loginErrorPrg.innerHTML = 'Неверный пароль';
         }
         else{
-            loginErrorPrg.classList.remove('hidden');
+            loginErrorPrg.classList.remove('d-none');
             loginErrorPrg.innerHTML = 'Пользователь не существует';
         }
     });

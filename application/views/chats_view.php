@@ -4,7 +4,19 @@
             <input type="text" class='find-contacts-input w-100 form-control' placeholder='поиск контакта' id='find-contacts-input'>
             <button class='position-absolute bg-white text-dark top-0 end-0 border-0 mt-1 me-2' id='reset-find-contacts-btn' title='сбросить фильтр'>&#9747;</button>
         </div>
-        <div class='h-50 border-bottom border-dark overflow-auto' id='contacts'></div>
+        <div class='h-50 border-bottom border-dark overflow-auto'>
+            <div id='contacts'></div>
+            <div class='btn-resend-block' id='btn-resend-block'>
+                <button class='btn-resend' id='btn-resend'>
+                    <div class='btn-resend__img-block'><img src="application/images/resend.png" class='img' title='Переслать'></div>
+                    <span class='btn-resend__name'>Переслать</span>
+                </button>
+                <button class='btn-resend' id='btn-resend-reset'>
+                    <div class='btn-resend__img-block'><img src="application/images/cancel.png" class='img' title='Отменить'></div>
+                    <span class='btn-resend__name'>Отменить</span>
+                </button>
+            </div>
+        </div>
         <div class='groups pt-2 text-center' id='group-chats' ></div>
     </div>
     

@@ -24,7 +24,7 @@
             <a href="/main" class='text-decoration-none'><div class='mx-auto w-25 btn-bg-C4C4C4 text-white p-2'>Назад</div></a>
         </div>
 
-        <p class='w-25 mx-auto fw-bolder text-dark-red hidden' id='reg-error'>Пользователь уже существует</p>
+        <p class='w-25 mx-auto fw-bolder text-dark-red d-none' id='reg-error'>Пользователь уже существует</p>
     </form>
 </div>
 
