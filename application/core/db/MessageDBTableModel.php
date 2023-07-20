@@ -85,4 +85,9 @@ class MessageDBTableModel extends DBTableModel{
         ";
         return $this->db->query($sql, false);
     }
+
+    // установить показ уведомлений чатов
+    public function setNoticeShow(){
+        return $this->db->exec("");
+    }
 }

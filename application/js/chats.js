@@ -454,21 +454,21 @@ function forwardMessageContextMenu(){
 }
 /** контекстное меню: включить/отключить уведомления */
 function editNoticeShowContextMenu(){
+    // создание пакета с id чата, значением необходимости  показа уведомления для установки
     let data = {};
-    data.notice = selectedContact.getAttribute('data-notice');
     if(selectedContact.className==='group'){
-        data.name = selectedContact.innerHTML;
-        data.type = 'discussion';
+        data.chat_id = groupList.find(el => el.chat_name === selectedContact.innerHTML).chat_id;
     }
     else{
-        data.name = selectedContact.title;
-        data.type = 'dialog';
+        let name = selectedContact.querySelector('.contact__name').innerHTML;
+        data.chat_id = contactList.find(el => el.username === name).chat_id;
     }
-    console.clear();
-    console.log(data);
+    data.notice = !(selectedContact.getAttribute('data-notice') == 1) ? 1 : 0; //инвертирование значения
     hideContextMenu();
-}
 
+    // отправка данных на сервер
+    
+}
 
 window.addEventListener('DOMContentLoaded', () => {
     resetFindContactsBtn.onclick = showContacts;
