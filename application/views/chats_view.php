@@ -65,10 +65,16 @@
     </div>
 </div>
 
-<div class='msg-context-menu' id='msg-context-menu'>
+<div class='context-menu' id='msg-context-menu'>
     <ul class='list-group m-0'>
     <li class='list-group-item' id='edit-msg'>Редактировать</li>
     <li class='list-group-item' id='resend-msg'>Переслать</li>
     <li class='list-group-item' id='remove-msg'>Удалить</li>
+    </ul>
+</div>
+
+<div class='context-menu' id='contact-context-menu'>
+    <ul class='list-group m-0'>
+    <li class='list-group-item' id='contact-notice-edit'>Отключить уведомления</li>
     </ul>
 </div>

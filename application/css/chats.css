@@ -26,8 +26,8 @@
    font-size: 110%;
 }
 
-/* контекстное меню */
-.msg-context-menu { 
+/* контекстные меню*/
+.context-menu { 
     background-color: #C4C4C4; 
         -moz-box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
         -webkit-box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
@@ -40,13 +40,12 @@
     left: 0;
     top:0;
 }
-.msg-context-menu li{
+.context-menu li{
     cursor: pointer;
 }
-.msg-context-menu li:hover{
+.context-menu li:hover{
     background-color: #C4C4C4;
 }
-
 
 .contact{
     border-radius: 3px;
@@ -107,7 +106,7 @@
     cursor: pointer;
     white-space: nowrap;
 }
-.group__title:hover{
+.group:hover{
     font-weight: bolder;
     background-color: #bbb;
 }

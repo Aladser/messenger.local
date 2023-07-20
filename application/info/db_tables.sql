@@ -52,7 +52,7 @@ create table chat(
 create table chat_participant(
 	chat_participant_chatid int,
 	chat_participant_userid int,
-	chat_participant_isnotice int(1) default 0,
+	chat_participant_isnotice int(1) default 1,
 	PRIMARY KEY (chat_participant_chatid, chat_participant_userid),
 	CONSTRAINT check_participant_chatid foreign key (chat_participant_chatid) references chat(chat_id) ON DELETE CASCADE,
 	CONSTRAINT check_participant_userid foreign key (chat_participant_userid) references users(user_id) ON DELETE CASCADE
