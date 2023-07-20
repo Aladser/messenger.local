@@ -58,15 +58,23 @@ let forwardedMessageRecipientName = null;
 let chatType = null;
 /** текущий id чата*/
 let chatId = null;
-/** список участников выбранной группы */
-let groupContacts = [];
-/** создатель группового чата {заготовка на будущее}*/
-let discussionCreatorName = null;
 /** флаг измененного сообщения */
 let isEditMessage = false;
 /** флаг пересылаемого сообщения*/
 let isForwaredMessage = false;
+/** список контактов*/
+let contactList = [];
+/** список групп */
+let groupList = [];
+/** список участников выбранной группы */
+let groupContacts = [];
 
+/** звуковое уведомление*/
+function noticeBySound(){
+    let audio = new Audio();
+    audio.src = 'application/views/notice.wav';
+    audio.play();
+}
 
 /** ----- ВЕБСОКЕТ СООБЩЕНИЙ -----*/
 let webSocket = new WebSocket(wsUri);
@@ -195,10 +203,10 @@ function appendMessage(data){
     msgBlock.append(msgTable);
     chat.append(msgBlock);
 }
-
-
 /** создать DOM-элемент контакта списка контактов*/
 function appendContactDOMElement(element){
+    contactList.push({'username': element.username, 'chat_id': element.chat_id, 'user_id': element.user_id});
+
     // контейнер контакта
     let contact = document.createElement('div');    // блок контакта
     let contactImgBlock = document.createElement('div'); // блок изображения профиля
@@ -214,8 +222,6 @@ function appendContactDOMElement(element){
     img.src = (element.user_photo == 'ava_profile.png' || element.user_photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${element.user_photo}`;
     name.innerHTML = element.username;
     contact.addEventListener('click', setGetMessages(contact, element.username, 'dialog'));
-    contact.setAttribute('data-user_id', element.user_id);
-    contact.setAttribute('data-chat_id', element.chat_id);
 
     contactImgBlock.append(img);
     contact.append(contactImgBlock);
@@ -231,13 +237,14 @@ function appendContactDOMElement(element){
  * @param {*} place куда добавить: START - начало списка, END - конец
  */
 function appendGroupDOMElement(group, place='END'){
+    groupList.push({'chat_name': group.chat_name, 'chat_id': group.chat_id});
+
     let groupsItem = document.createElement('div');
     let groupsItemName = document.createElement('div');
 
     groupsItem.className = 'group';
     groupsItemName.className = 'group__title';
 
-    groupsItem.setAttribute('data-group-id', group.chat_id);
     groupsItem.title = group.chat_name;
     groupsItemName.innerHTML = group.chat_name;
     groupsItem.addEventListener('click', setGetMessages(groupsItem, {'chat_id':group.chat_id, 'chat_name':group.chat_name}, 'discussion'));
@@ -247,7 +254,14 @@ function appendGroupDOMElement(group, place='END'){
     else if(place === 'END') groupChatsContainer.append(groupsItem);
 }
 
-
+/** показать контакты пользователя-клиента*/
+function showContacts(){
+    fetch('/get-contacts').then(r=>r.json()).then(data => {
+        findContactsInput.value = '';
+        contactsContainer.innerHTML = '';
+        data.forEach(element => appendContactDOMElement(element));
+    });
+}
 /** показать групповые чаты пользователя-клиента */
 const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => appendGroupDOMElement(elem))); 
 
@@ -387,7 +401,6 @@ function resetForwardMessage(){
     if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
 }
 
-
 // ----- Контекстное меню
 /** скрыть контекстное меню*/
 function hideContextMenu(){
@@ -414,16 +427,6 @@ function forwardMessageContextMenu(){
     hideContextMenu();
     isForwaredMessage = true;
     forwardBtnBlock.classList.add('btn-resend-block_active');
-}
-
-
-/** показать контакты пользователя-клиента*/
-function showContacts(){
-    fetch('/get-contacts').then(r=>r.json()).then(data => {
-        findContactsInput.value = '';
-        contactsContainer.innerHTML = '';
-        data.forEach(element => appendContactDOMElement(element));
-    });
 }
 
 

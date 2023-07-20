@@ -19,7 +19,7 @@
                 <?php if(isset($data['publicUsername'])): ?>
                     <h3 class='text-center p-4 text-white bg-c4c4c4'>
                         Месенджер
-                        <span id='clientuser' data-clientuser-id=<?=$data['userhostId']?>  data-clientuser-publicname=<?=$data['publicUsername']?>> 
+                        <span id='clientuser' data-clientuser-publicname=<?=$data['publicUsername']?>> 
                             <?=$data['user-email']?>
                         </span>
                     </h3>

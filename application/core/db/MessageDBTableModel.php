@@ -28,13 +28,13 @@ class MessageDBTableModel extends DBTableModel{
     // создать групповой чат
     public function createDiscussion(int $userHostId){
         $groupId = $this->db->executeProcedure("create_discussion($userHostId, @info)", '@info');
-        return $this->db->query("select chat_id, chat_name, chat_creatorid from chat where chat_id = $groupId");
+        return $this->db->query("select chat_id, chat_name from chat where chat_id = $groupId");
     }
 
     // возвращает групповые чаты пользователя
     public function getDiscussions(int $userHostId){
         return $this->db->query("
-        select chat_id, chat_name, chat_creatorid       
+        select chat_id, chat_name       
         from chat_participant
         join chat on chat_participant.chat_participant_chatid = chat.chat_id
         where chat_type = 'discussion' and chat_participant_userid = $userHostId
