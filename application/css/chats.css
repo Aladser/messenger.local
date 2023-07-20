@@ -20,7 +20,7 @@
 
 
 /* контекстное меню */
-.context-menu { 
+.msg-context-menu { 
     background-color: #C4C4C4; 
         -moz-box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
         -webkit-box-shadow: 5px 2px 10px rgba(0,0,0,0.5); 
@@ -33,10 +33,10 @@
     left: 0;
     top:0;
 }
-.context-menu li{
+.msg-context-menu li{
     cursor: pointer;
 }
-.context-menu li:hover{
+.msg-context-menu li:hover{
     background-color: #C4C4C4;
 }
 

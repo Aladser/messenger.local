@@ -56,8 +56,8 @@ let forwardedMessageRecipientElement = null;
 let forwardedMessageRecipientName = null;
 /** текущий тип чата*/
 let chatType = null;
-/** текущий id чата*/
-let chatId = null;
+/** id открытого чата*/
+let openChatId = null;
 /** флаг измененного сообщения */
 let isEditMessage = false;
 /** флаг пересылаемого сообщения*/
@@ -69,19 +69,15 @@ let groupList = [];
 /** список участников выбранной группы */
 let groupContacts = [];
 
-/** звуковое уведомление*/
-function noticeBySound(){
-    let audio = new Audio();
-    audio.src = 'application/views/notice.wav';
-    audio.play();
-}
 
 /** ----- ВЕБСОКЕТ СООБЩЕНИЙ -----*/
 let webSocket = new WebSocket(wsUri);
 webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
-    console.log(data);
+    //console.clear();
+    //console.log(e.data);
+
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if(data.onсonnection){
@@ -107,9 +103,23 @@ webSocket.onmessage = e => {
     else if(data.offсonnection){
         systemMessagePrg.innerHTML = `${data.user} не в сети`;
     }
-    // показ сообщений открытого чата
-    else{
-        if(chatId == data.chatId){
+    // сообщения
+    else{   
+        // уведомления о новых сообщениях чатов контактов и групп
+        // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов из контактов и групп пользователя-клиента
+        if( (data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser != publicClientUsername){
+            foundedContactChat = contactList.find(el => el.chat_id == data.chatId);
+            foundedGroupChat = groupList.find(el => el.chat_id == data.chatId);
+            let isChatInContacts = (foundedContactChat!=undefined) || (foundedGroupChat!=undefined);
+            // сделано специально множественное создание объектов звука
+            if(isChatInContacts){
+                let audio = new Audio('application/views/notice.wav');
+                audio.play();
+            }
+        }
+
+        // сообщения открытого чата
+        if(openChatId == data.chatId){
             // изменение сообщения
             if(data.messageType === 'EDIT'){
                 let messageDOMElem = document.querySelector(`[data-chat_message_id="${data.chat_message_id}"]`);
@@ -124,6 +134,9 @@ webSocket.onmessage = e => {
             else{
                 appendMessage(data);
             } 
+        }
+        else{
+            console.log(data);
         } 
     }
 };
@@ -151,7 +164,7 @@ function sendData(message, messageType){
     }  
     // отправка сообщения на сервер
     if(message!==''){
-        data = {'message':message, 'fromuser':publicClientUsername, 'chatId':chatId,'chatType':chatType,'messageType':messageType};
+        data = {'message':message, 'fromuser':publicClientUsername, 'chatId':openChatId,'chatType':chatType,'messageType':messageType};
          // для старых сообщений добавляется id сообщения
         if(['EDIT', 'REMOVE', 'FORWARD'].includes(messageType)){
             data.msgId = selectedMessage.getAttribute('data-chat_message_id');
@@ -357,7 +370,7 @@ function setGetMessages(domElement, bdData, type){
                 chat.innerHTML = '';
 
                 chatType = data.type;
-                chatId = data.chatId;
+                openChatId = data.chatId;
 
                 chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение '; 
                 chatNameLabel.innerHTML = type==='dialog' ? bdData : bdData.chat_name; 

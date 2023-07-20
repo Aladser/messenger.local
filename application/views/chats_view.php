@@ -65,7 +65,7 @@
     </div>
 </div>
 
-<div class='context-menu' id='context-menu'>
+<div class='msg-context-menu' id='msg-context-menu'>
     <ul class='list-group m-0'>
     <li class='list-group-item' id='edit-msg'>Редактировать</li>
     <li class='list-group-item' id='resend-msg'>Переслать</li>
