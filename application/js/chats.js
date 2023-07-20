@@ -38,9 +38,9 @@ const forwardBtn = document.querySelector('#btn-resend');
 const resetForwardtBtn = document.querySelector('#btn-resend-reset');
 
 /** контекстное меню */
-const contextMenu = document.querySelector('#context-menu');
+const msgContextMenu = document.querySelector('#msg-context-menu');
 /** DOM-элементы контекстного меню*/
-const contextMenuElements = ['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forwarding'];
+const msgContextMenuElements = ['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forwarding'];
 /** кнопка контекстного меню: Редактировать*/
 const editContextMenuMsgBtn = document.querySelector('#edit-msg');
 /** кнопка контекстного меню: Удалить*/
@@ -234,16 +234,20 @@ function appendContactDOMElement(element){
 
     img.src = (element.user_photo == 'ava_profile.png' || element.user_photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${element.user_photo}`;
     name.innerHTML = element.username;
+
     contact.addEventListener('click', setGetMessages(contact, element.username, 'dialog'));
+    contact.setAttribute('data-notice', element.notice);
 
     contactImgBlock.append(img);
     contact.append(contactImgBlock);
     contact.append(name);
+    // добавление значка без уведомлений, если они отключены
+    if(element.notice == 1){
+        contact.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
+    }
 
     contactsContainer.append(contact);
 }
-
-
 /** создать DOM-элемент группы списка групп
  * 
  * @param {*} group БД данные группы
@@ -417,9 +421,9 @@ function resetForwardMessage(){
 // ----- Контекстное меню
 /** скрыть контекстное меню*/
 function hideContextMenu(){
-    contextMenu.style.left = '0px';
-    contextMenu.style.top = '1000px';
-    contextMenu.style.display = 'none';
+    msgContextMenu.style.left = '0px';
+    msgContextMenu.style.top = '1000px';
+    msgContextMenu.style.display = 'none';
 }
 /** контекстное меню: изменить сообщение */
 function editMessageContextMenu(){
@@ -481,11 +485,11 @@ window.addEventListener('DOMContentLoaded', () => {
     // нажатия правой кнопкой мыши
     window.oncontextmenu = event => {
         // клик на сообщении
-        if(contextMenuElements.includes(event.target.className)){
+        if(msgContextMenuElements.includes(event.target.className)){
             // координаты меню
-            contextMenu.style.left = event.pageX+'px';
-            contextMenu.style.top = event.pageY+'px';
-            contextMenu.style.display = 'block';
+            msgContextMenu.style.left = event.pageX+'px';
+            msgContextMenu.style.top = event.pageY+'px';
+            msgContextMenu.style.display = 'block';
              
             if(['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)){
                 selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode;

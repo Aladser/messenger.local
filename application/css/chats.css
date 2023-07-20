@@ -18,6 +18,13 @@
     position: relative;
 }
 
+.notice-soundless{
+   position: absolute;
+   top: 0;
+   left: 0;
+   background-color: white;
+   font-size: 110%;
+}
 
 /* контекстное меню */
 .msg-context-menu { 
