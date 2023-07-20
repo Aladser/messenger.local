@@ -18,7 +18,11 @@ class ContactsDBTableModel extends DBTableModel{
 
     // получить контакты пользователя
     function getContacts($userId){
-        $sql = "select chat_id, user_id, getPublicUserName(user_email, user_nickname, user_hide_email) as username, chat_participant_isnotice as notice, user_photo from chat join chat_participant on chat_participant_chatid = chat_id
+        $sql = "select chat_id, user_id, user_photo,
+        getPublicUserName(user_email, user_nickname, user_hide_email) as username, 
+        (select chat_participant_isnotice from chat_participant where chat_participant_chatid = chat_id and chat_participant_userid = $userId) as isnotice
+        from chat 
+        join chat_participant on chat_participant_chatid = chat_id
         join users on chat_participant_userid = user_id
         where chat_type = 'dialog'
         and chat_id in (select chat_participant_chatid from chat_participant where chat_participant_userid = $userId)
