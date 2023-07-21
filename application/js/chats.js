@@ -192,13 +192,6 @@ function sendData(message, messageType){
 }
 
 
-/** удаление DOM узлов участников текущего выбранного группового чата */
-function removeGroupPatricipantDOMElements(){
-    let groupContactsElement = document.querySelector('.group__contacts');
-    if(groupContactsElement) groupContactsElement.remove();
-    // удаление кнопок добавления в группу у контактов-неучастников
-    contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.remove());
-}
 /** создать DOM-элемент сообщения чата*/
 function appendMessage(data){
     // показ местного времени
@@ -251,7 +244,7 @@ function appendContactDOMElement(contact){
 
     img.src = (contact.user_photo == 'ava_profile.png' || contact.user_photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${contact.user_photo}`;
     name.innerHTML = contact.username;
-    contactBlock.addEventListener('click', setGetMessages(contactBlock,contact.username, 'dialog'));
+    contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock,contact.username, 'dialog'));
     contactBlock.setAttribute('data-notice', contact.isnotice);
 
     contactImgBlock.append(img);
@@ -270,13 +263,11 @@ function appendContactDOMElement(contact){
  * @param {*} place куда добавить: START - начало списка, END - конец
  */
 function appendGroupDOMElement(group, place='END'){
-    groupList.push({'chat_name': group.chat_name, 'chat_id': group.chat_id, 'isnotice': group.chat_isnotice});
-
     let groupsItem = document.createElement('div');
     groupsItem.className = 'group';
     groupsItem.title = group.chat_name;
     groupsItem.innerHTML = group.chat_name;
-    groupsItem.addEventListener('click', setGetMessages(groupsItem, {'chat_id':group.chat_id, 'chat_name':group.chat_name}, 'discussion'));
+    groupsItem.addEventListener('click', setContactOrGroupClick(groupsItem, {'chat_id':group.chat_id, 'chat_name':group.chat_name}, 'discussion'));
     groupsItem.setAttribute('data-notice', group.chat_isnotice);
 
     if(place === 'START') groupChatsContainer.prepend(groupsItem);
@@ -287,41 +278,134 @@ function appendGroupDOMElement(group, place='END'){
     }
 }
 
+
 /** показать контакты пользователя-клиента*/
-function showContacts(){
-    fetch('/get-contacts').then(r=>r.json()).then(data => {
-        findContactsInput.value = '';
-        contactsContainer.innerHTML = '';
-        data.forEach(element =>{
-            contactList.push({'username': element.username, 'chat_id': element.chat_id, 'user_id': element.user_id, 'isnotice' : element.isnotice});
-            appendContactDOMElement(element);
+const showContacts = () => fetch('/get-contacts').then(r=>r.json()).then(data => {
+    findContactsInput.value = '';
+    contactsContainer.innerHTML = '';
+    contactList = [];
+    data.forEach(element =>{
+        //contactList.push({'username': element.username, 'chat_id': element.chat_id, 'user_id': element.user_id, 'isnotice' : element.isnotice});
+        contactList.push({'username': element.username, 'chat_id': element.chat_id, 'isnotice' : element.isnotice});
+        appendContactDOMElement(element);
+    });
+    console.log(contactList);
+});
+/** показать групповые чаты пользователя-клиента */
+const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => {
+    groupList = [];
+    data.forEach(element => {
+        groupList.push({'chat_name': element.chat_name, 'chat_id': element.chat_id, 'isnotice': element.chat_isnotice});
+        appendGroupDOMElement(element);
+    });
+    console.log(groupList);
+});
+/** показать участников группового чата*/
+const showGroupRecipients = (domElement, discussionid) => {
+    let urlParams = new URLSearchParams();
+    urlParams.set('discussionid', discussionid);
+    fetch('/get-group-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
+        // создание DOM-списка участников группового чата
+        let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
+        prtBlock.className = 'group__contacts';
+        domElement.append(prtBlock);
+        groupContacts = [];
+        data.participants.forEach(prt => {
+            prtBlock.innerHTML += `<p class='group__contact'>${prt.publicname}</p>`;
+            groupContacts.push(prt.publicname);
+        });
+
+        discussionCreatorName = data.creatorName; // {заготовка на будущее}
+
+        // добавить новые кнопки добавления в группу у контактов-неучастников выбранной группы
+        let contacts = [];
+        contactsContainer.querySelectorAll('.contact').forEach(cnt => {
+            cntName = cnt.lastChild.innerHTML;
+            if(!groupContacts.includes(cntName)){
+                let plus = document.createElement('div');
+                plus.className = 'contact-addgroup';
+                plus.innerHTML = '+';
+                plus.title = 'добавить в групповой чат';
+
+                // добавить пользователя в группу
+                plus.onclick = e =>{
+                    let username = e.target.parentNode.childNodes[1].innerHTML; // имя пользователя
+                    e.stopPropagation();    // прекратить всплытие событий
+
+                    let urlParams2 = new URLSearchParams();
+                    urlParams2.set('discussionid', discussionid);
+                    urlParams2.set('username', username);
+                    fetch('add-group-contact', {method: 'POST', body: urlParams2}).then(r=>r.text()).then(data => {
+                        if(data == 1){
+                            e.target.parentNode.lastChild.remove();
+                            domElement.lastChild.innerHTML += `<p class='group__contact'>${username}</p>`;
+                        }
+                        else{
+                            console.log(data);
+                        }
+                    });
+                }
+
+                cnt.append(plus);
+            }
+            contacts.push(cntName);
         });
     });
+};
+/** показать сообщения */
+const showChat = (urlParams, bdData, type) =>{
+    fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
+        if(data){
+            chat.innerHTML = '';
+
+            chatType = data.type;
+            openChatId = data.chatId;
+
+            chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение '; 
+            chatNameLabel.innerHTML = type==='dialog' ? bdData : bdData.chat_name; 
+
+            messageInput.disabled = false;  
+            sendMsgBtn.disabled = false;
+
+            data.messages.forEach(elem => appendMessage(elem));// сообщения
+            chat.scrollTo(0, chat.scrollHeight); // прокрутка сообщений в конец
+        }
+    });
+};
+
+
+/** показать на странице получателя пересылаемого сообщения*/
+function showForwardedMessageRecipient(contactDomElem){
+    let contactNameElem = contactDomElem.querySelector('.contact__name');
+    if(contactNameElem){
+        forwardedMessageRecipientElement = contactDomElem;
+        forwardedMessageRecipientName = contactNameElem.innerHTML.trim();      
+        let contactRecipient = document.querySelector('.contact-recipient');
+        if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
+        contactDomElem.classList.add('contact-recipient');
+    } 
 }
-/** показать групповые чаты пользователя-клиента */
-const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => data.forEach(elem => appendGroupDOMElement(elem))); 
+/** удаление DOM узлов участников текущего выбранного группового чата */
+function removeGroupPatricipantDOMElements(){
+    let groupContactsElement = document.querySelector('.group__contacts');
+    if(groupContactsElement) groupContactsElement.remove();
+    // удаление кнопок добавления в группу у контактов-неучастников
+    contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.remove());
+}
 
-
-/** ОТКРЫТЬ ЧАТ ДИАЛОГА ИЛИ ГРУППОВОГО ЧАТА
+/** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
  * 
  * @param {*} domElement DOM-элемент контакта или чата
  * @param {*} bdData данные элемента из БД
  * @param {*} type тип диалога
  * @returns 
  */
-function setGetMessages(domElement, bdData, type){
+function setContactOrGroupClick(domElement, bdData, type){
     return function(){
-        // если пересылается сообщение
+        // если пересылается сообщение, показать, кому пересылается
         if(isForwaredMessage){
-            // выбран контакт, кому переадресуется сообщение
-            let contactNameElem = domElement.querySelector('.contact__name');
-            if(contactNameElem){
-                forwardedMessageRecipientElement = domElement;
-                forwardedMessageRecipientName = contactNameElem.innerHTML.trim();      
-                let contactRecipient = document.querySelector('.contact-recipient');
-                if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
-                domElement.classList.add('contact-recipient');
-            } 
+            showForwardedMessageRecipient(domElement);
+            isForwaredMessage = false;
             return;
         }
 
@@ -333,78 +417,13 @@ function setGetMessages(domElement, bdData, type){
         }
         else if(type === 'discussion'){
             urlParams.set('discussionid', bdData.chat_id);
-            // показ участников группового чата
-            fetch('/get-group-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
-                removeGroupPatricipantDOMElements();
-                // создание DOM-списка участников группового чата
-                let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
-                prtBlock.className = 'group__contacts';
-                domElement.append(prtBlock);
-                groupContacts = [];
-                data.participants.forEach(prt => {
-                    prtBlock.innerHTML += `<p class='group__contact'>${prt.publicname}</p>`;
-                    groupContacts.push(prt.publicname);
-                });
-
-                discussionCreatorName = data.creatorName; // {заготовка на будущее}
-
-                // добавить новые кнопки добавления в группу у контактов-неучастников выбранной группы
-                let contacts = [];
-                contactsContainer.querySelectorAll('.contact').forEach(cnt => {
-                    cntName = cnt.lastChild.innerHTML;
-                    if(!groupContacts.includes(cntName)){
-                        let plus = document.createElement('div');
-                        plus.className = 'contact-addgroup';
-                        plus.innerHTML = '+';
-                        plus.title = 'добавить в групповой чат';
-
-                        // добавить пользователя в группу
-                        plus.onclick = e =>{
-                            let username = e.target.parentNode.childNodes[1].innerHTML; // имя пользователя
-                            e.stopPropagation();    // прекратить всплытие событий
-
-                            let urlParams2 = new URLSearchParams();
-                            urlParams2.set('discussionid', bdData.chat_id);
-                            urlParams2.set('username', username);
-                            fetch('add-group-contact', {method: 'POST', body: urlParams2}).then(r=>r.text()).then(data => {
-                                if(data == 1){
-                                    e.target.parentNode.lastChild.remove();
-                                    domElement.lastChild.innerHTML += `<p class='group__contact'>${username}</p>`;
-                                }
-                                else{
-                                    console.log(data);
-                                }
-                            });
-                        }
-
-                        cnt.append(plus);
-                    }
-                    contacts.push(cntName);
-                });
-            });
+            removeGroupPatricipantDOMElements();
+            showGroupRecipients(domElement, bdData.chat_id) // показ участников группового чата
         }
         else{
             return;
         }
-       
-        // показ сообщений диалога или чата
-        fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
-            if(data){
-                chat.innerHTML = '';
-
-                chatType = data.type;
-                openChatId = data.chatId;
-
-                chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение '; 
-                chatNameLabel.innerHTML = type==='dialog' ? bdData : bdData.chat_name; 
-
-                messageInput.disabled = false;  
-                sendMsgBtn.disabled = false;
-
-                data.messages.forEach(elem => appendMessage(elem));// сообщения
-                chat.scrollTo(0, chat.scrollHeight); // прокрутка сообщений в конец
-            }
-        });
+        showChat(urlParams, bdData, type); // показ сообщения чата
     };
 }
 
@@ -427,6 +446,7 @@ function resetForwardMessage(){
     let contactRecipient = document.querySelector('.contact-recipient');
     if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
 }
+
 
 // ----- Контекстное меню
 /** показать контекстное меню */
@@ -508,6 +528,7 @@ function editNoticeShowContextMenu(){
         }
     });
 }
+
 
 window.addEventListener('DOMContentLoaded', () => {
     resetFindContactsBtn.onclick = showContacts;

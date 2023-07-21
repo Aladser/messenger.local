@@ -249,3 +249,9 @@ Connection sendlyamobile@gmail.com completed
 {"chat_message_id":"36","chatId":"4","messageType":"REMOVE"}
 Connection sendlyamobile@gmail.com completed
 Connection Admin completed
+Connection Admin completed
+{"messageOnconnection":1,"author":"Admin","userId":566}
+Connection Admin completed
+{"messageOnconnection":1,"author":"Admin","userId":576}
+Connection Admin completed
+{"messageOnconnection":1,"author":"Admin","userId":586}

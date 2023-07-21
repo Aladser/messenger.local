@@ -10,6 +10,10 @@ class ContactsDBTableModel extends DBTableModel{
         return $isContact ? 1 :  $this->db->exec("insert into contacts(cnt_user_id, cnt_contact_id) values($userId, $contactId)");
     }
 
+    function existsContact($contactId, $userId){
+        return var_dump($this->db->query("select * from contacts where (cnt_user_id = $userId and cnt_contact_id = $contactId)"));
+    }
+
     // добавить участника группового чата
     function addGroupContact($chatId, $userId){
         $isContact = $this->db->query("select * from chat_participant where chat_participant_chatid = $chatId and chat_participant_userid = $userId");
