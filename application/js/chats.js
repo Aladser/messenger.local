@@ -145,9 +145,9 @@ webSocket.onmessage = e => {
                 appendMessage(data);
             } 
         }
-        else{
-            //console.log(data);
-        } 
+        
+        // визуальный показ уведомлений
+        
     }
 };
 
@@ -284,12 +284,10 @@ const showContacts = () => fetch('/get-contacts').then(r=>r.json()).then(data =>
     findContactsInput.value = '';
     contactsContainer.innerHTML = '';
     contactList = [];
-    data.forEach(element =>{
-        //contactList.push({'username': element.username, 'chat_id': element.chat_id, 'user_id': element.user_id, 'isnotice' : element.isnotice});
+    data.forEach(element => {
         contactList.push({'username': element.username, 'chat_id': element.chat_id, 'isnotice' : element.isnotice});
         appendContactDOMElement(element);
     });
-    console.log(contactList);
 });
 /** показать групповые чаты пользователя-клиента */
 const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => {
@@ -298,7 +296,7 @@ const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => {
         groupList.push({'chat_name': element.chat_name, 'chat_id': element.chat_id, 'isnotice': element.chat_isnotice});
         appendGroupDOMElement(element);
     });
-    console.log(groupList);
+    //console.log(groupList);
 });
 /** показать участников группового чата*/
 const showGroupRecipients = (domElement, discussionid) => {
@@ -414,6 +412,13 @@ function setContactOrGroupClick(domElement, bdData, type){
         if(type === 'dialog'){
             urlParams.set('contact', bdData);
             removeGroupPatricipantDOMElements();
+            // поиск пользователя в контактах и добавление, если отсутствует
+            fetch('/get-contact', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
+                let contact = contactList.find(elem => elem.chat_id == data.chat_id);
+                if(contact == undefined){
+                    contactList.push(data);
+                }
+            });
         }
         else if(type === 'discussion'){
             urlParams.set('discussionid', bdData.chat_id);
@@ -423,7 +428,8 @@ function setContactOrGroupClick(domElement, bdData, type){
         else{
             return;
         }
-        showChat(urlParams, bdData, type); // показ сообщения чата
+        
+        showChat(urlParams, bdData, type); // показ сообщений чата
     };
 }
 

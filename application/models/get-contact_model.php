@@ -5,10 +5,12 @@ class GetContactModel extends \core\Model
 {
     private $contactsTable;
     private $usersTable;
+    private $messageTable;
 
     public function __construct($CONFIG){
         $this->contactsTable = $CONFIG->getContacts();
         $this->usersTable = $CONFIG->getUsers();
+        $this->messageTable = $CONFIG->getMessageDBTable();
     }
 
     public function run(){
@@ -16,11 +18,19 @@ class GetContactModel extends \core\Model
         $userId = $this->usersTable->getUserId($userHostName);                              // id клиента-хоста
         $contactId = $this->usersTable->getUserId($_POST['contact']);                        // id клиента-контакта
 
-        $isUser = $this->contactsTable->existsContact($contactId, $userId);
-        if($isUser){
+        // добавляется контакт, если не существует
+        $isContact = $this->contactsTable->existsContact($contactId, $userId);
+        if(!$isContact){
             $this->contactsTable->addContact($contactId, $userId);
+            $chatId = $this->messageTable->getDialogId($userId, $contactId); // создается диалог, если не существует
+            $contactName = $this->usersTable->getPublicUsername($contactId);
+            $isnotice = 0;
+            $rslt = ['username'=>$contactName, 'chat_id'=>$chatId, 'isnotice'=>$isnotice];
         }
-        $chatId = $this->messageTable->getDialogId($userId, $contactId);
-        //$rslt = ['chatId' => $chatId, 'type'=>'dialog', 'messages' => $this->messageTable->getMessages($chatId)]; 
+        else{
+            $rslt = $this->contactsTable->getContact($userId, $contactId);
+            $rslt = ['username'=>$rslt[0]['username'], 'chat_id'=>$rslt[0]['chat_id'], 'isnotice'=>$rslt[0]['isnotice']];
+        }
+        echo json_encode($rslt);
     }
 }
