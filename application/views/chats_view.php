@@ -31,7 +31,7 @@
 
         <p class="messages-container__system" id="message-system">Проверка подключения</p>                                   
         <div class='input-group d-flex justify-content-between pb-2'>
-            <textarea class="input-group-prepend resize-none border-0 form-control" rows='2' placeholder='Сообщение' id='message-input' disabled></textarea>
+            <textarea class="messages-container__message-input input-group-prepend border-0 form-control" rows='2' placeholder='Сообщение' id='message-input' disabled></textarea>
             <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn" disabled><img src="application/images/sendbtn.png"></button>
         </div>
     </div>
