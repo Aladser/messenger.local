@@ -1,7 +1,7 @@
 # messenger.local
 **Месенджер**
 
-![Окно чатов](/application/images/demo1.png)
+![Окно чатов](/application/images/demo.png)
 
 Используемые модули:
 * Open Server Panel
