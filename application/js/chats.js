@@ -72,7 +72,9 @@ let contactList = [];
 let groupList = [];
 /** список участников выбранной группы */
 let groupContacts = [];
-
+/** показ уведомления */
+let noticeTimer;
+//clearInterval(timerId);
 
 /** ----- ВЕБСОКЕТ СООБЩЕНИЙ -----*/
 let webSocket = new WebSocket(wsUri);
@@ -109,22 +111,19 @@ webSocket.onmessage = e => {
         // уведомления о новых сообщениях чатов контактов и групп
         // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов из контактов и групп пользователя-клиента
         if( (data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser != publicClientUsername){
-            foundedContactChat = contactList.find(el => el.chat_id == data.chatId);
-            foundedGroupChat = groupList.find(el => el.chat_id == data.chatId);
+            foundedContactChat = contactList.find(el => el.chat_id == data.chatId); // поиск чата среди списка контактов
+            foundedGroupChat = groupList.find(el => el.chat_id == data.chatId); // поиск чата среди групповых чатов
             let isChatInContacts = (foundedContactChat!=undefined) || (foundedGroupChat!=undefined);
             // сделано специально множественное создание объектов звука
             if(isChatInContacts){
-                let isnotice = false;
-                if(foundedContactChat!=undefined){
-                    let elem = contactList.find(el => el.chat_id == data.chatId);
-                    isnotice = elem.isnotice === 1;
-                }
-                else{
-                    isnotice = groupList.find(el => el.chatId = data.chatId).isnotice === 1;
-                }
-
-                if(isnotice) new Audio('application/views/notice.wav').play();
-
+                let elem = foundedContactChat!=undefined ? contactList.find(el => el.chat_id == data.chatId) : groupList.find(el => el.chatId = data.chatId); // поиск контакта/группы в списке контактов/групп
+                let elemName = elem.hasOwnProperty("chat_name") ? elem.chat_name : elem.username; // имя контакта или группового чата
+                let domElem = document.querySelector(`[title='${elemName}']`);                    // DOM-элемент  контакта или группового чата
+                if(openChatId !== data.chatId) domElem.classList.add('isnewmessage');
+                if(elem.isnotice == 1){
+                    let notice = new Audio('application/views/notice.wav');
+                    notice.autoplay = true;
+                } 
             }
         }
 
@@ -145,9 +144,6 @@ webSocket.onmessage = e => {
                 appendMessage(data);
             } 
         }
-        
-        // визуальный показ уведомлений
-        
     }
 };
 
@@ -408,6 +404,7 @@ function setContactOrGroupClick(domElement, bdData, type){
         }
 
         // если открывается диалог или обсуждение для открытия переписки
+        domElement.classList.remove('isnewmessage');
         let urlParams = new URLSearchParams();
         if(type === 'dialog'){
             urlParams.set('contact', bdData);

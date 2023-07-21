@@ -86,7 +86,6 @@ class MessageDBTableModel extends DBTableModel{
         return $this->db->query($sql, false);
     }
 
-
     // установить показ уведомлений чатов
     public function setNoticeShow($chatid, $userid, $notice){
         $this->db->exec("update chat_participant set chat_participant_isnotice = $notice where chat_participant_chatid = $chatid and chat_participant_userid = $userid");
