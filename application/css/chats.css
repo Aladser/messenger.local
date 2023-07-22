@@ -14,6 +14,7 @@
     background-color: #888;
 }
 
+
 .chat-container{
     height: 85vh;
 }
@@ -181,12 +182,10 @@
 }
 .message-forward{
     font-size: 90%;
+    text-align: end;
     opacity: 0.8;
-}
-.msg__forwarding{
     padding-top: 0.2rem;
-    font-size: 90%;
-    opacity: 0.75;
+    padding-right: 0.4rem;
 }
 
 

@@ -41,6 +41,7 @@ class Chat implements MessageComponentInterface {
         $this->clients->detach($conn);
         $publicUsername = $this->connectionsTable->getConnectionPublicUsername( $conn->resourceId ); // публичное имя клиента
         $this->connectionsTable->removeConnection( $conn->resourceId ); // удаление соединения из БД
+        echo "Connection $publicUsername completed\n";
         $this->writeLog("Connection $publicUsername completed");
         $message = json_encode([ 'offсonnection' => 1, 'user' => $publicUsername]);
         foreach ($this->clients as $client) $client->send($message); 
@@ -50,11 +51,11 @@ class Chat implements MessageComponentInterface {
      * @param ConnectionInterface $from соединение
      * @param mixed $msg сообщение
      */
-    public function onMessage(ConnectionInterface $from, $msg) {
-        // после соединения пользователь отправляет пакет messageOnconnection
+    public function onMessage(ConnectionInterface $from, $msg) {    
         $data = json_decode($msg);
+        // после соединения пользователь отправляет пакет messageOnconnection
         if($data->messageOnconnection){
-            $rslt = $this->connectionsTable->addConnection( ['author'=>$data->author, 'userId'=>$data->userId] ); // добавление соединения в БД
+            $rslt = $this->connectionsTable->addConnection( ['author'=>$data->author, 'wsId'=>$data->wsId] ); // добавление соединения в БД
             $data->author = $rslt['publicUsername'] ? $rslt['publicUsername'] : ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo]; // имя пользователя или ошибка добавления
         }
         // новое сообщение пользователя
@@ -71,25 +72,20 @@ class Chat implements MessageComponentInterface {
             }
             else if($data->messageType == 'FORWARD'){
                 $data->time = date('Y-m-d H:i:s');
-
-                // добавляем Переслано один раз для переотправленных сообщений
-                if(mb_strripos($data->message, "<div class=\"msg__forwarding\">Переслано</div>") === false){
-                    $data->message = "<div class=\"msg__forwarding\">Переслано</div>" . $data->message;
-                }
-
-                // определяем чат, куда добавить
-                $fromUserId = $this->usersTable->getUserId($data->fromuser);
-                $toUserId = $this->usersTable->getUserId($data->touser);
-                $data->chatId = $this->messageTable->getDialogId($fromUserId, $toUserId)."\n";
-
-
-                $data->chat_message_id = $this->messageTable->addMessage($data);
+                $data->msgId = intval($data->msgId);
+                $data->fromuserId = intval($this->usersTable->getUserId($data->fromuser));
+                unset($data->messageType);
+                unset($data->touser);
+                unset($data->message);
+                unset($data->creator);
+                unset($data->fromuser);
+                $data->chat_message_id = $this->messageTable->addForwardedMessage($data);
             }
         }
 
         $msg = json_encode($data);
-        echo $msg."\n";
-        $this->writeLog($msg);
+        //echo $msg."\n";
+        //$this->writeLog($msg);
         foreach ($this->clients as $client) $client->send($msg);
     }
 

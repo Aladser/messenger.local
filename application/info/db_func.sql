@@ -68,3 +68,26 @@ begin
 	update chat set chat_name = concat('Групповой чат ', userhost, @count) where chat_id = chatid; 					 # название группового чата
 END//
 DELIMITER ;
+
+# --процедура создать пересылаемое сообщение--
+DROP PROCEDURE if exists add_forwarded_message;
+DELIMITER //
+CREATE PROCEDURE add_forwarded_message(
+	in msg_creatorid int,
+	in message_id int,
+	in chat_id int,
+	in msg_time datetime,
+	out new_msg_id  int
+)
+begin
+	# копируем сообщение
+	insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time)
+	select chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time from chat_message
+	where chat_message_id = message_id;
+
+	select last_insert_id() into new_msg_id;
+
+	# обновляем чат и время строки
+	update chat_message set chat_message_chatid = chat_id, chat_message_time = msg_time, chat_message_creatorid = msg_creatorid, chat_message_forward = 1 where chat_message_id = new_msg_id;
+END//
+DELIMITER ;

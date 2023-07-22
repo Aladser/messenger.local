@@ -22,7 +22,7 @@ class MessageDBTableModel extends DBTableModel{
             $chatId = $this->db->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
             return $chatId;
         }
-        return $query['chat_id'];
+        return intval($query['chat_id']);
     }
 
     // создать групповой чат
@@ -56,6 +56,20 @@ class MessageDBTableModel extends DBTableModel{
         return $this->db->query($sql)['chat_message_id'];
     }
 
+    // добавить пересылаемое сообщение
+    /* 
+    call add_forwarder_message(:message_id, :chat_id, :msg_time);
+    select @info;
+    in msg_creatorid int,
+	in message_id int,
+	in chat_id int,
+	in msg_time datetime,
+	out new_msg_id  int
+    */
+    public function addForwardedMessage($msg){
+        return $this->db->executeProcedure("add_forwarded_message($msg->fromuserId, $msg->msgId, $msg->chatId, '$msg->time', @chatid)", '@chatid');
+    }
+
     // изменить сообщение
     public function editMessage(string $msg, int $msgId){
         $this->db->exec("update chat_message set chat_message_text = '$msg' where chat_message_id = $msgId");
@@ -79,7 +93,8 @@ class MessageDBTableModel extends DBTableModel{
             chat_message_chatid as chatId, 
             getPublicUserName(user_email, user_nickname, user_hide_email) as fromuser, 
             chat_message_text as message, 
-            chat_message_time as time
+            chat_message_time as time,
+            chat_message_forward as forward
             from chat_message join users on user_id = chat_message_creatorid
             where chat_message_chatid = $chatId
         ";

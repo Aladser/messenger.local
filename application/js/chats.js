@@ -88,7 +88,7 @@ webSocket.onmessage = e => {
         webSocket.send(JSON.stringify({
             'messageOnconnection': 1,
             'author' : clientUsername,
-            'userId' : data.onсonnection
+            'wsId' : data.onсonnection
         }));
     }
     // сообщение пользователям о подключении клиента
@@ -104,7 +104,7 @@ webSocket.onmessage = e => {
         }
     }
     // сообщение пользователям об отключении
-    else if(data.offсonnection){
+    else if(data.offсonnection && data.user != null){
         systemMessagePrg.innerHTML = `${data.user} не в сети`;
     }
     // сообщения
@@ -177,14 +177,12 @@ function sendData(message, messageType){
         data = {'message':message, 'fromuser':publicClientUsername, 'chatId':openChatId,'chatType':chatType,'messageType':messageType};
          // для старых сообщений добавляется id сообщения
         if(['EDIT', 'REMOVE', 'FORWARD'].includes(messageType)){
-            data.msgId = selectedMessage.getAttribute('data-chat_message_id');
+            data.msgId = parseInt(selectedMessage.getAttribute('data-chat_message_id'));
         }
         // пересылка сообщения
         if(messageType == 'FORWARD'){
-            data.touser = forwardedMessageRecipientName;
-            data.creator = selectedMessage.getAttribute('data-fromuser');
-            delete data['chatId'];
-            delete data['msgId'];
+            data.chatId = contactList.find(el => el.username == forwardedMessageRecipientName).chat_id;
+            delete data['chatType'];
         }
         webSocket.send(JSON.stringify(data));
     }
@@ -194,6 +192,7 @@ function sendData(message, messageType){
 
 /** создать DOM-элемент сообщения чата*/
 function appendMessage(data){
+    console.log(data);
     // показ местного времени
     // YYYY.MM.DD HH:ii:ss
     let timeInMs = Date.parse(data.time);
@@ -216,11 +215,7 @@ function appendMessage(data){
     msgBlock.setAttribute('data-chat_message_id', data.chat_message_id);
     msgBlock.setAttribute('data-fromuser', data.fromuser);
 
-    // для пересланных сообщений
-    if(chatType==='dialog' && data.fromuser!==publicClientUsername && data.fromuser!==chatNameLabel.innerHTML){
-        msgTable.innerHTML += `<tr><td class='msg__forwarding'>Переслано</td></tr>`;
-    }
-
+    if(data.forward == 1) msgTable.innerHTML += `<tr><td class='message-forward'>Переслано</td></tr>`; // надпись о пересланном сообщении
     msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`; // текст сообщения
     msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;   // время сообщения
     if(chatType === 'discussion') msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.fromuser}</td></tr>`;     // показ автора сообщения в групповом чате
@@ -438,8 +433,9 @@ function setContactOrGroupClick(domElement, urlArg, type){
 
 /** Переотправить сообщение */
 function forwardMessage(){
-    forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
     sendData(selectedMessage.querySelector('.msg__text').innerHTML, 'FORWARD');
+
+    forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
     forwardedMessageRecipientElement.classList.remove('contact-recipient'); // убрать выделение
 
     isForwaredMessage = null;
@@ -543,7 +539,9 @@ window.addEventListener('DOMContentLoaded', () => {
     showContacts();
     showGroups();
     // создание группового чата
-    createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => appendGroupDOMElement(data, 'START'));
+    createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => {
+        appendGroupDOMElement(data, 'START');
+    });
     // запрет контекстного меню
     document.oncontextmenu = function() {return false;}; 
 
