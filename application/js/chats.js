@@ -192,7 +192,6 @@ function sendData(message, messageType){
 
 /** создать DOM-элемент сообщения чата*/
 function appendMessage(data){
-    console.log(data);
     // показ местного времени
     // YYYY.MM.DD HH:ii:ss
     let timeInMs = Date.parse(data.time);
@@ -214,8 +213,9 @@ function appendMessage(data){
     msgTable.className = data.fromuser !== publicClientUsername ? 'msg__table msg__table-contact' : 'msg__table';
     msgBlock.setAttribute('data-chat_message_id', data.chat_message_id);
     msgBlock.setAttribute('data-fromuser', data.fromuser);
+    msgBlock.setAttribute('data-forward', data.forward);
 
-    if(data.forward == 1) msgTable.innerHTML += `<tr><td class='message-forward'>Переслано</td></tr>`; // надпись о пересланном сообщении
+    if(data.forward == 1) msgTable.innerHTML += `<tr><td class='msg__forward'>Переслано</td></tr>`; // надпись о пересланном сообщении
     msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`; // текст сообщения
     msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;   // время сообщения
     if(chatType === 'discussion') msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.fromuser}</td></tr>`;     // показ автора сообщения в групповом чате
@@ -594,12 +594,12 @@ window.addEventListener('DOMContentLoaded', () => {
 // нажатия правой кнопкой мыши на странице
 window.oncontextmenu = event => {
     // клик на элементе сообщения
-    if(['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forwarding'].includes(event.target.className)){  
+    if(['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forward'].includes(event.target.className)){  
         if(['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)){
             selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode;
         }
-        else if(event.target.className === 'msg__forwarding'){
-            selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode.parentNode;
+        else if(event.target.className === 'msg__forward'){
+            selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode;
         }
         else{
             selectedMessage = event.target.parentNode.parentNode.parentNode;
@@ -609,6 +609,10 @@ window.oncontextmenu = event => {
         let msgUserhost = selectedMessage.getAttribute('data-fromuser');
         editMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
         removeMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
+
+        if(selectedMessage.getAttribute('data-forward') == 1){
+            editMsgContextMenuBtn.style.display = 'none';
+        }
     }
     // клик на элементе контакта
     else if(['contact__name','contact__img img pe-2','contact position-relative mb-2','group'].includes(event.target.className)){
