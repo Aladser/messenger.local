@@ -1,7 +1,6 @@
 # messenger.local
 **Месенджер**
 
-<<<<<<< HEAD
 ![Окно чатов](/application/images/demo.png)
 =======
 Особенности:
