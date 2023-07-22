@@ -25,7 +25,7 @@ class ContactsDBTableModel extends DBTableModel{
             join users on chat_participant_userid = user_id
             where chat_type = 'dialog'
             and chat_id in (select chat_participant_chatid from chat_participant where chat_participant_userid = $userId)
-            and user_id = $contactId;
+            and user_id = $contactId
         ";
         return $this->db->query($sql, false);
     }

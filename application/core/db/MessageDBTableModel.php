@@ -2,9 +2,7 @@
 
 namespace core\db;
 
-/**
- * класс БД таблицы сообщений чатов
-*/
+/** класс БД таблицы сообщений чатов */
 class MessageDBTableModel extends DBTableModel{
     // получить ID диалога
     public function getDialogId($user1Id, $user2Id){

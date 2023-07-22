@@ -67,7 +67,7 @@ class UsersDBTableModel extends DBTableModel{
         select user_id, user_nickname as username, user_photo from users where user_nickname  != '' and user_nickname is not null and user_email != '$email' and user_nickname  like '%$phrase%'
         and user_email not in (select * from unhidden_emails where user_email  like '%$phrase%')
         union 
-        select user_id, user_email, user_photo as username from users where user_hide_email  = 0 and user_email != '$email' and user_email  like '%$phrase%';
+        select user_id, user_email, user_photo as username from users where user_hide_email  = 0 and user_email != '$email' and user_email like '%$phrase%';
         ";
         return $this->db->query($sql, false);
     }

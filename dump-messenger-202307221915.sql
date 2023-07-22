@@ -30,7 +30,7 @@ CREATE TABLE `chat` (
   PRIMARY KEY (`chat_id`),
   KEY `check_creatorid` (`chat_creatorid`),
   CONSTRAINT `check_creatorid` FOREIGN KEY (`chat_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `chat` (
 
 LOCK TABLES `chat` WRITE;
 /*!40000 ALTER TABLE `chat` DISABLE KEYS */;
-INSERT INTO `chat` VALUES (1,'dialog',NULL,1),(2,'dialog',NULL,1),(3,'dialog',NULL,1),(4,'dialog',NULL,1),(5,'dialog',NULL,1),(6,'discussion','Групповой чат 11',1);
+INSERT INTO `chat` VALUES (1,'dialog',NULL,1),(2,'dialog',NULL,1),(3,'discussion','Групповой чат 11',1),(4,'dialog',NULL,1),(5,'dialog',NULL,2),(6,'dialog',NULL,3),(7,'discussion','Групповой чат 12',1);
 /*!40000 ALTER TABLE `chat` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -55,13 +55,14 @@ CREATE TABLE `chat_message` (
   `chat_message_chatid` int(11) DEFAULT NULL,
   `chat_message_text` text NOT NULL,
   `chat_message_creatorid` int(11) DEFAULT NULL,
-  `chat_message_time` datetime NOT NULL,
+  `chat_message_time` datetime DEFAULT NULL,
+  `chat_message_forward` int(1) DEFAULT '0',
   PRIMARY KEY (`chat_message_id`),
   KEY `check_message_chatid` (`chat_message_chatid`),
   KEY `check_message_creator` (`chat_message_creatorid`),
   CONSTRAINT `check_message_chatid` FOREIGN KEY (`chat_message_chatid`) REFERENCES `chat` (`chat_id`) ON DELETE CASCADE,
   CONSTRAINT `check_message_creator` FOREIGN KEY (`chat_message_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +71,7 @@ CREATE TABLE `chat_message` (
 
 LOCK TABLES `chat_message` WRITE;
 /*!40000 ALTER TABLE `chat_message` DISABLE KEYS */;
-INSERT INTO `chat_message` VALUES (1,1,'Аладсер',1,'2023-07-21 01:52:00'),(3,1,'Админ',2,'2023-07-21 01:52:26'),(8,2,'<div class=\"msg__forwarding\">Переслано</div>Админ',1,'2023-07-21 01:53:15'),(9,6,'Админ',1,'2023-07-21 02:12:29');
+INSERT INTO `chat_message` VALUES (3,2,'два',2,'2023-07-22 09:41:35',0),(5,3,'аладсер',2,'2023-07-22 10:04:44',0),(6,3,'админ',1,'2023-07-22 10:04:54',0),(9,1,'от Аладсера Админу',2,'2023-07-22 11:42:58',0),(10,1,'от Админа Аладсеру',1,'2023-07-22 11:43:26',0),(11,5,'от Аласдера яндексу',2,'2023-07-22 11:43:45',0),(18,4,'от админа лаутексу',1,'2023-07-22 12:16:22',0),(19,4,'от лаутекса админу',3,'2023-07-22 12:16:45',0),(20,6,'от админа лаутексу',3,'2023-07-22 12:17:03',1),(21,6,'от лаутекса админу',3,'2023-07-22 12:17:06',1),(22,2,'от Аладсера Админу',1,'2023-07-22 12:17:22',1),(23,2,'от админа лаутексу',1,'2023-07-22 12:17:25',1);
 /*!40000 ALTER TABLE `chat_message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +99,7 @@ CREATE TABLE `chat_participant` (
 
 LOCK TABLES `chat_participant` WRITE;
 /*!40000 ALTER TABLE `chat_participant` DISABLE KEYS */;
-INSERT INTO `chat_participant` VALUES (1,1,1),(1,2,1),(2,1,1),(2,3,1),(3,1,1),(3,33,1),(4,1,1),(4,5,1),(5,1,1),(5,4,1),(6,1,1),(6,2,1),(6,3,1),(6,4,1),(6,5,1),(6,33,1);
+INSERT INTO `chat_participant` VALUES (1,1,1),(1,2,1),(2,1,0),(2,33,1),(3,1,0),(3,2,1),(4,1,1),(4,3,1),(5,2,1),(5,33,1),(6,3,1),(6,4,1),(7,1,1),(7,2,1),(7,3,1),(7,33,1);
 /*!40000 ALTER TABLE `chat_participant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,13 +111,12 @@ DROP TABLE IF EXISTS `connections`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `connections` (
-  `connection_id` int(11) NOT NULL AUTO_INCREMENT,
   `connection_ws_id` int(11) NOT NULL,
   `connection_userid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`connection_id`),
-  KEY `fk_userid` (`connection_userid`),
+  PRIMARY KEY (`connection_ws_id`),
+  UNIQUE KEY `connection_userid` (`connection_userid`),
   CONSTRAINT `fk_userid` FOREIGN KEY (`connection_userid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,7 +144,7 @@ CREATE TABLE `contacts` (
   KEY `contacts_fk_contactid` (`cnt_contact_id`),
   CONSTRAINT `contacts_fk_contactid` FOREIGN KEY (`cnt_contact_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
   CONSTRAINT `contacts_fk_userid` FOREIGN KEY (`cnt_user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +153,7 @@ CREATE TABLE `contacts` (
 
 LOCK TABLES `contacts` WRITE;
 /*!40000 ALTER TABLE `contacts` DISABLE KEYS */;
-INSERT INTO `contacts` VALUES (1,1,2),(2,1,3),(3,1,33),(4,1,5),(5,1,4),(6,2,1);
+INSERT INTO `contacts` VALUES (1,1,2),(2,1,33),(3,1,3),(4,2,33),(5,3,4);
 /*!40000 ALTER TABLE `contacts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,6 +236,39 @@ begin
 	ELSE
 	   	return email;
 	END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `add_forwarded_message` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`admin`@`%` PROCEDURE `add_forwarded_message`(
+	in msg_creatorid int,
+	in message_id int,
+	in chat_id int,
+	in msg_time datetime,
+	out new_msg_id  int
+)
+begin
+	# копируем сообщение
+	insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time)
+	select chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time from chat_message
+	where chat_message_id = message_id;
+
+	select last_insert_id() into new_msg_id;
+
+	# обновляем чат и время строки
+	update chat_message set chat_message_chatid = chat_id, chat_message_time = msg_time, chat_message_creatorid = msg_creatorid, chat_message_forward = 1 where chat_message_id = new_msg_id;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -339,4 +372,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-21  8:25:58
+-- Dump completed on 2023-07-22 19:15:35

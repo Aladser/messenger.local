@@ -1,14 +1,5 @@
-Connection Aladser completed
-Connection Aladser completed
+{"messageOnconnection":1,"author":"Admin","wsId":61}
 Connection Admin completed
-Connection Lauxtec completed
+{"messageOnconnection":1,"author":"Admin","wsId":100}
 Connection Admin completed
-Connection Admin completed
-Connection Admin completed
-Connection Admin completed
-Connection Admin completed
-Connection Admin completed
-Connection Admin completed
-Connection Admin completed
-Connection Admin completed
-Connection Admin completed
+{"messageOnconnection":1,"author":"Admin","wsId":110}
