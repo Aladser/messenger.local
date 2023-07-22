@@ -74,11 +74,6 @@ class Chat implements MessageComponentInterface {
                 $data->time = date('Y-m-d H:i:s');
                 $data->msgId = intval($data->msgId);
                 $data->fromuserId = intval($this->usersTable->getUserId($data->fromuser));
-                unset($data->messageType);
-                unset($data->touser);
-                unset($data->message);
-                unset($data->creator);
-                unset($data->fromuser);
                 $data->chat_message_id = $this->messageTable->addForwardedMessage($data);
             }
         }

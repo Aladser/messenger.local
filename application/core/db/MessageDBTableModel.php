@@ -47,23 +47,10 @@ class MessageDBTableModel extends DBTableModel{
 
     // добавить сообщение
     public function addMessage($msg){
-        $userId = $this->db->query("select user_id from users where user_email='$msg->fromuser' or user_nickname='$msg->fromuser'")['user_id'];
-        $sql = "insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time) values($msg->chatId, '$msg->message', $userId, '$msg->time')";
-        $this->db->exec($sql);
-        $sql = "select chat_message_id from chat_message where chat_message_chatid = $msg->chatId and chat_message_text = '$msg->message' and chat_message_time = '$msg->time'";
-        return $this->db->query($sql)['chat_message_id'];
+        return $this->db->executeProcedure("add_message($msg->chatId, '$msg->message', '$msg->fromuser', '$msg->time', @chatid)", '@chatid');
     }
 
     // добавить пересылаемое сообщение
-    /* 
-    call add_forwarder_message(:message_id, :chat_id, :msg_time);
-    select @info;
-    in msg_creatorid int,
-	in message_id int,
-	in chat_id int,
-	in msg_time datetime,
-	out new_msg_id  int
-    */
     public function addForwardedMessage($msg){
         return $this->db->executeProcedure("add_forwarded_message($msg->fromuserId, $msg->msgId, $msg->chatId, '$msg->time', @chatid)", '@chatid');
     }

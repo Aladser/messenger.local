@@ -69,6 +69,23 @@ begin
 END//
 DELIMITER ;
 
+# --процедура создать сообщение--
+DROP PROCEDURE if exists add_message;
+DELIMITER //
+CREATE PROCEDURE add_message(
+	in chat_chatid int,
+	in chat_text text,
+	in chat_user varchar(100),
+	in chat_time datetime,
+	out msg_id  int
+)
+begin
+	select user_id into @userid from users where user_email = chat_user or user_nickname = chat_user;
+	insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time) values(chat_chatid, chat_text, @userid, chat_time);
+	select last_insert_id() into msg_id;
+END//
+DELIMITER ;
+
 # --процедура создать пересылаемое сообщение--
 DROP PROCEDURE if exists add_forwarded_message;
 DELIMITER //
