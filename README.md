@@ -24,4 +24,4 @@
 * phpmailer
 * ratchet
 
-![Окно чатов](/application/images/demo2.png)
+![Окно чатов](/application/images/demo.png)
