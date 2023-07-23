@@ -21,13 +21,15 @@ class UsersDBTableModel extends DBTableModel
     public function addUser($email, $password)
     {
         $password = password_hash($password, PASSWORD_DEFAULT);
-        return $this->db->exec("insert into users(user_email, user_password) values('$email', '$password')");
+        $sql = "insert into users(user_email, user_password) values('$email', '$password')";
+        return $this->db->exec($sql);
     }
 
     // добавить хэш пользователю
     public function addUserHash($email, $hash)
     {
-        return $this->db->exec("UPDATE users SET user_hash='$hash' WHERE user_email='$email'");
+        $sql = "UPDATE users SET user_hash='$hash' WHERE user_email='$email'";
+        return $this->db->exec($sql);
     }
 
     // проверить хэш пользователя
@@ -40,42 +42,47 @@ class UsersDBTableModel extends DBTableModel
     // подтвердить почту
     public function confirmEmail($email)
     {
-        return $this->db->exec("UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'");
+        $sql = "UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'";
+        return $this->db->exec($sql);
     }
 
     // проверить уникальность никнейма
     public function isUniqueNickname($nickname){
-        return $this->db->query("select count(*) as count from users where user_nickname='$nickname'")['count'] == 0;
+        $sql = "select count(*) as count from users where user_nickname='$nickname'";
+        return $this->db->query($sql)['count'] == 0;
     }
 
     /** получить публичное имя пользователя из ID */
     public function getPublicUsername(int $userId)
     {
-        return $this->db->query("
+        $sql = "
             select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
             from users 
             where user_id = $userId
-        ")['username'];
+        ";
+        return $this->db->query($sql)['username'];
     }
 
     // получить публичное имя пользователя из почты
     public function getPublicUsernameFromEmail(string $userEmail)
     {
-        return $this->db->query("
+        $sql = "
             select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
             from users 
             where user_email = '$userEmail'
-        ")['username'];
+        ";
+        return $this->db->query($sql)['username'];
     }
 
     // получить ID пользователя
     public function getUserId(string $publicUserName)
     {
-        return $this->db->query("
+        $sql = "
             select user_id 
             from users 
             where user_email = '$publicUserName' or user_nickname='$publicUserName'
-        ")['user_id'];
+        ";
+        return $this->db->query($sql)['user_id'];
     }
 
     // список пользователей по шаблону почты или никнейма

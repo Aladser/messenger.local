@@ -2,10 +2,9 @@
     <div class='profile-container'>
         <div class='profile-img-block'>
             <?php
-                if(is_null($data['user_photo']) || $data['user_photo'] == 'ava_profile.png'){
+                if (is_null($data['user_photo']) || $data['user_photo'] == 'ava_profile.png') {
                     $photo = 'application/images/ava_profile.png';
-                }
-                else{
+                } else {
                     $photo = 'application/data/profile_photos//'.$data['user_photo'];
                 }
             ?>
@@ -16,11 +15,11 @@
             <table class='table'>
                 <tr>
                     <td>Почта:</td>
-                    <td><?= $data['user-email'] ?></td>
+                    <td><?=$data['user-email']?></td>
                 </tr>
                 <tr>
                     <td data-bs-toggle="tooltip">Никнейм:</td>
-                    <td><input type="text" class='input-nickname' id='input-nickname' value="<?= is_null($data['user_nickname']) ? '' : $data['user_nickname']?>" disabled></td>
+                    <td><input type="text" class='input-nickname' id='input-nickname' value="<?=is_null($data['user_nickname']) ? '' : $data['user_nickname']?>" disabled></td>
                 </tr>
             </table>
             <div class="form-check form-switch mb-3 d-flex justify-content-center d-none" id='hide-email-input-block'>

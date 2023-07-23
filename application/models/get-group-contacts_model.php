@@ -1,5 +1,4 @@
 <?php
-
 /** контакты группового чата */
 class GetGroupContactsModel extends \core\Model
 {

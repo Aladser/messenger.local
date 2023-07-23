@@ -1,5 +1,4 @@
 <?php
-
 /** Получить группы пользователя */
 class GetGroupsModel extends \core\Model
 {
@@ -16,7 +15,7 @@ class GetGroupsModel extends \core\Model
     {
         session_start();
         $username = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
-        $userId = $this->userTable->getUserId( $username );
+        $userId = $this->userTable->getUserId($username);
         echo json_encode($this->messageTable->getDiscussions($userId));
     }
 }

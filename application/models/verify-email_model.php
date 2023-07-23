@@ -1,5 +1,4 @@
 <?php
-
 /** Подтверждение почты */
 class VerifyEmailModel extends \core\Model
 {
@@ -13,12 +12,10 @@ class VerifyEmailModel extends \core\Model
     public function run()
     {
         $modelData = array();
-        if($this->users->checkUserHash($_GET['email'], $_GET['hash'])){
+        if ($this->users->checkUserHash($_GET['email'], $_GET['hash'])) {
             $this->users->confirmEmail($_GET['email']);
             return 'Электронная почта подтверждена';
-        }
-        else
-        {
+        } else {
             return 'Ссылка недействительная или некорректная';
         }
     }

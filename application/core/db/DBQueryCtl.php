@@ -23,8 +23,7 @@ class DBQueryCtl
         try{
            $this->dbConnection = new \PDO("mysql:dbname=$this->nameDB; host=$this->host", $this->userDB, $this->passwordDB, 
             array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-        }
-        catch(\PDOException $e){
+        } catch (\PDOException $e) {
             die($e->getMessage());
         }
     }
@@ -51,8 +50,7 @@ class DBQueryCtl
         return $rslt;
     }
 
-    // выполняет процедуру с возвращаемым результатом
-    /**
+    /** выполняет процедуру с возвращаемым результатом
      * @param mixed $sql выражение
      * @param mixed $out выходная переменная, куда будет возвращен результат
      */
@@ -62,7 +60,7 @@ class DBQueryCtl
         $stmt = $this->dbConnection->prepare("call $sql");
         $stmt->execute();
         $stmt->closeCursor();
-        $rslt =$this->dbConnection->query("select $out as info");
+        $rslt = $this->dbConnection->query("select $out as info");
         $this->disconnect();
         return $rslt->fetch(\PDO::FETCH_ASSOC)['info'];
     }

@@ -1,5 +1,4 @@
 <?php
-
 // Контакты пользователя
 class GetContactModel extends \core\Model
 {
@@ -22,14 +21,13 @@ class GetContactModel extends \core\Model
 
         // добавляется контакт, если не существует
         $isContact = $this->contactsTable->existsContact($contactId, $userId);
-        if(!$isContact){
+        if (!$isContact) {
             $this->contactsTable->addContact($contactId, $userId);
             $chatId = $this->messageTable->getDialogId($userId, $contactId); // создается диалог, если не существует
             $contactName = $this->usersTable->getPublicUsername($contactId);
             $isnotice = 0;
             $rslt = ['username'=>$contactName, 'chat_id'=>$chatId, 'isnotice'=>$isnotice];
-        }
-        else{
+        } else {
             $rslt = $this->contactsTable->getContact($userId, $contactId);
             $rslt = ['username'=>$rslt[0]['username'], 'chat_id'=>$rslt[0]['chat_id'], 'isnotice'=>$rslt[0]['isnotice']];
         }

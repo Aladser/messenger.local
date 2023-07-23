@@ -1,6 +1,9 @@
 <?php
     require __DIR__."/vendor/autoload.php";
-    spl_autoload_register(function ($class_name) {include $class_name . '.php';});
+
+    spl_autoload_register(function ($class_name) {
+        include $class_name . '.php';
+    });
     
     // Объявляем сервер
     $CONFIG = new core\ConfigClass();
@@ -16,7 +19,6 @@
         ),
         $CONFIG::CHAT_WS_PORT
     );
-
     $server->run();
 
 //cd C:\domains\messenger.local\application

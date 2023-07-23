@@ -1,5 +1,4 @@
 <?php
-
 /** Создать групповой чат */
 class CreateGroupModel extends \core\Model
 {
@@ -16,8 +15,8 @@ class CreateGroupModel extends \core\Model
     {
         session_start();
         $username = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
-        $userId = $this->userTable->getUserId( $username );
-        echo json_encode($this->messageTable->createDiscussion( $userId ));
+        $userId = $this->userTable->getUserId($username);
+        echo json_encode($this->messageTable->createDiscussion($userId));
     }
 }
 ?>

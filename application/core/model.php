@@ -3,7 +3,7 @@ namespace core;
 
 abstract class Model
 {
-    public abstract function run();
+    abstract public function run();
 
     public function getUserMail()
     {

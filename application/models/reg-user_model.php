@@ -1,5 +1,4 @@
 <?php
-
 //***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
 class RegUserModel extends \core\Model
 {
@@ -14,7 +13,7 @@ class RegUserModel extends \core\Model
 
     public function run()
     {
-        if(!$this->users->existsUser($_POST['email'])){
+        if (!$this->users->existsUser($_POST['email'])) {
             $email = $_POST['email'];
             $addUserRslt = $this->users->addUser($email, $_POST['password']);
             if($addUserRslt === 1) {
@@ -26,12 +25,10 @@ class RegUserModel extends \core\Model
                 </body>
                 ';
                 $data['result'] = $this->eMailSender->send('Месенджер: подтвердите e-mail', $text, $email);
-            }
-            else{
+            } else {
                 $data['result'] = 'add_user_error';
             }
-        }
-        else{
+        } else {
             $data['result'] = 'user_exists';
         }
 

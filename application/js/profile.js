@@ -138,7 +138,7 @@ saveBtn.addEventListener('click', ()=>{
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-    profileImageField.src = `${profileImageField.src}?r=${randomNumber++}`; // фото профиля с рандомным GET-параметром
+    profileImageField.src = `${profileImageField.src}?r=${randomNumber++}`;
     hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn);
     inputNickname.oninput = writeNickname(inputNickname, saveBtn);
     // скрыть кнопку скрытия почты, если пустой никнейм

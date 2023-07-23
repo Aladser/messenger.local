@@ -29,22 +29,24 @@ class SetUserDataModel extends \core\Model
         $topath = $dwlDirPath.$filename;
         
         // если загружено новое изображение
-        if(file_exists($frompath)){
-            foreach (glob("$dwlDirPath$email*") as $file) unlink($file); // удаление старых файлов профиля
-            if(rename($frompath, $topath)){
+        if (file_exists($frompath)) {
+            foreach (glob("$dwlDirPath$email*") as $file) {
+                unlink($file); // удаление старых файлов профиля
+            }
+            if (rename($frompath, $topath)) {
                 $data['user_photo'] = $filename;
                 echo $this->users->setUserData($data) ? 1 : 0;
-            }
-            else{
+            } else {
                 echo 0;
             }
-        }
-        else{
+        } else {
             $data['user_photo'] = $filename;
             echo $this->users->setUserData($data) ? 1 : 0;
         }
 
-        foreach(glob("$tempDirPath$email*") as $file) unlink($file);// удаление временных файлов профиля
+        foreach (glob("$tempDirPath$email*") as $file) {
+            unlink($file);// удаление временных файлов профиля
+        }
     }
 }
 ?>

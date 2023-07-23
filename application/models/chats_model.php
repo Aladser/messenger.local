@@ -1,5 +1,4 @@
 <?php
-
 /** Добавить контакт(чат) с пользователем */
 class ChatsModel extends \core\Model
 {
@@ -19,7 +18,9 @@ class ChatsModel extends \core\Model
 
         // удаление временных файлов профиля, откуда был переход
         $tempDirPath = dirname(__DIR__, 1)."\data\\temp\\";
-        foreach(glob($tempDirPath.$userEmail.'*') as $file) unlink($file);
+        foreach(glob($tempDirPath.$userEmail.'*') as $file) {
+            unlink($file);
+        }
 
         return ['user-email' => $userEmail, 'publicUsername' => $publicUsername, 'userhostId' => $userId];
     }

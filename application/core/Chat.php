@@ -3,6 +3,9 @@ namespace core;
 
 use \Ratchet\MessageComponentInterface;
 use \Ratchet\ConnectionInterface;
+use \core\db\ConnectionsDBTableModel;
+use \core\db\MessageDBTableModel;
+use \core\db\UsersDBTableModel;
 
 /** Чат-серверная часть */
 class Chat implements MessageComponentInterface 
@@ -14,14 +17,18 @@ class Chat implements MessageComponentInterface
     private $logFile;
     private $logfileContent;
    
-    public function __construct(\core\db\ConnectionsDBTableModel $connectionsTable, \core\db\MessageDBTableModel $messageTable, \core\db\UsersDBTableModel $usersTable)
+    public function __construct(
+        ConnectionsDBTableModel $connectionsTable, 
+        MessageDBTableModel $messageTable, 
+        UsersDBTableModel $usersTable
+    )
     {
         $this->clients = new \SplObjectStorage;
         $this->connectionsTable = $connectionsTable;
         $this->messageTable = $messageTable;
         $this->usersTable = $usersTable;
-
         $this->connectionsTable->removeConnections(); // удаление старых соединений
+        // обнуления содержания файла логов
         $this->logFile = dirname(__DIR__, 1).'/logs.txt';
         file_put_contents($this->logFile, "");
     }
@@ -32,8 +39,10 @@ class Chat implements MessageComponentInterface
     public function onOpen(ConnectionInterface $conn) 
     {
         $this->clients->attach($conn); // добавление клиента
-        $message = json_encode([ 'onсonnection' => $conn->resourceId ]);
-        foreach ($this->clients as $client) $client->send($message); // рассылка остальным клиентам
+        $message = json_encode(['onсonnection' => $conn->resourceId]);
+        foreach ($this->clients as $client) {
+            $client->send($message); // рассылка остальным клиентам
+        }
     }
     
     /** закрыть соединение
@@ -42,12 +51,14 @@ class Chat implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn) 
     {
         $this->clients->detach($conn);
-        $publicUsername = $this->connectionsTable->getConnectionPublicUsername( $conn->resourceId ); // публичное имя клиента
-        $this->connectionsTable->removeConnection( $conn->resourceId ); // удаление соединения из БД
+        $publicUsername = $this->connectionsTable->getConnectionPublicUsername($conn->resourceId); // публичное имя клиента
+        $this->connectionsTable->removeConnection($conn->resourceId); // удаление соединения из БД
         echo "Connection $publicUsername completed\n";
         $this->writeLog("Connection $publicUsername completed");
-        $message = json_encode([ 'offсonnection' => 1, 'user' => $publicUsername]);
-        foreach ($this->clients as $client) $client->send($message); 
+        $message = json_encode(['offсonnection' => 1, 'user' => $publicUsername]);
+        foreach ($this->clients as $client) {
+            $client->send($message);
+        } 
     }
 
     /** получить соообщения от клиентов
@@ -58,34 +69,33 @@ class Chat implements MessageComponentInterface
     {    
         $data = json_decode($msg);
         // после соединения пользователь отправляет пакет messageOnconnection
-        if($data->messageOnconnection){
-            $rslt = $this->connectionsTable->addConnection( ['author'=>$data->author, 'wsId'=>$data->wsId] ); // добавление соединения в БД
-            $data->author = $rslt['publicUsername'] ? $rslt['publicUsername'] : ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo]; // имя пользователя или ошибка добавления
-        }
+        if ($data->messageOnconnection) {
+            // добавление соединения в БД
+            $rslt = $this->connectionsTable->addConnection(['author'=>$data->author, 'wsId'=>$data->wsId]);
+            // имя пользователя или ошибка добавления
+            $data->author = $rslt['publicUsername'] ? $rslt['publicUsername'] : ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo];
         // новое сообщение пользователя
-        else if($data->message){
-            if($data->messageType == 'NEW'){
+        } elseif ($data->message) {
+            if ($data->messageType == 'NEW') {
                 $data->time = date('Y-m-d H:i:s');
                 $data->chat_message_id = $this->messageTable->addMessage($data);
-            }
-            else if($data->messageType == 'EDIT'){
+            } elseif ($data->messageType == 'EDIT') {
                 $data = $this->messageTable->editMessage($data->message, $data->msgId);
-            }
-            else if($data->messageType == 'REMOVE'){
+            } elseif ($data->messageType == 'REMOVE') {
                 $data = $this->messageTable->removeMessage($data->msgId);
-            }
-            else if($data->messageType == 'FORWARD'){
+            } elseif ($data->messageType == 'FORWARD') {
                 $data->time = date('Y-m-d H:i:s');
                 $data->msgId = intval($data->msgId);
                 $data->fromuserId = intval($this->usersTable->getUserId($data->fromuser));
                 $data->chat_message_id = $this->messageTable->addForwardedMessage($data);
             }
         }
-
         $msg = json_encode($data);
         echo $msg."\n";
         $this->writeLog($msg);
-        foreach ($this->clients as $client) $client->send($msg);
+        foreach ($this->clients as $client) {
+            $client->send($msg);
+        } 
     }
 
     /** ошибка подключения

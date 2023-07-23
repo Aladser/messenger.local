@@ -14,11 +14,11 @@ class ContactsDBTableModel extends DBTableModel
     function existsContact($contactId, $userId)
     {
         return $this->db->query("
-        select * 
-        from contacts 
-        where cnt_user_id = $userId 
-        and cnt_contact_id = $contactId or cnt_user_id = $contactId 
-        and cnt_contact_id = $userId
+            select * 
+            from contacts 
+            where cnt_user_id = $userId 
+            and cnt_contact_id = $contactId or cnt_user_id = $contactId 
+            and cnt_contact_id = $userId
         ");
     }
 
@@ -59,8 +59,12 @@ class ContactsDBTableModel extends DBTableModel
     // добавить участника группового чата
     function addGroupContact($chatId, $userId)
     {
-        $isContact = $this->db->query("select * from chat_participant where chat_participant_chatid = $chatId and chat_participant_userid = $userId");
-        return $isContact ? 1 :  $this->db->exec("insert into chat_participant(chat_participant_chatid, chat_participant_userid) values ($chatId, $userId)");
+        $isContact = $this->db->query("
+            select * from chat_participant where chat_participant_chatid = $chatId and chat_participant_userid = $userId
+        ");
+        return $isContact 
+                ? 1 
+                : $this->db->exec("insert into chat_participant(chat_participant_chatid, chat_participant_userid) values ($chatId, $userId)");
     }
 
     // получить участников группового чата

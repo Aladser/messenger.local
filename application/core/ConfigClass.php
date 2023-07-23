@@ -37,15 +37,13 @@ class ConfigClass
 
 	public function __construct()
 	{
-		$this->dbQueryCtl = new DBQueryCtl
-		(
+		$this->dbQueryCtl = new DBQueryCtl(
 			self::HOST_DB, 
 			self::NAME_DB, 
 			self::USER_DB, 
 			self::PASS_DB
 		);
-		$this->eMailSender = new EMailSender
-		(
+		$this->eMailSender = new EMailSender(
 			self::SMTP_SRV, 
 			self::EMAIL_USERNAME, 
 			self::EMAIL_PASSWORD, 

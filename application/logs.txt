@@ -1,5 +1,7 @@
 {"messageOnconnection":1,"author":"Admin","wsId":62}
-{"chat_message_id":"45","chatId":"4","messageType":"REMOVE"}
-{"message":"\u043e\u0442 \u0410\u043b\u0430\u0434\u0441\u0435\u0440\u0430 \u0410\u0434\u043c\u0438\u043d\u0443","fromuser":"Admin","chatId":8,"messageType":"FORWARD","msgId":9,"time":"2023-07-23 04:05:15","fromuserId":1,"chat_message_id":"54"}
-{"chat_message_id":"54","chatId":"8","messageType":"REMOVE"}
+{"message":"\u043e\u0442 \u0410\u043b\u0430\u0434\u0441\u0435\u0440\u0430 \u0410\u0434\u043c\u0438\u043d\u0443","fromuser":"Admin","chatId":10,"messageType":"FORWARD","msgId":9,"time":"2023-07-23 08:54:18","fromuserId":1,"chat_message_id":"69"}
+{"chat_message_id":"69","chatId":"10","messageType":"REMOVE"}
+{"message":"1","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-23 08:54:25","chat_message_id":"70"}
+{"chat_message_id":"70","chatId":"1","chat_message_text":"111","chat_message_time":"2023-07-23 08:54:25","messageType":"EDIT"}
+{"chat_message_id":"70","chatId":"1","messageType":"REMOVE"}
 Connection Admin completed

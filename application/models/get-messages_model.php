@@ -1,5 +1,4 @@
 <?php
-
 /** список сообщений чата с пользователем*/
 class GetMessagesModel extends \core\Model
 {
@@ -19,14 +18,14 @@ class GetMessagesModel extends \core\Model
     {
         session_start();
         // диалоги
-        if(isset($_POST['contact'])){
+        if (isset($_POST['contact'])) {
             $userHostName = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];  // имя клиента-хоста
             $userId = $this->usersTable->getUserId($userHostName);                              // id клиента-хоста
             $contactId = $this->usersTable->getUserId($_POST['contact']);                        // id клиента-контакта
             $chatId = $this->messageTable->getDialogId($userId, $contactId);                         
         }
         // групповые чаты
-        else if(isset($_POST['discussionid'])){
+        else if(isset($_POST['discussionid'])) {
             $chatId = $_POST['discussionid'];
         } 
         $rslt = ['chatId' => $chatId, 'type'=>'dialog', 'messages' => $this->messageTable->getMessages($chatId)];

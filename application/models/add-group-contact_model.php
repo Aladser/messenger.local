@@ -1,5 +1,4 @@
 <?php
-
 // Контакты пользователя
 class AddGroupContactModel extends \core\Model
 {
@@ -14,7 +13,7 @@ class AddGroupContactModel extends \core\Model
 
     public function run()
     {
-        echo json_encode( $this->contactsTable->addGroupContact($_POST['discussionid'], $this->usersTable->getUserId($_POST['username'])) );
+        echo json_encode($this->contactsTable->addGroupContact($_POST['discussionid'], $this->usersTable->getUserId($_POST['username'])));
     }
 }
 ?>

@@ -14,10 +14,9 @@ class UploadFileModel extends \core\Model
         $dwlDirPath = dirname(__DIR__, 1)."\data\\temp\\"; // папка, куда перемещается изображение из $_POST
         $dwlfiles = glob($dwlDirPath.$email.'*'); // поиск файлов по шаблону
         $number = false;
-        if(count($dwlfiles) == 0){
+        if (count($dwlfiles) == 0) {
             $filename = $email.'.1.'.$ext;
-        }
-        else{
+        } else{
             $dwlFile = $dwlfiles[count($dwlfiles)-1];           // последний файл
             $dwlfiles = explode('.', $dwlFile);                 // имя разбивается по точкам в массив
             $number = intval($dwlfiles[count($dwlfiles)-2]);    // предпоследний индекс файла
@@ -29,10 +28,10 @@ class UploadFileModel extends \core\Model
         $toPath =  "$dwlDirPath$filename"; // куда перемещается
         echo move_uploaded_file($fromPath, $toPath) ? $filename : '';
         // удаление предыдущих вариантов изображения
-        if($number){
-            for($i=1; $i<$number; $i++){
+        if ($number) {
+            for ($i=1; $i<$number; $i++) {
                 $filename = "$dwlDirPath$email.$i.$ext";
-                if(file_exists($filename)){ 
+                if (file_exists($filename)) { 
                     unlink( "$dwlDirPath$email.$i.$ext");
                 }
             }

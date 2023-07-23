@@ -15,22 +15,24 @@ class ConnectionsDBTableModel extends DBTableModel
             from users 
             where user_email = '$user_email'
         ");
-        if($user){
+        if ($user) {
             // поиск соединения в БД
             $userId = $user['user_id'];
             $isConnection = $this->db->query("select * from connections where connection_userid = $userId");
             // не могу понять откуда берется нулевой connId из Ratchet          
-            if(!$isConnection && $connection_ws_id != 0){
-                $sqlRslt = $this->db->exec("insert connections(connection_ws_id, connection_userid) values($connection_ws_id, $userId)");
+            if (!$isConnection && $connection_ws_id != 0) {
+                $sqlRslt = $this->db->exec("
+                    insert connections(connection_ws_id, connection_userid) values($connection_ws_id, $userId)
+                ");
                 // при добавлении соединения возвращается публичное имя пользователя или ошибка добавления
-                return $sqlRslt == 1 ? ['publicUsername' => $user['publicusername']] : ['systeminfo' => "$user_email: DATABASE ERROR"];
-            }
-            else{
+                return $sqlRslt == 1 
+                    ? ['publicUsername' => $user['publicusername']] 
+                    : ['systeminfo' => "$user_email: DATABASE ERROR"];
+            } else {
                 // соединение уже есть в БД. Возвращается публичное имя пользователя
                 return ['publicUsername' => $user['publicusername']];
             }
-        }
-        else{
+        } else {
             return ['systeminfo' => "USER $user_email NO EXISTS"]; // пользователь в БД не существует
         }
     }
