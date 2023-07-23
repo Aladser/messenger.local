@@ -2,10 +2,10 @@
 namespace core;
 
 use core\db\DBQueryCtl;
-use \core\db\UsersDBTableModel;
-use \core\db\ContactsDBTableModel;
-use \core\db\ConnectionsDBTableModel;
-use \core\db\MessageDBTableModel;
+use core\db\UsersDBTableModel;
+use core\db\ContactsDBTableModel;
+use core\db\ConnectionsDBTableModel;
+use core\db\MessageDBTableModel;
 
 class ConfigClass
 {

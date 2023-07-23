@@ -1,11 +1,11 @@
 <?php
 namespace core;
 
-use \Ratchet\MessageComponentInterface;
-use \Ratchet\ConnectionInterface;
-use \core\db\ConnectionsDBTableModel;
-use \core\db\MessageDBTableModel;
-use \core\db\UsersDBTableModel;
+use Ratchet\MessageComponentInterface;
+use Ratchet\ConnectionInterface;
+use core\db\ConnectionsDBTableModel;
+use core\db\MessageDBTableModel;
+use core\db\UsersDBTableModel;
 
 /** Чат-серверная часть */
 class Chat implements MessageComponentInterface
