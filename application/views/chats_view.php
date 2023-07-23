@@ -7,7 +7,7 @@
         <div class='h-50 border-bottom border-dark overflow-auto'>
             <div id='contacts'></div>
             <div class='btn-resend-block' id='btn-resend-block'>
-                <button class='btn-resend' id='btn-resend'>
+                <button class='btn-resend' id='btn-resend' disabled>
                     <div class='btn-resend__img-block'><img src="application/images/resend.png" class='img' title='Переслать'></div>
                     <span class='btn-resend__name'>Переслать</span>
                 </button>

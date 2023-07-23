@@ -2,12 +2,12 @@
     <div class='profile-container'>
         <div class='profile-img-block'>
             <?php
-            if(is_null($data['user_photo']) || $data['user_photo'] == 'ava_profile.png'){
-                $photo = 'application/images/ava_profile.png';
-            }
-            else{
-                $photo = 'application/data/profile_photos//'.$data['user_photo'];
-            }
+                if(is_null($data['user_photo']) || $data['user_photo'] == 'ava_profile.png'){
+                    $photo = 'application/images/ava_profile.png';
+                }
+                else{
+                    $photo = 'application/data/profile_photos//'.$data['user_photo'];
+                }
             ?>
             <img src="<?=$photo?>" id='profile-img' class="rounded-circle img" alt="Avatar" />
         </div>

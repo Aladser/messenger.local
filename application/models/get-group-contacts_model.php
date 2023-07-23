@@ -1,6 +1,6 @@
 <?php
 
-// Контакты пользователя
+/** контакты группового чата */
 class GetGroupContactsModel extends \core\Model
 {
     private $contactsTable;

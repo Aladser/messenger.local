@@ -1,6 +1,6 @@
 <?php
 
-/** Создать групповой чат */
+/** Получить группы пользователя */
 class GetGroupsModel extends \core\Model
 {
     private $userTable;

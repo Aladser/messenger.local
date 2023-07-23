@@ -1,7 +1,5 @@
-{"messageOnconnection":1,"author":"Admin","wsId":61}
-{"message":"\u0442\u0435\u0441\u0442 \u0430\u043b\u0430\u0434\u0441\u0435\u0440","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-23 03:15:12","chat_message_id":"50"}
-{"message":"\u0442\u0435\u0441\u0442 \u0430\u043b\u0430\u0434\u0441\u0435\u0440","fromuser":"Admin","chatId":4,"messageType":"FORWARD","msgId":50,"time":"2023-07-23 03:15:16","fromuserId":1,"chat_message_id":"51"}
-{"chat_message_id":"50","chatId":"1","chat_message_text":"\u0442\u0435\u0441\u0442 \u0430\u043b\u0430\u0434\u0441\u0435\u0440 1","chat_message_time":"2023-07-23 03:15:12","messageType":"EDIT"}
-{"chat_message_id":"51","chatId":"4","messageType":"REMOVE"}
-{"chat_message_id":"50","chatId":"1","messageType":"REMOVE"}
+{"messageOnconnection":1,"author":"Admin","wsId":62}
+{"chat_message_id":"45","chatId":"4","messageType":"REMOVE"}
+{"message":"\u043e\u0442 \u0410\u043b\u0430\u0434\u0441\u0435\u0440\u0430 \u0410\u0434\u043c\u0438\u043d\u0443","fromuser":"Admin","chatId":8,"messageType":"FORWARD","msgId":9,"time":"2023-07-23 04:05:15","fromuserId":1,"chat_message_id":"54"}
+{"chat_message_id":"54","chatId":"8","messageType":"REMOVE"}
 Connection Admin completed

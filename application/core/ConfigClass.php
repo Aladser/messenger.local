@@ -24,11 +24,11 @@ class ConfigClass
 	private const EMAIL_SENDER = 'aladser@mail.ru';
 	private const EMAIL_SENDER_NAME = 'Messenger Admin';
 
-	private $DBQueryCtl; // класс запросов к БД
-	private $EMailSender; // класс отправки писем
-	private $users; // пользователи
-	private $contacts; // контакты пользователя
-	private $connections; // соединения
+	private $dbQueryCtl; // класс запросов к БД
+	private $eMailSender; // класс отправки писем
+	private $usersDBTable; // пользователи
+	private $contactsDBTable; // контакты пользователя
+	private $connectionsDBTable; // соединения
 	private $messageDBTable; // БД таблица сообщений
 
 	// демон вебсокета сообщений
@@ -37,14 +37,14 @@ class ConfigClass
 
 	public function __construct()
 	{
-		$this->DBQueryCtl = new DBQueryCtl
+		$this->dbQueryCtl = new DBQueryCtl
 		(
 			self::HOST_DB, 
 			self::NAME_DB, 
 			self::USER_DB, 
 			self::PASS_DB
 		);
-		$this->EMailSender = new EMailSender
+		$this->eMailSender = new EMailSender
 		(
 			self::SMTP_SRV, 
 			self::EMAIL_USERNAME, 
@@ -55,35 +55,35 @@ class ConfigClass
 			self::EMAIL_SENDER_NAME
 		);
 		
-		$this->users = new UsersDBTableModel($this->DBQueryCtl);
-		$this->contacts = new ContactsDBTableModel($this->DBQueryCtl);
-		$this->connections = new ConnectionsDBTableModel($this->DBQueryCtl);
-		$this->messageDBTable = new MessageDBTableModel($this->DBQueryCtl);
+		$this->usersDBTable = new UsersDBTableModel($this->dbQueryCtl);
+		$this->contactsDBTable = new ContactsDBTableModel($this->dbQueryCtl);
+		$this->connectionsDBTable = new ConnectionsDBTableModel($this->dbQueryCtl);
+		$this->messageDBTable = new MessageDBTableModel($this->dbQueryCtl);
 	}
 
 	public function getDBQueryCtl()
 	{
-		return $this->DBQueryCtl;
+		return $this->dbQueryCtl;
 	}
 
 	public function getEmailSender()
 	{
-		return $this->EMailSender;
+		return $this->eMailSender;
 	}
 
 	public function getUsers()
 	{
-		return $this->users;
+		return $this->usersDBTable;
 	}
 
 	public function getContacts()
 	{
-		return $this->contacts;
+		return $this->contactsDBTable;
 	}
 
 	public function getConnections()
 	{
-		return $this->connections;
+		return $this->connectionsDBTable;
 	}
 	
 	public function getMessageDBTable()

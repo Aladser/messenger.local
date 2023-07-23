@@ -291,7 +291,6 @@ const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => {
         groupList.push({'chat_name': element.chat_name, 'chat_id': element.chat_id, 'isnotice': element.chat_isnotice});
         appendGroupDOMElement(element);
     });
-    //console.log(groupList);
 });
 /** показать участников группового чата*/
 const showGroupRecipients = (domElement, discussionid) => {
@@ -374,6 +373,7 @@ function showForwardedMessageRecipient(contactDomElem){
         let contactRecipient = document.querySelector('.contact-recipient');
         if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
         contactDomElem.classList.add('contact-recipient');
+        forwardBtn.disabled = false;
     } 
 }
 /** удаление DOM узлов участников текущего выбранного группового чата */
@@ -448,6 +448,7 @@ function resetForwardMessage(){
     selectedMessage = null;
     let contactRecipient = document.querySelector('.contact-recipient');
     if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
+    forwardBtn.disabled = true;
 }
 
 

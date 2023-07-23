@@ -1,8 +1,6 @@
 <?php
 
-/**
- * Список сообщений от конкретного пользователя
- */
+/** список сообщений чата с пользователем*/
 class GetMessagesModel extends \core\Model
 {
     private $usersTable;
