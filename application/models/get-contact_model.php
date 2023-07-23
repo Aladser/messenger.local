@@ -7,13 +7,15 @@ class GetContactModel extends \core\Model
     private $usersTable;
     private $messageTable;
 
-    public function __construct($CONFIG){
+    public function __construct($CONFIG)
+    {
         $this->contactsTable = $CONFIG->getContacts();
         $this->usersTable = $CONFIG->getUsers();
         $this->messageTable = $CONFIG->getMessageDBTable();
     }
 
-    public function run(){
+    public function run()
+    {
         $userHostName = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];  // имя клиента-хоста
         $userId = $this->usersTable->getUserId($userHostName);                              // id клиента-хоста
         $contactId = $this->usersTable->getUserId($_POST['contact']);                        // id клиента-контакта

@@ -1,7 +1,8 @@
 <?php
-    class IsUniqueNicknameController extends \core\Controller { 
-        function action_index() {
+    class IsUniqueNicknameController extends \core\Controller 
+    { 
+        public function action_index() 
+        {
             $this->model->run();
         } 
     }
-?>

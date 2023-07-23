@@ -1,11 +1,12 @@
 <?php
-
 namespace core\db;
 
-// Класс БД таблицы соединений вебсокета
-class ConnectionsDBTableModel extends DBTableModel{
+/** Класс БД таблицы соединений вебсокета */
+class ConnectionsDBTableModel extends DBTableModel
+{
     // сохранить подключение в БД
-    public function addConnection(array $data){
+    public function addConnection(array $data)
+    {
         $connection_ws_id = intval($data['wsId']);
         $user_email = trim($data['author']);
         // поиск пользователя в БД
@@ -30,19 +31,22 @@ class ConnectionsDBTableModel extends DBTableModel{
     }
 
     // получить публичное имя пользователя соединения
-    public function getConnectionPublicUsername(int $connId){
+    public function getConnectionPublicUsername(int $connId)
+    {
         $sql = "select getPublicUserName(user_email, user_nickname, user_hide_email) as username from users where user_id = (select connection_userid from connections where connection_ws_id = $connId)";
         $publicUsername = $this->db->query($sql)['username'];
         return $publicUsername;
     }
 
     // удалить закрытое соединение из БД
-    public function removeConnection(int $connId){
+    public function removeConnection(int $connId)
+    {
         return $this->db->exec("delete from connections where connection_ws_id = $connId");
     }
 
     // очистить таблицу соединений
-    public function removeConnections(){
+    public function removeConnections()
+    {
         $this->db->exec('delete from connections');
     }
 }

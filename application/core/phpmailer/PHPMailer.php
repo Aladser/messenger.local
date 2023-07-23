@@ -1,15 +1,6 @@
 <?php
-
 namespace core\phpmailer;
 
-/**
- * PHPMailer - PHP email creation and transport class.
- *
- * @author Marcus Bointon (Synchro/coolbru) <phpmailer@synchromedia.co.uk>
- * @author Jim Jagielski (jimjag) <jimjag@gmail.com>
- * @author Andy Prevost (codeworxtech) <codeworxtech@users.sourceforge.net>
- * @author Brent R. Matzelle (original founder)
- */
 class PHPMailer
 {
     const CHARSET_ASCII = 'us-ascii';
@@ -5105,3 +5096,4 @@ class PHPMailer
         $this->oauth = $oauth;
     }
 }
+

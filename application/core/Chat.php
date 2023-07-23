@@ -1,12 +1,12 @@
-<?php
- 
+<?php 
 namespace core;
+
 use \Ratchet\MessageComponentInterface;
 use \Ratchet\ConnectionInterface;
-date_default_timezone_set('Europe/Moscow');
 
-// Чат
-class Chat implements MessageComponentInterface {
+/** Чат-серверная часть */
+class Chat implements MessageComponentInterface 
+{
     private $clients;           // хранение всех подключенных пользователей
     private $connectionsTable;  // таблица подключений
     private $messageTable;      // таблица сообщений
@@ -14,7 +14,8 @@ class Chat implements MessageComponentInterface {
     private $logFile;
     private $logfileContent;
    
-    public function __construct(\core\db\ConnectionsDBTableModel $connectionsTable, \core\db\MessageDBTableModel $messageTable, \core\db\UsersDBTableModel $usersTable){
+    public function __construct(\core\db\ConnectionsDBTableModel $connectionsTable, \core\db\MessageDBTableModel $messageTable, \core\db\UsersDBTableModel $usersTable)
+    {
         $this->clients = new \SplObjectStorage;
         $this->connectionsTable = $connectionsTable;
         $this->messageTable = $messageTable;
@@ -28,7 +29,8 @@ class Chat implements MessageComponentInterface {
     /** открыть соединение
      * @param ConnectionInterface $conn соединение
      */
-    public function onOpen(ConnectionInterface $conn) {
+    public function onOpen(ConnectionInterface $conn) 
+    {
         $this->clients->attach($conn); // добавление клиента
         $message = json_encode([ 'onсonnection' => $conn->resourceId ]);
         foreach ($this->clients as $client) $client->send($message); // рассылка остальным клиентам
@@ -37,7 +39,8 @@ class Chat implements MessageComponentInterface {
     /** закрыть соединение
      * @param ConnectionInterface $conn соединение
      */
-    public function onClose(ConnectionInterface $conn) {
+    public function onClose(ConnectionInterface $conn) 
+    {
         $this->clients->detach($conn);
         $publicUsername = $this->connectionsTable->getConnectionPublicUsername( $conn->resourceId ); // публичное имя клиента
         $this->connectionsTable->removeConnection( $conn->resourceId ); // удаление соединения из БД
@@ -51,7 +54,8 @@ class Chat implements MessageComponentInterface {
      * @param ConnectionInterface $from соединение
      * @param mixed $msg сообщение
      */
-    public function onMessage(ConnectionInterface $from, $msg) {    
+    public function onMessage(ConnectionInterface $from, $msg) 
+    {    
         $data = json_decode($msg);
         // после соединения пользователь отправляет пакет messageOnconnection
         if($data->messageOnconnection){
@@ -88,7 +92,8 @@ class Chat implements MessageComponentInterface {
      * @param ConnectionInterface $conn соединение
      * @param \Exception $e ошибка
      */
-    public function onError(ConnectionInterface $conn, \Exception $e) {
+    public function onError(ConnectionInterface $conn, \Exception $e) 
+    {
         $this->writeLog("error: {$e->getMessage()}");
         $conn->close();
     }
@@ -96,7 +101,8 @@ class Chat implements MessageComponentInterface {
     /** Запись логов
      * @param mixed $message лог
      */
-    public function writeLog($message){
+    public function writeLog($message)
+    {
         file_put_contents($this->logFile, $message."\n", FILE_APPEND | LOCK_EX);
     }
 }

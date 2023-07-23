@@ -1,7 +1,8 @@
 <?php
-    class AddGroupContactController extends \core\Controller { 
-        function action_index() {
+    class AddGroupContactController extends \core\Controller 
+    { 
+        public function action_index() 
+        {
             $this->model->run();
         } 
     }
-?>

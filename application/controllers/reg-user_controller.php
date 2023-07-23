@@ -1,7 +1,8 @@
 <?php
-    class RegUserController extends \core\Controller { 
-        function action_index() {
+    class RegUserController extends \core\Controller 
+    { 
+        public function action_index() 
+        {
             $this->model->run();
         } 
     }
-?>

@@ -445,7 +445,6 @@ function forwardMessage(){
 function resetForwardMessage(){
     forwardBtnBlock.classList.remove('btn-resend-block_active');
     isForwaredMessage = null;
-    forwardedMessageRecipient = null;
     selectedMessage = null;
     let contactRecipient = document.querySelector('.contact-recipient');
     if(contactRecipient) contactRecipient.classList.remove('contact-recipient');

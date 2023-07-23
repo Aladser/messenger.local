@@ -1,5 +1,4 @@
 <?php
-
 namespace core;
 
 class Route
@@ -99,4 +98,3 @@ class Route
 			return null;
 	}
 }
-?>

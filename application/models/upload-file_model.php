@@ -3,7 +3,8 @@
 /** Загрузка временного изображения на сервер  */
 class UploadFileModel extends \core\Model
 {
-    public function run(){
+    public function run()
+    {
         session_start();
         // почта пользователя
         $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];

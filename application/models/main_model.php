@@ -3,7 +3,8 @@
 /** Поиск контактов пользователя */
 class MainModel extends \core\Model
 {
-    public function run(){
+    public function run()
+    {
         if(isset($_GET['logout'])){
             session_start();
             setcookie("email", "", time()-3600, '/');
@@ -12,4 +13,5 @@ class MainModel extends \core\Model
         }
     }
 }
+
 

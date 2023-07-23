@@ -5,11 +5,13 @@ class SetUserDataModel extends \core\Model
 {
 	private $users;
 
-    public function __construct($CONFIG){
+    public function __construct($CONFIG)
+    {
         $this->users = $CONFIG->getUsers();
     }
 
     public function run(){
+
         session_start();
         $email = isset($_SESSION['email']) ? $_SESSION['email'] : $_COOKIE['email'];
         $data['user_email'] = $email;

@@ -1,7 +1,8 @@
 <?php
-    class GetContactController extends \core\Controller { 
-        function action_index() {
+    class GetContactController extends \core\Controller 
+    { 
+        public function action_index() 
+        {
             $this->model->run();
         } 
     }
-?>

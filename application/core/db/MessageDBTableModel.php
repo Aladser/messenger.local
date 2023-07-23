@@ -1,11 +1,12 @@
 <?php
-
 namespace core\db;
 
 /** класс БД таблицы сообщений чатов */
-class MessageDBTableModel extends DBTableModel{
+class MessageDBTableModel extends DBTableModel
+{
     // получить ID диалога
-    public function getDialogId($user1Id, $user2Id){
+    public function getDialogId($user1Id, $user2Id)
+    {
         // поиск диалога пользователей
         $sql = "
             select chat_id from extended_chat 
@@ -24,13 +25,15 @@ class MessageDBTableModel extends DBTableModel{
     }
 
     // создать групповой чат
-    public function createDiscussion(int $userHostId){
+    public function createDiscussion(int $userHostId)
+    {
         $groupId = $this->db->executeProcedure("create_discussion($userHostId, @info)", '@info');
         return $this->db->query("select chat_id, chat_name from chat where chat_id = $groupId");
     }
 
     // возвращает групповые чаты пользователя
-    public function getDiscussions(int $userHostId){
+    public function getDiscussions(int $userHostId)
+    {
         return $this->db->query("
         select chat_id, chat_name, chat_participant_isnotice as chat_isnotice       
         from chat_participant
@@ -40,13 +43,15 @@ class MessageDBTableModel extends DBTableModel{
     }
 
     // возвращает создателя группового чата
-    public function getDiscussionCreatorId($chatId){
+    public function getDiscussionCreatorId($chatId)
+    {
         $sql = "select chat_creatorid from chat where chat_id = $chatId";
         return $this->db->query($sql)['chat_creatorid'];
     }
 
     // добавить сообщение
-    public function addMessage($msg){
+    public function addMessage($msg)
+    {
         return $this->db->executeProcedure("add_message($msg->chatId, '$msg->message', '$msg->fromuser', '$msg->time', @chatid)", '@chatid');
     }
 
@@ -56,7 +61,8 @@ class MessageDBTableModel extends DBTableModel{
     }
 
     // изменить сообщение
-    public function editMessage(string $msg, int $msgId){
+    public function editMessage(string $msg, int $msgId)
+    {
         $this->db->exec("update chat_message set chat_message_text = '$msg' where chat_message_id = $msgId");
         $rslt = $this->db->query("select chat_message_id, chat_message_chatid as chatId, chat_message_text, chat_message_time from chat_message where chat_message_id = $msgId");
         $rslt['messageType'] = 'EDIT';
@@ -64,7 +70,8 @@ class MessageDBTableModel extends DBTableModel{
     }
 
     // удалить сообщение
-    public function removeMessage(int $msgId){
+    public function removeMessage(int $msgId)
+    {
         $rslt = $this->db->query("select chat_message_id, chat_message_chatid as chatId from chat_message where chat_message_id = $msgId");
         $this->db->exec("delete from chat_message where chat_message_id = $msgId");
         $rslt['messageType'] = 'REMOVE';
@@ -72,7 +79,8 @@ class MessageDBTableModel extends DBTableModel{
     }
 
     // возвращает сообшения диалога
-    public function getMessages(int $chatId){
+    public function getMessages(int $chatId)
+    {
         $sql = "
             select chat_message_id, 
             chat_message_chatid as chatId, 
@@ -87,7 +95,8 @@ class MessageDBTableModel extends DBTableModel{
     }
 
     // установить показ уведомлений чатов
-    public function setNoticeShow($chatid, $userid, $notice){
+    public function setNoticeShow($chatid, $userid, $notice)
+    {
         $this->db->exec("update chat_participant set chat_participant_isnotice = $notice where chat_participant_chatid = $chatid and chat_participant_userid = $userid");
         return $this->db->query("select chat_participant_isnotice from chat_participant where chat_participant_chatid = $chatid and chat_participant_userid = $userid")['chat_participant_isnotice'];
     }

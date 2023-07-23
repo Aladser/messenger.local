@@ -6,12 +6,14 @@ class RegUserModel extends \core\Model
 	private $users;
     private $eMailSender;
 
-    public function __construct($CONFIG){
+    public function __construct($CONFIG)
+    {
         $this->users = $CONFIG->getUsers();
         $this->eMailSender = $CONFIG->getEmailSender();
     }
 
-    public function run(){
+    public function run()
+    {
         if(!$this->users->existsUser($_POST['email'])){
             $email = $_POST['email'];
             $addUserRslt = $this->users->addUser($email, $_POST['password']);
@@ -36,4 +38,5 @@ class RegUserModel extends \core\Model
         echo json_encode($data);
     }
 }
+
 

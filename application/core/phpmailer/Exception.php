@@ -1,12 +1,6 @@
 <?php
-
 namespace core\phpmailer;
 
-/**
- * PHPMailer exception handler.
- *
- * @author Marcus Bointon <phpmailer@synchromedia.co.uk>
- */
 class Exception extends \Exception
 {
     /**
@@ -19,3 +13,4 @@ class Exception extends \Exception
         return '<strong>' . htmlspecialchars($this->getMessage(), ENT_COMPAT | ENT_HTML401) . "</strong><br />\n";
     }
 }
+

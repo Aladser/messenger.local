@@ -1,42 +1,45 @@
 <?php
-
 namespace core\db;
 
-/**
- *  класс БД таблицы пользователей 
- *  отвечает за все запросы в таблице пользователей
-*/
-class UsersDBTableModel extends DBTableModel{
-
+/** класс БД таблицы пользователей */
+class UsersDBTableModel extends DBTableModel
+{
     // проверить существование пользователя
-    public function existsUser($email){
+    public function existsUser($email)
+    {
         return $this->db->query("select count(*) as count from users where user_email = '$email'")['count'] == 1;
     }
 
     // проверка авторизации
-    public function checkUser($email, $password){
+    public function checkUser($email, $password)
+    {
         $passhash = $this->db->query("select user_password from users where user_email='$email'")['user_password'];
         return password_verify($password, $passhash);
     }
     
     // добавить нового пользователя
-    public function addUser($email, $password){
+    public function addUser($email, $password)
+    {
         $password = password_hash($password, PASSWORD_DEFAULT);
         return $this->db->exec("insert into users(user_email, user_password) values('$email', '$password')");
     }
 
     // добавить хэш пользователю
-    public function addUserHash($email, $hash){
+    public function addUserHash($email, $hash)
+    {
         return $this->db->exec("UPDATE users SET user_hash='$hash' WHERE user_email='$email'");
     }
+
     // проверить хэш пользователя
-    public function checkUserHash($email, $hash){
+    public function checkUserHash($email, $hash)
+    {
         $hash = $this->db->query("select count(*) as count from users where user_email = '$email' and user_hash='$hash'")['count'];
         return $hash == 1;
     }
 
     // подтвердить почту
-    public function confirmEmail($email){
+    public function confirmEmail($email)
+    {
         return $this->db->exec("UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'");
     }
 
@@ -46,22 +49,26 @@ class UsersDBTableModel extends DBTableModel{
     }
 
     /** получить публичное имя пользователя из ID */
-    public function getPublicUsername(int $userId){
+    public function getPublicUsername(int $userId)
+    {
         return $this->db->query("select getPublicUserName(user_email, user_nickname, user_hide_email) as username from users where user_id = $userId")['username'];
     }
 
     // получить публичное имя пользователя из почты
-    public function getPublicUsernameFromEmail(string $userEmail){
+    public function getPublicUsernameFromEmail(string $userEmail)
+    {
         return $this->db->query("select getPublicUserName(user_email, user_nickname, user_hide_email) as username from users where user_email = '$userEmail'")['username'];
     }
 
     // получить ID пользователя
-    public function getUserId(string $publicUserName){
+    public function getUserId(string $publicUserName)
+    {
         return $this->db->query("select user_id from users where user_email = '$publicUserName' or user_nickname='$publicUserName'")['user_id'];
     }
 
     // список пользователей по шаблону почты или никнейма
-    public function getUsers($phrase, $email){
+    public function getUsers($phrase, $email)
+    {
         // список пользователей, подходящие по шаблону
         $sql = "
         select user_id, user_nickname as username, user_photo from users where user_nickname  != '' and user_nickname is not null and user_email != '$email' and user_nickname  like '%$phrase%'
@@ -73,7 +80,8 @@ class UsersDBTableModel extends DBTableModel{
     }
 
     // получить пользовательские данные
-    public function getUserData($email){
+    public function getUserData($email)
+    {
         $dbData = $this->db->query("select user_nickname, user_hide_email, user_photo from users where user_email = '$email'", false);
         $data['user-email'] = $email;
         $data['user_nickname'] = $dbData[0]['user_nickname'];
@@ -83,7 +91,8 @@ class UsersDBTableModel extends DBTableModel{
     }
 
     // изменить пользовательские данные в Бд
-    public function setUserData($data){
+    public function setUserData($data)
+    {
         $rslt = false; 
         $email = $data['user_email']; 
 
@@ -103,7 +112,8 @@ class UsersDBTableModel extends DBTableModel{
     }
 
     // сравнение новых данных и в БД
-    private function isEqualData($data, $field, $email){
+    private function isEqualData($data, $field, $email)
+    {
         $dbData = $this->db->query("select $field from users WHERE user_email='$email'")[$field];
         return $data === $dbData;
     }

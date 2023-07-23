@@ -5,11 +5,13 @@ class LoginUserModel extends \core\Model
 {
 	private $users;
 
-    public function __construct($CONFIG){
+    public function __construct($CONFIG)
+    {
         $this->users = $CONFIG->getUsers();
     }
 
-    public function run(){
+    public function run()
+    {
         session_start();
         if($this->users->existsUser($_POST['email'])){
             $loginUserRslt = $this->users->checkUser($_POST['email'], $_POST['password']);

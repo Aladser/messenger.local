@@ -9,14 +9,16 @@ class GetMessagesModel extends \core\Model
     private $contactsTable;
     private $messageTable;
 
-    public function __construct($CONFIG){
+    public function __construct($CONFIG)
+    {
         $this->usersTable = $CONFIG->getUsers();
         $this->contactsTable = $CONFIG->getContacts();
         $this->messageTable = $CONFIG->getMessageDBTable();
     }
 
     // получить список сообщений чата
-    public function run(){
+    public function run()
+    {
         session_start();
         // диалоги
         if(isset($_POST['contact'])){

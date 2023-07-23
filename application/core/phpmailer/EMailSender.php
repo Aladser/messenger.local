@@ -1,11 +1,12 @@
 <?php
-
 namespace core\phpmailer;
 
-class EMailSender{
+class EMailSender
+{
     private $mail;
 
-    function __construct($smtpSrv, $username, $password, $smtpSecure, $port, $emailSender, $emailSenderName){
+    function __construct($smtpSrv, $username, $password, $smtpSecure, $port, $emailSender, $emailSenderName)
+    {
         $this->mail = new PHPMailer();
 
         $this->mail->isSMTP();   
@@ -22,7 +23,8 @@ class EMailSender{
         $this->mail->setFrom($emailSender, $emailSenderName='Месенджер Админ'); // адрес почты и имя отправителя
     }
 
-    function send($title, $text, $emailRecipient){  
+    function send($title, $text, $emailRecipient)
+    {  
         $this->mail->clearAllRecipients(); // очистка отправителей
 
         $this->mail->addAddress($emailRecipient); // получатель письма

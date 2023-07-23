@@ -5,11 +5,13 @@ class ChatsModel extends \core\Model
 {
     private $userTable;
 
-    public function __construct($CONFIG){
+    public function __construct($CONFIG)
+    {
         $this->userTable = $CONFIG->getUsers();
     }
 
-    public function run(){
+    public function run()
+    {
         session_start();
         $userEmail = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
         $publicUsername = $this->userTable->getPublicUsernameFromEmail($userEmail);

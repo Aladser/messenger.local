@@ -5,11 +5,13 @@ class VerifyEmailModel extends \core\Model
 {
 	private $users;
 
-    public function __construct($CONFIG){
+    public function __construct($CONFIG)
+    {
         $this->users = $CONFIG->getUsers();
     }
 
-    public function run(){
+    public function run()
+    {
         $modelData = array();
         if($this->users->checkUserHash($_GET['email'], $_GET['hash'])){
             $this->users->confirmEmail($_GET['email']);

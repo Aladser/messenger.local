@@ -1,7 +1,8 @@
 <?php
-    class SetUserDataController extends \core\Controller { 
-        function action_index() {
+    class SetUserDataController extends \core\Controller 
+    { 
+        public function action_index() 
+        {
             $this->model->run();
         } 
     }
-?>

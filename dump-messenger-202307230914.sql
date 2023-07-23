@@ -29,6 +29,8 @@ CREATE TABLE `chat` (
   `chat_creatorid` int(11) DEFAULT NULL,
   PRIMARY KEY (`chat_id`),
   KEY `check_creatorid` (`chat_creatorid`),
+  KEY `i_chat_type` (`chat_type`),
+  KEY `i_getdialogid` (`chat_id`,`chat_type`),
   CONSTRAINT `check_creatorid` FOREIGN KEY (`chat_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -58,11 +60,12 @@ CREATE TABLE `chat_message` (
   `chat_message_time` datetime DEFAULT NULL,
   `chat_message_forward` int(1) DEFAULT '0',
   PRIMARY KEY (`chat_message_id`),
-  KEY `check_message_chatid` (`chat_message_chatid`),
   KEY `check_message_creator` (`chat_message_creatorid`),
+  KEY `i_addmsg` (`chat_message_chatid`,`chat_message_time`),
+  KEY `i_chat_message_chatid` (`chat_message_chatid`),
   CONSTRAINT `check_message_chatid` FOREIGN KEY (`chat_message_chatid`) REFERENCES `chat` (`chat_id`) ON DELETE CASCADE,
   CONSTRAINT `check_message_creator` FOREIGN KEY (`chat_message_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +74,7 @@ CREATE TABLE `chat_message` (
 
 LOCK TABLES `chat_message` WRITE;
 /*!40000 ALTER TABLE `chat_message` DISABLE KEYS */;
-INSERT INTO `chat_message` VALUES (3,2,'два',2,'2023-07-22 09:41:35',0),(5,3,'аладсер',2,'2023-07-22 10:04:44',0),(6,3,'админ',1,'2023-07-22 10:04:54',0),(9,1,'от Аладсера Админу',2,'2023-07-22 11:42:58',0),(10,1,'от Админа Аладсеру',1,'2023-07-22 11:43:26',0),(11,5,'от Аласдера яндексу',2,'2023-07-22 11:43:45',0),(18,4,'от админа лаутексу',1,'2023-07-22 12:16:22',0),(19,4,'от лаутекса админу',3,'2023-07-22 12:16:45',0),(20,6,'от админа лаутексу',3,'2023-07-22 12:17:03',1),(21,6,'от лаутекса админу',3,'2023-07-22 12:17:06',1),(22,2,'от Аладсера Админу',1,'2023-07-22 12:17:22',1),(23,2,'от админа лаутексу',1,'2023-07-22 12:17:25',1);
+INSERT INTO `chat_message` VALUES (3,2,'два',2,'2023-07-22 09:41:35',0),(5,3,'аладсер',2,'2023-07-22 10:04:44',0),(6,3,'админ',1,'2023-07-22 10:04:54',0),(9,1,'от Аладсера Админу',2,'2023-07-22 11:42:58',0),(10,1,'от Админа Аладсеру',1,'2023-07-22 11:43:26',0),(11,5,'от Аласдера яндексу',2,'2023-07-22 11:43:45',0),(18,4,'от админа лаутексу',1,'2023-07-22 12:16:22',0),(19,4,'от лаутекса админу',3,'2023-07-22 12:16:45',0),(20,6,'от админа лаутексу',3,'2023-07-22 12:17:03',1),(21,6,'от лаутекса админу',3,'2023-07-22 12:17:06',1),(34,5,'1',2,'2023-07-22 16:42:08',0),(44,4,'от Аладсера Админу',1,'2023-07-22 16:43:24',1),(45,4,'от Админа Аладсеру',1,'2023-07-22 16:43:26',1);
 /*!40000 ALTER TABLE `chat_message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +90,8 @@ CREATE TABLE `chat_participant` (
   `chat_participant_userid` int(11) NOT NULL,
   `chat_participant_isnotice` int(1) DEFAULT '1',
   PRIMARY KEY (`chat_participant_chatid`,`chat_participant_userid`),
-  KEY `check_participant_userid` (`chat_participant_userid`),
+  KEY `i_chat_participant_user` (`chat_participant_userid`),
+  KEY `i_chat_participant_chat` (`chat_participant_chatid`),
   CONSTRAINT `check_participant_chatid` FOREIGN KEY (`chat_participant_chatid`) REFERENCES `chat` (`chat_id`) ON DELETE CASCADE,
   CONSTRAINT `check_participant_userid` FOREIGN KEY (`chat_participant_userid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -99,7 +103,7 @@ CREATE TABLE `chat_participant` (
 
 LOCK TABLES `chat_participant` WRITE;
 /*!40000 ALTER TABLE `chat_participant` DISABLE KEYS */;
-INSERT INTO `chat_participant` VALUES (1,1,1),(1,2,1),(2,1,0),(2,33,1),(3,1,0),(3,2,1),(4,1,1),(4,3,1),(5,2,1),(5,33,1),(6,3,1),(6,4,1),(7,1,1),(7,2,1),(7,3,1),(7,33,1);
+INSERT INTO `chat_participant` VALUES (1,1,1),(1,2,1),(2,1,1),(3,1,1),(3,2,1),(4,1,1),(4,3,1),(5,2,1),(6,3,1),(6,4,1),(7,1,1),(7,2,1),(7,3,1);
 /*!40000 ALTER TABLE `chat_participant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,6 +119,7 @@ CREATE TABLE `connections` (
   `connection_userid` int(11) DEFAULT NULL,
   PRIMARY KEY (`connection_ws_id`),
   UNIQUE KEY `connection_userid` (`connection_userid`),
+  KEY `i_ws_id` (`connection_ws_id`),
   CONSTRAINT `fk_userid` FOREIGN KEY (`connection_userid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -153,7 +158,7 @@ CREATE TABLE `contacts` (
 
 LOCK TABLES `contacts` WRITE;
 /*!40000 ALTER TABLE `contacts` DISABLE KEYS */;
-INSERT INTO `contacts` VALUES (1,1,2),(2,1,33),(3,1,3),(4,2,33),(5,3,4);
+INSERT INTO `contacts` VALUES (1,1,2),(3,1,3),(5,3,4);
 /*!40000 ALTER TABLE `contacts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,8 +206,9 @@ CREATE TABLE `users` (
   `user_photo` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_email` (`user_email`),
-  UNIQUE KEY `user_nickname` (`user_nickname`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `user_nickname` (`user_nickname`),
+  KEY `i_user_publicname` (`user_nickname`,`user_email`)
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +217,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'aladser@mail.ru','Admin','$2y$10$DkDtoYVWxAEt/ey/PcniT.58/N2BwI6CkTmmMMP2r7/uw0DkHvZgi',NULL,1,1,'aladser@mail.ru.1.jpg'),(2,'aladser@gmail.com','Aladser','$2y$10$K0n3aKnEGuxi1gyly1tBLebxpUFVHnqfG0KD2a8hen.XgB/EcPmZ6',NULL,1,1,'aladser@gmail.com.1.png'),(3,'lauxtec@gmail.com','Lauxtec','$2y$10$P1Gq37vuwOOQIh2t2zqvtuMEaa9FCRlLVczpAnJZ0wg0PTW1LNp/2',NULL,1,1,'lauxtec@gmail.com.1.jpeg'),(4,'sendlyamobile@gmail.com','Evgensha','$2y$10$io9DqPPtXKSDgADMw4tBge5YYzywhMc/rTMDiMhmo04yxgoyaEmGW',NULL,1,0,'sendlyamobile@gmail.com.2.jpg'),(5,'denisdyo17@gmail.com','','$2y$10$5ujTi/UqGu4atpGR2yflWub07R/V1kKHe86JwWZMwdVmH7XtLLy4i',NULL,1,0,'ava_profile.png'),(33,'aladser@yandex.ru',NULL,'$2y$10$g/XJNVvdA.ktTP2Ccq/.EeoazGyjPqAyeBqHoiFTwRlcLQQOkb2O6','cc9800a9f8b14a2c19058f89e9f7872f',1,0,NULL);
+INSERT INTO `users` VALUES (1,'aladser@mail.ru','Admin','$2y$10$DkDtoYVWxAEt/ey/PcniT.58/N2BwI6CkTmmMMP2r7/uw0DkHvZgi',NULL,1,1,'aladser@mail.ru.1.jpg'),(2,'aladser@gmail.com','Aladser','$2y$10$K0n3aKnEGuxi1gyly1tBLebxpUFVHnqfG0KD2a8hen.XgB/EcPmZ6',NULL,1,1,'aladser@gmail.com.1.png'),(3,'lauxtec@gmail.com','Lauxtec','$2y$10$P1Gq37vuwOOQIh2t2zqvtuMEaa9FCRlLVczpAnJZ0wg0PTW1LNp/2',NULL,1,1,'lauxtec@gmail.com.1.jpeg'),(4,'sendlyamobile@gmail.com','Evgensha','$2y$10$io9DqPPtXKSDgADMw4tBge5YYzywhMc/rTMDiMhmo04yxgoyaEmGW',NULL,1,0,'sendlyamobile@gmail.com.2.jpg'),(5,'denisdyo17@gmail.com','','$2y$10$5ujTi/UqGu4atpGR2yflWub07R/V1kKHe86JwWZMwdVmH7XtLLy4i',NULL,1,0,'ava_profile.png'),(34,'aladser@yandex.ru',NULL,'$2y$10$3CdXOaYVDUr1H4eYtxGuZuH.ProZ/bgVJwJhVwsGa1NLUIdavWHR.','2d4f6af52d53a70a0876e5a48c6e11c2',1,0,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -269,6 +275,33 @@ begin
 
 	# обновляем чат и время строки
 	update chat_message set chat_message_chatid = chat_id, chat_message_time = msg_time, chat_message_creatorid = msg_creatorid, chat_message_forward = 1 where chat_message_id = new_msg_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `add_message` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`admin`@`%` PROCEDURE `add_message`(
+	in chat_chatid int,
+	in chat_text text,
+	in chat_user varchar(100),
+	in chat_time datetime,
+	out msg_id  int
+)
+begin
+	select user_id into @userid from users where user_email = chat_user or user_nickname = chat_user;
+	insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time) values(chat_chatid, chat_text, @userid, chat_time);
+	select last_insert_id() into msg_id;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -372,4 +405,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-22 19:15:35
+-- Dump completed on 2023-07-23  9:14:15
