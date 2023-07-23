@@ -1,16 +1,14 @@
 {"messageOnconnection":1,"author":"Aladser","wsId":62}
-{"messageOnconnection":1,"author":"Aladser","wsId":98}
-{"messageOnconnection":1,"author":"Admin","wsId":98}
-{"message":"1","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-23 20:05:21","chat_message_id":98}
-{"message":"1","fromuser":"Admin","chatId":"3","chatType":"dialog","messageType":"NEW","time":"2023-07-23 20:05:25","chat_message_id":99}
-{"message":"1","fromuser":"Admin","chatId":"3","chatType":"dialog","messageType":"NEW","time":"2023-07-23 20:05:29","chat_message_id":100}
-{"message":"1","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-23 20:05:37","chat_message_id":101}
-{"chat_message_id":98,"chatId":1,"messageType":"REMOVE"}
-{"chat_message_id":101,"chatId":1,"messageType":"REMOVE"}
-{"chat_message_id":100,"chatId":3,"messageType":"REMOVE"}
-{"chat_message_id":99,"chatId":3,"chat_message_text":"111","chat_message_time":"2023-07-23 20:05:25","messageType":"EDIT"}
-{"message":"111","fromuser":"Admin","chatId":1,"messageType":"FORWARD","msgId":99,"time":"2023-07-23 20:05:58","fromuserId":1,"chat_message_id":102}
-{"chat_message_id":99,"chatId":3,"messageType":"REMOVE"}
-{"chat_message_id":102,"chatId":1,"messageType":"REMOVE"}
-Connection Admin completed
 Connection Aladser completed
+{"messageOnconnection":1,"author":"Aladser","wsId":101}
+{"chat_message_id":7,"chatId":1,"messageType":"REMOVE"}
+{"chat_message_id":6,"chatId":1,"messageType":"REMOVE"}
+{"chat_message_id":5,"chatId":1,"messageType":"REMOVE"}
+{"chat_message_id":4,"chatId":1,"messageType":"REMOVE"}
+{"message":"1","fromuser":"Aladser","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-23 21:02:20","chat_message_id":8}
+{"messageOnconnection":1,"author":"Aladser","wsId":122}
+{"messageOnconnection":1,"author":"Admin","wsId":122}
+{"message":"1","fromuser":"Aladser","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-23 21:02:28","chat_message_id":9}
+{"message":"1","fromuser":"Aladser","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-23 21:03:09","chat_message_id":10}
+Connection Aladser completed
+Connection Admin completed

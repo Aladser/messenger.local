@@ -1,9 +1,9 @@
 /** элемент имени клиента-пользователя*/
-const clientnameBlock = document.querySelector('#clientuser');
+const clientNameBlock = document.querySelector('#clientuser');
 /** почта пользователя-хоста */
-const clientUsername = clientnameBlock.innerHTML.trim();
+const clientUsername = clientNameBlock.innerHTML.trim();
 /** публичное имя пользователя-хоста */
-const publicClientUsername = clientnameBlock.getAttribute('data-clientuser-publicname');
+const publicClientUsername = clientNameBlock.getAttribute('data-clientuser-publicname');
 
 /** контейнер контактов */
 const contactsContainer = document.querySelector('#contacts');
@@ -61,7 +61,7 @@ let forwardedMessageRecipientName = null;
 /** текущий тип чата*/
 let chatType = null;
 /** id открытого чата*/
-let openChatId = null;
+let openChatId = -1;
 /** флаг измененного сообщения */
 let isEditMessage = false;
 /** флаг пересылаемого сообщения*/
@@ -104,8 +104,8 @@ webSocket.onmessage = e => {
         // уведомления о новых сообщениях чатов
         // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
         if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== publicClientUsername) {
-            let foundedContactChat = contactList.find(el => el.chat_id == data.chatId); // поиск чата среди списка чатов контактов
-            let foundedGroupChat = groupList.find(el => el.chat_id == data.chatId);     // поиск чата среди групповых чатов
+            let foundedContactChat = contactList.find(el => el.chat_id === data.chatId); // поиск чата среди списка чатов контактов
+            let foundedGroupChat = groupList.find(el => el.chat_id === data.chatId);     // поиск чата среди групповых чатов
             let isChat = (foundedContactChat!==undefined) || (foundedGroupChat!==undefined);
             // сделано специально множественное создание объектов звука
             if (isChat) {
@@ -115,18 +115,21 @@ webSocket.onmessage = e => {
                 let chatName = chat.hasOwnProperty("chat_name") ? chat.chat_name : chat.username;
                 // DOM-элемент  контакта или группового чата
                 let domElem = document.querySelector(`[title='${chatName}']`);
+                // для неоткрытых чатов визуальное уведомление
                 if (openChatId !== data.chatId) {
                     domElem.classList.add('isnewmessage');
                 }
-                if (chat.isnotice == 1) {
+                // звуковое уведомление
+                if (chat.isnotice === 1) {
                     let notice = new Audio('application/views/notice.wav');
                     notice.autoplay = true;
                 }
             }
         }
 
+        console.log(openChatId, data.chatId)
         // сообщения открытого чата
-        if (openChatId == data.chatId) {
+        if (openChatId === data.chatId) {
             // изменение сообщения
             if (data.messageType === 'EDIT') {
                 let messageDOMElem = document.querySelector(`[data-chat_message_id="${data.chat_message_id}"]`);
@@ -580,11 +583,11 @@ window.addEventListener('DOMContentLoaded', () => {
     // отпускание клавиши в поле ввода сообщения
     messageInput.onkeyup = event => {
         // перевод строки, если Ctrl+Enter
-        if (event.code === 'Enter' && pressedKeys.indexOf('ControlLeft') != -1) {
+        if (event.code === 'Enter' && pressedKeys.indexOf('ControlLeft') !== -1) {
             messageInput.value += '\n';
-        }
-        // отправка сообщения, если Enter
-        else if (event.code === 'Enter') {
+        } else if (event.code === 'Enter') {
+            // отправка сообщения, если Enter
+
             // если поседний символ - перевод строки
             if (messageInput.value[messageInput.value.length - 1] === '\n') {
                 messageInput.value = messageInput.value.substring(0, messageInput.value.length - 1);
@@ -625,9 +628,8 @@ window.oncontextmenu = event => {
         if (selectedMessage.getAttribute('data-forward') == 1) {
             editMsgContextMenuBtn.style.display = 'none';
         }
-    }
-    // клик на элементе контакта
-    else if (['contact__name','contact__img img pe-2','contact position-relative mb-2','group'].includes(event.target.className)) {
+    } else if (['contact__name','contact__img img pe-2','contact position-relative mb-2','group'].includes(event.target.className)) {
+        // клик на элементе контакта
         if (event.target.className === 'contact__img img pe-2') {
             selectedContact = event.target.parentNode.parentNode;
         } else if (event.target.className === 'contact__name') {
