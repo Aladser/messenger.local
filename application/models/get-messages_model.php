@@ -17,6 +17,7 @@ class GetMessagesModel extends \core\Model
     public function run()
     {
         session_start();
+        $chatId = null;
         // диалоги
         if (isset($_POST['contact'])) {
             $userHostName = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];  // имя клиента-хоста

@@ -49,6 +49,7 @@ class Route
 
 
 		//**** создаем модель, если существует
+        $model = null;
 		if (file_exists($model_path)) {
 			$model_name = self::getMVCClassName($model_name, 'Model');
 			$model = new $model_name(new ConfigClass());

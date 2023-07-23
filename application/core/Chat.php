@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace core;
 
 use \Ratchet\MessageComponentInterface;
@@ -8,7 +8,7 @@ use \core\db\MessageDBTableModel;
 use \core\db\UsersDBTableModel;
 
 /** Чат-серверная часть */
-class Chat implements MessageComponentInterface 
+class Chat implements MessageComponentInterface
 {
     private $clients;           // хранение всех подключенных пользователей
     private $connectionsTable;  // таблица подключений
@@ -18,8 +18,8 @@ class Chat implements MessageComponentInterface
     private $logfileContent;
    
     public function __construct(
-        ConnectionsDBTableModel $connectionsTable, 
-        MessageDBTableModel $messageTable, 
+        ConnectionsDBTableModel $connectionsTable,
+        MessageDBTableModel $messageTable,
         UsersDBTableModel $usersTable
     ) {
         $this->clients = new \SplObjectStorage;
@@ -32,10 +32,11 @@ class Chat implements MessageComponentInterface
         file_put_contents($this->logFile, "");
     }
 
-    /** открыть соединение
+    /**
+     * открыть соединение
      * @param ConnectionInterface $conn соединение
      */
-    public function onOpen(ConnectionInterface $conn) 
+    public function onOpen(ConnectionInterface $conn)
     {
         $this->clients->attach($conn); // добавление клиента
         $message = json_encode(['onсonnection' => $conn->resourceId]);
@@ -44,7 +45,8 @@ class Chat implements MessageComponentInterface
         }
     }
     
-    /** закрыть соединение
+    /**
+     * закрыть соединение
      * @param ConnectionInterface $conn соединение
      */
     public function onClose(ConnectionInterface $conn) 
@@ -62,7 +64,8 @@ class Chat implements MessageComponentInterface
         } 
     }
 
-    /** получить соообщения от клиентов
+    /**
+     * получить соообщения от клиентов
      * @param ConnectionInterface $from соединение
      * @param mixed $msg сообщение
      */
@@ -70,7 +73,7 @@ class Chat implements MessageComponentInterface
     {    
         $data = json_decode($msg);
         // после соединения пользователь отправляет пакет messageOnconnection
-        if ($data->messageOnconnection) {
+        if (property_exists($data, 'messageOnconnection')) {
             // добавление соединения в БД
             $rslt = $this->connectionsTable->addConnection(['author'=>$data->author, 'wsId'=>$data->wsId]);
             // имя пользователя или ошибка добавления
@@ -103,7 +106,8 @@ class Chat implements MessageComponentInterface
         } 
     }
 
-    /** ошибка подключения
+    /**
+     * ошибка подключения
      * @param ConnectionInterface $conn соединение
      * @param \Exception $e ошибка
      */
@@ -113,7 +117,8 @@ class Chat implements MessageComponentInterface
         $conn->close();
     }
 
-    /** Запись логов
+    /**
+     * Запись логов
      * @param mixed $message лог
      */
     public function writeLog($message)

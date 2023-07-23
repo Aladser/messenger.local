@@ -8,6 +8,7 @@ abstract class Model
     public function getUserMail()
     {
         session_start();
-        return  isset($_COOKIE['email']) ?  $_COOKIE['email'] : $_SESSION['email'];
+        $email = isset($_COOKIE['email']) ?  $_COOKIE['email'] : $_SESSION['email'];
+        return   $email;
     }
 }
