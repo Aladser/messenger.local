@@ -1,4 +1,5 @@
 <?php
+
 class IsUniqueNicknameController extends \core\Controller
 {
     public function action_index()

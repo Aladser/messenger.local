@@ -1,5 +1,6 @@
 <?php
 
+
 /** Изменить пользовательские данные */
 class SetUserDataModel extends \core\Model
 {

@@ -1,4 +1,5 @@
 <?php
+
 class SetUserDataController extends \core\Controller
 {
     public function action_index()

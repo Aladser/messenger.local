@@ -121,13 +121,12 @@ webSocket.onmessage = e => {
                 }
                 // звуковое уведомление
                 if (chat.isnotice === 1) {
-                    let notice = new Audio('application/views/notice.wav');
+                    let notice = new Audio('application/data/notice.wav');
                     notice.autoplay = true;
                 }
             }
         }
 
-        console.log(openChatId, data.chatId)
         // сообщения открытого чата
         if (openChatId === data.chatId) {
             // изменение сообщения

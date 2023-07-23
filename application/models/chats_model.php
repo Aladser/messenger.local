@@ -1,4 +1,5 @@
 <?php
+
 /** Добавить контакт(чат) с пользователем */
 class ChatsModel extends \core\Model
 {

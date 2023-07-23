@@ -1,4 +1,5 @@
 <?php
+
 /** Поиск контактов пользователя */
 class MainModel extends \core\Model
 {

@@ -1,4 +1,5 @@
 <?php
+
 /** Данные о профиле текущего пользователя */
 class ProfileModel extends \core\Model
 {

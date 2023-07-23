@@ -1,4 +1,5 @@
 <?php
+
 class GetContactsController extends \core\Controller
 {
     public function action_index()

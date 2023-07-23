@@ -1,4 +1,5 @@
 <?php
+
 namespace core;
 
 use core\db\DBQueryCtl;
@@ -59,31 +60,55 @@ class ConfigClass
         $this->messageDBTable = new MessageDBTableModel($this->dbQueryCtl);
     }
 
+    /**
+     * Возвращает класс запросов БД
+     * @return DBQueryCtl
+     */
     public function getDBQueryCtl(): DBQueryCtl
     {
         return $this->dbQueryCtl;
     }
 
+    /**
+     * Возвращает класс Отправителя писем
+     * @return EMailSender
+     */
     public function getEmailSender(): EMailSender
     {
         return $this->eMailSender;
     }
 
+    /**
+     * Возвращает таблицу пользователей
+     * @return UsersDBTableModel
+     */
     public function getUsers(): UsersDBTableModel
     {
         return $this->usersDBTable;
     }
 
+    /**
+     * Возвращает таблицу контактов
+     * @return ContactsDBTableModel
+     */
     public function getContacts(): ContactsDBTableModel
     {
         return $this->contactsDBTable;
     }
 
+    /**
+     * Возвращает таблицу соединений
+     * @return ConnectionsDBTableModel
+     */
     public function getConnections(): ConnectionsDBTableModel
     {
         return $this->connectionsDBTable;
     }
-    
+
+    /**
+     * Возвращает таблицу сообщений
+     * @return MessageDBTableModel
+     */
     public function getMessageDBTable(): MessageDBTableModel
     {
         return $this->messageDBTable;

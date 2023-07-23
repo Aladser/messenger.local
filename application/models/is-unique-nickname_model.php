@@ -1,4 +1,5 @@
 <?php
+
 /** Проверка уникальности никнейма */
 class IsUniqueNicknameModel extends \core\Model
 {

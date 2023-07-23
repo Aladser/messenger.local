@@ -1,4 +1,5 @@
 <?php
+
 //***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
 class RegUserModel extends \core\Model
 {

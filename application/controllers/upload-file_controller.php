@@ -1,4 +1,5 @@
 <?php
+
 class UploadFileController extends \core\Controller
 {
     public function action_index()

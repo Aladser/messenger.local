@@ -1,4 +1,5 @@
 <?php
+
 class LoginUserController extends \core\Controller
 {
     public function action_index()

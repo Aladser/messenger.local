@@ -1,4 +1,5 @@
 <?php
+
 // Контакты пользователя
 class EditNoticeShowModel extends \core\Model
 {

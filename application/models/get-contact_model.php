@@ -1,4 +1,5 @@
 <?php
+
 // Контакты пользователя
 class GetContactModel extends \core\Model
 {

@@ -1,4 +1,5 @@
 <?php
+
 /** Подтверждение почты */
 class VerifyEmailModel extends \core\Model
 {

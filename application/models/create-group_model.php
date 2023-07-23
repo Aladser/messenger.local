@@ -1,4 +1,5 @@
 <?php
+
 /** Создать групповой чат */
 class CreateGroupModel extends \core\Model
 {

@@ -1,4 +1,5 @@
 <?php
+
 /** Получить группы пользователя */
 class GetGroupsModel extends \core\Model
 {

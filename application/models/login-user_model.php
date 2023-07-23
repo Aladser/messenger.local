@@ -1,4 +1,5 @@
 <?php
+
 /** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ */
 class LoginUserModel extends \core\Model
 {

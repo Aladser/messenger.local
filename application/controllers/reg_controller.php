@@ -1,4 +1,5 @@
 <?php
+
 class RegController extends \core\Controller
 {
     public function action_index()

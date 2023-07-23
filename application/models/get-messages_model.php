@@ -1,4 +1,5 @@
 <?php
+
 /** список сообщений чата с пользователем*/
 class GetMessagesModel extends \core\Model
 {

@@ -1,4 +1,5 @@
 <?php
+
 class GetGroupContactsController extends \core\Controller
 {
     public function action_index()
