@@ -124,4 +124,3 @@ class MessageDBTableModel extends DBTableModel
         return $this->db->query($sql)['chat_participant_isnotice'];
     }
 }
-?>

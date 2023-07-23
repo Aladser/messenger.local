@@ -25,4 +25,3 @@ class ChatsModel extends \core\Model
         return ['user-email' => $userEmail, 'publicUsername' => $publicUsername, 'userhostId' => $userId];
     }
 }
-?>

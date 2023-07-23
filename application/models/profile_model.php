@@ -23,4 +23,4 @@ class ProfileModel extends \core\Model
         return $this->usersTable->getUserData($email);
     }
 }
-?>
+

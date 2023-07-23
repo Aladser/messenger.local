@@ -16,4 +16,3 @@ class FindContactsModel extends \core\Model
         echo json_encode($this->users->getUsers($_POST['userphrase'], $email));
     }
 }
-?>

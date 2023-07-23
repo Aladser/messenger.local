@@ -6,4 +6,4 @@
             $this->model->run();
         } 
     }
-?>
+

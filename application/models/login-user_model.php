@@ -30,4 +30,3 @@ class LoginUserModel extends \core\Model
         echo json_encode($data);
     }
 }
-?>

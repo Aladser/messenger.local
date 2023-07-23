@@ -116,4 +116,3 @@ class Chat implements MessageComponentInterface
         file_put_contents($this->logFile, $message."\n", FILE_APPEND | LOCK_EX);
     }
 }
-?>

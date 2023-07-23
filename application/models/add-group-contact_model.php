@@ -16,4 +16,3 @@ class AddGroupContactModel extends \core\Model
         echo json_encode($this->contactsTable->addGroupContact($_POST['discussionid'], $this->usersTable->getUserId($_POST['username'])));
     }
 }
-?>

@@ -152,4 +152,3 @@ class UsersDBTableModel extends DBTableModel
         return $data === $dbData;
     }
 }
-?>

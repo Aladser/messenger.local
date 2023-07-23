@@ -11,4 +11,3 @@ class Controller {
 		$this->model = is_null($modelName) ? null : $modelName;
 	}
 }
-?>

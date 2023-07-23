@@ -23,4 +23,3 @@ class GetGroupContactsModel extends \core\Model
         ]);
     }
 }
-?>

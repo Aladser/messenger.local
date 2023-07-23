@@ -49,4 +49,3 @@ class EMailSender
         return json_encode($data);
     }
 }
-?>

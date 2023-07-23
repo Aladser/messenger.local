@@ -49,4 +49,3 @@ class SetUserDataModel extends \core\Model
         }
     }
 }
-?>

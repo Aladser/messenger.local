@@ -14,4 +14,3 @@ class IsUniqueNicknameModel extends \core\Model
         echo $this->users->isUniqueNickname($_POST['nickname']) ? 1 : 0;
     }
 }
-?>

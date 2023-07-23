@@ -38,4 +38,3 @@ class UploadFileModel extends \core\Model
         }
     }
 }
-?>

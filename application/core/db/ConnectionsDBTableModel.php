@@ -60,4 +60,3 @@ class ConnectionsDBTableModel extends DBTableModel
         $this->db->exec('delete from connections');
     }
 }
-?>
