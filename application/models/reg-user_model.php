@@ -36,5 +36,3 @@ class RegUserModel extends \core\Model
     }
 }
 ?>
-
-

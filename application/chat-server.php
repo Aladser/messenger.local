@@ -25,4 +25,3 @@
 // php chat-server.php
 // php C:\domains\messenger.local\application\chat-server.php
 ?>
-

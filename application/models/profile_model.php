@@ -24,5 +24,3 @@ class ProfileModel extends \core\Model
     }
 }
 ?>
-
-

@@ -21,4 +21,3 @@ class VerifyEmailModel extends \core\Model
     }
 }
 ?>
-

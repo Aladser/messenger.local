@@ -17,5 +17,3 @@ class FindContactsModel extends \core\Model
     }
 }
 ?>
-
-

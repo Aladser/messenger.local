@@ -31,4 +31,3 @@ class LoginUserModel extends \core\Model
     }
 }
 ?>
-

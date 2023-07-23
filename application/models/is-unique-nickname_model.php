@@ -15,5 +15,3 @@ class IsUniqueNicknameModel extends \core\Model
     }
 }
 ?>
-
-
