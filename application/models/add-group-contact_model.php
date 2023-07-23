@@ -13,6 +13,9 @@ class AddGroupContactModel extends \core\Model
 
     public function run()
     {
-        echo json_encode($this->contactsTable->addGroupContact($_POST['discussionid'], $this->usersTable->getUserId($_POST['username'])));
+        $discussionId = $_POST['discussionid'];
+        $userId = $this->usersTable->getUserId($_POST['username']);
+        $rslt = $this->contactsTable->addGroupContact($discussionId, $userId);
+        echo json_encode($rslt);
     }
 }

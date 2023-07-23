@@ -21,8 +21,7 @@ class Chat implements MessageComponentInterface
         ConnectionsDBTableModel $connectionsTable, 
         MessageDBTableModel $messageTable, 
         UsersDBTableModel $usersTable
-    )
-    {
+    ) {
         $this->clients = new \SplObjectStorage;
         $this->connectionsTable = $connectionsTable;
         $this->messageTable = $messageTable;
@@ -51,8 +50,10 @@ class Chat implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn) 
     {
         $this->clients->detach($conn);
-        $publicUsername = $this->connectionsTable->getConnectionPublicUsername($conn->resourceId); // публичное имя клиента
-        $this->connectionsTable->removeConnection($conn->resourceId); // удаление соединения из БД
+        // публичное имя клиента
+        $publicUsername = $this->connectionsTable->getConnectionPublicUsername($conn->resourceId);
+        // удаление соединения из БД
+        $this->connectionsTable->removeConnection($conn->resourceId);
         echo "Connection $publicUsername completed\n";
         $this->writeLog("Connection $publicUsername completed");
         $message = json_encode(['offсonnection' => 1, 'user' => $publicUsername]);
@@ -73,7 +74,11 @@ class Chat implements MessageComponentInterface
             // добавление соединения в БД
             $rslt = $this->connectionsTable->addConnection(['author'=>$data->author, 'wsId'=>$data->wsId]);
             // имя пользователя или ошибка добавления
-            $data->author = $rslt['publicUsername'] ? $rslt['publicUsername'] : ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo];
+            if ($rslt['publicUsername']) {
+                $data->author = $rslt['publicUsername'];
+            } else {
+                $data->author = ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo];
+            }
         // новое сообщение пользователя
         } elseif ($data->message) {
             if ($data->messageType == 'NEW') {
