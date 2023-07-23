@@ -51,19 +51,31 @@ class UsersDBTableModel extends DBTableModel
     /** получить публичное имя пользователя из ID */
     public function getPublicUsername(int $userId)
     {
-        return $this->db->query("select getPublicUserName(user_email, user_nickname, user_hide_email) as username from users where user_id = $userId")['username'];
+        return $this->db->query("
+            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
+            from users 
+            where user_id = $userId
+        ")['username'];
     }
 
     // получить публичное имя пользователя из почты
     public function getPublicUsernameFromEmail(string $userEmail)
     {
-        return $this->db->query("select getPublicUserName(user_email, user_nickname, user_hide_email) as username from users where user_email = '$userEmail'")['username'];
+        return $this->db->query("
+            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
+            from users 
+            where user_email = '$userEmail'
+        ")['username'];
     }
 
     // получить ID пользователя
     public function getUserId(string $publicUserName)
     {
-        return $this->db->query("select user_id from users where user_email = '$publicUserName' or user_nickname='$publicUserName'")['user_id'];
+        return $this->db->query("
+            select user_id 
+            from users 
+            where user_email = '$publicUserName' or user_nickname='$publicUserName'
+        ")['user_id'];
     }
 
     // список пользователей по шаблону почты или никнейма
@@ -71,10 +83,15 @@ class UsersDBTableModel extends DBTableModel
     {
         // список пользователей, подходящие по шаблону
         $sql = "
-        select user_id, user_nickname as username, user_photo from users where user_nickname  != '' and user_nickname is not null and user_email != '$email' and user_nickname  like '%$phrase%'
-        and user_email not in (select * from unhidden_emails where user_email  like '%$phrase%')
-        union 
-        select user_id, user_email, user_photo as username from users where user_hide_email  = 0 and user_email != '$email' and user_email like '%$phrase%';
+            select user_id, user_nickname as username, user_photo 
+            from users 
+            where user_nickname  != '' and user_nickname is not null 
+            and user_email != '$email' and user_nickname  like '%$phrase%'
+            and user_email not in (select * from unhidden_emails where user_email  like '%$phrase%')
+            union 
+            select user_id, user_email, user_photo as username 
+            from users 
+            where user_hide_email  = 0 and user_email != '$email' and user_email like '%$phrase%';
         ";
         return $this->db->query($sql, false);
     }
@@ -82,7 +99,11 @@ class UsersDBTableModel extends DBTableModel
     // получить пользовательские данные
     public function getUserData($email)
     {
-        $dbData = $this->db->query("select user_nickname, user_hide_email, user_photo from users where user_email = '$email'", false);
+        $dbData = $this->db->query("
+            select user_nickname, user_hide_email, user_photo 
+            from users 
+            where user_email = '$email'
+        ", false);
         $data['user-email'] = $email;
         $data['user_nickname'] = $dbData[0]['user_nickname'];
         $data['user_hide_email'] = $dbData[0]['user_hide_email'];
@@ -98,15 +119,21 @@ class UsersDBTableModel extends DBTableModel
 
         // запись никнейма
         $nickname = $data['user_nickname'];
-        $rslt |= $this->isEqualData($nickname, 'user_nickname', $email) ? true : $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
+        $rslt |= $this->isEqualData($nickname, 'user_nickname', $email) ? 
+        true : 
+        $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
 
         // запись скрытия почты
         $hideEmail = $data['user_hide_email'];
-        $rslt |= $this->isEqualData($hideEmail, 'user_hide_email', $email) ? true : $this->db->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
+        $rslt |= $this->isEqualData($hideEmail, 'user_hide_email', $email) ? 
+        true : 
+        $this->db->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
 
         // запись фото
         $photo = $data['user_photo'];
-        $rslt |= $this->isEqualData($photo, 'user_photo', $email) ? true : $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
+        $rslt |= $this->isEqualData($photo, 'user_photo', $email) ? 
+        true : 
+        $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
 
         return $rslt;
     }

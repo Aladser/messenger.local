@@ -10,7 +10,11 @@ class ConnectionsDBTableModel extends DBTableModel
         $connection_ws_id = intval($data['wsId']);
         $user_email = trim($data['author']);
         // поиск пользователя в БД
-        $user = $this->db->query("select user_id, getPublicUserName(user_email, user_nickname, user_hide_email) as publicusername from users where user_email = '$user_email'");
+        $user = $this->db->query("
+            select user_id, getPublicUserName(user_email, user_nickname, user_hide_email) as publicusername 
+            from users 
+            where user_email = '$user_email'
+        ");
         if($user){
             // поиск соединения в БД
             $userId = $user['user_id'];
@@ -22,7 +26,8 @@ class ConnectionsDBTableModel extends DBTableModel
                 return $sqlRslt == 1 ? ['publicUsername' => $user['publicusername']] : ['systeminfo' => "$user_email: DATABASE ERROR"];
             }
             else{
-                return ['publicUsername' => $user['publicusername']]; // соединение уже есть в БД. Возвращается публичное имя пользователя
+                // соединение уже есть в БД. Возвращается публичное имя пользователя
+                return ['publicUsername' => $user['publicusername']];
             }
         }
         else{
@@ -33,8 +38,11 @@ class ConnectionsDBTableModel extends DBTableModel
     // получить публичное имя пользователя соединения
     public function getConnectionPublicUsername(int $connId)
     {
-        $sql = "select getPublicUserName(user_email, user_nickname, user_hide_email) as username from users where user_id = (select connection_userid from connections where connection_ws_id = $connId)";
-        $publicUsername = $this->db->query($sql)['username'];
+        $publicUsername = $this->db->query("
+            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
+            from users where user_id = (select connection_userid from connections 
+            where connection_ws_id = $connId)
+        ")['username'];
         return $publicUsername;
     }
 

@@ -64,7 +64,11 @@ class MessageDBTableModel extends DBTableModel
     public function editMessage(string $msg, int $msgId)
     {
         $this->db->exec("update chat_message set chat_message_text = '$msg' where chat_message_id = $msgId");
-        $rslt = $this->db->query("select chat_message_id, chat_message_chatid as chatId, chat_message_text, chat_message_time from chat_message where chat_message_id = $msgId");
+        $rslt = $this->db->query("
+            select chat_message_id, chat_message_chatid as chatId, chat_message_text, chat_message_time 
+            from chat_message 
+            where chat_message_id = $msgId
+        ");
         $rslt['messageType'] = 'EDIT';
         return $rslt;
     }
@@ -72,7 +76,11 @@ class MessageDBTableModel extends DBTableModel
     // удалить сообщение
     public function removeMessage(int $msgId)
     {
-        $rslt = $this->db->query("select chat_message_id, chat_message_chatid as chatId from chat_message where chat_message_id = $msgId");
+        $rslt = $this->db->query("
+            select chat_message_id, chat_message_chatid as chatId 
+            from chat_message 
+            where chat_message_id = $msgId
+        ");
         $this->db->exec("delete from chat_message where chat_message_id = $msgId");
         $rslt['messageType'] = 'REMOVE';
         return $rslt;
@@ -97,8 +105,16 @@ class MessageDBTableModel extends DBTableModel
     // установить показ уведомлений чатов
     public function setNoticeShow($chatid, $userid, $notice)
     {
-        $this->db->exec("update chat_participant set chat_participant_isnotice = $notice where chat_participant_chatid = $chatid and chat_participant_userid = $userid");
-        return $this->db->query("select chat_participant_isnotice from chat_participant where chat_participant_chatid = $chatid and chat_participant_userid = $userid")['chat_participant_isnotice'];
+        $this->db->exec("
+            update chat_participant 
+            set chat_participant_isnotice = $notice where chat_participant_chatid = $chatid and chat_participant_userid = $userid
+        ");
+        return $this->db->query("
+            select chat_participant_isnotice 
+            from chat_participant 
+            where chat_participant_chatid = $chatid 
+            and chat_participant_userid = $userid
+        ")['chat_participant_isnotice'];
     }
 }
 ?>

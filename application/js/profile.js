@@ -8,16 +8,16 @@ const hideEmailInput = document.querySelector('#hide-email-input');
 const saveBtn = document.querySelector('#save-profile-settings-btn');
 /** элемент отображения никнейма */
 const inputNickname = document.querySelector('#input-nickname'); 
+
 const prgError = document.querySelector('#prg-error');
 const editNicknameBtn = document.querySelector('#btn-edit-nickname');
 const editPhotoBtn = document.querySelector('#edit-photo-btn');
+/** изображение профиля */
+const profileImageField = document.querySelector('#profile-img');
 
-window.onload = () =>{
-    hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn);
-    inputNickname.oninput = writeNickname(inputNickname, saveBtn);
-    // скрыть кнопку скрытия почты, если пустой никнейм
-    if(inputNickname.value.trim() !== '') hideEmailInputBlock.classList.remove('d-none');          
-}
+/** случайное число*/
+let randomNumber = Math.round(Math.random()*100000);
+
 
 /** изменить видимость кнопки Сохранить при переключении чекбокса скрытия почты */ 
 function changeHideEmailInputVisibility(input, btn){
@@ -101,20 +101,21 @@ selectFileInput.onchange = () => {
     saveBtn.classList.remove('d-none');
     document.querySelector('#upload-file-btn').click();
 }
-// установка фото профиля
+// показ выбранного изображения как фото профиля
 document.querySelector('#upload-file-form').onsubmit = e => {
     e.preventDefault();
     if(selectFileInput.value !== ''){
         fetch('/upload-file', {method: 'POST', body: new FormData(e.target)}).then(response => response.text()).then(filename => {
-            let imgFile = filename != '' ? `application/data/temp/${filename}` : 'application/images/ava_profile.png';
-            document.querySelector('#profile-img').src = imgFile;
+            filename = filename.trim();
+            let imgFile = filename != '' ? `application/data/temp/${filename}?r=${randomNumber++}` : 'application/images/ava_profile.png';
+            profileImageField.src = imgFile;
             selectFileInput.value = ''; // очистка элемента выбора файлов
         });
     }
 }
 
 
-// отправка изменений профиля на сервер
+// сохранение введенных данных, и отправка изменений профиля на сервер
 saveBtn.addEventListener('click', ()=>{
     let data = new URLSearchParams();
     data.set('user_nickname', inputNickname.value);
@@ -123,6 +124,7 @@ saveBtn.addEventListener('click', ()=>{
     data.set('user_photo', fpathArr[fpathArr.length - 1]);
 
     fetch('/set-userdata', {method: 'POST', body: data}).then(r => r.text()).then(data => {
+        console.log(data);
         if(data == 0){
             saveBtn.classList.remove('d-none');
             prgError.innerHTML = 'серверная ошибка';
@@ -133,4 +135,12 @@ saveBtn.addEventListener('click', ()=>{
     });
 
     if(inputNickname.value.trim() !== '') hideEmailInputBlock.classList.remove('d-none');  
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    profileImageField.src = `${profileImageField.src}?r=${randomNumber++}`; // фото профиля с рандомным GET-параметром
+    hideEmailInput.onchange = changeHideEmailInputVisibility(hideEmailInput, saveBtn);
+    inputNickname.oninput = writeNickname(inputNickname, saveBtn);
+    // скрыть кнопку скрытия почты, если пустой никнейм
+    if(inputNickname.value.trim() !== '') hideEmailInputBlock.classList.remove('d-none');          
 });

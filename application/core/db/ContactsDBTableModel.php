@@ -13,7 +13,13 @@ class ContactsDBTableModel extends DBTableModel
     // проверка существования
     function existsContact($contactId, $userId)
     {
-        return $this->db->query("select * from contacts where cnt_user_id = $userId and cnt_contact_id = $contactId or cnt_user_id = $contactId and cnt_contact_id = $userId");
+        return $this->db->query("
+        select * 
+        from contacts 
+        where cnt_user_id = $userId 
+        and cnt_contact_id = $contactId or cnt_user_id = $contactId 
+        and cnt_contact_id = $userId
+        ");
     }
 
     // получить контакт пользователя
