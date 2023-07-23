@@ -1,7 +1,10 @@
 <?php
+require __DIR__."/vendor/autoload.php";
+
 spl_autoload_register(function ($class_name) {
     include $class_name . '.php';
 });
+
 date_default_timezone_set('Europe/Moscow');
 
 // проверить существование папки data/temp.
@@ -11,4 +14,3 @@ if (!is_dir($tempDir)) {
 };
 
 \core\Route::start();
-?>

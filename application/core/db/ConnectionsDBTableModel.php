@@ -5,7 +5,7 @@ namespace core\db;
 class ConnectionsDBTableModel extends DBTableModel
 {
     // сохранить подключение в БД
-    public function addConnection(array $data)
+    public function addConnection(array $data): array
     {
         $connection_ws_id = intval($data['wsId']);
         $user_email = trim($data['author']);
@@ -19,20 +19,21 @@ class ConnectionsDBTableModel extends DBTableModel
             // поиск соединения в БД
             $userId = $user['user_id'];
             $isConnection = $this->db->query("select * from connections where connection_userid = $userId");
-            // не могу понять откуда берется нулевой connId из Ratchet          
+            // не могу понять откуда берется нулевой connId из Ratchet. Удаляю его
             if (!$isConnection && $connection_ws_id != 0) {
                 $sqlRslt = $this->db->exec("
                     insert connections(connection_ws_id, connection_userid) values($connection_ws_id, $userId)
                 ");
                 // при добавлении соединения возвращается публичное имя пользователя или ошибка добавления
-                return $sqlRslt == 1 
-                    ? ['publicUsername' => $user['publicusername']] 
+                return $sqlRslt == 1
+                    ? ['publicUsername' => $user['publicusername']]
                     : ['systeminfo' => "$user_email: DATABASE ERROR"];
             } else {
                 // соединение уже есть в БД. Возвращается публичное имя пользователя
                 return ['publicUsername' => $user['publicusername']];
             }
         } else {
+            $rslt = ['systeminfo' => "USER $user_email NO EXISTS"];
             return ['systeminfo' => "USER $user_email NO EXISTS"]; // пользователь в БД не существует
         }
     }

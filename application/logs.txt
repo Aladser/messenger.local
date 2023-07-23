@@ -2,4 +2,9 @@
 {"messageOnconnection":1,"author":"Admin","wsId":98}
 {"messageOnconnection":1,"author":"aladser@yandex.ru","wsId":98}
 Connection aladser@yandex.ru completed
+{"messageOnconnection":1,"author":"Admin","wsId":111}
+{"messageOnconnection":1,"author":"Aladser","wsId":111}
+{"message":"1","fromuser":"Aladser","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-23 17:37:24","chat_message_id":79}
+{"message":"1","fromuser":"Admin","chatId":1,"chatType":"dialog","messageType":"NEW","time":"2023-07-23 17:37:28","chat_message_id":80}
 Connection Admin completed
+Connection Aladser completed

@@ -17,7 +17,7 @@ class MessageDBTableModel extends DBTableModel
         $query = $this->db->query($sql);
 
         // создание диалога, если не существует
-        if(!$query){
+        if (!$query) {
             $chatId = $this->db->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
             return $chatId;
         }
@@ -60,7 +60,8 @@ class MessageDBTableModel extends DBTableModel
     }
 
     // добавить пересылаемое сообщение
-    public function addForwardedMessage($msg){
+    public function addForwardedMessage($msg)
+    {
         $out = '@chatid';
         $func = "add_forwarded_message($msg->fromuserId, $msg->msgId, $msg->chatId, '$msg->time', $out)";
         return $this->db->executeProcedure($func, $out);
@@ -118,9 +119,16 @@ class MessageDBTableModel extends DBTableModel
     {
         $this->db->exec("
             update chat_participant 
-            set chat_participant_isnotice = $notice where chat_participant_chatid = $chatid and chat_participant_userid = $userid
+            set chat_participant_isnotice = $notice 
+            where chat_participant_chatid = $chatid 
+              and chat_participant_userid = $userid
         ");
-        $sql = "select chat_participant_isnotice from chat_participant where chat_participant_chatid = $chatid and chat_participant_userid = $userid";
+        $sql = "
+            select chat_participant_isnotice 
+            from chat_participant 
+            where chat_participant_chatid = $chatid 
+              and chat_participant_userid = $userid
+        ";
         return $this->db->query($sql)['chat_participant_isnotice'];
     }
 }

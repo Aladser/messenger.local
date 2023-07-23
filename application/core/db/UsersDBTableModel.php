@@ -5,16 +5,16 @@ namespace core\db;
 class UsersDBTableModel extends DBTableModel
 {
     // проверить существование пользователя
-    public function existsUser($email)
+    public function existsUser($email): bool
     {
         return $this->db->query("select count(*) as count from users where user_email = '$email'")['count'] == 1;
     }
 
     // проверка авторизации
-    public function checkUser($email, $password)
+    public function checkUser($email, $password): bool
     {
-        $passhash = $this->db->query("select user_password from users where user_email='$email'")['user_password'];
-        return password_verify($password, $passhash);
+        $passHash = $this->db->query("select user_password from users where user_email='$email'")['user_password'];
+        return password_verify($password, $passHash);
     }
     
     // добавить нового пользователя
@@ -33,9 +33,10 @@ class UsersDBTableModel extends DBTableModel
     }
 
     // проверить хэш пользователя
-    public function checkUserHash($email, $hash)
+    public function checkUserHash($email, $hash): bool
     {
-        $hash = $this->db->query("select count(*) as count from users where user_email = '$email' and user_hash='$hash'")['count'];
+        $sql = "select count(*) as count from users where user_email = '$email' and user_hash='$hash'";
+        $hash = $this->db->query($sql)['count'];
         return $hash == 1;
     }
 
@@ -47,7 +48,8 @@ class UsersDBTableModel extends DBTableModel
     }
 
     // проверить уникальность никнейма
-    public function isUniqueNickname($nickname){
+    public function isUniqueNickname($nickname): bool
+    {
         $sql = "select count(*) as count from users where user_nickname='$nickname'";
         return $this->db->query($sql)['count'] == 0;
     }
@@ -104,7 +106,7 @@ class UsersDBTableModel extends DBTableModel
     }
 
     // получить пользовательские данные
-    public function getUserData($email)
+    public function getUserData($email): array
     {
         $dbData = $this->db->query("
             select user_nickname, user_hide_email, user_photo 
@@ -119,34 +121,34 @@ class UsersDBTableModel extends DBTableModel
     }
 
     // изменить пользовательские данные в Бд
-    public function setUserData($data)
+    public function setUserData($data): bool
     {
-        $rslt = false; 
-        $email = $data['user_email']; 
+        $rslt = false;
+        $email = $data['user_email'];
 
         // запись никнейма
         $nickname = $data['user_nickname'];
-        $rslt |= $this->isEqualData($nickname, 'user_nickname', $email) ? 
-        true : 
+        $rslt |= $this->isEqualData($nickname, 'user_nickname', $email) ?
+        true :
         $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
 
         // запись скрытия почты
         $hideEmail = $data['user_hide_email'];
-        $rslt |= $this->isEqualData($hideEmail, 'user_hide_email', $email) ? 
-        true : 
+        $rslt |= $this->isEqualData($hideEmail, 'user_hide_email', $email) ?
+        true :
         $this->db->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
 
         // запись фото
         $photo = $data['user_photo'];
-        $rslt |= $this->isEqualData($photo, 'user_photo', $email) ? 
-        true : 
+        $rslt |= $this->isEqualData($photo, 'user_photo', $email) ?
+        true :
         $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
 
         return $rslt;
     }
 
     // сравнение новых данных и в БД
-    private function isEqualData($data, $field, $email)
+    private function isEqualData($data, $field, $email): bool
     {
         $dbData = $this->db->query("select $field from users WHERE user_email='$email'")[$field];
         return $data === $dbData;

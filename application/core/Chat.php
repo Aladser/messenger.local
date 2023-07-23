@@ -49,7 +49,7 @@ class Chat implements MessageComponentInterface
      * закрыть соединение
      * @param ConnectionInterface $conn соединение
      */
-    public function onClose(ConnectionInterface $conn) 
+    public function onClose(ConnectionInterface $conn)
     {
         $this->clients->detach($conn);
         // публичное имя клиента
@@ -61,7 +61,7 @@ class Chat implements MessageComponentInterface
         $message = json_encode(['offсonnection' => 1, 'user' => $publicUsername]);
         foreach ($this->clients as $client) {
             $client->send($message);
-        } 
+        }
     }
 
     /**
@@ -69,20 +69,19 @@ class Chat implements MessageComponentInterface
      * @param ConnectionInterface $from соединение
      * @param mixed $msg сообщение
      */
-    public function onMessage(ConnectionInterface $from, $msg) 
-    {    
+    public function onMessage(ConnectionInterface $from, $msg)
+    {
         $data = json_decode($msg);
-        // после соединения пользователь отправляет пакет messageOnconnection
+        // после соединения пользователь отправляет пакет messageOnconnection. Или отправляется сообщение
         if (property_exists($data, 'messageOnconnection')) {
             // добавление соединения в БД
-            $rslt = $this->connectionsTable->addConnection(['author'=>$data->author, 'wsId'=>$data->wsId]);
+            $connection = $this->connectionsTable->addConnection(['author'=>$data->author, 'wsId'=>$data->wsId]);
             // имя пользователя или ошибка добавления
-            if ($rslt['publicUsername']) {
-                $data->author = $rslt['publicUsername'];
+            if ($connection['publicUsername']) {
+                $data->author = $connection['publicUsername'];
             } else {
                 $data->author = ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo];
             }
-        // новое сообщение пользователя
         } elseif ($data->message) {
             if ($data->messageType == 'NEW') {
                 $data->time = date('Y-m-d H:i:s');
@@ -103,7 +102,7 @@ class Chat implements MessageComponentInterface
         $this->writeLog($msg);
         foreach ($this->clients as $client) {
             $client->send($msg);
-        } 
+        }
     }
 
     /**
@@ -111,7 +110,7 @@ class Chat implements MessageComponentInterface
      * @param ConnectionInterface $conn соединение
      * @param \Exception $e ошибка
      */
-    public function onError(ConnectionInterface $conn, \Exception $e) 
+    public function onError(ConnectionInterface $conn, \Exception $e)
     {
         $this->writeLog("error: {$e->getMessage()}");
         $conn->close();
