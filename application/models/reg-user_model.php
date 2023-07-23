@@ -2,7 +2,7 @@
 //***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
 class RegUserModel extends \core\Model
 {
-	private $users;
+    private $users;
     private $eMailSender;
 
     public function __construct($CONFIG)
@@ -16,7 +16,7 @@ class RegUserModel extends \core\Model
         if (!$this->users->existsUser($_POST['email'])) {
             $email = $_POST['email'];
             $addUserRslt = $this->users->addUser($email, $_POST['password']);
-            if($addUserRslt === 1) {
+            if ($addUserRslt === 1) {
                 $hash = md5($email . time());
                 $this->users->addUserHash($email, $hash);
                 $text = '

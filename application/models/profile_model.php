@@ -2,7 +2,7 @@
 /** Данные о профиле текущего пользователя */
 class ProfileModel extends \core\Model
 {
-	private $usersTable;
+    private $usersTable;
 
     public function __construct($CONFIG)
     {
@@ -23,4 +23,3 @@ class ProfileModel extends \core\Model
         return $this->usersTable->getUserData($email);
     }
 }
-

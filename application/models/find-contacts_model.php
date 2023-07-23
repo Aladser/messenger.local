@@ -2,7 +2,7 @@
 /** Поиск контактов пользователя */
 class FindContactsModel extends \core\Model
 {
-	private $users;
+    private $users;
 
     public function __construct($CONFIG)
     {

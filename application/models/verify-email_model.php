@@ -2,7 +2,7 @@
 /** Подтверждение почты */
 class VerifyEmailModel extends \core\Model
 {
-	private $users;
+    private $users;
 
     public function __construct($CONFIG)
     {

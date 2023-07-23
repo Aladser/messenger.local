@@ -18,7 +18,7 @@ class ChatsModel extends \core\Model
 
         // удаление временных файлов профиля, откуда был переход
         $tempDirPath = dirname(__DIR__, 1)."\data\\temp\\";
-        foreach(glob($tempDirPath.$userEmail.'*') as $file) {
+        foreach (glob($tempDirPath.$userEmail.'*') as $file) {
             unlink($file);
         }
 

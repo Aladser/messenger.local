@@ -16,7 +16,7 @@ class UploadFileModel extends \core\Model
         $number = false;
         if (count($dwlfiles) == 0) {
             $filename = $email.'.1.'.$ext;
-        } else{
+        } else {
             $dwlFile = $dwlfiles[count($dwlfiles)-1];           // последний файл
             $dwlfiles = explode('.', $dwlFile);                 // имя разбивается по точкам в массив
             $number = intval($dwlfiles[count($dwlfiles)-2]);    // предпоследний индекс файла
@@ -31,8 +31,8 @@ class UploadFileModel extends \core\Model
         if ($number) {
             for ($i=1; $i<$number; $i++) {
                 $filename = "$dwlDirPath$email.$i.$ext";
-                if (file_exists($filename)) { 
-                    unlink( "$dwlDirPath$email.$i.$ext");
+                if (file_exists($filename)) {
+                    unlink("$dwlDirPath$email.$i.$ext");
                 }
             }
         }

@@ -2,7 +2,7 @@
 /** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ */
 class LoginUserModel extends \core\Model
 {
-	private $users;
+    private $users;
 
     public function __construct($CONFIG)
     {

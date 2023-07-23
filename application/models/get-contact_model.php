@@ -25,12 +25,14 @@ class GetContactModel extends \core\Model
             $this->contactsTable->addContact($contactId, $userId);
             $chatId = $this->messageTable->getDialogId($userId, $contactId); // создается диалог, если не существует
             $contactName = $this->usersTable->getPublicUsername($contactId);
-            $isnotice = 0;
-            $rslt = ['username'=>$contactName, 'chat_id'=>$chatId, 'isnotice'=>$isnotice];
+            $userData = ['username'=>$contactName, 'chat_id'=>$chatId, 'isnotice'=>0];
         } else {
-            $rslt = $this->contactsTable->getContact($userId, $contactId);
-            $rslt = ['username'=>$rslt[0]['username'], 'chat_id'=>$rslt[0]['chat_id'], 'isnotice'=>$rslt[0]['isnotice']];
+            $contact = $this->contactsTable->getContact($userId, $contactId);
+            $userData = ['username'=>$contact[0]['username'],
+                'chat_id'=>$contact[0]['chat_id'],
+                'isnotice'=>$contact[0]['isnotice']
+            ];
         }
-        echo json_encode($rslt);
+        echo json_encode($userData);
     }
 }

@@ -18,7 +18,7 @@ class GetGroupContactsModel extends \core\Model
         $discussionId = $_POST['discussionid'];
         $creatorId = $this->messagesTable->getDiscussionCreatorId($discussionId);
         echo json_encode([
-            'participants' => $this->contactsTable->getGroupContacts($discussionId), 
+            'participants' => $this->contactsTable->getGroupContacts($discussionId),
             'creatorName' => $this->usersTable->getPublicUsername($creatorId)
         ]);
     }

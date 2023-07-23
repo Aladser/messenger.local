@@ -2,7 +2,7 @@
 /** Проверка уникальности никнейма */
 class IsUniqueNicknameModel extends \core\Model
 {
-	private $users;
+    private $users;
 
     public function __construct($CONFIG)
     {

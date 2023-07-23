@@ -14,58 +14,63 @@ const password2Clue = document.querySelector('#reg-form__password2-clue');
 
 
 //***** событие клика поля ввода данных *****/
-function clickInputElement(input, clue, isPassword){
+function clickInputElement(input, clue, isPassword)
+{
     regErrorPrg.classList.add('d-none');
     // убирание выделения
     emailClue.classList.remove('input-clue--active');
     password1Clue.classList.remove('input-clue--active');
     password2Clue.classList.remove('input-clue--active');
     // валидация данных
-    let clickRslt = isPassword ? validatePassword(input.value) : validateEmail(input.value);
-    if(!clickRslt){
+    let isValid = isPassword ? validatePassword(input.value) : validateEmail(input.value);
+    if (!isValid) {
         clue.classList.add('input-clue--active');
     }
 }
 
-emailInput.onclick = function(){
+emailInput.onclick = function () {
     clickInputElement(this, emailClue, false);
     password2Input.value = '';
     regBtn.disabled = true;
 };
-password1Input.onclick = function(){
+password1Input.onclick = function () {
     clickInputElement(this, password1Clue, true);
     password2Input.value = '';
     regBtn.disabled = true;
 };
-password2Input.onclick = function(){clickInputElement(this, password2Clue, true)};
+password2Input.onclick = function () {
+    clickInputElement(this, password2Clue, true)};
 
 
 
 //***** событие ввода данных *****/
-function inputData(input, clue, isPassword){
+function inputData(input, clue, isPassword)
+{
     // валидация данных
-    let inputRslt = isPassword ? validatePassword(input.value) : validateEmail(input.value);
-    if(inputRslt){
+    let isValid = isPassword ? validatePassword(input.value) : validateEmail(input.value);
+    if (isValid) {
         input.style.outlineColor = 'black';
         clue.classList.remove('input-clue--active');
-    }
-    else{
+    } else {
         input.style.outlineColor = 'red';
         clue.classList.add('input-clue--active');
     }
     // проверка доступности кнопки
-    regBtnEnabled = validateEmail(emailInput.value) && validatePassword(password1Input.value) && validatePassword(password2Input.value) && password1Input.value===password2Input.value;
+    let regBtnEnabled = validateEmail(emailInput.value) && validatePassword(password1Input.value) && validatePassword(password2Input.value) && password1Input.value===password2Input.value;
     regBtn.disabled = !regBtnEnabled;
 }
 
-emailInput.addEventListener('input', function(){inputData(this, emailClue, false);});
-password1Input.addEventListener('input', function(){inputData(this, password1Clue, true);});
-password2Input.addEventListener('input', function(){inputData(this, password2Clue, true);});
+emailInput.addEventListener('input', function () {
+    inputData(this, emailClue, false);});
+password1Input.addEventListener('input', function () {
+    inputData(this, password1Clue, true);});
+password2Input.addEventListener('input', function () {
+    inputData(this, password2Clue, true);});
 
 
 
 //***** проверка существования пользователя и регистрация *****/
-document.querySelector('#reg-form').addEventListener('submit', function(e){
+document.querySelector('#reg-form').addEventListener('submit', function (e) {
     e.preventDefault();
     let form = new FormData(this);
     // Список пар ключ/значение
@@ -73,21 +78,19 @@ document.querySelector('#reg-form').addEventListener('submit', function(e){
         console.log(data);
         data = JSON.parse(data);
         regErrorPrg.classList.remove('d-none');
-        if(data['result'] === 'user_exists'){
+        if (data['result'] === 'user_exists') {
             regErrorPrg.innerHTML = 'пользователь уже существует';
             regErrorPrg.classList.remove('text-success');
             regErrorPrg.classList.add('text-danger');
             password1Input.value = '';
             password2Input.value = '';
-        }
-        else if(data['result'] === 'add_user_error'){
+        } else if (data['result'] === 'add_user_error') {
             regErrorPrg.innerHTML = 'серверная ошибка создания пользователя';
             regErrorPrg.classList.remove('text-success');
             regErrorPrg.classList.add('text-danger');
             password1Input.value = '';
             password2Input.value = '';
-        }
-        else{
+        } else {
             regErrorPrg.innerHTML = 'Пользователь создан. Подтвердите ваши регистрационные данные по ссылке, указанной в письме, направленном на вашу почту';
             regErrorPrg.classList.remove('text-danger');
             regErrorPrg.classList.add('text-success');
