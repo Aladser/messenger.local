@@ -1,8 +1,8 @@
 <?php
-    class RegController extends \core\Controller 
-    { 
-        public function action_index() 
-        { 
-            $this->view->generate('template_view.php', 'reg_view.php', 'reg.css', 'reg.js', 'Месенджер: регистрация'); 
-        } 
+class RegController extends \core\Controller
+{
+    public function action_index()
+    {
+        $this->view->generate('template_view.php', 'reg_view.php', 'reg.css', 'reg.js', 'Месенджер: регистрация');
     }
+}

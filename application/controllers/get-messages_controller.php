@@ -1,8 +1,8 @@
 <?php
-    class GetMessagesController extends \core\Controller 
-    { 
-        public function action_index() 
-        {
-            $this->model->run();
-        } 
+class GetMessagesController extends \core\Controller
+{
+    public function action_index()
+    {
+        $this->model->run();
     }
+}
