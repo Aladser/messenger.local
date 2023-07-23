@@ -67,3 +67,4 @@ class DBQueryCtl
         return $rslt->fetch(\PDO::FETCH_ASSOC)['info'];
     }
 }
+?>

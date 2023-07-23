@@ -68,3 +68,4 @@ class ContactsDBTableModel extends DBTableModel
         return $this->db->query($sql, false);
     }
 }
+?>

@@ -101,3 +101,4 @@ class MessageDBTableModel extends DBTableModel
         return $this->db->query("select chat_participant_isnotice from chat_participant where chat_participant_chatid = $chatid and chat_participant_userid = $userid")['chat_participant_isnotice'];
     }
 }
+?>

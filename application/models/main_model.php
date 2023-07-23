@@ -13,5 +13,6 @@ class MainModel extends \core\Model
         }
     }
 }
+?>
 
 

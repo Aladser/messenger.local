@@ -11,3 +11,4 @@ class DBTableModel
         $this->db = $db;
     }
 }
+?>

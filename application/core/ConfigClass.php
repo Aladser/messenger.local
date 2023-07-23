@@ -91,4 +91,5 @@ class ConfigClass
 		return $this->messageDBTable;
 	}
 }
+?>
                                                                                                                                                                                                                                                       

@@ -38,5 +38,6 @@ class RegUserModel extends \core\Model
         echo json_encode($data);
     }
 }
+?>
 
 

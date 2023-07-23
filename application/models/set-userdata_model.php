@@ -45,3 +45,4 @@ class SetUserDataModel extends \core\Model
         foreach(glob("$tempDirPath$email*") as $file) unlink($file);// удаление временных файлов профиля
     }
 }
+?>

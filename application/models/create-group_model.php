@@ -20,3 +20,4 @@ class CreateGroupModel extends \core\Model
         echo json_encode($this->messageTable->createDiscussion( $userId ));
     }
 }
+?>

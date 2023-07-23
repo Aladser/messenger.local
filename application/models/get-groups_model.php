@@ -20,3 +20,4 @@ class GetGroupsModel extends \core\Model
         echo json_encode($this->messageTable->getDiscussions($userId));
     }
 }
+?>

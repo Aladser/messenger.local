@@ -19,3 +19,4 @@ class EditNoticeShowModel extends \core\Model
         echo $this->messageTable->setNoticeShow($_POST["chat_id"], $userId, $notice);
     }
 }
+?>

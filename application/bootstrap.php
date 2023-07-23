@@ -7,3 +7,4 @@ $tempDir = __DIR__.'/data/temp';
 if(!is_dir($tempDir)){mkdir($tempDir, 0777);};
 
 \core\Route::start();
+?>

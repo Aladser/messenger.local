@@ -20,3 +20,4 @@ class GetContactsModel extends \core\Model
         echo json_encode($this->contactsTable->getContacts($userId));
     }
 }
+?>

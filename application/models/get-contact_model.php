@@ -36,3 +36,4 @@ class GetContactModel extends \core\Model
         echo json_encode($rslt);
     }
 }
+?>

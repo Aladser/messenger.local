@@ -7,3 +7,4 @@
             $this->view->generate('template_view.php', 'main_view.php', 'main.css', '','Месенджер'); 
         } 
     }
+?>

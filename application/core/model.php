@@ -11,3 +11,4 @@ abstract class Model
         return  isset($_COOKIE['email']) ?  $_COOKIE['email'] : $_SESSION['email'];
     }
 }
+?>

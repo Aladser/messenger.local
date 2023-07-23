@@ -7,3 +7,4 @@
             $this->view->generate('template_view.php', 'chats_view.php', 'chats.css', 'chats.js','Чаты', $data); 
         } 
     }
+?>
