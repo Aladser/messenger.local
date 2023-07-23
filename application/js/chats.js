@@ -72,8 +72,6 @@ let contactList = [];
 let groupList = [];
 /** список участников выбранной группы */
 let groupContacts = [];
-/** показ уведомления */
-let noticeTimer;
 /** массив нажатых клавиш */
 let pressedKeys = [];
 
@@ -105,7 +103,7 @@ webSocket.onmessage = e => {
     } else {
         // уведомления о новых сообщениях чатов
         // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
-        if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser != publicClientUsername) {
+        if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== publicClientUsername) {
             let foundedContactChat = contactList.find(el => el.chat_id == data.chatId); // поиск чата среди списка чатов контактов
             let foundedGroupChat = groupList.find(el => el.chat_id == data.chatId);     // поиск чата среди групповых чатов
             let isChat = (foundedContactChat!==undefined) || (foundedGroupChat!==undefined);
@@ -175,8 +173,8 @@ function sendData(message, messageType)
             data.msgId = parseInt(selectedMessage.getAttribute('data-chat_message_id'));
         }
 
-        if (messageType == 'FORWARD') {
-            data.chatId = contactList.find(el => el.username == forwardedMessageRecipientName).chat_id;
+        if (messageType === 'FORWARD') {
+            data.chatId = contactList.find(el => el.username === forwardedMessageRecipientName).chat_id;
             delete data['chatType'];
         }
         webSocket.send(JSON.stringify(data));
@@ -197,7 +195,6 @@ function appendMessage(data)
     newDate = new Date(timeInMs);
     let localTime = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
     // показ переводов строки на странице
-    console.log(data.message);
     let brIndex = data.message.indexOf('\n');
     while (brIndex > -1) {
         data.message = data.message.replace('\n', '<br>');
@@ -239,7 +236,7 @@ function appendContactDOMElement(contact)
     img.className = 'contact__img img pe-2';
     name.className = 'contact__name';
 
-    img.src = (contact.user_photo == 'ava_profile.png' || contact.user_photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${contact.user_photo}`;
+    img.src = (contact.user_photo === 'ava_profile.png' || contact.user_photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${contact.user_photo}`;
     name.innerHTML = contact.username;
     contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock,contact.username, 'dialog'));
     contactBlock.setAttribute('data-notice', contact.isnotice);
@@ -255,7 +252,7 @@ function appendContactDOMElement(contact)
     contactsContainer.append(contactBlock);
 }
 /** создать DOM-элемент группового чата списка групповых чатов
- * 
+ *
  * @param {*} group БД данные группы
  * @param {*} place куда добавить: START - начало списка, END - конец
  */
@@ -314,10 +311,9 @@ const showGroupRecipients = (domElement, discussionid) => {
         });
 
         // добавить новые кнопки добавления в группу у контактов-неучастников выбранной группы
-        let contacts = [];
         contactsContainer.querySelectorAll('.contact').forEach(cnt => {
-            cntName = cnt.lastChild.innerHTML;
-            if(!groupContacts.includes(cntName)){
+            let cntName = cnt.lastChild.innerHTML;
+            if (!groupContacts.includes(cntName)) {
                 let plus = document.createElement('div');
                 plus.className = 'contact-addgroup';
                 plus.innerHTML = '+';
@@ -332,11 +328,10 @@ const showGroupRecipients = (domElement, discussionid) => {
                     urlParams2.set('discussionid', discussionid);
                     urlParams2.set('username', username);
                     fetch('add-group-contact', {method: 'POST', body: urlParams2}).then(r=>r.text()).then(data => {
-                        if(data == 1){
+                        if (data == 1) {
                             e.target.parentNode.lastChild.remove();
                             domElement.lastChild.innerHTML += `<p class='group__contact'>${username}</p>`;
-                        }
-                        else{
+                        } else {
                             console.log(data);
                         }
                     });
@@ -351,16 +346,16 @@ const showGroupRecipients = (domElement, discussionid) => {
 /** показать сообщения */
 const showChat = (urlParams, bdChatName, type) =>{
     fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
-        if(data){
+        if (data) {
             chat.innerHTML = '';
 
             chatType = data.type;
             openChatId = data.chatId;
 
-            chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение '; 
-            chatNameLabel.innerHTML = bdChatName; 
+            chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
+            chatNameLabel.innerHTML = bdChatName;
 
-            messageInput.disabled = false;  
+            messageInput.disabled = false;
             sendMsgBtn.disabled = false;
 
             data.messages.forEach(elem => appendMessage(elem));// сообщения
@@ -371,36 +366,43 @@ const showChat = (urlParams, bdChatName, type) =>{
 
 
 /** показать на странице получателя пересылаемого сообщения*/
-function showForwardedMessageRecipient(contactDomElem){
+function showForwardedMessageRecipient(contactDomElem)
+{
     let contactNameElem = contactDomElem.querySelector('.contact__name');
-    if(contactNameElem){
+    if (contactNameElem) {
         forwardedMessageRecipientElement = contactDomElem;
-        forwardedMessageRecipientName = contactNameElem.innerHTML.trim();      
+        forwardedMessageRecipientName = contactNameElem.innerHTML.trim();
         let contactRecipient = document.querySelector('.contact-recipient');
-        if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
+        if (contactRecipient) {
+            contactRecipient.classList.remove('contact-recipient');
+        }
         contactDomElem.classList.add('contact-recipient');
         forwardBtn.disabled = false;
-    } 
+    }
 }
 /** удаление DOM узлов участников текущего выбранного группового чата */
-function removeGroupPatricipantDOMElements(){
+function removeGroupPatricipantDOMElements()
+{
     let groupContactsElement = document.querySelector('.group__contacts');
-    if(groupContactsElement) groupContactsElement.remove();
+    if (groupContactsElement) {
+        groupContactsElement.remove();
+    }
     // удаление кнопок добавления в группу у контактов-неучастников
     contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.remove());
 }
 
 /** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
- * 
+ *
  * @param {*} domElement DOM-элемент контакта или чата
  * @param {*} urlArg что ищется: контакт или групповой чат
  * @param {*} type тип диалога
- * @returns 
+ * @returns
  */
-function setContactOrGroupClick(domElement, urlArg, type){
-    return function(){
+function setContactOrGroupClick(domElement, urlArg, type)
+{
+    return function () {
         // если пересылается сообщение, показать, кому пересылается
-        if(isForwaredMessage){
+        if (isForwaredMessage) {
             showForwardedMessageRecipient(domElement);
             isForwaredMessage = false;
             return;
@@ -411,34 +413,33 @@ function setContactOrGroupClick(domElement, urlArg, type){
 
         let urlParams = new URLSearchParams();
         let groupChatName;
-        if(type === 'dialog'){
+        if (type === 'dialog') {
             urlParams.set('contact', urlArg);
             removeGroupPatricipantDOMElements();
             // поиск пользователя в массиве контактов на клиенте и добавление, если отсутствует
             fetch('/get-contact', {method: 'POST', body: urlParams}).then(r=>r.json()).then(dbContact => {
                 let contact = contactList.find(elem => elem.chat_id == dbContact.chat_id);
-                if(contact == undefined){
+                if (contact === undefined) {
                     contactList.push(dbContact);
                 }
             });
-        }
-        else if(type === 'discussion'){
+        } else if (type === 'discussion') {
             urlParams.set('discussionid', urlArg);
             removeGroupPatricipantDOMElements();
             showGroupRecipients(domElement, urlArg) // показать участников группового чата
             groupChatName = groupList.find(el => el.chat_id == urlArg).chat_name;
-        }
-        else{
+        } else {
             return;
         }
         
-        showChat(urlParams, type=='dialog' ? urlArg : groupChatName, type); // показать чат
+        showChat(urlParams, type==='dialog' ? urlArg : groupChatName, type); // показать чат
     };
 }
 
 
 /** Переотправить сообщение */
-function forwardMessage(){
+function forwardMessage()
+{
     sendData(selectedMessage.querySelector('.msg__text').innerHTML, 'FORWARD');
 
     forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
@@ -448,25 +449,30 @@ function forwardMessage(){
     forwardedMessageRecipientElement = null;
 }
 /** Отменяет пересылку сообщения */
-function resetForwardMessage(){
+function resetForwardMessage()
+{
     forwardBtnBlock.classList.remove('btn-resend-block_active');
     isForwaredMessage = null;
     selectedMessage = null;
     let contactRecipient = document.querySelector('.contact-recipient');
-    if(contactRecipient) contactRecipient.classList.remove('contact-recipient');
+    if (contactRecipient) {
+        contactRecipient.classList.remove('contact-recipient');
+    }
     forwardBtn.disabled = true;
 }
 
 
 // ----- Контекстное меню
 /** показать контекстное меню */
-function showContextMenu(contextMenu, event){
+function showContextMenu(contextMenu, event)
+{
     contextMenu.style.left = event.pageX+'px';
     contextMenu.style.top = event.pageY+'px';
     contextMenu.style.display = 'block';
 }
 /** скрыть контекстное меню*/
-function hideContextMenu(){
+function hideContextMenu()
+{
     msgContextMenu.style.left = '0px';
     msgContextMenu.style.top = '1000px';
     msgContextMenu.style.display = 'none';
@@ -475,35 +481,38 @@ function hideContextMenu(){
     contactContextMenu.style.display = 'none';
 }
 /** контекстное меню: изменить сообщение */
-function editMessageContextMenu(){
+function editMessageContextMenu()
+{
     isEditMessage = true;
     hideContextMenu();
     messageInput.value = selectedMessage.querySelector('.msg__text').innerHTML;
     messageInput.focus();
 }
 /** контекстное меню: удалить сообщение  */
-function removeMessageContextMenu(){
+function removeMessageContextMenu()
+{
     let msg = selectedMessage.querySelector('.msg__text').innerHTML;
     sendData(msg, 'REMOVE');
     selectedMessage = null;
     hideContextMenu();
 }
 /** контекстное меню: переотправить сообщение */
-function forwardMessageContextMenu(){
+function forwardMessageContextMenu()
+{
     hideContextMenu();
     isForwaredMessage = true;
     forwardBtnBlock.classList.add('btn-resend-block_active');
 }
 /** контекстное меню: включить/отключить уведомления */
-function editNoticeShowContextMenu(){
+function editNoticeShowContextMenu()
+{
     // создание пакета с id чата, значением о показе уведомлений
     let data = {};
     // поиск выбранного группового чата
-    if(selectedContact.className==='group'){
+    if (selectedContact.className==='group') {
         data.chat_id = groupList.find(el => el.chat_name === selectedContact.title).chat_id;
-    }
-    //  поиск выбранного контакта
-    else{
+    } else {
+        //  поиск выбранного контакта
         let name = selectedContact.querySelector('.contact__name').innerHTML;
         data.chat_id = contactList.find(el => el.username === name).chat_id;
     }
@@ -521,20 +530,18 @@ function editNoticeShowContextMenu(){
         selectedContact.setAttribute('data-notice', data);  // меняем атрибут
         // если контакт, то изменяем значение в массиве контактов
         let elem;
-        if(selectedContact.classList.contains('contact')){
-            elem = contactList.find(el => el.username == selectedContact.title);
-        }
-        // если групповой чат, то изменяем значение в массиве групповых чатов
-        else if(selectedContact.className == 'group'){
-            elem = groupList.find(el => el.chat_name == selectedContact.title);
+        if (selectedContact.classList.contains('contact')) {
+            elem = contactList.find(el => el.username === selectedContact.title);
+        } else if (selectedContact.className === 'group') {
+            // если групповой чат, то изменяем значение в массиве групповых чатов
+            elem = groupList.find(el => el.chat_name === selectedContact.title);
         }
         elem.isnotice = data;
 
-        if(data === 1){
+        if (data === 1) {
             selectedContact.querySelector('.notice-soundless').remove();
-        }
-        else{
-            selectedContact.innerHTML += "<div class='notice-soundless'>&#128263;</div>"; 
+        } else {
+            selectedContact.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
         }
     });
 }
@@ -549,10 +556,11 @@ window.addEventListener('DOMContentLoaded', () => {
         appendGroupDOMElement(data, 'START');
     });
     // запрет контекстного меню
-    document.oncontextmenu = function() {return false;}; 
+    document.oncontextmenu = function () {
+        return false;};
 
     // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
-    findContactsInput.addEventListener('input', function(){
+    findContactsInput.addEventListener('input', function () {
         const urlParams = new URLSearchParams();
         urlParams.set('userphrase', this.value);
         fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
@@ -565,20 +573,20 @@ window.addEventListener('DOMContentLoaded', () => {
     sendMsgBtn.onclick = () => sendData(messageInput.value, 'NEW');
     // нажатие клавиши в поле ввода сообщения
     messageInput.onkeydown = event => {
-        if(event.code === 'Enter' || event.code === 'ControlLeft'){
+        if (event.code === 'Enter' || event.code === 'ControlLeft') {
             pressedKeys.push(event.code);
         }
     };
     // отпускание клавиши в поле ввода сообщения
     messageInput.onkeyup = event => {
         // перевод строки, если Ctrl+Enter
-        if(event.code === 'Enter' && pressedKeys.indexOf('ControlLeft') != -1){
+        if (event.code === 'Enter' && pressedKeys.indexOf('ControlLeft') != -1) {
             messageInput.value += '\n';
         }
         // отправка сообщения, если Enter
-        else if(event.code === 'Enter'){
+        else if (event.code === 'Enter') {
             // если поседний символ - перевод строки
-            if(messageInput.value[messageInput.value.length - 1] == '\n'){
+            if (messageInput.value[messageInput.value.length - 1] === '\n') {
                 messageInput.value = messageInput.value.substring(0, messageInput.value.length - 1);
             }
             sendData(messageInput.value, 'NEW');
@@ -600,14 +608,12 @@ window.addEventListener('DOMContentLoaded', () => {
 // нажатия правой кнопкой мыши на странице
 window.oncontextmenu = event => {
     // клик на элементе сообщения
-    if(['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forward'].includes(event.target.className)){  
-        if(['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)){
+    if (['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forward'].includes(event.target.className)) {
+        if (['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)) {
             selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode;
-        }
-        else if(event.target.className === 'msg__forward'){
+        } else if (event.target.className === 'msg__forward') {
             selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode;
-        }
-        else{
+        } else {
             selectedMessage = event.target.parentNode.parentNode.parentNode;
         }
 
@@ -616,27 +622,24 @@ window.oncontextmenu = event => {
         editMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
         removeMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
 
-        if(selectedMessage.getAttribute('data-forward') == 1){
+        if (selectedMessage.getAttribute('data-forward') == 1) {
             editMsgContextMenuBtn.style.display = 'none';
         }
     }
     // клик на элементе контакта
-    else if(['contact__name','contact__img img pe-2','contact position-relative mb-2','group'].includes(event.target.className)){
-        if(event.target.className == 'contact__img img pe-2'){
+    else if (['contact__name','contact__img img pe-2','contact position-relative mb-2','group'].includes(event.target.className)) {
+        if (event.target.className === 'contact__img img pe-2') {
             selectedContact = event.target.parentNode.parentNode;
-        }
-        else if(event.target.className == 'contact__name'){
+        } else if (event.target.className === 'contact__name') {
             selectedContact = event.target.parentNode;
-        }
-        else{
+        } else {
             selectedContact = event.target;
         }
 
         let isNotice = selectedContact.getAttribute('data-notice');
         editNoticeShowContextMenuBtn.innerHTML = isNotice==1 ? 'Отключить уведомления' : 'Включить уведомления';
         showContextMenu(contactContextMenu, event);
-    }
-    else{
+    } else {
         hideContextMenu();
     }
 };
@@ -644,5 +647,7 @@ window.oncontextmenu = event => {
 
 // нажатия левой кнопкой мыши на странице
 window.onclick = event => {
-    if(event.target.className !== 'list-group-item') hideContextMenu();
+    if (event.target.className !== 'list-group-item') {
+        hideContextMenu();
+    }
 };
