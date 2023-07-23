@@ -1,6 +1,12 @@
 <?php
 namespace core;
 
+use core\db\DBQueryCtl;
+use \core\db\UsersDBTableModel;
+use \core\db\ContactsDBTableModel;
+use \core\db\ConnectionsDBTableModel;
+use \core\db\MessageDBTableModel;
+
 class ConfigClass
 {
 	// подключение к БД
@@ -31,14 +37,14 @@ class ConfigClass
 
 	public function __construct()
 	{
-		$this->DBQueryCtl = new \core\db\DBQueryCtl
+		$this->DBQueryCtl = new DBQueryCtl
 		(
 			self::HOST_DB, 
 			self::NAME_DB, 
 			self::USER_DB, 
 			self::PASS_DB
 		);
-		$this->EMailSender = new \core\phpmailer\EMailSender
+		$this->EMailSender = new EMailSender
 		(
 			self::SMTP_SRV, 
 			self::EMAIL_USERNAME, 
@@ -49,10 +55,10 @@ class ConfigClass
 			self::EMAIL_SENDER_NAME
 		);
 		
-		$this->users = new \core\db\UsersDBTableModel($this->DBQueryCtl);
-		$this->contacts = new \core\db\ContactsDBTableModel($this->DBQueryCtl);
-		$this->connections = new \core\db\ConnectionsDBTableModel($this->DBQueryCtl);
-		$this->messageDBTable = new \core\db\MessageDBTableModel($this->DBQueryCtl);
+		$this->users = new UsersDBTableModel($this->DBQueryCtl);
+		$this->contacts = new ContactsDBTableModel($this->DBQueryCtl);
+		$this->connections = new ConnectionsDBTableModel($this->DBQueryCtl);
+		$this->messageDBTable = new MessageDBTableModel($this->DBQueryCtl);
 	}
 
 	public function getDBQueryCtl()

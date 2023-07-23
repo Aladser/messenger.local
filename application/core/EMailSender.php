@@ -1,5 +1,11 @@
 <?php
-namespace core\phpmailer;
+namespace core;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+require dirname(__DIR__, 1)."/vendor/autoload.php";
 
 class EMailSender
 {
