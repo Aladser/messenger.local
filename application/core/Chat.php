@@ -39,7 +39,7 @@ class Chat implements MessageComponentInterface
     public function onOpen(ConnectionInterface $conn)
     {
         $this->clients->attach($conn); // добавление клиента
-        $message = json_encode(['onсonnection' => $conn->resourceId]);
+        $message = json_encode(['onconnection' => $conn->resourceId]);
         foreach ($this->clients as $client) {
             $client->send($message); // рассылка остальным клиентам
         }
@@ -58,7 +58,7 @@ class Chat implements MessageComponentInterface
         $this->connectionsTable->removeConnection($conn->resourceId);
         echo "Connection $publicUsername completed\n";
         $this->writeLog("Connection $publicUsername completed");
-        $message = json_encode(['offсonnection' => 1, 'user' => $publicUsername]);
+        $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
         foreach ($this->clients as $client) {
             $client->send($message);
         }

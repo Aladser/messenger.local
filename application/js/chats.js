@@ -14,7 +14,7 @@ const chatNameTitle = document.querySelector('#chat-title');
 /** С кем открыт чат */
 const chatNameLabel = document.querySelector('#chat-username');
 /** кнопка создать групповой чат */
-const createGroupOption = document.querySelector('#create-group-option'); 
+const createGroupOption = document.querySelector('#create-group-option');
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
 /** контейнер групповых чатов */
@@ -84,69 +84,63 @@ webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
-    if(data.onсonnection){
+    if (data.onconnection) {
         webSocket.send(JSON.stringify({
             'messageOnconnection': 1,
             'author' : clientUsername,
-            'wsId' : data.onсonnection
+            'wsId' : data.onconnection
         }));
-    }
-    // сообщение пользователям о подключении клиента
-    else if(data.messageOnconnection){
-        // подключение клиента
-        if(data.author){
+    } else if (data.messageOnconnection) {
+        // сообщение пользователям о подключении клиента
+        if (data.author) {
             let username = data.author===publicClientUsername ? 'Вы' : data.author;
             systemMessagePrg.innerHTML = `${username} в сети`;
-        }
-        // ошибки подключения
-        else{
+        } else {
+            // ошибки подключения
             systemMessagePrg.innerHTML = `${data.systeminfo}`;
         }
-    }
-    // сообщение пользователям об отключении
-    else if(data.offсonnection && data.user != null){
+    } else if (data.offconnection && data.user != null) {
+        // сообщение пользователям об отключении
         systemMessagePrg.innerHTML = `${data.user} не в сети`;
-    }
-    // сообщения
-    else{
+    } else {
         // уведомления о новых сообщениях чатов
         // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
-        if( (data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser != publicClientUsername){
-            foundedContactChat = contactList.find(el => el.chat_id == data.chatId); // поиск чата среди списка чатов контактов
-            foundedGroupChat = groupList.find(el => el.chat_id == data.chatId);     // поиск чата среди групповых чатов
-            let isChat = (foundedContactChat!=undefined) || (foundedGroupChat!=undefined);
+        if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser != publicClientUsername) {
+            let foundedContactChat = contactList.find(el => el.chat_id == data.chatId); // поиск чата среди списка чатов контактов
+            let foundedGroupChat = groupList.find(el => el.chat_id == data.chatId);     // поиск чата среди групповых чатов
+            let isChat = (foundedContactChat!==undefined) || (foundedGroupChat!==undefined);
             // сделано специально множественное создание объектов звука
-            if(isChat){
+            if (isChat) {
                 // поиск контакта/группы в списке контактов/групп
-                let chat = foundedContactChat!=undefined ? foundedContactChat : foundedGroupChat;
+                let chat = foundedContactChat!==undefined ? foundedContactChat : foundedGroupChat;
                 // имя контакта или группового чата
                 let chatName = chat.hasOwnProperty("chat_name") ? chat.chat_name : chat.username;
                 // DOM-элемент  контакта или группового чата
                 let domElem = document.querySelector(`[title='${chatName}']`);
-                if(openChatId !== data.chatId) domElem.classList.add('isnewmessage');
-                if(chat.isnotice == 1){
+                if (openChatId !== data.chatId) {
+                    domElem.classList.add('isnewmessage');
+                }
+                if (chat.isnotice == 1) {
                     let notice = new Audio('application/views/notice.wav');
                     notice.autoplay = true;
-                } 
+                }
             }
         }
 
         // сообщения открытого чата
-        if(openChatId == data.chatId){
+        if (openChatId == data.chatId) {
             // изменение сообщения
-            if(data.messageType === 'EDIT'){
+            if (data.messageType === 'EDIT') {
                 let messageDOMElem = document.querySelector(`[data-chat_message_id="${data.chat_message_id}"]`);
                 messageDOMElem.querySelector('.msg__text').innerHTML = data.chat_message_text;
-            }
-            // удаление сообщения
-            else if(data.messageType === 'REMOVE'){
+            } else if (data.messageType === 'REMOVE') {
+                // удаление сообщения
                 let messageDOMElem = document.querySelector(`[data-chat_message_id="${data.chat_message_id}"]`);
                 messageDOMElem.remove();
-            }
-            // новое сообщение   
-            else{
+            } else {
+                // новое сообщение
                 appendMessage(data);
-            } 
+            }
         }
     }
 };
@@ -156,31 +150,32 @@ webSocket.onmessage = e => {
  * @param message текст сообщения
  * @param messageType тип сообщения: NEW, EDIT, REMOVE или FORWARD
  */
-function sendData(message, messageType){
+function sendData(message, messageType)
+{
     // проверка типа сообщения
-    if( !['NEW', 'EDIT', 'REMOVE', 'FORWARD'].includes(messageType) ){
+    if (!['NEW', 'EDIT', 'REMOVE', 'FORWARD'].includes(messageType) ) {
         alert('sendData(msgType): неверный аргумент msgType');
         throw 'sendData(msgType): неверный аргумент msgType';
     }
     // проверка сокета
-    if(webSocket.readyState !== 1){
+    if (webSocket.readyState !== 1) {
         alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
         throw 'sendData(msgType): вебсокет не готов к обмену сообщениями';
     }
     // изменение типа сообщения для редактированных сообщений
-    if(isEditMessage){
+    if (isEditMessage) {
         messageType = 'EDIT';
         isEditMessage = false;
-    }  
+    }
     // отправка сообщения на сервер
-    if(message!==''){
-        data = {'message':message, 'fromuser':publicClientUsername, 'chatId':openChatId,'chatType':chatType,'messageType':messageType};
+    if (message!=='') {
+        let data = {'message':message, 'fromuser':publicClientUsername, 'chatId':openChatId,'chatType':chatType,'messageType':messageType};
          // для старых сообщений добавляется id сообщения
-        if(['EDIT', 'REMOVE', 'FORWARD'].includes(messageType)){
+        if (['EDIT', 'REMOVE', 'FORWARD'].includes(messageType)) {
             data.msgId = parseInt(selectedMessage.getAttribute('data-chat_message_id'));
         }
-        // пересылка сообщения
-        if(messageType == 'FORWARD'){
+
+        if (messageType == 'FORWARD') {
             data.chatId = contactList.find(el => el.username == forwardedMessageRecipientName).chat_id;
             delete data['chatType'];
         }
@@ -191,7 +186,8 @@ function sendData(message, messageType){
 
 
 /** создать DOM-элемент сообщения чата*/
-function appendMessage(data){
+function appendMessage(data)
+{
     // показ местного времени
     // YYYY.MM.DD HH:ii:ss
     let timeInMs = Date.parse(data.time);
@@ -201,8 +197,9 @@ function appendMessage(data){
     newDate = new Date(timeInMs);
     let localTime = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
     // показ переводов строки на странице
+    console.log(data.message);
     let brIndex = data.message.indexOf('\n');
-    while(brIndex > -1){
+    while (brIndex > -1) {
         data.message = data.message.replace('\n', '<br>');
         brIndex = data.message.indexOf('\n');
     }
@@ -215,16 +212,21 @@ function appendMessage(data){
     msgBlock.setAttribute('data-fromuser', data.fromuser);
     msgBlock.setAttribute('data-forward', data.forward);
 
-    if(data.forward == 1) msgTable.innerHTML += `<tr><td class='msg__forward'>Переслано</td></tr>`; // надпись о пересланном сообщении
+    if (data.forward == 1) {
+        msgTable.innerHTML += `<tr><td class='msg__forward'>Переслано</td></tr>`;
+    } // надпись о пересланном сообщении
     msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`; // текст сообщения
     msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;   // время сообщения
-    if(chatType === 'discussion') msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.fromuser}</td></tr>`;     // показ автора сообщения в групповом чате
+    if (chatType === 'discussion') {
+        msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.fromuser}</td></tr>`;
+    }     // показ автора сообщения в групповом чате
 
     msgBlock.append(msgTable);
     chat.append(msgBlock);
 }
 /** создать DOM-элемент контакта списка контактов*/
-function appendContactDOMElement(contact){
+function appendContactDOMElement(contact)
+{
     // контейнер контакта
     let contactBlock = document.createElement('div');    // блок контакта
     let contactImgBlock = document.createElement('div'); // блок изображения профиля
@@ -246,7 +248,7 @@ function appendContactDOMElement(contact){
     contactBlock.append(contactImgBlock);
     contactBlock.append(name);
     // добавление значка без уведомлений, если они отключены
-    if(contact.isnotice == 0){
+    if (contact.isnotice == 0) {
         contactBlock.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
     }
 
@@ -257,7 +259,8 @@ function appendContactDOMElement(contact){
  * @param {*} group БД данные группы
  * @param {*} place куда добавить: START - начало списка, END - конец
  */
-function appendGroupDOMElement(group, place='END'){
+function appendGroupDOMElement(group, place='END')
+{
     let groupsItem = document.createElement('div');
     groupsItem.className = 'group';
     groupsItem.title = group.chat_name;
@@ -265,10 +268,13 @@ function appendGroupDOMElement(group, place='END'){
     groupsItem.addEventListener('click', setContactOrGroupClick(groupsItem, group.chat_id, 'discussion'));
     groupsItem.setAttribute('data-notice', group.chat_isnotice);
 
-    if(place === 'START') groupChatsContainer.prepend(groupsItem);
-    else if(place === 'END') groupChatsContainer.append(groupsItem);
+    if (place === 'START') {
+        groupChatsContainer.prepend(groupsItem);
+    } else if (place === 'END') {
+        groupChatsContainer.append(groupsItem);
+    }
 
-    if(group.chat_isnotice == 0){
+    if (group.chat_isnotice == 0) {
         groupsItem.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
     }
 }
