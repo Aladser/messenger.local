@@ -104,9 +104,10 @@ webSocket.onmessage = e => {
         // уведомления о новых сообщениях чатов
         // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
         if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== publicClientUsername) {
-            let foundedContactChat = contactList.find(el => el.chat_id == data.chatId); // поиск чата среди списка чатов контактов
-            let foundedGroupChat = groupList.find(el => el.chat_id == data.chatId);     // поиск чата среди групповых чатов
-            let isChat = (foundedContactChat!==undefined) || (foundedGroupChat!==undefined);
+            let foundedContactChat = contactList.find(el => el.chat_id === data.chatId); // поиск чата среди списка чатов контактов
+            let foundedGroupChat = groupList.find(el => el.chat_id === data.chatId);     // поиск чата среди групповых чатов
+            let isChat = (foundedContactChat !== undefined) || (foundedGroupChat !== undefined);
+
 
             // сделано специально множественное создание объектов звука
             if (isChat) {
@@ -629,11 +630,11 @@ window.oncontextmenu = event => {
         if (selectedMessage.getAttribute('data-forward') == 1) {
             editMsgContextMenuBtn.style.display = 'none';
         }
-    } else if (['contact__name','contact__img img pe-2','contact position-relative mb-2','group'].includes(event.target.className)) {
+    } else if (['contact__name','contact__img img pe-2','contact position-relative mb-2','group', 'notice-soundless'].includes(event.target.className)) {
         // клик на элементе контакта
         if (event.target.className === 'contact__img img pe-2') {
             selectedContact = event.target.parentNode.parentNode;
-        } else if (event.target.className === 'contact__name') {
+        } else if (event.target.className === 'contact__name' || event.target.className === 'notice-soundless') {
             selectedContact = event.target.parentNode;
         } else {
             selectedContact = event.target;
