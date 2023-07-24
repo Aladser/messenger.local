@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\core;
+namespace Aladser\Core;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

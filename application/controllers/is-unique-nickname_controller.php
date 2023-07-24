@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\controllers;
+namespace Aladser\Controllers;
 
-use Aladser\core\Controller;
+use Aladser\Core\Controller;
 
 class IsUniqueNicknameController extends Controller
 {

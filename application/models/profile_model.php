@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\models;
+namespace Aladser\Models;
 
-use Aladser\core\Model;
+use Aladser\Core\Model;
 
 /** Данные о профиле текущего пользователя */
 class ProfileModel extends Model

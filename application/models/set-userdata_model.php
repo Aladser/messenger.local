@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\models;
+namespace Aladser\Models;
 
-use Aladser\core\Model;
+use Aladser\Core\Model;
 
 /** Изменить пользовательские данные */
 class SetUserDataModel extends Model

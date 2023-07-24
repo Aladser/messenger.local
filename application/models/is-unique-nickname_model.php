@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\models;
+namespace Aladser\Models;
 
-use Aladser\core\Model;
+use Aladser\Core\Model;
 
 /** Проверка уникальности никнейма */
 class IsUniqueNicknameModel extends Model

@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\models;
+namespace Aladser\Models;
 
-use Aladser\core\Model;
+use Aladser\Core\Model;
 
 /** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ */
 class LoginUserModel extends Model

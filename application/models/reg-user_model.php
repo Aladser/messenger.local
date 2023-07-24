@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\models;
+namespace Aladser\Models;
 
-use Aladser\core\Model;
+use Aladser\Core\Model;
 
 //***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
 class RegUserModel extends Model

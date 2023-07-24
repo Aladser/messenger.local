@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\core;
+namespace Aladser\Core;
 
-use Aladser\core\ConfigClass;
+use Aladser\Core\ConfigClass;
 
 class Route
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\core;
+namespace Aladser\Core;
 
 abstract class Model
 {

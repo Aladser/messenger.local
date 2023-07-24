@@ -1,20 +1,18 @@
 <?php
 
-namespace Aladser\models;
+namespace Aladser\Models;
 
-use Aladser\core\Model;
+use Aladser\Core\Model;
 
 /** список сообщений чата с пользователем*/
 class GetMessagesModel extends Model
 {
     private $usersTable;
-    private $contactsTable;
     private $messageTable;
 
     public function __construct($CONFIG)
     {
         $this->usersTable = $CONFIG->getUsers();
-        $this->contactsTable = $CONFIG->getContacts();
         $this->messageTable = $CONFIG->getMessageDBTable();
     }
 

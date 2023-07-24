@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\core\db;
+namespace Aladser\Core\DB;
 
 use \PDO;
 use \PDOException;

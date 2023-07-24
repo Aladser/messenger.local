@@ -2,7 +2,8 @@
 
 namespace Aladser;
 
-use Aladser\core\Chat;
+use Aladser\Core\Chat;
+use Aladser\Core\ConfigClass;
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
@@ -10,7 +11,7 @@ use Ratchet\WebSocket\WsServer;
 require __DIR__."/vendor/autoload.php";
 
 // Объявляем сервер
-$CONFIG = new core\ConfigClass();
+$CONFIG = new ConfigClass();
 $users = $CONFIG->getUsers();
 $connections = $CONFIG->getConnections();
 $messages = $CONFIG->getMessageDBTable();

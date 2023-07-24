@@ -1,12 +1,12 @@
 <?php
 
-namespace Aladser\core;
+namespace Aladser\Core;
 
-use Aladser\core\db\DBQueryCtl;
-use Aladser\core\db\UsersDBTableModel;
-use Aladser\core\db\ContactsDBTableModel;
-use Aladser\core\db\ConnectionsDBTableModel;
-use Aladser\core\db\MessageDBTableModel;
+use Aladser\Core\DB\DBQueryCtl;
+use Aladser\Core\DB\UsersDBTableModel;
+use Aladser\Core\DB\ContactsDBTableModel;
+use Aladser\Core\DB\ConnectionsDBTableModel;
+use Aladser\Core\DB\MessageDBTableModel;
 
 class ConfigClass
 {
