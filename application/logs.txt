@@ -1,0 +1,21 @@
+{"messageOnconnection":1,"author":"Aladser","wsId":62}
+{"message":"11","fromuser":"Aladser","chatId":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-24 04:47:36","chat_message_id":12}
+{"message":"111","fromuser":"Aladser","chatId":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-24 04:47:55","chat_message_id":13}
+{"messageOnconnection":1,"author":"Aladser","wsId":102}
+{"messageOnconnection":1,"author":"Admin","wsId":102}
+{"message":"11","fromuser":"Aladser","chatId":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-24 04:48:08","chat_message_id":14}
+{"chat_message_id":14,"chatId":3,"messageType":"REMOVE"}
+{"chat_message_id":13,"chatId":3,"messageType":"REMOVE"}
+{"chat_message_id":12,"chatId":3,"messageType":"REMOVE"}
+{"message":"11","fromuser":"Aladser","chatId":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-24 04:48:16","chat_message_id":15}
+{"chat_message_id":15,"chatId":3,"chat_message_text":"1111","chat_message_time":"2023-07-24 04:48:16","messageType":"EDIT"}
+{"chat_message_id":15,"chatId":3,"messageType":"REMOVE"}
+{"chat_message_id":7,"chatId":2,"messageType":"REMOVE"}
+{"message":"11","fromuser":"Admin","chatId":2,"chatType":"dialog","messageType":"NEW","time":"2023-07-24 04:48:31","chat_message_id":16}
+{"message":"11","fromuser":"Admin","chatId":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-24 04:48:42","chat_message_id":17}
+{"chat_message_id":17,"chatId":3,"messageType":"REMOVE"}
+{"message":"11","fromuser":"Admin","chatId":3,"messageType":"FORWARD","msgId":16,"time":"2023-07-24 04:48:51","fromuserId":1,"chat_message_id":18}
+{"chat_message_id":16,"chatId":2,"messageType":"REMOVE"}
+{"chat_message_id":18,"chatId":3,"messageType":"REMOVE"}
+Connection Aladser completed
+Connection Admin completed
