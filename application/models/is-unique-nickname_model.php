@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** Проверка уникальности никнейма */
-class IsUniqueNicknameModel extends \core\Model
+class IsUniqueNicknameModel extends Model
 {
     private $users;
 

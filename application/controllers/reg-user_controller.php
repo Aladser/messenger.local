@@ -1,6 +1,10 @@
 <?php
 
-class RegUserController extends \core\Controller
+namespace Aladser\controllers;
+
+use Aladser\core\Controller;
+
+class RegUserController extends Controller
 {
     public function action_index()
     {

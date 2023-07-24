@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** контакты группового чата */
-class GetGroupContactsModel extends \core\Model
+class GetGroupContactsModel extends Model
 {
     private $contactsTable;
     private $usersTable;

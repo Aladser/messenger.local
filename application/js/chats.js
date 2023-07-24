@@ -104,9 +104,10 @@ webSocket.onmessage = e => {
         // уведомления о новых сообщениях чатов
         // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
         if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== publicClientUsername) {
-            let foundedContactChat = contactList.find(el => el.chat_id === data.chatId); // поиск чата среди списка чатов контактов
-            let foundedGroupChat = groupList.find(el => el.chat_id === data.chatId);     // поиск чата среди групповых чатов
+            let foundedContactChat = contactList.find(el => el.chat_id == data.chatId); // поиск чата среди списка чатов контактов
+            let foundedGroupChat = groupList.find(el => el.chat_id == data.chatId);     // поиск чата среди групповых чатов
             let isChat = (foundedContactChat!==undefined) || (foundedGroupChat!==undefined);
+
             // сделано специально множественное создание объектов звука
             if (isChat) {
                 // поиск контакта/группы в списке контактов/групп
@@ -120,7 +121,7 @@ webSocket.onmessage = e => {
                     domElem.classList.add('isnewmessage');
                 }
                 // звуковое уведомление
-                if (chat.isnotice === 1) {
+                if (chat.isnotice == 1) {
                     let notice = new Audio('application/data/notice.wav');
                     notice.autoplay = true;
                 }
@@ -130,7 +131,7 @@ webSocket.onmessage = e => {
         // сообщения открытого чата
         if (openChatId === data.chatId) {
             // изменение сообщения
-            if (data.messageType === 'EDIT') {
+            if (data.messageType == 'EDIT') {
                 let messageDOMElem = document.querySelector(`[data-chat_message_id="${data.chat_message_id}"]`);
                 messageDOMElem.querySelector('.msg__text').innerHTML = data.chat_message_text;
             } else if (data.messageType === 'REMOVE') {
@@ -307,6 +308,7 @@ const showGroupRecipients = (domElement, discussionid) => {
         prtBlock.className = 'group__contacts';
         domElement.append(prtBlock);
         groupContacts = [];
+        // создается список участников группового чата
         data.participants.forEach(prt => {
             prtBlock.innerHTML += `<p class='group__contact'>${prt.publicname}</p>`;
             groupContacts.push(prt.publicname);
@@ -341,18 +343,18 @@ const showGroupRecipients = (domElement, discussionid) => {
 
                 cnt.append(plus);
             }
-            contacts.push(cntName);
         });
     });
 };
 /** показать сообщения */
 const showChat = (urlParams, bdChatName, type) =>{
-    fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
+    fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.text()).then(data=>{
+        data = JSON.parse(data);
         if (data) {
             chat.innerHTML = '';
 
             chatType = data.type;
-            openChatId = data.chatId;
+            openChatId = parseInt(data.chatId);
 
             chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
             chatNameLabel.innerHTML = bdChatName;

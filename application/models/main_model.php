@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** Поиск контактов пользователя */
-class MainModel extends \core\Model
+class MainModel extends Model
 {
     public function run()
     {

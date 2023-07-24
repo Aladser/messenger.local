@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 // Контакты пользователя
-class GetContactsModel extends \core\Model
+class GetContactsModel extends Model
 {
     private $contactsTable;
     private $usersTable;

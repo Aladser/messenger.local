@@ -1,10 +1,10 @@
 <?php
 
-require __DIR__."/vendor/autoload.php";
+namespace Aladser;
 
-spl_autoload_register(function ($class_name) {
-    include $class_name . '.php';
-});
+use Aladser\core\Route;
+
+require __DIR__."/vendor/autoload.php";
 
 date_default_timezone_set('Europe/Moscow');
 
@@ -14,4 +14,4 @@ if (!is_dir($tempDir)) {
     mkdir($tempDir, 0777);
 };
 
-\core\Route::start();
+Route::start();

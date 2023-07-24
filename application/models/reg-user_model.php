@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 //***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
-class RegUserModel extends \core\Model
+class RegUserModel extends Model
 {
     private $users;
     private $eMailSender;
@@ -16,13 +20,15 @@ class RegUserModel extends \core\Model
     {
         if (!$this->users->existsUser($_POST['email'])) {
             $email = $_POST['email'];
-            $addUserRslt = $this->users->addUser($email, $_POST['password']);
-            if ($addUserRslt === 1) {
+            $isRegUser = $this->users->addUser($email, $_POST['password']) === 1;
+            if ($isRegUser) {
                 $hash = md5($email . time());
                 $this->users->addUserHash($email, $hash);
                 $text = '
                 <body>
-                <p>Для подтверждения электронной почты перейдите по <a href="http://messenger.local/verify-email?email='.$email.'&hash='.$hash.'">ссылке</a></p>
+                <p>Для подтверждения электронной почты перейдите по 
+                <a href="http://messenger.local/verify-email?email='.$email.'&hash='.$hash.'">ссылке</a>
+                </p>
                 </body>
                 ';
                 $data['result'] = $this->eMailSender->send('Месенджер: подтвердите e-mail', $text, $email);

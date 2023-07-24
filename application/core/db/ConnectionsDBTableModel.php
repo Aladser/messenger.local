@@ -1,6 +1,6 @@
 <?php
 
-namespace core\db;
+namespace Aladser\core\db;
 
 /** Класс БД таблицы соединений вебсокета */
 class ConnectionsDBTableModel extends DBTableModel

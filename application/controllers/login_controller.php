@@ -1,6 +1,10 @@
 <?php
 
-class LoginController extends \core\Controller
+namespace Aladser\controllers;
+
+use Aladser\core\Controller;
+
+class LoginController extends Controller
 {
     public function action_index()
     {

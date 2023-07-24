@@ -1,6 +1,6 @@
 <?php
 
-namespace core\db;
+namespace Aladser\core\db;
 
 /** класс БД таблицы пользователей */
 class UsersDBTableModel extends DBTableModel

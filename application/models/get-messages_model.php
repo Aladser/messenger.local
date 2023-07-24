@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** список сообщений чата с пользователем*/
-class GetMessagesModel extends \core\Model
+class GetMessagesModel extends Model
 {
     private $usersTable;
     private $contactsTable;
@@ -19,17 +23,21 @@ class GetMessagesModel extends \core\Model
     {
         session_start();
         $chatId = null;
+        $type = null;
         // диалоги
         if (isset($_POST['contact'])) {
             $userHostName = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];  // имя клиента-хоста
             $userId = $this->usersTable->getUserId($userHostName);                              // id клиента-хоста
             $contactId = $this->usersTable->getUserId($_POST['contact']);                        // id клиента-контакта
             $chatId = $this->messageTable->getDialogId($userId, $contactId);
+            $type = 'dialog';
         } elseif (isset($_POST['discussionid'])) {
             // групповые чаты
             $chatId = $_POST['discussionid'];
+            $type = 'discussion';
         }
-        $rslt = ['chatId' => $chatId, 'type'=>'dialog', 'messages' => $this->messageTable->getMessages($chatId)];
-        echo json_encode($rslt);
+
+        $messages = ['chatId' => $chatId, 'type'=>$type, 'messages' => $this->messageTable->getMessages($chatId)];
+        echo json_encode($messages);
     }
 }

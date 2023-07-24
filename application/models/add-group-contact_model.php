@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 // Контакты пользователя
-class AddGroupContactModel extends \core\Model
+class AddGroupContactModel extends Model
 {
     private $contactsTable;
     private $usersTable;
@@ -16,7 +20,7 @@ class AddGroupContactModel extends \core\Model
     {
         $discussionId = $_POST['discussionid'];
         $userId = $this->usersTable->getUserId($_POST['username']);
-        $rslt = $this->contactsTable->addGroupContact($discussionId, $userId);
-        echo json_encode($rslt);
+        $group = $this->contactsTable->addGroupContact($discussionId, $userId);
+        echo json_encode($group);
     }
 }

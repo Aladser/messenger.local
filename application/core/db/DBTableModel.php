@@ -1,6 +1,6 @@
 <?php
 
-namespace core\db;
+namespace Aladser\core\db;
 
 /** Класс модели таблицы БД */
 class DBTableModel

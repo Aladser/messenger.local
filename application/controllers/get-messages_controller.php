@@ -1,6 +1,10 @@
 <?php
 
-class GetMessagesController extends \core\Controller
+namespace Aladser\controllers;
+
+use Aladser\core\Controller;
+
+class GetMessagesController extends Controller
 {
     public function action_index()
     {

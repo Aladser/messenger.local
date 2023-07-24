@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** Подтверждение почты */
-class VerifyEmailModel extends \core\Model
+class VerifyEmailModel extends Model
 {
     private $users;
 
@@ -10,9 +14,8 @@ class VerifyEmailModel extends \core\Model
         $this->users = $CONFIG->getUsers();
     }
 
-    public function run()
+    public function run(): string
     {
-        $modelData = array();
         if ($this->users->checkUserHash($_GET['email'], $_GET['hash'])) {
             $this->users->confirmEmail($_GET['email']);
             return 'Электронная почта подтверждена';

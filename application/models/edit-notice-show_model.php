@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 // Контакты пользователя
-class EditNoticeShowModel extends \core\Model
+class EditNoticeShowModel extends Model
 {
     private $usersTable;
     private $messageTable;

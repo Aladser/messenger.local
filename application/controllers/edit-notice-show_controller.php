@@ -1,6 +1,10 @@
 <?php
 
-class EditNoticeShowController extends \core\Controller
+namespace Aladser\controllers;
+
+use Aladser\core\Controller;
+
+class EditNoticeShowController extends Controller
 {
     public function action_index()
     {

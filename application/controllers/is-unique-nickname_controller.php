@@ -1,6 +1,10 @@
 <?php
 
-class IsUniqueNicknameController extends \core\Controller
+namespace Aladser\controllers;
+
+use Aladser\core\Controller;
+
+class IsUniqueNicknameController extends Controller
 {
     public function action_index()
     {

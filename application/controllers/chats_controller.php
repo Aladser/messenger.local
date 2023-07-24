@@ -1,6 +1,10 @@
 <?php
 
-class ChatsController extends \core\Controller
+namespace Aladser\controllers;
+
+use Aladser\core\Controller;
+
+class ChatsController extends Controller
 {
     public function action_index()
     {

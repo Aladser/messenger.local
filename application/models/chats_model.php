@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** Добавить контакт(чат) с пользователем */
-class ChatsModel extends \core\Model
+class ChatsModel extends Model
 {
     private $userTable;
 

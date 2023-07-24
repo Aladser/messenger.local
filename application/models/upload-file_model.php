@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** Загрузка временного изображения на сервер  */
-class UploadFileModel extends \core\Model
+class UploadFileModel extends Model
 {
     public function run()
     {
@@ -12,14 +16,14 @@ class UploadFileModel extends \core\Model
 
         // поиск других загрузок изображений этого профиля и установка нового имени файла
         $dwlDirPath = dirname(__DIR__, 1)."\data\\temp\\"; // папка, куда перемещается изображение из $_POST
-        $dwlfiles = glob($dwlDirPath.$email.'*'); // поиск файлов по шаблону
+        $dwlFiles = glob($dwlDirPath.$email.'*'); // поиск файлов по шаблону
         $number = false;
-        if (count($dwlfiles) == 0) {
+        if (count($dwlFiles) == 0) {
             $filename = $email.'.1.'.$ext;
         } else {
-            $dwlFile = $dwlfiles[count($dwlfiles)-1];           // последний файл
-            $dwlfiles = explode('.', $dwlFile);                 // имя разбивается по точкам в массив
-            $number = intval($dwlfiles[count($dwlfiles)-2]);    // предпоследний индекс файла
+            $dwlFile = $dwlFiles[count($dwlFiles)-1];           // последний файл
+            $dwlFiles = explode('.', $dwlFile);                 // имя разбивается по точкам в массив
+            $number = intval($dwlFiles[count($dwlFiles)-2]);    // предпоследний индекс файла
             $filename = $email.'.'.++$number.'.'.$ext;
         }
 

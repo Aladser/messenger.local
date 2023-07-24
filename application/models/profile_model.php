@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** Данные о профиле текущего пользователя */
-class ProfileModel extends \core\Model
+class ProfileModel extends Model
 {
     private $usersTable;
 

@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** Получить группы пользователя */
-class GetGroupsModel extends \core\Model
+class GetGroupsModel extends Model
 {
     private $userTable;
     private $messageTable;

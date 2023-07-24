@@ -1,6 +1,10 @@
 <?php
 
-class CreateGroupController extends \core\Controller
+namespace Aladser\controllers;
+
+use Aladser\core\Controller;
+
+class CreateGroupController extends Controller
 {
     public function action_index()
     {

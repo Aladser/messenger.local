@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ */
-class LoginUserModel extends \core\Model
+class LoginUserModel extends Model
 {
     private $users;
 
@@ -14,8 +18,8 @@ class LoginUserModel extends \core\Model
     {
         session_start();
         if ($this->users->existsUser($_POST['email'])) {
-            $loginUserRslt = $this->users->checkUser($_POST['email'], $_POST['password']);
-            if ($loginUserRslt == 1) {
+            $isValidLogin = $this->users->checkUser($_POST['email'], $_POST['password']) == 1;
+            if ($isValidLogin) {
                 $_SESSION['auth'] = 1;
                 $_SESSION['email'] = $_POST['email'];
                 setcookie('auth', 1, time()+60*60*24, '/');

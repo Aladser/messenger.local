@@ -1,6 +1,10 @@
 <?php
 
-class FindContactsController extends \core\Controller
+namespace Aladser\controllers;
+
+use Aladser\core\Controller;
+
+class FindContactsController extends Controller
 {
     public function action_index()
     {

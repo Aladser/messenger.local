@@ -1,6 +1,10 @@
 <?php
 
-class MainController extends \core\Controller
+namespace Aladser\controllers;
+
+use Aladser\core\Controller;
+
+class MainController extends Controller
 {
     public function action_index()
     {

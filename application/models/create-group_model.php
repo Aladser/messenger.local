@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** Создать групповой чат */
-class CreateGroupModel extends \core\Model
+class CreateGroupModel extends Model
 {
     private $userTable;
     private $messageTable;

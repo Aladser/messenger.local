@@ -1,7 +1,11 @@
 <?php
 
+namespace Aladser\models;
+
+use Aladser\core\Model;
+
 /** Поиск контактов пользователя */
-class FindContactsModel extends \core\Model
+class FindContactsModel extends Model
 {
     private $users;
 

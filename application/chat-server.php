@@ -1,10 +1,13 @@
 <?php
 
-require __DIR__."/vendor/autoload.php";
+namespace Aladser;
 
-spl_autoload_register(function ($class_name) {
-    include $class_name . '.php';
-});
+use Aladser\core\Chat;
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+
+require __DIR__."/vendor/autoload.php";
 
 // Объявляем сервер
 $CONFIG = new core\ConfigClass();
@@ -12,10 +15,10 @@ $users = $CONFIG->getUsers();
 $connections = $CONFIG->getConnections();
 $messages = $CONFIG->getMessageDBTable();
 
-$server = Ratchet\Server\IoServer::factory(
-    new Ratchet\Http\HttpServer(
-        new Ratchet\WebSocket\WsServer(
-            new core\Chat($connections, $messages, $users)
+$server = IoServer::factory(
+    new HttpServer(
+        new WsServer(
+            new Chat($connections, $messages, $users)
         )
     ),
     $CONFIG::CHAT_WS_PORT

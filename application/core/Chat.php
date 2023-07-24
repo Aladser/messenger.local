@@ -1,14 +1,14 @@
 <?php
 
-namespace core;
+namespace Aladser\core;
 
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
-use core\db\ConnectionsDBTableModel;
-use core\db\MessageDBTableModel;
-use core\db\UsersDBTableModel;
+use Aladser\core\db\ConnectionsDBTableModel;
+use Aladser\core\db\MessageDBTableModel;
+use Aladser\core\db\UsersDBTableModel;
 
-/** Чат-серверная часть */
+/** Чат - серверная часть */
 class Chat implements MessageComponentInterface
 {
     private $clients;           // хранение всех подключенных пользователей

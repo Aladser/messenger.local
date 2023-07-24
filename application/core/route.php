@@ -1,6 +1,8 @@
 <?php
 
-namespace core;
+namespace Aladser\core;
+
+use Aladser\core\ConfigClass;
 
 class Route
 {
@@ -55,13 +57,13 @@ class Route
         //**** создаем модель, если существует
         $model = null;
         if (file_exists($model_path)) {
-            $model_name = self::getMVCClassName($model_name, 'Model');
+            $model_name = '\\Aladser\\models\\'.self::getMVCClassName($model_name, 'Model');
             $model = new $model_name(new ConfigClass());
         }
 
 
         //**** создаем контроллер
-        $controller_name = self::getMVCClassName($controller_name, 'Controller');
+        $controller_name = '\\Aladser\\controllers\\'.self::getMVCClassName($controller_name, 'Controller');
         $controller = file_exists($model_path) ? new $controller_name($model) : new $controller_name();
 
         $action = $action_name;
