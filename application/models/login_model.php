@@ -5,7 +5,7 @@ namespace Aladser\Models;
 use Aladser\Core\Model;
 
 /** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ */
-class LoginUserModel extends Model
+class LoginModel extends Model
 {
     private $users;
 
@@ -17,7 +17,11 @@ class LoginUserModel extends Model
     public function run()
     {
         session_start();
-        if ($this->users->existsUser($_POST['email'])) {
+        if (!Model::checkCSRF($_POST['csrf'], $_SESSION['CSRF'])) {
+            // проверка на подмену адреса
+            $data['result'] = 'wrong_url';
+        } elseif ($this->users->existsUser($_POST['email'])) {
+            // проверка введенныъ данных
             $isValidLogin = $this->users->checkUser($_POST['email'], $_POST['password']) == 1;
             if ($isValidLogin) {
                 $_SESSION['auth'] = 1;
