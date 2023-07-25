@@ -25,5 +25,3 @@ $server = IoServer::factory(
     $CONFIG::CHAT_WS_PORT
 );
 $server->run();
-
-// php chat-server.php
