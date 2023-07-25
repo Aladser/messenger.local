@@ -1,107 +1,107 @@
-{"messageOnconnection":1,"author":"Admin","wsId":62}
-{"messageOnconnection":1,"author":"Admin","wsId":98}
+{"messageOnconnection":1,"author":"Aladser","wsId":62}
 {"messageOnconnection":1,"author":"Aladser","wsId":98}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:22:13","msg":140}
+{"messageOnconnection":1,"author":"Admin","wsId":98}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:03:51","msg":162}
+{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-26 02:03:58","msg":163}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:04:06","msg":164}
+{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-26 02:04:16","msg":165}
+Connection Admin completed
+{"messageOnconnection":1,"author":"Aladser","wsId":119}
+{"messageOnconnection":1,"author":"Admin","wsId":119}
 Connection Aladser completed
-{"messageOnconnection":1,"author":"Admin","wsId":113}
-{"messageOnconnection":1,"author":"Aladser","wsId":113}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Aladser","wsId":126}
-{"messageOnconnection":1,"author":"Admin","wsId":126}
-{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-25 19:23:34","msg":141}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:23:40","msg":142}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Aladser","wsId":143}
-{"messageOnconnection":1,"author":"Admin","wsId":143}
+{"messageOnconnection":1,"author":"Admin","wsId":132}
+{"messageOnconnection":1,"author":"Aladser","wsId":132}
+{"msg":164,"chat":3,"messageType":"REMOVE"}
+{"msg":162,"chat":3,"messageType":"REMOVE"}
+{"msg":165,"chat":7,"messageType":"REMOVE"}
+{"msg":163,"chat":7,"messageType":"REMOVE"}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:05:00","msg":166}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:05:04","msg":167}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:05:08","msg":168}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:05:14","msg":169}
 Connection Aladser completed
-{"messageOnconnection":1,"author":"Admin","wsId":156}
-{"messageOnconnection":1,"author":"Aladser","wsId":156}
-{"msg":141,"chat":3,"messageType":"REMOVE"}
-{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-25 19:24:32","msg":143}
+{"messageOnconnection":1,"author":"Admin","wsId":165}
+{"messageOnconnection":1,"author":"Aladser","wsId":165}
 Connection Admin completed
-{"messageOnconnection":1,"author":"Aladser","wsId":174}
-{"messageOnconnection":1,"author":"Admin","wsId":174}
+{"messageOnconnection":1,"author":"Aladser","wsId":178}
+{"messageOnconnection":1,"author":"Admin","wsId":178}
+{"msg":169,"chat":3,"messageType":"REMOVE"}
+{"msg":168,"chat":3,"messageType":"REMOVE"}
+{"msg":167,"chat":3,"messageType":"REMOVE"}
+{"msg":166,"chat":3,"messageType":"REMOVE"}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:05:37","msg":170}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:05:44","msg":171}
 Connection Admin completed
-{"messageOnconnection":1,"author":"Aladser","wsId":187}
-{"messageOnconnection":1,"author":"Admin","wsId":187}
-{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-25 19:24:56","msg":144}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:25:00","msg":145}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:25:07","msg":146}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:25:11","msg":147}
-{"msg":140,"chat":7,"messageType":"REMOVE"}
-{"msg":142,"chat":7,"messageType":"REMOVE"}
-{"msg":145,"chat":7,"messageType":"REMOVE"}
-{"msg":146,"chat":7,"messageType":"REMOVE"}
-{"msg":147,"chat":7,"messageType":"REMOVE"}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:25:20","msg":148}
-{"msg":148,"chat":7,"messageType":"REMOVE"}
+{"messageOnconnection":1,"author":"Aladser","wsId":207}
+{"messageOnconnection":1,"author":"Admin","wsId":207}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:05:53","msg":172}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:05:57","msg":173}
+Connection Admin completed
+{"messageOnconnection":1,"author":"Aladser","wsId":224}
+{"messageOnconnection":1,"author":"Admin","wsId":224}
 Connection Aladser completed
-{"messageOnconnection":1,"author":"Admin","wsId":228}
-{"messageOnconnection":1,"author":"Aladser","wsId":228}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:25:30","msg":149}
-{"message":"1","author":"Aladser","chat":10,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:25:33","msg":150}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:25:36","msg":151}
+{"messageOnconnection":1,"author":"Admin","wsId":237}
+{"messageOnconnection":1,"author":"Aladser","wsId":237}
+{"msg":173,"chat":3,"messageType":"REMOVE"}
+{"msg":172,"chat":3,"messageType":"REMOVE"}
+{"msg":171,"chat":3,"messageType":"REMOVE"}
+{"msg":170,"chat":3,"messageType":"REMOVE"}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:09:37","msg":174}
+Connection Admin completed
+{"messageOnconnection":1,"author":"Aladser","wsId":264}
+{"messageOnconnection":1,"author":"Admin","wsId":264}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:09:44","msg":175}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:09:51","msg":176}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:09:58","msg":177}
+{"msg":177,"chat":3,"messageType":"REMOVE"}
+{"msg":176,"chat":3,"messageType":"REMOVE"}
+{"msg":175,"chat":3,"messageType":"REMOVE"}
+{"msg":174,"chat":3,"messageType":"REMOVE"}
+Connection Admin completed
+{"messageOnconnection":1,"author":"Aladser","wsId":295}
+{"messageOnconnection":1,"author":"Admin","wsId":295}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:10:13","msg":178}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:10:20","msg":179}
 Connection Aladser completed
+{"messageOnconnection":1,"author":"Admin","wsId":312}
+{"messageOnconnection":1,"author":"Aladser","wsId":312}
 Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":250}
-{"messageOnconnection":1,"author":"Admin","wsId":257}
-{"messageOnconnection":1,"author":"Aladser","wsId":257}
+{"messageOnconnection":1,"author":"Aladser","wsId":325}
+{"messageOnconnection":1,"author":"Admin","wsId":325}
+{"msg":179,"chat":3,"messageType":"REMOVE"}
+{"msg":178,"chat":3,"messageType":"REMOVE"}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:13:26","msg":180}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:13:31","msg":181}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:13:36","msg":182}
+{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-26 02:13:42","msg":183}
+{"msg":183,"chat":3,"messageType":"REMOVE"}
+{"msg":182,"chat":3,"messageType":"REMOVE"}
+{"msg":181,"chat":3,"messageType":"REMOVE"}
+{"msg":180,"chat":3,"messageType":"REMOVE"}
+Connection Admin completed
+{"messageOnconnection":1,"author":"Aladser","wsId":364}
+{"messageOnconnection":1,"author":"Admin","wsId":364}
 Connection Aladser completed
-{"messageOnconnection":1,"author":"Admin","wsId":270}
-{"messageOnconnection":1,"author":"Aladser","wsId":270}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":283}
-{"messageOnconnection":1,"author":"Aladser","wsId":283}
-{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-25 19:26:16","msg":152}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Aladser","wsId":298}
-{"messageOnconnection":1,"author":"Admin","wsId":298}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Aladser","wsId":311}
-{"messageOnconnection":1,"author":"Admin","wsId":311}
+{"messageOnconnection":1,"author":"Admin","wsId":377}
+{"messageOnconnection":1,"author":"Aladser","wsId":377}
 Connection Aladser completed
+{"messageOnconnection":1,"author":"Admin","wsId":390}
+{"messageOnconnection":1,"author":"Aladser","wsId":390}
 Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":327}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":337}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":347}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":357}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":367}
-{"messageOnconnection":1,"author":"Admin","wsId":374}
-{"messageOnconnection":1,"author":"Aladser","wsId":374}
-Connection Aladser completed
-{"messageOnconnection":1,"author":"Admin","wsId":387}
-{"messageOnconnection":1,"author":"Aladser","wsId":387}
-{"msg":152,"chat":3,"messageType":"REMOVE"}
-{"msg":144,"chat":3,"messageType":"REMOVE"}
-{"msg":143,"chat":3,"messageType":"REMOVE"}
-{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-25 19:34:27","msg":153}
-{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-25 19:34:36","msg":154}
-{"msg":154,"chat":3,"messageType":"REMOVE"}
-{"msg":153,"chat":3,"messageType":"REMOVE"}
-{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-25 19:34:46","msg":155}
-{"message":"1","author":"Aladser","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-25 19:34:51","msg":156}
-{"msg":156,"chat":3,"messageType":"REMOVE"}
-{"msg":155,"chat":3,"messageType":"REMOVE"}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:35:01","msg":157}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:35:07","msg":158}
-{"message":"1","author":"Aladser","chat":10,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:35:11","msg":159}
-{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-25 19:35:15","msg":160}
-{"msg":160,"chat":7,"messageType":"REMOVE"}
-{"msg":158,"chat":7,"messageType":"REMOVE"}
-{"msg":157,"chat":7,"messageType":"REMOVE"}
-{"msg":151,"chat":7,"messageType":"REMOVE"}
-{"msg":149,"chat":7,"messageType":"REMOVE"}
-{"msg":159,"chat":10,"messageType":"REMOVE"}
-{"msg":150,"chat":10,"messageType":"REMOVE"}
-{"msg":114,"chat":10,"messageType":"REMOVE"}
-{"message":"1","author":"Admin","chat":3,"chatType":"dialog","messageType":"NEW","time":"2023-07-25 19:35:47","msg":161}
-{"msg":161,"chat":3,"messageType":"REMOVE"}
+{"messageOnconnection":1,"author":"Aladser","wsId":403}
+{"messageOnconnection":1,"author":"Admin","wsId":403}
+{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-26 02:15:17","msg":184}
+{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-26 02:15:21","msg":185}
+{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-26 02:15:25","msg":186}
+{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-26 02:15:30","msg":187}
+{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-26 02:15:36","msg":188}
+{"message":"1","author":"Aladser","chat":10,"chatType":"discussion","messageType":"NEW","time":"2023-07-26 02:15:40","msg":189}
+{"message":"1","author":"Aladser","chat":7,"chatType":"discussion","messageType":"NEW","time":"2023-07-26 02:15:52","msg":190}
+{"msg":184,"chat":7,"messageType":"REMOVE"}
+{"msg":185,"chat":7,"messageType":"REMOVE"}
+{"msg":186,"chat":7,"messageType":"REMOVE"}
+{"msg":187,"chat":7,"messageType":"REMOVE"}
+{"msg":188,"chat":7,"messageType":"REMOVE"}
+{"msg":190,"chat":7,"messageType":"REMOVE"}
 Connection Aladser completed
 Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":469}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":479}

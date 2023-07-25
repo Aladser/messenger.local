@@ -126,7 +126,7 @@ webSocket.onmessage = e => {
                 }
 
                 // звуковое уведомление
-                if (chat.isnotice == 1 && data.author !== publicClientUsername) {
+                if (chat.notice == 1 && data.author !== publicClientUsername) {
                     let notice = new Audio('application/data/notice.wav');
                     notice.autoplay = true;
                 }
@@ -179,7 +179,7 @@ function sendData(message, messageType)
         }
 
         if (messageType === 'FORWARD') {
-            data.chat = contactList.find(el => el.name === forwardedMessageRecipientName).chat_id; // чат, куда пересылается
+            data.chat = contactList.find(el => el.name === forwardedMessageRecipientName).chat; // чат, куда пересылается
             delete data['chatType'];
         }
         webSocket.send(JSON.stringify(data));
@@ -238,21 +238,21 @@ function appendContactDOMElement(contact)
     let name = document.createElement('span'); // имя контакта
 
     contactBlock.className = 'contact position-relative mb-2';
-    contactBlock.title = contact.username;
+    contactBlock.title = contact.name;
     contactImgBlock.className = 'profile-img';
     img.className = 'contact__img img pe-2';
     name.className = 'contact__name';
 
-    img.src = (contact.user_photo === 'ava_profile.png' || contact.user_photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${contact.user_photo}`;
-    name.innerHTML = contact.username;
-    contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock,contact.username, 'dialog'));
-    contactBlock.setAttribute('data-notice', contact.isnotice);
+    img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${contact.photo}`;
+    name.innerHTML = contact.name;
+    contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock,contact.name, 'dialog'));
+    contactBlock.setAttribute('data-notice', contact.notice);
 
     contactImgBlock.append(img);
     contactBlock.append(contactImgBlock);
     contactBlock.append(name);
     // добавление значка без уведомлений, если они отключены
-    if (contact.isnotice == 0) {
+    if (contact.notice == 0) {
         contactBlock.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
     }
 
@@ -267,10 +267,10 @@ function appendGroupDOMElement(group, place='END')
 {
     let groupsItem = document.createElement('div');
     groupsItem.className = 'group';
-    groupsItem.title = group.chat_name;
-    groupsItem.innerHTML = group.chat_name;
-    groupsItem.addEventListener('click', setContactOrGroupClick(groupsItem, group.chat_id, 'discussion'));
-    groupsItem.setAttribute('data-notice', group.chat_isnotice);
+    groupsItem.title = group.name;
+    groupsItem.innerHTML = group.name;
+    groupsItem.addEventListener('click', setContactOrGroupClick(groupsItem, group.chat, 'discussion'));
+    groupsItem.setAttribute('data-notice', group.notice);
 
     if (place === 'START') {
         groupChatsContainer.prepend(groupsItem);
@@ -278,7 +278,7 @@ function appendGroupDOMElement(group, place='END')
         groupChatsContainer.append(groupsItem);
     }
 
-    if (group.chat_isnotice == 0) {
+    if (group.notice == 0) {
         groupsItem.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
     }
 }
@@ -289,17 +289,18 @@ const showContacts = () => fetch('/get-contacts').then(r=>r.json()).then(data =>
     findContactsInput.value = '';
     contactsContainer.innerHTML = '';
     contactList = [];
-    data.forEach(element => {
-        contactList.push({'name': element.username, 'chat': element.chat_id, 'isnotice' : element.isnotice});
-        appendContactDOMElement(element);
+    data.forEach(contact => {
+        contactList.push({'name': contact.name, 'chat': contact.chat, 'notice' : contact.notice});
+        appendContactDOMElement(contact);
     });
 });
+
 /** показать групповые чаты пользователя-клиента */
 const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => {
     groupList = [];
-    data.forEach(element => {
-        groupList.push({'name': element.chat_name, 'chat': element.chat_id, 'isnotice': element.chat_isnotice});
-        appendGroupDOMElement(element);
+    data.forEach(group => {
+        groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
+        appendGroupDOMElement(group);
     });
 });
 
@@ -528,14 +529,13 @@ function editNoticeShowContextMenu()
     let data = {};
 
     // поиск выбранного группового чата
-    if (selectedContact.className==='group') {
+    if (selectedContact.className === 'group') {
         data.chat = groupList.find(el => el.name === selectedContact.title).chat;
     } else {
         //  поиск выбранного контакта
         let name = selectedContact.querySelector('.contact__name').innerHTML;
         data.chat = contactList.find(el => el.name === name).chat;
     }
-    console.log(typeof selectedContact.getAttribute('data-notice'));
     data.notice = !(selectedContact.getAttribute('data-notice') == 1) ? 1 : 0; //инвертирование значения. Это значение будет записано в БД
     hideContextMenu();
 
@@ -545,21 +545,23 @@ function editNoticeShowContextMenu()
     urlParams.set('notice', data.notice);
     urlParams.set('username', clientUsername);
     // изменяет установленный флаг получения уведомлений
-    fetch('/edit-notice-show', {method:'post', body:urlParams}).then(r=>r.text()).then(data => {
-        data = parseInt(data);
-        selectedContact.setAttribute('data-notice', data);  // меняем атрибут
-        // если контакт, то изменяем значение в массиве контактов
+    fetch('/edit-notice-show', {method:'post', body:urlParams}).then(r=>r.text()).then(notice => {
+        notice = parseInt(notice);
+        selectedContact.setAttribute('data-notice', notice);  // меняем атрибут
         let elem;
         if (selectedContact.classList.contains('contact')) {
+            // если контакт, то изменяем значение в массиве контактов
+
             elem = contactList.find(el => el.name === selectedContact.title);
         } else if (selectedContact.className === 'group') {
             // если групповой чат, то изменяем значение в массиве групповых чатов
+
             elem = groupList.find(el => el.name === selectedContact.title);
         }
-        elem.isnotice = data;
+        elem.notice = notice;
 
         // изменение визуального уведомления
-        if (data === 1) {
+        if (notice === 1) {
             selectedContact.querySelector('.notice-soundless').remove();
         } else {
             selectedContact.innerHTML += "<div class='notice-soundless'>&#128263;</div>";

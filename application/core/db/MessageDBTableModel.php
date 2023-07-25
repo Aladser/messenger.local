@@ -53,7 +53,7 @@ class MessageDBTableModel extends DBTableModel
     public function getDiscussions(int $userHostId)
     {
         $sql = "
-        select chat_id, chat_name, chat_participant_isnotice as chat_isnotice       
+        select chat_id as chat, chat_name as name, chat_participant_isnotice as notice       
         from chat_participant
         join chat on chat_participant.chat_participant_chatid = chat.chat_id
         where chat_type = 'discussion' and chat_participant_userid = $userHostId
