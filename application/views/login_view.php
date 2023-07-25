@@ -16,6 +16,8 @@
             <input type="submit" class='btn w-25 mb-2 btn-bg-C4C4C4 text-white' value="Войти" disabled id='login-form__login-btn'>
             <a href="/main" class='text-decoration-none'><div class='mx-auto w-25 btn-bg-C4C4C4 text-white p-2'>Назад</div></a>
         </div>
+
+        <input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
     </form>
 
     <p class='w-25 mx-auto fw-bolder text-dark-red d-none' id='login-error'>Пользователь уже существует</p>

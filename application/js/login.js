@@ -30,7 +30,6 @@ document.querySelector('#login-form').addEventListener('submit', function (e) {
     form.append('CSRF', inputCsrf.value);
 
     fetch('/login', {method: 'POST', body: form}).then(response => response.json()).then(data => {
-        console.log(data);
 
         if (data['result'] === 'login_user') {
             // вход

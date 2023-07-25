@@ -3,22 +3,22 @@
 namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
+use Aladser\Core\Model;
+use Exception;
 
 class LoginController extends Controller
 {
+    /**
+     * @throws Exception
+     */
     public function action_index()
     {
-        if (array_key_exists('CSRF', $_POST)) {
+        if (isset($_POST['CSRF'])) {
             // проверка аутентификации
             $this->model->run();
         } else {
-            // открытие страницы входа
-            session_start();
-
-            //****** CSRF добавляется на страницу и в сессию *****
-            $data['csrfToken'] = hash('gost-crypto', random_int(0, 999999));
-            $_SESSION["CSRF"] = $data['csrfToken'];
-
+            // открыть станицу входа
+            $data['csrfToken'] = Model::createCSRFToken();
             $this->view->generate('template_view.php', 'login_view.php', '', 'login.js', 'Месенджер: войти', $data);
         }
     }

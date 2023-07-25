@@ -35,18 +35,6 @@
 
         <?php include $content_view ?>
 
-        <?php
-        // CSRF-токен на странице
-        session_start();
-        if (!is_null($data)) :
-            if (array_key_exists('csrfToken', $data)) :
-                ?>
-                    <input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
-                <?php
-            endif;
-        endif;
-        ?>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <?php if ($content_js !== '') : ?>
             <script type='text/javascript' src="application/js/<?=$content_js?>"></script>
