@@ -14,7 +14,8 @@ const editNicknameBtn = document.querySelector('#btn-edit-nickname');
 const editPhotoBtn = document.querySelector('#edit-photo-btn');
 /** изображение профиля */
 const profileImageField = document.querySelector('#profile-img');
-
+/** инпут CSRF-токена */
+const inputCsrf = document.querySelector('#input-csrf');
 /** случайное число*/
 let randomNumber = Math.round(Math.random()*100000);
 
@@ -74,13 +75,13 @@ function writeNickname(input, btn)
     }
 }
 
-// активирует поле ввода нового никнейма
+/** активирует поле ввода нового никнейма */
 editNicknameBtn.onclick = () => {
     inputNickname.disabled = false;
     inputNickname.focus();
 }
 
-// снять фокус с поля никнейма
+/** снять фокус с поля никнейма */
 inputNickname.onblur = function () {
     let originalNickname = inputNickname.value;
     return function () {
@@ -96,39 +97,49 @@ inputNickname.onblur = function () {
 
 // ИЗОБРАЖЕНИЕ ПРОФИЛЯ
 editPhotoBtn.onclick = () => selectFileInput.click();
-// оправка формы на сервер
+/** оправка формы на сервер */
 selectFileInput.onchange = () => {
     saveBtn.classList.remove('d-none');
     document.querySelector('#upload-file-btn').click();
 }
+
 // показ выбранного изображения как фото профиля
-document.querySelector('#upload-file-form').onsubmit = e => {
+document.querySelector('#upload-file-form').onsubmit = (e) => {
     e.preventDefault();
+    let formData = new FormData(e.target);
+    formData.append('CSRF', inputCsrf.value);
     if (selectFileInput.value !== '') {
-        fetch('/upload-file', {method: 'POST', body: new FormData(e.target)}).then(response => response.text()).then(filename => {
-            filename = filename.trim();
-            profileImageField.src = filename !== '' ? `application/data/temp/${filename}?r=${randomNumber++}` : 'application/images/ava_profile.png';
-            selectFileInput.value = ''; // очистка элемента выбора файлов
+        fetch('/upload-file', {method:'POST', body:formData}).then(response => response.text()).then(data => {
+            data = JSON.parse(data);
+            if (data.hasOwnProperty('wrong_url')) {
+                prgError.classList.remove('d-none');
+                prgError.innerHTML = 'подмена сетевого адреса';
+            } else if (data.result === 'ok') {
+                data.image = data.image.trim();
+                profileImageField.src = data.image !== '' ? `application/data/temp/${data.image}?r=${randomNumber++}` : 'application/images/ava_profile.png';
+                selectFileInput.value = ''; // очистка элемента выбора файлов
+            }
         });
     }
 }
 
-
-// сохранение введенных данных, и отправка изменений профиля на сервер
+// сохранение измененных данных, и отправка изменений профиля на сервер
 saveBtn.addEventListener('click', ()=>{
     let data = new URLSearchParams();
     data.set('user_nickname', inputNickname.value);
     data.set('user_hide_email', hideEmailInput.checked ? '1' : '0');
-    let fpathArr = document.querySelector('#profile-img').src.split('/');
-    data.set('user_photo', fpathArr[fpathArr.length - 1]);
+    data.set('CSRF', inputCsrf.value);
+    let filepathArr = document.querySelector('#profile-img').src.split('/');
+    data.set('user_photo', filepathArr[filepathArr.length - 1]);
 
-    fetch('/set-userdata', {method: 'POST', body: data}).then(r => r.text()).then(data => {
-        console.log(data);
-        if (data == 0) {
-            saveBtn.classList.remove('d-none');
-            prgError.innerHTML = 'серверная ошибка';
-        } else {
-            saveBtn.classList.add('d-none');
+    fetch('/set-userdata', {method: 'POST', body: data}).then(r => r.json()).then(data => {
+        saveBtn.classList.add('d-none');
+        if (data.hasOwnProperty('wrong_url')) {
+            prgError.classList.remove('d-none');
+            prgError.innerHTML = 'подмена сетевого адреса';
+        } else if (data === 0) {
+            prgError.classList.remove('d-none');
+            prgError.innerHTML = 'серверная ошибка сохранения изображения';
         }
     });
 if (inputNickname.value.trim() !== '') {

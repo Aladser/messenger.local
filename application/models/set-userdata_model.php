@@ -18,6 +18,12 @@ class SetUserDataModel extends Model
     {
 
         session_start();
+        // проверка на подмену адреса
+        if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo json_encode(['wrong_url' => 1]);
+            return;
+        };
+
         $email = $_SESSION['email'] ?? $_COOKIE['email'];
         $data['user_email'] = $email;
         $_POST['user_nickname'] = trim($_POST['user_nickname']);

@@ -27,6 +27,7 @@
                 <label class="form-check-label" for="hide-email-input">&nbsp; скрыть почту</label>
             </div>
             <button class='btn btn-bg-C4C4C4 text-white w-100 d-none' id='save-profile-settings-btn'>Сохранить</button>
+            <input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
         </div>
 
         <div class='options mb-2'>

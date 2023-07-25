@@ -10,6 +10,13 @@ class UploadFileModel extends Model
     public function run()
     {
         session_start();
+
+        // проверка на подмену адреса
+        if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo json_encode(['wrong_url' => 1]);
+            return;
+        };
+
         // почта пользователя
         $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
         $ext = explode('.', $_FILES['image']['name'])[1];
@@ -30,7 +37,17 @@ class UploadFileModel extends Model
         
         $fromPath = $_FILES['image']['tmp_name']; // откуда перемещается
         $toPath =  "$dwlDirPath$filename"; // куда перемещается
-        echo move_uploaded_file($fromPath, $toPath) ? $filename : '';
+
+        // перемещение изображения в папку профилей
+        $isMoving = move_uploaded_file($fromPath, $toPath);
+        if ($isMoving) {
+            $data['result'] = 'ok';
+            $data['image'] = $filename;
+        } else {
+            $data['result'] = 'moving_error';
+        }
+        echo json_encode($data);
+
         // удаление предыдущих вариантов изображения
         if ($number) {
             for ($i=1; $i<$number; $i++) {
