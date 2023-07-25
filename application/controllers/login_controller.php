@@ -8,7 +8,7 @@ class LoginController extends Controller
 {
     public function action_index()
     {
-        if (array_key_exists('csrf', $_POST)) {
+        if (array_key_exists('CSRF', $_POST)) {
             // проверка аутентификации
             $this->model->run();
         } else {

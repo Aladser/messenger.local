@@ -27,9 +27,11 @@ passwordInput.addEventListener('input', function () {
 document.querySelector('#login-form').addEventListener('submit', function (e) {
     e.preventDefault();
     let form = new FormData(this);
-    form.append('csrf', inputCsrf.value);
+    form.append('CSRF', inputCsrf.value);
 
     fetch('/login', {method: 'POST', body: form}).then(response => response.json()).then(data => {
+        console.log(data);
+
         if (data['result'] === 'login_user') {
             // вход
             window.open('/chats', '_self')
@@ -44,5 +46,7 @@ document.querySelector('#login-form').addEventListener('submit', function (e) {
                 loginErrorPrg.innerHTML = 'Пользователь не существует';
             }
         }
+
+
     });
 });

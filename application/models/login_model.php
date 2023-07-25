@@ -17,7 +17,7 @@ class LoginModel extends Model
     public function run()
     {
         session_start();
-        if (!Model::checkCSRF($_POST['csrf'], $_SESSION['CSRF'])) {
+        if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
             // проверка на подмену адреса
             $data['result'] = 'wrong_url';
         } elseif ($this->users->existsUser($_POST['email'])) {
