@@ -17,7 +17,7 @@ class ChatsModel extends Model
     public function run()
     {
         session_start();
-        $userEmail = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
+        $userEmail = Model::getUserMailFromClient();
         $publicUsername = $this->userTable->getPublicUsernameFromEmail($userEmail);
         $userId = $this->userTable->getUserId($userEmail);
 

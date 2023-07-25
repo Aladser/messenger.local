@@ -18,7 +18,7 @@ class UploadFileModel extends Model
         };
 
         // почта пользователя
-        $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
+        $email = Model::getUserMailFromClient();
         $ext = explode('.', $_FILES['image']['name'])[1];
 
         // поиск других загрузок изображений этого профиля и установка нового имени файла

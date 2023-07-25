@@ -82,6 +82,8 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
+    //console.clear();
+    //console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if (data.onconnection) {
@@ -106,8 +108,8 @@ webSocket.onmessage = e => {
         // уведомления о новых сообщениях чатов
         // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
         if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== publicClientUsername) {
-            let foundedContactChat = contactList.find(el => el.chat_id === data.chatId); // поиск чата среди списка чатов контактов
-            let foundedGroupChat = groupList.find(el => el.chat_id === data.chatId);     // поиск чата среди групповых чатов
+            let foundedContactChat = contactList.find(el => el.chat === data.chat); // поиск чата среди списка чатов контактов
+            let foundedGroupChat = groupList.find(el => el.chat === data.chat);     // поиск чата среди групповых чатов
             let isChat = (foundedContactChat !== undefined) || (foundedGroupChat !== undefined);
 
 
@@ -115,16 +117,16 @@ webSocket.onmessage = e => {
             if (isChat) {
                 // поиск контакта/группы в списке контактов/групп
                 let chat = foundedContactChat!==undefined ? foundedContactChat : foundedGroupChat;
-                // имя контакта или группового чата
-                let chatName = chat.hasOwnProperty("chat_name") ? chat.chat_name : chat.username;
-                // DOM-элемент  контакта или группового чата
-                let domElem = document.querySelector(`[title='${chatName}']`);
+
                 // для неоткрытых чатов визуальное уведомление
-                if (openChatId !== data.chatId) {
+                // DOM-элемент  контакта или группового чата
+                let domElem = document.querySelector(`[title='${ chat.name}']`);
+                if (openChatId !== data.chat) {
                     domElem.classList.add('isnewmessage');
                 }
+
                 // звуковое уведомление
-                if (chat.isnotice == 1) {
+                if (chat.isnotice == 1 && data.author !== publicClientUsername) {
                     let notice = new Audio('application/data/notice.wav');
                     notice.autoplay = true;
                 }
@@ -132,14 +134,14 @@ webSocket.onmessage = e => {
         }
 
         // сообщения открытого чата
-        if (openChatId === data.chatId) {
+        if (openChatId === data.chat) {
             // изменение сообщения
-            if (data.messageType == 'EDIT') {
-                let messageDOMElem = document.querySelector(`[data-chat_message_id="${data.chat_message_id}"]`);
-                messageDOMElem.querySelector('.msg__text').innerHTML = data.chat_message_text;
+            if (data.messageType === 'EDIT') {
+                let messageDOMElem = document.querySelector(`[data-msg="${data.msg}"]`);
+                messageDOMElem.querySelector('.msg__text').innerHTML = data.message;
             } else if (data.messageType === 'REMOVE') {
                 // удаление сообщения
-                let messageDOMElem = document.querySelector(`[data-chat_message_id="${data.chat_message_id}"]`);
+                let messageDOMElem = document.querySelector(`[data-msg="${data.msg}"]`);
                 messageDOMElem.remove();
             } else {
                 // новое сообщение
@@ -156,31 +158,28 @@ webSocket.onmessage = e => {
  */
 function sendData(message, messageType)
 {
-    // проверка типа сообщения
-    if (!['NEW', 'EDIT', 'REMOVE', 'FORWARD'].includes(messageType) ) {
-        alert('sendData(msgType): неверный аргумент msgType');
-        throw 'sendData(msgType): неверный аргумент msgType';
-    }
     // проверка сокета
     if (webSocket.readyState !== 1) {
         alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
         throw 'sendData(msgType): вебсокет не готов к обмену сообщениями';
     }
+
     // изменение типа сообщения для редактированных сообщений
     if (isEditMessage) {
         messageType = 'EDIT';
         isEditMessage = false;
     }
+
     // отправка сообщения на сервер
     if (message!=='') {
-        let data = {'message':message, 'fromuser':publicClientUsername, 'chatId':openChatId,'chatType':chatType,'messageType':messageType};
+        let data = {'message':message, 'author':publicClientUsername, 'chat':openChatId,'chatType':chatType,'messageType':messageType};
          // для старых сообщений добавляется id сообщения
         if (['EDIT', 'REMOVE', 'FORWARD'].includes(messageType)) {
-            data.msgId = parseInt(selectedMessage.getAttribute('data-chat_message_id'));
+            data.msgId = parseInt(selectedMessage.getAttribute('data-msg'));
         }
 
         if (messageType === 'FORWARD') {
-            data.chatId = contactList.find(el => el.username === forwardedMessageRecipientName).chat_id;
+            data.chat = contactList.find(el => el.name === forwardedMessageRecipientName).chat_id; // чат, куда пересылается
             delete data['chatType'];
         }
         webSocket.send(JSON.stringify(data));
@@ -200,6 +199,7 @@ function appendMessage(data)
     timeInMs += (timeZone-3)*3600000;
     newDate = new Date(timeInMs);
     let localTime = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
+
     // показ переводов строки на странице
     let brIndex = data.message.indexOf('\n');
     while (brIndex > -1) {
@@ -209,19 +209,20 @@ function appendMessage(data)
 
     let msgBlock = document.createElement('div');
     let msgTable = document.createElement('table');
-    msgBlock.className = data.fromuser !== publicClientUsername ? 'msg d-flex justify-content-end' : 'msg';
-    msgTable.className = data.fromuser !== publicClientUsername ? 'msg__table msg__table-contact' : 'msg__table';
-    msgBlock.setAttribute('data-chat_message_id', data.chat_message_id);
-    msgBlock.setAttribute('data-fromuser', data.fromuser);
+
+    msgBlock.className = data.author !== publicClientUsername ? 'msg d-flex justify-content-end' : 'msg';
+    msgTable.className = data.author !== publicClientUsername ? 'msg__table msg__table-contact' : 'msg__table';
+    msgBlock.setAttribute('data-msg', data.msg);
+    msgBlock.setAttribute('data-author', data.author);
     msgBlock.setAttribute('data-forward', data.forward);
 
-    if (data.forward == 1) {
+    if (data.forward == 1 || data.messageType === 'FORWARD') {
         msgTable.innerHTML += `<tr><td class='msg__forward'>Переслано</td></tr>`;
     } // надпись о пересланном сообщении
     msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`; // текст сообщения
     msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;   // время сообщения
     if (chatType === 'discussion') {
-        msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.fromuser}</td></tr>`;
+        msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.author}</td></tr>`;
     }     // показ автора сообщения в групповом чате
 
     msgBlock.append(msgTable);
@@ -289,7 +290,7 @@ const showContacts = () => fetch('/get-contacts').then(r=>r.json()).then(data =>
     contactsContainer.innerHTML = '';
     contactList = [];
     data.forEach(element => {
-        contactList.push({'username': element.username, 'chat_id': element.chat_id, 'isnotice' : element.isnotice});
+        contactList.push({'name': element.username, 'chat': element.chat_id, 'isnotice' : element.isnotice});
         appendContactDOMElement(element);
     });
 });
@@ -297,10 +298,12 @@ const showContacts = () => fetch('/get-contacts').then(r=>r.json()).then(data =>
 const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => {
     groupList = [];
     data.forEach(element => {
-        groupList.push({'chat_name': element.chat_name, 'chat_id': element.chat_id, 'isnotice': element.chat_isnotice});
+        groupList.push({'name': element.chat_name, 'chat': element.chat_id, 'isnotice': element.chat_isnotice});
         appendGroupDOMElement(element);
     });
 });
+
+
 /** показать участников группового чата*/
 const showGroupRecipients = (domElement, discussionid) => {
     let urlParams = new URLSearchParams();
@@ -349,15 +352,16 @@ const showGroupRecipients = (domElement, discussionid) => {
         });
     });
 };
+
+
 /** показать сообщения */
 const showChat = (urlParams, bdChatName, type) =>{
-    fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.text()).then(data=>{
-        data = JSON.parse(data);
+    fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
         if (data) {
             chat.innerHTML = '';
 
             chatType = data.type;
-            openChatId = parseInt(data.chatId);
+            openChatId = parseInt(data.current_chat);
 
             chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
             chatNameLabel.innerHTML = bdChatName;
@@ -432,7 +436,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
                     return;
                 }
                 
-                let contact = contactList.find(elem => elem.chat_id == dbContact.chat_id);
+                let contact = contactList.find(elem => elem.chat == dbContact.chat_id);
                 if (contact === undefined) {
                     contactList.push(dbContact);
                 }
@@ -441,7 +445,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
             urlParams.set('discussionid', urlArg);
             removeGroupPatricipantDOMElements();
             showGroupRecipients(domElement, urlArg) // показать участников группового чата
-            groupChatName = groupList.find(el => el.chat_id == urlArg).chat_name;
+            groupChatName = groupList.find(el => el.chat == urlArg).name;
         } else {
             return;
         }
@@ -522,20 +526,22 @@ function editNoticeShowContextMenu()
 {
     // создание пакета с id чата, значением о показе уведомлений
     let data = {};
+
     // поиск выбранного группового чата
     if (selectedContact.className==='group') {
-        data.chat_id = groupList.find(el => el.chat_name === selectedContact.title).chat_id;
+        data.chat = groupList.find(el => el.name === selectedContact.title).chat;
     } else {
         //  поиск выбранного контакта
         let name = selectedContact.querySelector('.contact__name').innerHTML;
-        data.chat_id = contactList.find(el => el.username === name).chat_id;
+        data.chat = contactList.find(el => el.name === name).chat;
     }
+    console.log(typeof selectedContact.getAttribute('data-notice'));
     data.notice = !(selectedContact.getAttribute('data-notice') == 1) ? 1 : 0; //инвертирование значения. Это значение будет записано в БД
     hideContextMenu();
 
     // отправка данных на сервер
     let urlParams = new URLSearchParams();
-    urlParams.set('chat_id', data.chat_id);
+    urlParams.set('chat_id', data.chat);
     urlParams.set('notice', data.notice);
     urlParams.set('username', clientUsername);
     // изменяет установленный флаг получения уведомлений
@@ -545,13 +551,14 @@ function editNoticeShowContextMenu()
         // если контакт, то изменяем значение в массиве контактов
         let elem;
         if (selectedContact.classList.contains('contact')) {
-            elem = contactList.find(el => el.username === selectedContact.title);
+            elem = contactList.find(el => el.name === selectedContact.title);
         } else if (selectedContact.className === 'group') {
             // если групповой чат, то изменяем значение в массиве групповых чатов
-            elem = groupList.find(el => el.chat_name === selectedContact.title);
+            elem = groupList.find(el => el.name === selectedContact.title);
         }
         elem.isnotice = data;
 
+        // изменение визуального уведомления
         if (data === 1) {
             selectedContact.querySelector('.notice-soundless').remove();
         } else {
@@ -623,8 +630,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // нажатия правой кнопкой мыши на странице
 window.oncontextmenu = event => {
-    // клик на элементе сообщения
     if (['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forward'].includes(event.target.className)) {
+        // клик на элементе сообщения
+
         if (['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)) {
             selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode;
         } else if (event.target.className === 'msg__forward') {
@@ -634,8 +642,10 @@ window.oncontextmenu = event => {
         }
 
         showContextMenu(msgContextMenu, event);
-        let msgUserhost = selectedMessage.getAttribute('data-fromuser');
+        let msgUserhost = selectedMessage.getAttribute('data-author');
+        // отображение кнопки изменить сообщение
         editMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
+        // отображение кнопки удалить сообщение
         removeMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
 
         if (selectedMessage.getAttribute('data-forward') == 1) {
@@ -643,6 +653,7 @@ window.oncontextmenu = event => {
         }
     } else if (['contact__name','contact__img img pe-2','contact position-relative mb-2','group', 'notice-soundless'].includes(event.target.className)) {
         // клик на элементе контакта
+
         if (event.target.className === 'contact__img img pe-2') {
             selectedContact = event.target.parentNode.parentNode;
         } else if (event.target.className === 'contact__name' || event.target.className === 'notice-soundless') {
@@ -652,7 +663,9 @@ window.oncontextmenu = event => {
         }
 
         let isNotice = selectedContact.getAttribute('data-notice');
+        // показ кнопки включения - выключения уведомлений
         editNoticeShowContextMenuBtn.innerHTML = isNotice==1 ? 'Отключить уведомления' : 'Включить уведомления';
+
         showContextMenu(contactContextMenu, event);
     } else {
         hideContextMenu();

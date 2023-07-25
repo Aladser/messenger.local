@@ -27,9 +27,9 @@ class GetContactModel extends Model
             exit;
         };
 
-        $userHostName = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];  // имя клиента-хоста
-        $userId = $this->usersTable->getUserId($userHostName);                              // id клиента-хоста
-        $contactId = $this->usersTable->getUserId($_POST['contact']);                        // id клиента-контакта
+        $userHostName = Model::getUserMailFromClient();                // имя клиента-хоста
+        $userId = $this->usersTable->getUserId($userHostName);         // id клиента-хоста
+        $contactId = $this->usersTable->getUserId($_POST['contact']);  // id клиента-контакта
 
         // добавляется контакт, если не существует
         $isContact = $this->contactsTable->existsContact($contactId, $userId);

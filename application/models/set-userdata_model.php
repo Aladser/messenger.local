@@ -24,7 +24,7 @@ class SetUserDataModel extends Model
             return;
         };
 
-        $email = $_SESSION['email'] ?? $_COOKIE['email'];
+        $email = Model::getUserMailFromClient();
         $data['user_email'] = $email;
         $_POST['user_nickname'] = trim($_POST['user_nickname']);
         $data['user_nickname'] = $_POST['user_nickname'] == '' ? null :  $_POST['user_nickname'];

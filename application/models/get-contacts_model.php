@@ -19,7 +19,7 @@ class GetContactsModel extends Model
     public function run()
     {
         session_start();
-        $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
+        $email = Model::getUserMailFromClient();
         $userId = $this->usersTable->getUserId($email);
         echo json_encode($this->contactsTable->getContacts($userId));
     }

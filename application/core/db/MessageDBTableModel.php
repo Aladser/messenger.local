@@ -5,6 +5,22 @@ namespace Aladser\Core\DB;
 /** класс БД таблицы сообщений чатов */
 class MessageDBTableModel extends DBTableModel
 {
+    // возвращает сообшения диалога
+    public function getMessages(int $chatId)
+    {
+        $sql = "
+            select chat_message_id as msg, 
+            chat_message_chatid as chat, 
+            getPublicUserName(user_email, user_nickname, user_hide_email) as author, 
+            chat_message_text as message, 
+            chat_message_time as time,
+            chat_message_forward as forward
+            from chat_message join users on user_id = chat_message_creatorid
+            where chat_message_chatid = $chatId
+        ";
+        return $this->db->query($sql, false);
+    }
+
     // получить ID диалога
     public function getDialogId($user1Id, $user2Id)
     {
@@ -56,7 +72,7 @@ class MessageDBTableModel extends DBTableModel
     public function addMessage($msg)
     {
         $out = '@chatid';
-        $func = "add_message($msg->chatId, '$msg->message', '$msg->fromuser', '$msg->time', $out)";
+        $func = "add_message($msg->chat, '$msg->message', '$msg->author', '$msg->time', $out)";
         return $this->db->executeProcedure($func, $out);
     }
 
@@ -64,7 +80,7 @@ class MessageDBTableModel extends DBTableModel
     public function addForwardedMessage($msg)
     {
         $out = '@chatid';
-        $func = "add_forwarded_message($msg->fromuserId, $msg->msgId, $msg->chatId, '$msg->time', $out)";
+        $func = "add_forwarded_message($msg->authorId, $msg->msgId, $msg->chat, '$msg->time', $out)";
         return $this->db->executeProcedure($func, $out);
     }
 
@@ -75,7 +91,10 @@ class MessageDBTableModel extends DBTableModel
         $this->db->exec("update chat_message set chat_message_text = '$msg' where chat_message_id = $msgId");
         // возвращаем строку
         $rslt = $this->db->query("
-            select chat_message_id, chat_message_chatid as chatId, chat_message_text, chat_message_time 
+            select chat_message_id as msg, 
+                   chat_message_chatid as chat, 
+                   chat_message_text as message, 
+                   chat_message_time as time 
             from chat_message 
             where chat_message_id = $msgId
         ");
@@ -88,7 +107,7 @@ class MessageDBTableModel extends DBTableModel
     {
         // получиим удаляемую строку
         $rslt = $this->db->query("
-            select chat_message_id, chat_message_chatid as chatId 
+            select chat_message_id as msg, chat_message_chatid as chat 
             from chat_message 
             where chat_message_id = $msgId
         ");
@@ -97,22 +116,6 @@ class MessageDBTableModel extends DBTableModel
         // возвращаем информацию удаляемой строки
         $rslt['messageType'] = 'REMOVE';
         return $rslt;
-    }
-
-    // возвращает сообшения диалога
-    public function getMessages(int $chatId)
-    {
-        $sql = "
-            select chat_message_id, 
-            chat_message_chatid as chatId, 
-            getPublicUserName(user_email, user_nickname, user_hide_email) as fromuser, 
-            chat_message_text as message, 
-            chat_message_time as time,
-            chat_message_forward as forward
-            from chat_message join users on user_id = chat_message_creatorid
-            where chat_message_chatid = $chatId
-        ";
-        return $this->db->query($sql, false);
     }
 
     // установить показ уведомлений чатов

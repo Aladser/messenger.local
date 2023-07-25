@@ -19,7 +19,7 @@ class GetGroupsModel extends Model
     public function run()
     {
         session_start();
-        $username = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
+        $username = Model::getUserMailFromClient();
         $userId = $this->userTable->getUserId($username);
         echo json_encode($this->messageTable->getDiscussions($userId));
     }

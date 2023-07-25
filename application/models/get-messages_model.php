@@ -24,7 +24,7 @@ class GetMessagesModel extends Model
         $type = null;
         // диалоги
         if (isset($_POST['contact'])) {
-            $userHostName = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];  // имя клиента-хоста
+            $userHostName = Model::getUserMailFromClient();  // имя клиента-хоста
             $userId = $this->usersTable->getUserId($userHostName);                              // id клиента-хоста
             $contactId = $this->usersTable->getUserId($_POST['contact']);                        // id клиента-контакта
             $chatId = $this->messageTable->getDialogId($userId, $contactId);
@@ -35,7 +35,7 @@ class GetMessagesModel extends Model
             $type = 'discussion';
         }
 
-        $messages = ['chatId' => $chatId, 'type'=>$type, 'messages' => $this->messageTable->getMessages($chatId)];
+        $messages = ['current_chat' => $chatId, 'type'=>$type, 'messages' => $this->messageTable->getMessages($chatId)];
         echo json_encode($messages);
     }
 }

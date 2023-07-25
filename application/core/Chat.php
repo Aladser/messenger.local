@@ -86,7 +86,7 @@ class Chat implements MessageComponentInterface
         } elseif ($data->message) {
             if ($data->messageType == 'NEW') {
                 $data->time = date('Y-m-d H:i:s');
-                $data->chat_message_id = $this->messageTable->addMessage($data);
+                $data->msg = $this->messageTable->addMessage($data);
             } elseif ($data->messageType == 'EDIT') {
                 $data = $this->messageTable->editMessage($data->message, $data->msgId);
             } elseif ($data->messageType == 'REMOVE') {
@@ -94,8 +94,8 @@ class Chat implements MessageComponentInterface
             } elseif ($data->messageType == 'FORWARD') {
                 $data->time = date('Y-m-d H:i:s');
                 $data->msgId = intval($data->msgId);
-                $data->fromuserId = intval($this->usersTable->getUserId($data->fromuser));
-                $data->chat_message_id = $this->messageTable->addForwardedMessage($data);
+                $data->authorId = intval($this->usersTable->getUserId($data->author));
+                $data->msg = $this->messageTable->addForwardedMessage($data);
             }
         }
         $msg = json_encode($data);

@@ -20,7 +20,7 @@ class ProfileModel extends Model
     public function run()
     {
         session_start();
-        $email = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
+        $email = Model::getUserMailFromClient();
 
         // удаление временных файлов текущего профиля
         $tempDirPath = dirname(__DIR__, 1)."\data\\temp\\";
