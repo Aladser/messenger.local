@@ -27,6 +27,10 @@ class ChatsModel extends Model
             unlink($file);
         }
 
-        return ['user-email' => $userEmail, 'publicUsername' => $publicUsername, 'userhostId' => $userId];
+        $data['user-email'] = $userEmail;
+        $data['publicUsername'] = $publicUsername;
+        $data['userhostId'] = $userId;
+        $data['csrfToken'] = Model::createCSRFToken();
+        return $data;
     }
 }

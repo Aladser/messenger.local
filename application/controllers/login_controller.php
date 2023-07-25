@@ -18,8 +18,14 @@ class LoginController extends Controller
             $this->model->run();
         } else {
             // открыть станицу входа
-            $data['csrfToken'] = Model::createCSRFToken();
-            $this->view->generate('template_view.php', 'login_view.php', '', 'login.js', 'Месенджер: войти', $data);
+            $this->view->generate(
+                'template_view.php',
+                'login_view.php',
+                '',
+                'login.js',
+                'Месенджер: войти',
+                ['csrfToken' => Model::createCSRFToken()]
+            );
         }
     }
 }

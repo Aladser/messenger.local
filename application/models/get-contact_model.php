@@ -20,6 +20,13 @@ class GetContactModel extends Model
 
     public function run()
     {
+        // CSRF-проверка на подмену адреса
+        session_start();
+        if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo json_encode(['wrong_url' => 1]);
+            exit;
+        };
+
         $userHostName = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];  // имя клиента-хоста
         $userId = $this->usersTable->getUserId($userHostName);                              // id клиента-хоста
         $contactId = $this->usersTable->getUserId($_POST['contact']);                        // id клиента-контакта
@@ -33,7 +40,8 @@ class GetContactModel extends Model
             $userData = ['username'=>$contactName, 'chat_id'=>$chatId, 'isnotice'=>0];
         } else {
             $contact = $this->contactsTable->getContact($userId, $contactId);
-            $userData = ['username'=>$contact[0]['username'],
+            $userData = [
+                'username'=>$contact[0]['username'],
                 'chat_id'=>$contact[0]['chat_id'],
                 'isnotice'=>$contact[0]['isnotice']
             ];

@@ -14,6 +14,9 @@ class ProfileModel extends Model
         $this->usersTable = $CONFIG->getUsers();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function run()
     {
         session_start();
@@ -24,7 +27,8 @@ class ProfileModel extends Model
         foreach (glob($tempDirPath.$email.'*') as $file) {
             unlink($file);
         }
-
-        return $this->usersTable->getUserData($email);
+        $data = $this->usersTable->getUserData($email);
+        $data['csrfToken'] = Model::createCSRFToken();
+        return  $data;
     }
 }

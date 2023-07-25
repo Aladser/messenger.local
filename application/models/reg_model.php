@@ -5,7 +5,7 @@ namespace Aladser\Models;
 use Aladser\Core\Model;
 
 //***** ДОБАВИТЬ ПОЛЬЗОВАТЕЛЯ *****/
-class RegUserModel extends Model
+class RegModel extends Model
 {
     private $users;
     private $eMailSender;

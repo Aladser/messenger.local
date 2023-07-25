@@ -5,7 +5,7 @@ namespace Aladser\Core\DB;
 /** класс БД таблицы пользователей */
 class UsersDBTableModel extends DBTableModel
 {
-    // проверить существование пользователя
+    /** проверить существование пользователя */
     public function existsUser($email): bool
     {
         return $this->db->query("select count(*) as count from users where user_email = '$email'")['count'] == 1;
@@ -44,7 +44,7 @@ class UsersDBTableModel extends DBTableModel
     // подтвердить почту
     public function confirmEmail($email)
     {
-        $sql = "UPDATE users SET user_email_confirmed=1 WHERE user_email='$email'";
+        $sql = "update users set user_email_confirmed=1 and user_hash = null where user_email='$email'";
         return $this->db->exec($sql);
     }
 

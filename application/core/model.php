@@ -8,7 +8,8 @@ abstract class Model
 {
     abstract public function run();
 
-    public function getUserMail(): string
+    /** получить почту пользователя из сессии или куки */
+    public function getUserMailFromClient(): string
     {
         session_start();
         return $_COOKIE['email'] ?? $_SESSION['email'];

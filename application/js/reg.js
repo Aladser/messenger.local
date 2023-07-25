@@ -74,7 +74,7 @@ document.querySelector('#reg-form').addEventListener('submit', function (e) {
     e.preventDefault();
     let form = new FormData(this);
     // Список пар ключ/значение
-    fetch('/reg-user', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+    fetch('/reg', {method: 'POST', body: form}).then(response => response.text()).then(data => {
         console.log(data);
         data = JSON.parse(data);
         regErrorPrg.classList.remove('d-none');

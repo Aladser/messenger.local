@@ -49,6 +49,8 @@ const forwardMsgContextMenuBtn = document.querySelector('#resend-msg');
 const contactContextMenu = document.querySelector('#contact-context-menu');
 /** контекстное меню: изменить показ уведомлений*/
 const editNoticeShowContextMenuBtn = document.querySelector('#contact-notice-edit');
+/** инпут CSRF-токена */
+const inputCsrf = document.querySelector('#input-csrf');
 
 /** Выбранное сообщение */
 let selectedMessage = null;
@@ -255,8 +257,8 @@ function appendContactDOMElement(contact)
 
     contactsContainer.append(contactBlock);
 }
-/** создать DOM-элемент группового чата списка групповых чатов
- *
+/**
+ * создать DOM-элемент группового чата списка групповых чатов
  * @param {*} group БД данные группы
  * @param {*} place куда добавить: START - начало списка, END - конец
  */
@@ -396,8 +398,8 @@ function removeGroupPatricipantDOMElements()
     contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.remove());
 }
 
-/** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
- *
+/**
+ * НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
  * @param {*} domElement DOM-элемент контакта или чата
  * @param {*} urlArg что ищется: контакт или групповой чат
  * @param {*} type тип диалога
@@ -420,9 +422,16 @@ function setContactOrGroupClick(domElement, urlArg, type)
         let groupChatName;
         if (type === 'dialog') {
             urlParams.set('contact', urlArg);
+            urlParams.set('CSRF', inputCsrf.value);
             removeGroupPatricipantDOMElements();
             // поиск пользователя в массиве контактов на клиенте и добавление, если отсутствует
             fetch('/get-contact', {method: 'POST', body: urlParams}).then(r=>r.json()).then(dbContact => {
+                // проверка на подмену адреса
+                if (dbContact.hasOwnProperty('wrong_url')) {
+                    alert('Подмена URL-адреса запроса');
+                    return;
+                }
+                
                 let contact = contactList.find(elem => elem.chat_id == dbContact.chat_id);
                 if (contact === undefined) {
                     contactList.push(dbContact);
@@ -557,9 +566,10 @@ window.addEventListener('DOMContentLoaded', () => {
     showContacts();
     showGroups();
     // создание группового чата
-    createGroupOption.onclick = () => fetch('/create-group').then(r=>r.json()).then(data => {
-        appendGroupDOMElement(data, 'START');
-    });
+    createGroupOption.onclick = () => fetch('/create-group')
+        .then(r=>r.json())
+        .then(data => appendGroupDOMElement(data, 'START'));
+
     // запрет контекстного меню
     document.oncontextmenu = function () {
         return false;};
@@ -582,6 +592,7 @@ window.addEventListener('DOMContentLoaded', () => {
             pressedKeys.push(event.code);
         }
     };
+
     // отпускание клавиши в поле ввода сообщения
     messageInput.onkeyup = event => {
         // перевод строки, если Ctrl+Enter

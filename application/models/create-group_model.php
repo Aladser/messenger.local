@@ -16,11 +16,14 @@ class CreateGroupModel extends Model
         $this->messageTable = $CONFIG->getMessageDBTable();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function run()
     {
         session_start();
-        $username = isset($_COOKIE['auth']) ?  $_COOKIE['email'] : $_SESSION['email'];
-        $userId = $this->userTable->getUserId($username);
-        echo json_encode($this->messageTable->createDiscussion($userId));
+        $userId = $this->userTable->getUserId(Model::getUserMailFromClient());
+        $data = $this->messageTable->createDiscussion($userId);
+        echo json_encode($data);
     }
 }
