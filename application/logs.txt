@@ -1,13 +1,2 @@
-{"messageOnconnection":1,"author":"Aladser","wsId":62}
-Connection Aladser completed
-{"messageOnconnection":1,"author":"Admin","wsId":101}
-{"messageOnconnection":1,"author":"Admin","wsId":108}
-{"messageOnconnection":1,"author":"Admin","wsId":108}
-Connection Admin completed
-{"messageOnconnection":1,"author":"Admin","wsId":120}
-{"messageOnconnection":1,"author":"Admin","wsId":120}
-Connection  completed
-{"messageOnconnection":1,"author":"Admin","wsId":133}
-{"messageOnconnection":1,"author":"Admin","wsId":133}
-Connection  completed
+{"messageOnconnection":1,"author":"Admin","wsId":62}
 Connection Admin completed
