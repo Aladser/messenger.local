@@ -22,6 +22,7 @@ class DBQueryCtl
         $this->passwordDB = $passwordDB;
     }
 
+
     private function connect()
     {
         try {
@@ -41,12 +42,13 @@ class DBQueryCtl
         $this->dbConnection = null;
     }
 
+
     /**
      * выполняет подготовленный запрос
      * @param string $sql sql-запрос
      * @param array $args массив переменных запроса
-     * @param bool $isOneValue одно или несколько получаемых значений строки
-     * @return mixed
+     * @param bool $isOneValue одно или множество запрашиваемых полей
+     * @return mixed массив строк или одно значение
      */
     public function queryPrepared(string $sql, array $args, bool $isOneValue = true)
     {
@@ -60,8 +62,8 @@ class DBQueryCtl
     /**
      * выполняет запрос
      * @param string $sql запрос
-     * @param bool $isOneValue число требуемых полей
-     * @return mixed SQL-данные
+     * @param bool $isOneValue одно или множество запрашиваемых полей
+     * @return mixed массив строк или одно значение
      */
     public function query(string $sql, bool $isOneValue = true)
     {
@@ -70,6 +72,7 @@ class DBQueryCtl
         $this->disconnect();
         return $isOneValue ? $query->fetch(PDO::FETCH_ASSOC) : $query->fetchAll();
     }
+
 
     /**
      * выполняет изменения данных

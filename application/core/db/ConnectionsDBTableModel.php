@@ -47,11 +47,13 @@ class ConnectionsDBTableModel extends DBTableModel
     // получить публичное имя пользователя соединения
     public function getConnectionPublicUsername(int $connId)
     {
-        return $this->db->queryPrepared('
+        $sql = '
             select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
             from users where user_id = (select connection_userid from connections 
             where connection_ws_id = :connId)
-        ', ['connId' => $connId])['username'];
+        ';
+        $query = $this->db->queryPrepared($sql, ['connId' => $connId]);
+        return $query['username'] ?? '';
     }
 
     // удалить закрытое соединение из БД

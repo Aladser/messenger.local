@@ -42,16 +42,14 @@ class UsersDBTableModel extends DBTableModel
     // проверить хэш пользователя
     public function checkUserHash($email, $hash): bool
     {
-        $sql = 'select count(*) as count from users where user_email = :email and user_hash = :hash';
-        $hash = $this->db->queryPrepared($sql, ['email'=>$email, 'hash'=>$email])['count'];
-        return $hash == 1;
+        $sql = "select count(*) as count from users where user_email = :email and user_hash = :hash";
+        return $this->db->queryPrepared($sql, ['email'=>$email, 'hash'=>$hash])['count'] === 1;
     }
 
-    // подтвердить почту
+    /** подтвердить почту */
     public function confirmEmail($email)
     {
-        $sql = "update users set user_email_confirmed = 1 and user_hash = null where user_email='$email'";
-        return $this->db->exec($sql);
+        return $this->db->exec("update users set user_email_confirmed = 1, user_hash = null where user_email='$email'");
     }
 
     // проверить уникальность никнейма
@@ -162,7 +160,10 @@ class UsersDBTableModel extends DBTableModel
     // сравнение новых данных и в БД
     private function isEqualData($data, $field, $email): bool
     {
-        $dbData = $this->db->query("select $field from users WHERE user_email='$email'")[$field];
+        $dbData = $this->db->queryPrepared(
+            "select $field from users WHERE user_email=:email",
+            ['email' => $email]
+        )[$field];
         return $data === $dbData;
     }
 }

@@ -73,8 +73,9 @@ class Chat implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $data = json_decode($msg);
-        // после соединения пользователь отправляет пакет messageOnconnection. Или отправляется сообщение
         if (property_exists($data, 'messageOnconnection')) {
+            // после соединения пользователь отправляет пакет messageOnconnection.
+
             // добавление соединения в БД
             $connection = $this->connectionsTable->addConnection(['author'=>$data->author, 'wsId'=>$data->wsId]);
             // имя пользователя или ошибка добавления
@@ -84,6 +85,9 @@ class Chat implements MessageComponentInterface
                 $data->author = ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo];
             }
         } elseif ($data->message) {
+            // отправляется сообщение
+
+            $data->message = htmlspecialchars($data->message); // экранирование символов
             if ($data->messageType == 'NEW') {
                 $data->time = date('Y-m-d H:i:s');
                 $data->msg = $this->messageTable->addMessage($data);
@@ -98,6 +102,8 @@ class Chat implements MessageComponentInterface
                 $data->msg = $this->messageTable->addForwardedMessage($data);
             }
         }
+        // htmlspecialchars("<a href='test'>Test</a>", ENT_QUOTES)
+
         $msg = json_encode($data);
         echo $msg."\n";
         $this->writeLog($msg);

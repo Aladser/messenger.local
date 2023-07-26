@@ -75,7 +75,12 @@ class ContactsDBTableModel extends DBTableModel
         return $this->db->queryPrepared($sql, ['userId' => $userId], false);
     }
 
-    // добавить участника группового чата
+    /**
+     * добавить участника группового чата
+     * @param $chatId id чата
+     * @param $userId id пользователя-контакта
+     * @return int|mixed
+     */
     public function addGroupContact($chatId, $userId)
     {
         $isContact = $this->db->queryPrepared('

@@ -82,8 +82,8 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
-    //console.clear();
-    //console.log(data);
+    console.clear();
+    console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
     if (data.onconnection) {
@@ -595,7 +595,6 @@ window.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams();
         urlParams.set('userphrase', this.value);
         fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
-            console.log(data);
             contactsContainer.innerHTML = '';
             data.forEach(element => appendContactDOMElement(element));
         });

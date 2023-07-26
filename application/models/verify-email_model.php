@@ -7,17 +7,21 @@ use Aladser\Core\Model;
 /** Подтверждение почты */
 class VerifyEmailModel extends Model
 {
-    private $users;
+    private $usersTable;
 
     public function __construct($CONFIG)
     {
-        $this->users = $CONFIG->getUsers();
+        $this->usersTable = $CONFIG->getUsers();
     }
 
     public function run(): string
     {
-        if ($this->users->checkUserHash($_GET['email'], $_GET['hash'])) {
-            $this->users->confirmEmail($_GET['email']);
+        // замена спец символов на html-коды и удаление лишних символов
+        $email = htmlspecialchars(str_replace('\'', '', $_GET['email']));
+        $hash = htmlspecialchars(str_replace('\'', '', $_GET['hash']));
+
+        if ($this->usersTable->checkUserHash($email, $hash)) {
+            $this->usersTable->confirmEmail($email);
             return 'Электронная почта подтверждена';
         } else {
             return 'Ссылка недействительная или некорректная';

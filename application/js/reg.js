@@ -10,8 +10,8 @@ const password2Input = document.querySelector('#reg-form__password2-input');
 const emailClue = document.querySelector('#reg-form__emai-clue');
 const password1Clue = document.querySelector('#reg-form__password1-clue');
 const password2Clue = document.querySelector('#reg-form__password2-clue');
-
-
+/** форма регистрации */
+const regForm = document.querySelector('#reg-form');
 
 //***** событие клика поля ввода данных *****/
 function clickInputElement(input, clue, isPassword)
@@ -56,7 +56,10 @@ function inputData(input, clue, isPassword)
         clue.classList.add('input-clue--active');
     }
     // проверка доступности кнопки
-    let regBtnEnabled = validateEmail(emailInput.value) && validatePassword(password1Input.value) && validatePassword(password2Input.value) && password1Input.value===password2Input.value;
+    let regBtnEnabled = validateEmail(emailInput.value)
+        && validatePassword(password1Input.value)
+        && validatePassword(password2Input.value)
+        && password1Input.value===password2Input.value;
     regBtn.disabled = !regBtnEnabled;
 }
 
@@ -69,8 +72,8 @@ password2Input.addEventListener('input', function () {
 
 
 
-//***** проверка существования пользователя и регистрация *****/
-document.querySelector('#reg-form').addEventListener('submit', function (e) {
+/***** Отправка запроса на регистрацию *****/
+regForm.addEventListener('submit', function (e) {
     e.preventDefault();
     let form = new FormData(this);
     // Список пар ключ/значение
