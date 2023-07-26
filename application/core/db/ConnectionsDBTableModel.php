@@ -10,16 +10,21 @@ class ConnectionsDBTableModel extends DBTableModel
     {
         $connection_ws_id = intval($data['wsId']);
         $user_email = trim($data['author']);
-        // поиск пользователя в БД
-        $user = $this->db->query("
+
+        $user = $this->db->queryPrepared('
             select user_id, getPublicUserName(user_email, user_nickname, user_hide_email) as publicusername 
             from users 
-            where user_email = '$user_email'
-        ");
+            where user_email = :email
+        ', ['email' => $user_email]);
+
         if ($user) {
             // поиск соединения в БД
             $userId = $user['user_id'];
-            $isConnection = $this->db->query("select * from connections where connection_userid = $userId");
+            $isConnection = $this->db->queryPrepared(
+                'select * from connections where connection_userid = :id',
+                ['id' => $userId]
+            );
+            //$isConnection = $this->db->query("select * from connections where connection_userid = $userId");
             // не могу понять откуда берется нулевой connId из Ratchet. Удаляю его
             if (!$isConnection && $connection_ws_id != 0) {
                 $sqlRslt = $this->db->exec("
@@ -42,12 +47,11 @@ class ConnectionsDBTableModel extends DBTableModel
     // получить публичное имя пользователя соединения
     public function getConnectionPublicUsername(int $connId)
     {
-        $publicUsername = $this->db->query("
+        return $this->db->queryPrepared('
             select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
             from users where user_id = (select connection_userid from connections 
-            where connection_ws_id = $connId)
-        ")['username'];
-        return $publicUsername;
+            where connection_ws_id = :connId)
+        ', ['connId' => $connId])['username'];
     }
 
     // удалить закрытое соединение из БД

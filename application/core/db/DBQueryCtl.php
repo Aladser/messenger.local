@@ -42,6 +42,22 @@ class DBQueryCtl
     }
 
     /**
+     * выполняет подготовленный запрос
+     * @param string $sql sql-запрос
+     * @param array $args массив переменных запроса
+     * @param bool $isOneValue одно или несколько получаемых значений строки
+     * @return mixed
+     */
+    public function queryPrepared(string $sql, array $args, bool $isOneValue = true)
+    {
+        $this->connect();
+        $stmt = $this->dbConnection->prepare($sql);
+        $stmt->execute($args);
+        $this->disconnect();
+        return $isOneValue ? $stmt->fetch(PDO::FETCH_ASSOC) : $stmt->fetchAll();
+    }
+
+    /**
      * выполняет запрос
      * @param string $sql запрос
      * @param bool $isOneValue число требуемых полей

@@ -152,7 +152,8 @@ webSocket.onmessage = e => {
 };
 
 
-/** Отправить сообщение на сервер
+/**
+ * Отправить сообщение на сервер
  * @param message текст сообщения
  * @param messageType тип сообщения: NEW, EDIT, REMOVE или FORWARD
  */
@@ -228,6 +229,7 @@ function appendMessage(data)
     msgBlock.append(msgTable);
     chat.append(msgBlock);
 }
+
 /** создать DOM-элемент контакта списка контактов*/
 function appendContactDOMElement(contact)
 {
@@ -258,6 +260,7 @@ function appendContactDOMElement(contact)
 
     contactsContainer.append(contactBlock);
 }
+
 /**
  * создать DOM-элемент группового чата списка групповых чатов
  * @param {*} group БД данные группы
@@ -293,6 +296,7 @@ const showContacts = () => fetch('/get-contacts').then(r=>r.json()).then(data =>
         contactList.push({'name': contact.name, 'chat': contact.chat, 'notice' : contact.notice});
         appendContactDOMElement(contact);
     });
+    // console.log(data);
 });
 
 /** показать групповые чаты пользователя-клиента */
@@ -302,6 +306,7 @@ const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => {
         groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
         appendGroupDOMElement(group);
     });
+    // console.log(data);
 });
 
 
@@ -392,6 +397,7 @@ function showForwardedMessageRecipient(contactDomElem)
         forwardBtn.disabled = false;
     }
 }
+
 /** удаление DOM узлов участников текущего выбранного группового чата */
 function removeGroupPatricipantDOMElements()
 {
@@ -467,6 +473,7 @@ function forwardMessage()
     isForwaredMessage = null;
     forwardedMessageRecipientElement = null;
 }
+
 /** Отменяет пересылку сообщения */
 function resetForwardMessage()
 {
@@ -588,6 +595,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams();
         urlParams.set('userphrase', this.value);
         fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
+            console.log(data);
             contactsContainer.innerHTML = '';
             data.forEach(element => appendContactDOMElement(element));
         });

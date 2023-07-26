@@ -8,13 +8,19 @@ class UsersDBTableModel extends DBTableModel
     /** проверить существование пользователя */
     public function existsUser($email): bool
     {
-        return $this->db->query("select count(*) as count from users where user_email = '$email'")['count'] == 1;
+        return $this->db->queryPrepared(
+            'select count(*) as count from users where user_email = :email',
+            ['email' => $email]
+        )['count'] == 1;
     }
 
     // проверка авторизации
     public function checkUser($email, $password): bool
     {
-        $passHash = $this->db->query("select user_password from users where user_email='$email'")['user_password'];
+        $passHash = $this->db->queryPrepared(
+            "select user_password from users where user_email=:email",
+            ['email' => $email]
+        )['user_password'];
         return password_verify($password, $passHash);
     }
     
@@ -36,34 +42,34 @@ class UsersDBTableModel extends DBTableModel
     // проверить хэш пользователя
     public function checkUserHash($email, $hash): bool
     {
-        $sql = "select count(*) as count from users where user_email = '$email' and user_hash='$hash'";
-        $hash = $this->db->query($sql)['count'];
+        $sql = 'select count(*) as count from users where user_email = :email and user_hash = :hash';
+        $hash = $this->db->queryPrepared($sql, ['email'=>$email, 'hash'=>$email])['count'];
         return $hash == 1;
     }
 
     // подтвердить почту
     public function confirmEmail($email)
     {
-        $sql = "update users set user_email_confirmed=1 and user_hash = null where user_email='$email'";
+        $sql = "update users set user_email_confirmed = 1 and user_hash = null where user_email='$email'";
         return $this->db->exec($sql);
     }
 
     // проверить уникальность никнейма
     public function isUniqueNickname($nickname): bool
     {
-        $sql = "select count(*) as count from users where user_nickname='$nickname'";
-        return $this->db->query($sql)['count'] == 0;
+        $sql = "select count(*) as count from users where user_nickname=:nickname";
+        return $this->db->queryPrepared($sql, ['nickname'=>$nickname])['count'] == 0;
     }
 
     /** получить публичное имя пользователя из ID */
     public function getPublicUsername(int $userId)
     {
-        $sql = "
+        $sql = '
             select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
             from users 
-            where user_id = $userId
-        ";
-        return $this->db->query($sql)['username'];
+            where user_id = :userId
+        ';
+        return $this->db->queryPrepared($sql, ['userId' => $userId])['username'];
     }
 
     // получить публичное имя пользователя из почты
@@ -72,48 +78,53 @@ class UsersDBTableModel extends DBTableModel
         $sql = "
             select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
             from users 
-            where user_email = '$userEmail'
+            where user_email = :userEmail
         ";
-        return $this->db->query($sql)['username'];
+        return $this->db->queryPrepared($sql, ['userEmail'=>$userEmail])['username'];
     }
 
     // получить ID пользователя
     public function getUserId(string $publicUserName)
     {
-        $sql = "
+        $sql = '
             select user_id 
             from users 
-            where user_email = '$publicUserName' or user_nickname='$publicUserName'
-        ";
-        return $this->db->query($sql)['user_id'];
+            where user_email = :publicUserName or user_nickname=:publicUserName
+        ';
+        return $this->db->queryPrepared($sql, ['publicUserName' => $publicUserName])['user_id'];
     }
 
     // список пользователей по шаблону почты или никнейма
     public function getUsers($phrase, $email)
     {
+        $phrase = "%$phrase%";
         // список пользователей, подходящие по шаблону
-        $sql = "
-            select user_id, user_nickname as username, user_photo 
+        $sql = '
+            select user_id as user, user_nickname as name, user_photo as photo 
             from users 
-            where user_nickname  != '' and user_nickname is not null 
-            and user_email != '$email' and user_nickname  like '%$phrase%'
-            and user_email not in (select * from unhidden_emails where user_email  like '%$phrase%')
+            where user_nickname  != \'\' and user_nickname is not null 
+            and user_email != :email and user_nickname  like :phrase
+            and user_email not in (select * from unhidden_emails where user_email  like :phrase)
             union 
-            select user_id, user_email, user_photo as username 
+            select user_id as user, user_email as name, user_photo as photo 
             from users 
-            where user_hide_email  = 0 and user_email != '$email' and user_email like '%$phrase%';
-        ";
-        return $this->db->query($sql, false);
+            where user_hide_email  = 0 and user_email != :email and user_email like :phrase;
+        ';
+        return $this->db->queryPrepared($sql, ['email' => $email, 'phrase' => $phrase], false);
     }
 
     // получить пользовательские данные
     public function getUserData($email): array
     {
-        $dbData = $this->db->query("
+        $dbData = $this->db->queryPrepared(
+            '
             select user_nickname, user_hide_email, user_photo 
             from users 
-            where user_email = '$email'
-        ", false);
+            where user_email = :email
+            ',
+            ['email' => $email],
+            false
+        );
         $data['user-email'] = $email;
         $data['user_nickname'] = $dbData[0]['user_nickname'];
         $data['user_hide_email'] = $dbData[0]['user_hide_email'];
