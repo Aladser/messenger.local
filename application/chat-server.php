@@ -4,8 +4,8 @@ namespace Aladser;
 
 use Aladser\Core\Chat;
 use Aladser\Core\ConfigClass;
-use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
+use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
 
 require __DIR__ . "/vendor/autoload.php";

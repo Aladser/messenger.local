@@ -2,8 +2,8 @@
 
 namespace Aladser\Core\DB;
 
-use \PDO;
-use \PDOException;
+use PDO;
+use PDOException;
 
 /** Класс запросов в БД на основе PDO */
 class DBQueryCtl

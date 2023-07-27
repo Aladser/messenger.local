@@ -2,11 +2,11 @@
 
 namespace Aladser\Core;
 
-use Ratchet\MessageComponentInterface;
-use Ratchet\ConnectionInterface;
 use Aladser\Core\DB\ConnectionsDBTableModel;
 use Aladser\Core\DB\MessageDBTableModel;
 use Aladser\Core\DB\UsersDBTableModel;
+use Ratchet\ConnectionInterface;
+use Ratchet\MessageComponentInterface;
 
 /** Чат - серверная часть */
 class Chat implements MessageComponentInterface
