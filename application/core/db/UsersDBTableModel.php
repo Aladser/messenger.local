@@ -9,9 +9,9 @@ class UsersDBTableModel extends DBTableModel
     public function existsUser($email): bool
     {
         return $this->db->queryPrepared(
-            'select count(*) as count from users where user_email = :email',
-            ['email' => $email]
-        )['count'] == 1;
+                'select count(*) as count from users where user_email = :email',
+                ['email' => $email]
+            )['count'] == 1;
     }
 
     // проверка авторизации
@@ -23,7 +23,7 @@ class UsersDBTableModel extends DBTableModel
         )['user_password'];
         return password_verify($password, $passHash);
     }
-    
+
     // добавить нового пользователя
     public function addUser($email, $password)
     {
@@ -43,7 +43,7 @@ class UsersDBTableModel extends DBTableModel
     public function checkUserHash($email, $hash): bool
     {
         $sql = "select count(*) as count from users where user_email = :email and user_hash = :hash";
-        return $this->db->queryPrepared($sql, ['email'=>$email, 'hash'=>$hash])['count'] === 1;
+        return $this->db->queryPrepared($sql, ['email' => $email, 'hash' => $hash])['count'] === 1;
     }
 
     /** подтвердить почту */
@@ -56,7 +56,7 @@ class UsersDBTableModel extends DBTableModel
     public function isUniqueNickname($nickname): bool
     {
         $sql = "select count(*) as count from users where user_nickname=:nickname";
-        return $this->db->queryPrepared($sql, ['nickname'=>$nickname])['count'] == 0;
+        return $this->db->queryPrepared($sql, ['nickname' => $nickname])['count'] == 0;
     }
 
     /** получить публичное имя пользователя из ID */
@@ -78,7 +78,7 @@ class UsersDBTableModel extends DBTableModel
             from users 
             where user_email = :userEmail
         ";
-        return $this->db->queryPrepared($sql, ['userEmail'=>$userEmail])['username'];
+        return $this->db->queryPrepared($sql, ['userEmail' => $userEmail])['username'];
     }
 
     // получить ID пользователя
@@ -139,20 +139,20 @@ class UsersDBTableModel extends DBTableModel
         // запись никнейма
         $nickname = $data['user_nickname'];
         $rslt |= $this->isEqualData($nickname, 'user_nickname', $email) ?
-        true :
-        $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
+            true :
+            $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
 
         // запись скрытия почты
         $hideEmail = $data['user_hide_email'];
         $rslt |= $this->isEqualData($hideEmail, 'user_hide_email', $email) ?
-        true :
-        $this->db->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
+            true :
+            $this->db->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
 
         // запись фото
         $photo = $data['user_photo'];
         $rslt |= $this->isEqualData($photo, 'user_photo', $email) ?
-        true :
-        $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
+            true :
+            $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
 
         return $rslt;
     }

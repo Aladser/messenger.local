@@ -4,9 +4,10 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 
+/** контрллер страницы регистрации */
 class RegController extends Controller
 {
-    public function action_index()
+    public function actionIndex()
     {
         if (isset($_POST['registration'])) {
             $this->model->run();

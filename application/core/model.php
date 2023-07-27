@@ -9,10 +9,16 @@ abstract class Model
     abstract public function run();
 
     /** получить почту пользователя из сессии или куки */
-    public function getUserMailFromClient(): string
+    public function getUserMailFromClient()
     {
         session_start();
-        return $_COOKIE['email'] ?? $_SESSION['email'];
+        if (isset($_COOKIE['email'])) {
+            return $_COOKIE['email'];
+        } elseif (isset($_SESSION['email'])) {
+            return $_SESSION['email'];
+        } else {
+            return null;
+        }
     }
 
     /** создать CSRF-токен

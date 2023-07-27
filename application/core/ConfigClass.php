@@ -53,7 +53,7 @@ class ConfigClass
             self::EMAIL_SENDER,
             self::EMAIL_SENDER_NAME
         );
-        
+
         $this->usersDBTable = new UsersDBTableModel($this->dbQueryCtl);
         $this->contactsDBTable = new ContactsDBTableModel($this->dbQueryCtl);
         $this->connectionsDBTable = new ConnectionsDBTableModel($this->dbQueryCtl);

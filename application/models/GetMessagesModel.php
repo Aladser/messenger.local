@@ -35,7 +35,7 @@ class GetMessagesModel extends Model
             $type = 'discussion';
         }
 
-        $messages = ['current_chat' => $chatId, 'type'=>$type, 'messages' => $this->messageTable->getMessages($chatId)];
+        $messages = ['current_chat' => $chatId, 'type' => $type, 'messages' => $this->messageTable->getMessages($chatId)];
         echo json_encode($messages);
     }
 }

@@ -23,12 +23,12 @@ class ProfileModel extends Model
         $email = Model::getUserMailFromClient();
 
         // удаление временных файлов текущего профиля
-        $tempDirPath = dirname(__DIR__, 1)."\data\\temp\\";
-        foreach (glob($tempDirPath.$email.'*') as $file) {
+        $tempDirPath = dirname(__DIR__, 1) . "\data\\temp\\";
+        foreach (glob($tempDirPath . $email . '*') as $file) {
             unlink($file);
         }
         $data = $this->usersTable->getUserData($email);
         $data['csrfToken'] = Model::createCSRFToken();
-        return  $data;
+        return $data;
     }
 }

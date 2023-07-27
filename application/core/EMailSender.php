@@ -18,18 +18,18 @@ class EMailSender
 
         $this->mail->isSMTP();
         $this->mail->CharSet = "UTF-8";
-        $this->mail->SMTPAuth   = true;
+        $this->mail->SMTPAuth = true;
         //$this->mail->SMTPDebug = 2; // показ логов
         $this->mail->Debugoutput = function ($str, $level) {
             $GLOBALS['data']['debug'][] = $str;
         };
 
-        $this->mail->Host       = $smtpSrv;     // SMTP сервера почты
-        $this->mail->Username   = $username;    // логин на почте
-        $this->mail->Password   = $password;    // пароль на почте
+        $this->mail->Host = $smtpSrv;     // SMTP сервера почты
+        $this->mail->Username = $username;    // логин на почте
+        $this->mail->Password = $password;    // пароль на почте
         $this->mail->SMTPSecure = $smtpSecure;  // тип шифрования
-        $this->mail->Port       = $port;        // порт
-        $this->mail->setFrom($emailSender, $emailSenderName='Месенджер Админ'); // адрес почты и имя отправителя
+        $this->mail->Port = $port;        // порт
+        $this->mail->setFrom($emailSender, $emailSenderName = 'Месенджер Админ'); // адрес почты и имя отправителя
     }
 
     /**

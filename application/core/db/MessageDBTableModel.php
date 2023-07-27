@@ -58,7 +58,7 @@ class MessageDBTableModel extends DBTableModel
         join chat on chat_participant.chat_participant_chatid = chat.chat_id
         where chat_type = \'discussion\' and chat_participant_userid = :userHostId
         ';
-        return $this->db->queryPrepared($sql, ['userHostId'=>$userHostId], false);
+        return $this->db->queryPrepared($sql, ['userHostId' => $userHostId], false);
     }
 
     // возвращает создателя группового чата
@@ -134,6 +134,6 @@ class MessageDBTableModel extends DBTableModel
             where chat_participant_chatid = :chatid 
               and chat_participant_userid = :userid
         ';
-        return $this->db->queryPrepared($sql, ['chatid'=>$chatid, 'userid'=>$userid])['chat_participant_isnotice'];
+        return $this->db->queryPrepared($sql, ['chatid' => $chatid, 'userid' => $userid])['chat_participant_isnotice'];
     }
 }

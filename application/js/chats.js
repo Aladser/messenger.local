@@ -89,13 +89,13 @@ webSocket.onmessage = e => {
     if (data.onconnection) {
         webSocket.send(JSON.stringify({
             'messageOnconnection': 1,
-            'author' : clientUsername,
-            'wsId' : data.onconnection
+            'author': clientUsername,
+            'wsId': data.onconnection
         }));
     } else if (data.messageOnconnection) {
         // сообщение пользователям о подключении клиента
         if (data.author) {
-            let username = data.author===publicClientUsername ? 'Вы' : data.author;
+            let username = data.author === publicClientUsername ? 'Вы' : data.author;
             systemMessagePrg.innerHTML = `${username} в сети`;
         } else {
             // ошибки подключения
@@ -116,11 +116,11 @@ webSocket.onmessage = e => {
             // сделано специально множественное создание объектов звука
             if (isChat) {
                 // поиск контакта/группы в списке контактов/групп
-                let chat = foundedContactChat!==undefined ? foundedContactChat : foundedGroupChat;
+                let chat = foundedContactChat !== undefined ? foundedContactChat : foundedGroupChat;
 
                 // для неоткрытых чатов визуальное уведомление
                 // DOM-элемент  контакта или группового чата
-                let domElem = document.querySelector(`[title='${ chat.name}']`);
+                let domElem = document.querySelector(`[title='${chat.name}']`);
                 if (openChatId !== data.chat) {
                     domElem.classList.add('isnewmessage');
                 }
@@ -157,8 +157,7 @@ webSocket.onmessage = e => {
  * @param message текст сообщения
  * @param messageType тип сообщения: NEW, EDIT, REMOVE или FORWARD
  */
-function sendData(message, messageType)
-{
+function sendData(message, messageType) {
     // проверка сокета
     if (webSocket.readyState !== 1) {
         alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
@@ -172,9 +171,15 @@ function sendData(message, messageType)
     }
 
     // отправка сообщения на сервер
-    if (message!=='') {
-        let data = {'message':message, 'author':publicClientUsername, 'chat':openChatId,'chatType':chatType,'messageType':messageType};
-         // для старых сообщений добавляется id сообщения
+    if (message !== '') {
+        let data = {
+            'message': message,
+            'author': publicClientUsername,
+            'chat': openChatId,
+            'chatType': chatType,
+            'messageType': messageType
+        };
+        // для старых сообщений добавляется id сообщения
         if (['EDIT', 'REMOVE', 'FORWARD'].includes(messageType)) {
             data.msgId = parseInt(selectedMessage.getAttribute('data-msg'));
         }
@@ -190,16 +195,21 @@ function sendData(message, messageType)
 
 
 /** создать DOM-элемент сообщения чата*/
-function appendMessage(data)
-{
+function appendMessage(data) {
     // показ местного времени
     // YYYY.MM.DD HH:ii:ss
     let timeInMs = Date.parse(data.time);
     let newDate = new Date(timeInMs);
-    let timeZone = -newDate.getTimezoneOffset()/60; // текущий часовой пояс
-    timeInMs += (timeZone-3)*3600000;
+    let timeZone = -newDate.getTimezoneOffset() / 60; // текущий часовой пояс
+    timeInMs += (timeZone - 3) * 3600000;
     newDate = new Date(timeInMs);
-    let localTime = newDate.toLocaleString("ru", {year: 'numeric',month: 'numeric',day: 'numeric',hour: 'numeric',minute: 'numeric'}).replace(',','');
+    let localTime = newDate.toLocaleString("ru", {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+    }).replace(',', '');
 
     // показ переводов строки на странице
     let brIndex = data.message.indexOf('\n');
@@ -231,8 +241,7 @@ function appendMessage(data)
 }
 
 /** создать DOM-элемент контакта списка контактов*/
-function appendContactDOMElement(contact)
-{
+function appendContactDOMElement(contact) {
     // контейнер контакта
     let contactBlock = document.createElement('div');    // блок контакта
     let contactImgBlock = document.createElement('div'); // блок изображения профиля
@@ -247,7 +256,7 @@ function appendContactDOMElement(contact)
 
     img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${contact.photo}`;
     name.innerHTML = contact.name;
-    contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock,contact.name, 'dialog'));
+    contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock, contact.name, 'dialog'));
     contactBlock.setAttribute('data-notice', contact.notice);
 
     contactImgBlock.append(img);
@@ -266,8 +275,7 @@ function appendContactDOMElement(contact)
  * @param {*} group БД данные группы
  * @param {*} place куда добавить: START - начало списка, END - конец
  */
-function appendGroupDOMElement(group, place='END')
-{
+function appendGroupDOMElement(group, place = 'END') {
     let groupsItem = document.createElement('div');
     groupsItem.className = 'group';
     groupsItem.title = group.name;
@@ -288,19 +296,19 @@ function appendGroupDOMElement(group, place='END')
 
 
 /** показать контакты пользователя-клиента*/
-const showContacts = () => fetch('/get-contacts').then(r=>r.json()).then(data => {
+const showContacts = () => fetch('/get-contacts').then(r => r.json()).then(data => {
     findContactsInput.value = '';
     contactsContainer.innerHTML = '';
     contactList = [];
     data.forEach(contact => {
-        contactList.push({'name': contact.name, 'chat': contact.chat, 'notice' : contact.notice});
+        contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
         appendContactDOMElement(contact);
     });
     // console.log(data);
 });
 
 /** показать групповые чаты пользователя-клиента */
-const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => {
+const showGroups = () => fetch('/get-groups').then(r => r.json()).then(data => {
     groupList = [];
     data.forEach(group => {
         groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
@@ -314,7 +322,7 @@ const showGroups = () => fetch('/get-groups').then(r=>r.json()).then(data => {
 const showGroupRecipients = (domElement, discussionid) => {
     let urlParams = new URLSearchParams();
     urlParams.set('discussionid', discussionid);
-    fetch('/get-group-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
+    fetch('/get-group-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
         // создание DOM-списка участников группового чата
         let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
         prtBlock.className = 'group__contacts';
@@ -336,14 +344,14 @@ const showGroupRecipients = (domElement, discussionid) => {
                 plus.title = 'добавить в групповой чат';
 
                 // добавить пользователя в группу
-                plus.onclick = e =>{
+                plus.onclick = e => {
                     let username = e.target.parentNode.childNodes[1].innerHTML; // имя пользователя
                     e.stopPropagation();    // прекратить всплытие событий
 
                     let urlParams2 = new URLSearchParams();
                     urlParams2.set('discussionid', discussionid);
                     urlParams2.set('username', username);
-                    fetch('add-group-contact', {method: 'POST', body: urlParams2}).then(r=>r.text()).then(data => {
+                    fetch('add-group-contact', {method: 'POST', body: urlParams2}).then(r => r.text()).then(data => {
                         if (data == 1) {
                             e.target.parentNode.lastChild.remove();
                             domElement.lastChild.innerHTML += `<p class='group__contact'>${username}</p>`;
@@ -361,15 +369,15 @@ const showGroupRecipients = (domElement, discussionid) => {
 
 
 /** показать сообщения */
-const showChat = (urlParams, bdChatName, type) =>{
-    fetch('/get-messages', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data=>{
+const showChat = (urlParams, bdChatName, type) => {
+    fetch('/get-messages', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
         if (data) {
             chat.innerHTML = '';
 
             chatType = data.type;
             openChatId = parseInt(data.current_chat);
 
-            chatNameTitle.innerHTML = type==='dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
+            chatNameTitle.innerHTML = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
             chatNameLabel.innerHTML = bdChatName;
 
             messageInput.disabled = false;
@@ -383,8 +391,7 @@ const showChat = (urlParams, bdChatName, type) =>{
 
 
 /** показать на странице получателя пересылаемого сообщения*/
-function showForwardedMessageRecipient(contactDomElem)
-{
+function showForwardedMessageRecipient(contactDomElem) {
     let contactNameElem = contactDomElem.querySelector('.contact__name');
     if (contactNameElem) {
         forwardedMessageRecipientElement = contactDomElem;
@@ -399,8 +406,7 @@ function showForwardedMessageRecipient(contactDomElem)
 }
 
 /** удаление DOM узлов участников текущего выбранного группового чата */
-function removeGroupPatricipantDOMElements()
-{
+function removeGroupPatricipantDOMElements() {
     let groupContactsElement = document.querySelector('.group__contacts');
     if (groupContactsElement) {
         groupContactsElement.remove();
@@ -416,8 +422,7 @@ function removeGroupPatricipantDOMElements()
  * @param {*} type тип диалога
  * @returns
  */
-function setContactOrGroupClick(domElement, urlArg, type)
-{
+function setContactOrGroupClick(domElement, urlArg, type) {
     return function () {
         // если пересылается сообщение, показать, кому пересылается
         if (isForwaredMessage) {
@@ -436,13 +441,13 @@ function setContactOrGroupClick(domElement, urlArg, type)
             urlParams.set('CSRF', inputCsrf.value);
             removeGroupPatricipantDOMElements();
             // поиск пользователя в массиве контактов на клиенте и добавление, если отсутствует
-            fetch('/get-contact', {method: 'POST', body: urlParams}).then(r=>r.json()).then(dbContact => {
+            fetch('/get-contact', {method: 'POST', body: urlParams}).then(r => r.json()).then(dbContact => {
                 // проверка на подмену адреса
                 if (dbContact.hasOwnProperty('wrong_url')) {
                     alert('Подмена URL-адреса запроса');
                     return;
                 }
-                
+
                 let contact = contactList.find(elem => elem.chat == dbContact.chat_id);
                 if (contact === undefined) {
                     contactList.push(dbContact);
@@ -456,15 +461,14 @@ function setContactOrGroupClick(domElement, urlArg, type)
         } else {
             return;
         }
-        
-        showChat(urlParams, type==='dialog' ? urlArg : groupChatName, type); // показать чат
+
+        showChat(urlParams, type === 'dialog' ? urlArg : groupChatName, type); // показать чат
     };
 }
 
 
 /** Переотправить сообщение */
-function forwardMessage()
-{
+function forwardMessage() {
     sendData(selectedMessage.querySelector('.msg__text').innerHTML, 'FORWARD');
 
     forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
@@ -475,8 +479,7 @@ function forwardMessage()
 }
 
 /** Отменяет пересылку сообщения */
-function resetForwardMessage()
-{
+function resetForwardMessage() {
     forwardBtnBlock.classList.remove('btn-resend-block_active');
     isForwaredMessage = null;
     selectedMessage = null;
@@ -490,15 +493,14 @@ function resetForwardMessage()
 
 // ----- Контекстное меню
 /** показать контекстное меню */
-function showContextMenu(contextMenu, event)
-{
-    contextMenu.style.left = event.pageX+'px';
-    contextMenu.style.top = event.pageY+'px';
+function showContextMenu(contextMenu, event) {
+    contextMenu.style.left = event.pageX + 'px';
+    contextMenu.style.top = event.pageY + 'px';
     contextMenu.style.display = 'block';
 }
+
 /** скрыть контекстное меню*/
-function hideContextMenu()
-{
+function hideContextMenu() {
     msgContextMenu.style.left = '0px';
     msgContextMenu.style.top = '1000px';
     msgContextMenu.style.display = 'none';
@@ -506,32 +508,32 @@ function hideContextMenu()
     contactContextMenu.style.top = '1000px';
     contactContextMenu.style.display = 'none';
 }
+
 /** контекстное меню: изменить сообщение */
-function editMessageContextMenu()
-{
+function editMessageContextMenu() {
     isEditMessage = true;
     hideContextMenu();
     messageInput.value = selectedMessage.querySelector('.msg__text').innerHTML;
     messageInput.focus();
 }
+
 /** контекстное меню: удалить сообщение  */
-function removeMessageContextMenu()
-{
+function removeMessageContextMenu() {
     let msg = selectedMessage.querySelector('.msg__text').innerHTML;
     sendData(msg, 'REMOVE');
     selectedMessage = null;
     hideContextMenu();
 }
+
 /** контекстное меню: переотправить сообщение */
-function forwardMessageContextMenu()
-{
+function forwardMessageContextMenu() {
     hideContextMenu();
     isForwaredMessage = true;
     forwardBtnBlock.classList.add('btn-resend-block_active');
 }
+
 /** контекстное меню: включить/отключить уведомления */
-function editNoticeShowContextMenu()
-{
+function editNoticeShowContextMenu() {
     // создание пакета с id чата, значением о показе уведомлений
     let data = {};
 
@@ -552,7 +554,7 @@ function editNoticeShowContextMenu()
     urlParams.set('notice', data.notice);
     urlParams.set('username', clientUsername);
     // изменяет установленный флаг получения уведомлений
-    fetch('/edit-notice-show', {method:'post', body:urlParams}).then(r=>r.text()).then(notice => {
+    fetch('/edit-notice-show', {method: 'post', body: urlParams}).then(r => r.text()).then(notice => {
         notice = parseInt(notice);
         selectedContact.setAttribute('data-notice', notice);  // меняем атрибут
         let elem;
@@ -583,18 +585,19 @@ window.addEventListener('DOMContentLoaded', () => {
     showGroups();
     // создание группового чата
     createGroupOption.onclick = () => fetch('/create-group')
-        .then(r=>r.json())
+        .then(r => r.json())
         .then(data => appendGroupDOMElement(data, 'START'));
 
     // запрет контекстного меню
     document.oncontextmenu = function () {
-        return false;};
+        return false;
+    };
 
     // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
     findContactsInput.addEventListener('input', function () {
         const urlParams = new URLSearchParams();
         urlParams.set('userphrase', this.value);
-        fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r=>r.json()).then(data => {
+        fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
             contactsContainer.innerHTML = '';
             data.forEach(element => appendContactDOMElement(element));
         });
@@ -660,7 +663,7 @@ window.oncontextmenu = event => {
         if (selectedMessage.getAttribute('data-forward') == 1) {
             editMsgContextMenuBtn.style.display = 'none';
         }
-    } else if (['contact__name','contact__img img pe-2','contact position-relative mb-2','group', 'notice-soundless'].includes(event.target.className)) {
+    } else if (['contact__name', 'contact__img img pe-2', 'contact position-relative mb-2', 'group', 'notice-soundless'].includes(event.target.className)) {
         // клик на элементе контакта
 
         if (event.target.className === 'contact__img img pe-2') {
@@ -673,7 +676,7 @@ window.oncontextmenu = event => {
 
         let isNotice = selectedContact.getAttribute('data-notice');
         // показ кнопки включения - выключения уведомлений
-        editNoticeShowContextMenuBtn.innerHTML = isNotice==1 ? 'Отключить уведомления' : 'Включить уведомления';
+        editNoticeShowContextMenuBtn.innerHTML = isNotice == 1 ? 'Отключить уведомления' : 'Включить уведомления';
 
         showContextMenu(contactContextMenu, event);
     } else {

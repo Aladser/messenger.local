@@ -26,8 +26,8 @@ class LoginModel extends Model
             if ($isValidLogin) {
                 $_SESSION['auth'] = 1;
                 $_SESSION['email'] = $_POST['email'];
-                setcookie('auth', 1, time()+60*60*24, '/');
-                setcookie('email', $_POST['email'], time()+60*60*24, '/');
+                setcookie('auth', 1, time() + 60 * 60 * 24, '/');
+                setcookie('email', $_POST['email'], time() + 60 * 60 * 24, '/');
                 $data['result'] = 'login_user';
             } else {
                 $data['result'] = 'login_user_wrong_password';

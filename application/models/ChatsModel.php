@@ -22,8 +22,8 @@ class ChatsModel extends Model
         $userId = $this->userTable->getUserId($userEmail);
 
         // удаление временных файлов профиля, откуда был переход
-        $tempDirPath = dirname(__DIR__, 1)."\data\\temp\\";
-        foreach (glob($tempDirPath.$userEmail.'*') as $file) {
+        $tempDirPath = dirname(__DIR__, 1) . "\data\\temp\\";
+        foreach (glob($tempDirPath . $userEmail . '*') as $file) {
             unlink($file);
         }
 

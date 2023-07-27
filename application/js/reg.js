@@ -14,8 +14,7 @@ const password2Clue = document.querySelector('#reg-form__password2-clue');
 const regForm = document.querySelector('#reg-form');
 
 //***** событие клика поля ввода данных *****/
-function clickInputElement(input, clue, isPassword)
-{
+function clickInputElement(input, clue, isPassword) {
     regErrorPrg.classList.add('d-none');
     // убирание выделения
     emailClue.classList.remove('input-clue--active');
@@ -39,13 +38,12 @@ password1Input.onclick = function () {
     regBtn.disabled = true;
 };
 password2Input.onclick = function () {
-    clickInputElement(this, password2Clue, true)};
-
+    clickInputElement(this, password2Clue, true)
+};
 
 
 //***** событие ввода данных *****/
-function inputData(input, clue, isPassword)
-{
+function inputData(input, clue, isPassword) {
     // валидация данных
     let isValid = isPassword ? validatePassword(input.value) : validateEmail(input.value);
     if (isValid) {
@@ -59,17 +57,19 @@ function inputData(input, clue, isPassword)
     let regBtnEnabled = validateEmail(emailInput.value)
         && validatePassword(password1Input.value)
         && validatePassword(password2Input.value)
-        && password1Input.value===password2Input.value;
+        && password1Input.value === password2Input.value;
     regBtn.disabled = !regBtnEnabled;
 }
 
 emailInput.addEventListener('input', function () {
-    inputData(this, emailClue, false);});
+    inputData(this, emailClue, false);
+});
 password1Input.addEventListener('input', function () {
-    inputData(this, password1Clue, true);});
+    inputData(this, password1Clue, true);
+});
 password2Input.addEventListener('input', function () {
-    inputData(this, password2Clue, true);});
-
+    inputData(this, password2Clue, true);
+});
 
 
 /***** Отправка запроса на регистрацию *****/

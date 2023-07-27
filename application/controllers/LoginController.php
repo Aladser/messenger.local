@@ -6,12 +6,13 @@ use Aladser\Core\Controller;
 use Aladser\Core\Model;
 use Exception;
 
+/** контрллер страницы авторизации */
 class LoginController extends Controller
 {
     /**
      * @throws Exception
      */
-    public function action_index()
+    public function actionIndex()
     {
         if (isset($_POST['CSRF'])) {
             // проверка аутентификации

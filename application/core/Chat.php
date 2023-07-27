@@ -17,11 +17,11 @@ class Chat implements MessageComponentInterface
     private $usersTable;      // таблица сообщений
     private $logFile;
     private $logfileContent;
-   
+
     public function __construct(
         ConnectionsDBTableModel $connectionsTable,
-        MessageDBTableModel $messageTable,
-        UsersDBTableModel $usersTable
+        MessageDBTableModel     $messageTable,
+        UsersDBTableModel       $usersTable
     ) {
         $this->clients = new \SplObjectStorage;
         $this->connectionsTable = $connectionsTable;
@@ -29,7 +29,7 @@ class Chat implements MessageComponentInterface
         $this->usersTable = $usersTable;
         $this->connectionsTable->removeConnections(); // удаление старых соединений
         // обнуления содержания файла логов
-        $this->logFile = dirname(__DIR__, 1).'/logs.txt';
+        $this->logFile = dirname(__DIR__, 1) . '/logs.txt';
         file_put_contents($this->logFile, "");
     }
 
@@ -45,7 +45,7 @@ class Chat implements MessageComponentInterface
             $client->send($message); // рассылка остальным клиентам
         }
     }
-    
+
     /**
      * закрыть соединение
      * @param ConnectionInterface $conn соединение
@@ -77,7 +77,7 @@ class Chat implements MessageComponentInterface
             // после соединения пользователь отправляет пакет messageOnconnection.
 
             // добавление соединения в БД
-            $connection = $this->connectionsTable->addConnection(['author'=>$data->author, 'wsId'=>$data->wsId]);
+            $connection = $this->connectionsTable->addConnection(['author' => $data->author, 'wsId' => $data->wsId]);
             // имя пользователя или ошибка добавления
             if ($connection['publicUsername']) {
                 $data->author = $connection['publicUsername'];
@@ -105,7 +105,7 @@ class Chat implements MessageComponentInterface
         // htmlspecialchars("<a href='test'>Test</a>", ENT_QUOTES)
 
         $msg = json_encode($data);
-        echo $msg."\n";
+        echo $msg . "\n";
         $this->writeLog($msg);
         foreach ($this->clients as $client) {
             $client->send($msg);
@@ -129,6 +129,6 @@ class Chat implements MessageComponentInterface
      */
     public function writeLog($message)
     {
-        file_put_contents($this->logFile, $message."\n", FILE_APPEND | LOCK_EX);
+        file_put_contents($this->logFile, $message . "\n", FILE_APPEND | LOCK_EX);
     }
 }

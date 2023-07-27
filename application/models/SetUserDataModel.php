@@ -27,18 +27,18 @@ class SetUserDataModel extends Model
         $email = Model::getUserMailFromClient();
         $data['user_email'] = $email;
         $_POST['user_nickname'] = trim($_POST['user_nickname']);
-        $data['user_nickname'] = $_POST['user_nickname'] == '' ? null :  $_POST['user_nickname'];
+        $data['user_nickname'] = $_POST['user_nickname'] == '' ? null : $_POST['user_nickname'];
         $data['user_hide_email'] = $_POST['user_hide_email'];
 
         // перемещение изображения профиля из временой папки в папку изображений профилей
-        $tempDirPath = dirname(__DIR__, 1).'\\data\temp\\';
-        $dwlDirPath = dirname(__DIR__, 1).'\\data\profile_photos\\';
+        $tempDirPath = dirname(__DIR__, 1) . '\\data\temp\\';
+        $dwlDirPath = dirname(__DIR__, 1) . '\\data\profile_photos\\';
 
         $filename = $_POST['user_photo'];
         $filename = mb_substr($filename, 0, mb_strripos($filename, '?'));
-        $fromPath = $tempDirPath.$filename;
-        $toPath = $dwlDirPath.$filename;
-        
+        $fromPath = $tempDirPath . $filename;
+        $toPath = $dwlDirPath . $filename;
+
         // если загружено новое изображение
         if (file_exists($fromPath)) {
             foreach (glob("$dwlDirPath$email*") as $file) {

@@ -4,9 +4,10 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 
+/** контроллер получения списка контактов пользователя */
 class GetContactsController extends Controller
 {
-    public function action_index()
+    public function actionIndex()
     {
         $this->model->run();
     }

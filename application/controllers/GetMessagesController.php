@@ -4,9 +4,10 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 
+/** контрллер получения сообщений открытого чата */
 class GetMessagesController extends Controller
 {
-    public function action_index()
+    public function actionIndex()
     {
         $this->model->run();
     }

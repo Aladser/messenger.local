@@ -37,13 +37,13 @@ class GetContactModel extends Model
             $this->contactsTable->addContact($contactId, $userId);
             $chatId = $this->messageTable->getDialogId($userId, $contactId); // создается диалог, если не существует
             $contactName = $this->usersTable->getPublicUsername($contactId);
-            $userData = ['username'=>$contactName, 'chat_id'=>$chatId, 'isnotice'=>0];
+            $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 0];
         } else {
             $contact = $this->contactsTable->getContact($userId, $contactId);
             $userData = [
-                'username'=>$contact[0]['username'],
-                'chat_id'=>$contact[0]['chat_id'],
-                'isnotice'=>$contact[0]['isnotice']
+                'username' => $contact[0]['username'],
+                'chat_id' => $contact[0]['chat_id'],
+                'isnotice' => $contact[0]['isnotice']
             ];
         }
         echo json_encode($userData);
