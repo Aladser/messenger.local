@@ -1,0 +1,13 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Aladser\\": "\\"
+    }
+  },
+  "require": {
+    "cboden/ratchet": "^0.4.4",
+    "phpmailer/phpmailer": "^6.8",
+    "ext-json": "*",
+    "ext-pdo": "*"
+  }
+}
