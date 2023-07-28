@@ -11,8 +11,10 @@ class Route
         // контроллер и действие по умолчанию
         if (array_key_exists('REDIRECT_URL', $_SERVER)) {
             // Windows - убираем '/'
-            if ($_SERVER['REDIRECT_URL'][0] = '/') {
+            if ($_SERVER['REDIRECT_URL'][0] === '/') {
                 $routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
+            } else {
+                $routes = $_SERVER['REDIRECT_URL'];
             }
 
             $controller_name = !empty($routes) ? ucfirst($routes) : 'main';

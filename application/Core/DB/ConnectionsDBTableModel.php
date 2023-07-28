@@ -24,7 +24,6 @@ class ConnectionsDBTableModel extends DBTableModel
                 'select * from connections where connection_userid = :id',
                 ['id' => $userId]
             );
-            //$isConnection = $this->db->query("select * from connections where connection_userid = $userId");
             // не могу понять откуда берется нулевой connId из Ratchet. Удаляю его
             if (!$isConnection && $connection_ws_id != 0) {
                 $sqlRslt = $this->db->exec("
