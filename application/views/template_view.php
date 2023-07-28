@@ -9,7 +9,7 @@
     <link rel="icon" href="application/images/icon.png">
     <link rel="stylesheet" href="application/css/reset_styles.css">
     <link rel="stylesheet" href="application/css/template.css">
-    <?php if ($content_css !== '') : ?>
+    <?php if (!empty($content_css)) : ?>
         <link rel="stylesheet" href="application/css/<?= $content_css ?>">
     <?php endif; ?>
 </head>
@@ -41,7 +41,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-<?php if ($content_js !== '') : ?>
+<?php if (!empty($content_js)) : ?>
     <script type='text/javascript' src="application/js/<?= $content_js ?>"></script>
 <?php endif; ?>
 </body>
