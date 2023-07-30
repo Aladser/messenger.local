@@ -8,8 +8,5 @@
 .idea/vcs.xml
 .idea/inspectionProfiles/Project_Default.xml
 application/logs.txt
-application/data/profile_photos/aladser@yandex.ru.6.jpg
-.php-cs-fixer.cache
-application/logs.txt
-application/data/profile_photos/aladser@yandex.ru.5.jpeg
-/application/data/
+/application/data/temp/*
+/application/data/profile_photos/*
