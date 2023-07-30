@@ -8,5 +8,3 @@
 .idea/vcs.xml
 .idea/inspectionProfiles/Project_Default.xml
 application/logs.txt
-/application/data/temp/*
-/application/data/profile_photos/*
