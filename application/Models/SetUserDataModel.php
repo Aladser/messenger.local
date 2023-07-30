@@ -55,8 +55,9 @@ class SetUserDataModel extends Model
             echo $this->users->setUserData($data) ? 1 : 0;
         }
 
+        // удаление временных файлов профиля
         foreach (glob("$tempDirPath$email*") as $file) {
-            unlink($file);// удаление временных файлов профиля
+            unlink($file);
         }
     }
 }

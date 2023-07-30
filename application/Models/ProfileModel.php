@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Exception;
 
 /** Данные о профиле текущего пользователя */
 class ProfileModel extends Model
@@ -15,7 +16,7 @@ class ProfileModel extends Model
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function run()
     {
