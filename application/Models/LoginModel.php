@@ -16,10 +16,9 @@ class LoginModel extends Model
 
     public function run()
     {
-        session_start();
         if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
             // проверка на подмену адреса
-            $data['result'] = 'wrong_url';
+            echo 'Подмена URL-адреса';
         } elseif ($this->users->existsUser($_POST['email'])) {
             // проверка введенныъ данных
             $isValidLogin = $this->users->checkUser($_POST['email'], $_POST['password']) == 1;
@@ -28,14 +27,12 @@ class LoginModel extends Model
                 $_SESSION['email'] = $_POST['email'];
                 setcookie('auth', 1, time() + 60 * 60 * 24, '/');
                 setcookie('email', $_POST['email'], time() + 60 * 60 * 24, '/');
-                $data['result'] = 'login_user';
+                echo json_encode(['result' => 1]);
             } else {
-                $data['result'] = 'login_user_wrong_password';
+                echo 'Неправильный логин';
             }
         } else {
-            $data['result'] = 'not_user_exists';
+            echo 'Пользователь не существует';
         }
-
-        echo json_encode($data);
     }
 }

@@ -29,8 +29,7 @@ class DBQueryCtl
             $this->dbConnection = new PDO(
                 "mysql:dbname=$this->nameDB; host=$this->host",
                 $this->userDB,
-                $this->passwordDB,
-                array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'")
+                $this->passwordDB
             );
         } catch (PDOException $e) {
             die($e->getMessage());

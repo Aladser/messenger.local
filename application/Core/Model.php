@@ -26,7 +26,6 @@ abstract class Model
      */
     public static function createCSRFToken(): string
     {
-        session_start();
         $csrfToken = hash('gost-crypto', random_int(0, 999999));
         $_SESSION["CSRF"] = $csrfToken;
         return $csrfToken;

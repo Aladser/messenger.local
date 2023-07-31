@@ -28,23 +28,15 @@ document.querySelector('#login-form').addEventListener('submit', function (e) {
     let form = new FormData(this);
     form.append('CSRF', inputCsrf.value);
 
-    fetch('/login', {method: 'POST', body: form}).then(response => response.json()).then(data => {
-
-        if (data['result'] === 'login_user') {
-            // вход
-            window.open('/chats', '_self')
-        } else {
-            // ошибки входа
-            loginErrorPrg.classList.remove('d-none');
-            if (data['result'] === 'login_user_wrong_password') {
-                loginErrorPrg.innerHTML = 'Неверный пароль';
-            } else if (data['result'] === 'wrong_url') {
-                loginErrorPrg.innerHTML = 'Подмена url-адреса запроса';
-            } else {
-                loginErrorPrg.innerHTML = 'Пользователь не существует';
-            }
+    fetch('/login', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+        try{
+            JSON.parse(data);
+            window.open('/chats', '_self');
         }
-
-
+        catch(SyntaxError){
+            loginErrorPrg.classList.remove('d-none');
+            loginErrorPrg.innerHTML = data;
+            return;
+        }
     });
 });
