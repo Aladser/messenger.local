@@ -20,7 +20,6 @@ class ProfileModel extends Model
      */
     public function run()
     {
-        session_start();
         $email = Model::getUserMailFromClient();
 
         // удаление временных файлов текущего профиля

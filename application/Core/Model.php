@@ -11,7 +11,6 @@ abstract class Model
     /** получить почту пользователя из сессии или куки */
     public function getUserMailFromClient()
     {
-        session_start();
         if (isset($_COOKIE['email'])) {
             return $_COOKIE['email'];
         } elseif (isset($_SESSION['email'])) {

@@ -29,7 +29,7 @@ class LoginModel extends Model
                 setcookie('email', $_POST['email'], time() + 60 * 60 * 24, '/');
                 echo json_encode(['result' => 1]);
             } else {
-                echo 'Неправильный логин';
+                echo 'Неправильный пароль';
             }
         } else {
             echo 'Пользователь не существует';

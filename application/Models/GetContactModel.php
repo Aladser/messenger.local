@@ -21,7 +21,6 @@ class GetContactModel extends Model
     public function run()
     {
         // CSRF-проверка на подмену адреса
-        session_start();
         if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
             echo json_encode(['wrong_url' => 1]);
             exit;
