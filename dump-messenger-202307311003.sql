@@ -32,7 +32,7 @@ CREATE TABLE `chat` (
   KEY `i_chat_type` (`chat_type`),
   KEY `i_getdialogid` (`chat_id`,`chat_type`),
   CONSTRAINT `check_creatorid` FOREIGN KEY (`chat_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,6 @@ CREATE TABLE `chat` (
 
 LOCK TABLES `chat` WRITE;
 /*!40000 ALTER TABLE `chat` DISABLE KEYS */;
-INSERT INTO `chat` VALUES (1,'dialog',NULL,1),(2,'dialog',NULL,1),(3,'dialog',NULL,1),(4,'dialog',NULL,1),(5,'dialog',NULL,1),(6,'discussion','Групповой чат 11',1),(7,'discussion','Групповой чат 12',1),(8,'dialog',NULL,2),(9,'discussion','Групповой чат 21',2);
 /*!40000 ALTER TABLE `chat` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -85,7 +84,7 @@ CREATE TABLE `chat_message` (
   KEY `i_chat_message_chatid` (`chat_message_chatid`),
   CONSTRAINT `check_message_chatid` FOREIGN KEY (`chat_message_chatid`) REFERENCES `chat` (`chat_id`) ON DELETE CASCADE,
   CONSTRAINT `check_message_creator` FOREIGN KEY (`chat_message_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +93,6 @@ CREATE TABLE `chat_message` (
 
 LOCK TABLES `chat_message` WRITE;
 /*!40000 ALTER TABLE `chat_message` DISABLE KEYS */;
-INSERT INTO `chat_message` VALUES (1,1,'111',1,'2023-07-26 10:43:42',0),(7,2,'111',1,'2023-07-26 10:44:36',1),(8,6,'1',1,'2023-07-26 10:44:53',0),(9,6,'1',1,'2023-07-26 10:45:06',0),(10,6,'1',2,'2023-07-26 10:45:09',0),(11,6,'1',3,'2023-07-26 10:45:18',0),(12,1,'222',2,'2023-07-26 10:46:23',0);
 /*!40000 ALTER TABLE `chat_message` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -143,7 +141,6 @@ CREATE TABLE `chat_participant` (
 
 LOCK TABLES `chat_participant` WRITE;
 /*!40000 ALTER TABLE `chat_participant` DISABLE KEYS */;
-INSERT INTO `chat_participant` VALUES (1,1,1),(1,2,0),(2,1,1),(2,3,1),(3,1,1),(3,4,1),(4,1,1),(4,6,1),(5,1,1),(5,5,1),(6,1,1),(6,2,0),(6,3,0),(6,4,1),(6,5,1),(6,6,1),(7,1,1),(7,2,1),(7,3,1),(8,2,1),(8,3,1),(9,2,1);
 /*!40000 ALTER TABLE `chat_participant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -189,7 +186,7 @@ CREATE TABLE `contacts` (
   KEY `contacts_fk_contactid` (`cnt_contact_id`),
   CONSTRAINT `contacts_fk_contactid` FOREIGN KEY (`cnt_contact_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
   CONSTRAINT `contacts_fk_userid` FOREIGN KEY (`cnt_user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +195,6 @@ CREATE TABLE `contacts` (
 
 LOCK TABLES `contacts` WRITE;
 /*!40000 ALTER TABLE `contacts` DISABLE KEYS */;
-INSERT INTO `contacts` VALUES (1,1,2),(2,1,3),(3,1,4),(4,1,6),(5,1,5),(6,2,3),(7,1,2),(8,2,1),(9,2,3),(10,2,1),(11,3,1),(12,1,3),(13,1,2),(14,1,2),(15,2,1);
 /*!40000 ALTER TABLE `contacts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -248,7 +244,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `user_email` (`user_email`),
   UNIQUE KEY `user_nickname` (`user_nickname`),
   KEY `i_user_publicname` (`user_nickname`,`user_email`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -257,7 +253,6 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'aladser@mail.ru','Admin','$2y$10$n3w/mNANJD9oOKr1qdFx/.sbqEKtR/YdHPNbgJfRGRgGBBwLFGkMq',NULL,1,1,'aladser@mail.ru.1.ru'),(2,'aladser@gmail.com','Aladser','$2y$10$FpTLRmT5KrL9cx5UR.CbPegpt1.GU3FfL1QNE7LZb0Mp2Ro1kyiNm',NULL,1,1,'aladser@gmail.com.1.com'),(3,'lauxtec@gmail.com','Lauxtec','$2y$10$v5U9pehMII45xZrKxDodVul4uX9SkZz7FRpXKkIJyW992Sh7X4QBO','ea9939680c974035f294b7c0a4fc9b34',0,1,'lauxtec@gmail.com.1.com'),(4,'aladser@yandex.ru',NULL,'$2y$10$O4h7iL1/Y9BRTilXrKTa7e5Zv20ftxKopeeo03xTQMlBIYudQa5yW',NULL,1,0,NULL),(5,'sendlyamobile@gmail.com','Evgesha','$2y$10$y0CdLeDsR5mCUZEq8wLzput3zT1SQPQNJUmFKO.uZk702tTbnrto6',NULL,1,0,'sendlyamobile@gmail.com.1.com'),(6,'denisdyo17@gmail.com',NULL,'$2y$10$D6cJtzMzdhLuZvJnbwDSK.krHALJgahwBJNTq7Le7AmUBDj05/JVu',NULL,1,0,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -445,4 +440,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-26 16:56:30
+-- Dump completed on 2023-07-31 10:03:28
