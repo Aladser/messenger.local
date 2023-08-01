@@ -21,7 +21,6 @@ class CreateGroupModel extends Model
      */
     public function run()
     {
-        session_start();
         $userId = $this->userTable->getUserId(Model::getUserMailFromClient());
         $data = $this->messageTable->createDiscussion($userId);
         echo json_encode($data);

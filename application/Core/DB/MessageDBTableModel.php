@@ -26,10 +26,15 @@ class MessageDBTableModel extends DBTableModel
     {
         // поиск диалога пользователей
         $sql = '
-            select chat_id from extended_chat 
-            where chat_participant_userid = :user1Id 
+            select chat_id from chat
+            join chat_participant on chat_id = chat_participant_chatid
+            where chat_participant_userid = :user1Id
             and chat_type = \'dialog\'
-            and chat_id in (select chat_id from extended_chat where chat_participant_userid = :user2Id);
+            and chat_id in (
+	            select chat_id from chat
+	            join chat_participant on chat_id = chat_participant_chatid
+	            where chat_participant_userid = :user2Id
+            );
         ';
         $query = $this->db->queryPrepared($sql, ['user1Id' => $user1Id, 'user2Id' => $user2Id]);
 

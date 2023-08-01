@@ -1,6 +1,14 @@
+drop table if exists connections;
+drop table if exists chat_message;
+drop table if exists chat_participant;
+drop table if exists chat;
+drop table if exists contacts;
+drop view if exists unhidden_emails;
+DROP VIEW IF EXISTS extended_chat;
+drop table if exists users;
+
 # -- пользователи --
 # -- предполагается доработка, что пользователь может сменить почту
-drop table if exists users;
 create table users
 (
     user_id              int AUTO_INCREMENT PRIMARY KEY,
@@ -20,23 +28,19 @@ insert into users(user_email, user_nickname, user_password)
 values ('lauxtec@gmail.com', 'Lauxtec', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
 insert into users(user_email, user_nickname, user_password)
 values ('sendlyamobile@gmail.com', 'Barashka', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
-update users
-set user_email_confirmed = 1
-where user_id < 5;
+update users set user_email_confirmed = 1 where user_id < 5;
 
 # -- контакты пользователя --
-drop table if exists contacts;
 create table contacts
 (
-    id         int auto_increment primary key,
-    user_id    int not null,
-    contact_id int not null,
-    CONSTRAINT contacts_fk_userid foreign key (user_id) references users (user_id) ON DELETE cascade,
-    CONSTRAINT contacts_fk_contactid foreign key (contact_id) references users (user_id) ON DELETE CASCADE
+    cnt_id         int auto_increment primary key,
+    cnt_user_id    int not null,
+    cnt_contact_id int not null,
+    CONSTRAINT contacts_fk_userid foreign key (cnt_user_id) references users (user_id) ON DELETE cascade,
+    CONSTRAINT contacts_fk_contactid foreign key (cnt_contact_id) references users (user_id) ON DELETE CASCADE
 );
 
 # -- соединения --
-drop table if exists connections;
 create table connections
 (
     connection_ws_id  int not null primary key,
@@ -45,10 +49,6 @@ create table connections
 );
 
 # --  ЧАТЫ  --
-drop table if exists chat_message;
-drop table if exists chat_participant;
-drop table if exists chat;
-
 create table chat
 (
     chat_id        int auto_increment primary key,

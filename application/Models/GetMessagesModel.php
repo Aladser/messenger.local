@@ -19,7 +19,6 @@ class GetMessagesModel extends Model
     // получить список сообщений чата
     public function run()
     {
-        session_start();
         $chatId = null;
         $type = null;
         // диалоги
