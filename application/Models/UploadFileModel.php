@@ -10,7 +10,8 @@ class UploadFileModel extends Model
     public function run()
     {
 
-        var_dump($_POST);
+        var_dump($_FILES);
+        return;
 
         // проверка на подмену адреса
         if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {

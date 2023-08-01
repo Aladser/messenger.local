@@ -102,9 +102,7 @@ selectFileInput.onchange = () => {
 // показ выбранного изображения как фото профиля
 document.querySelector('#upload-file-form').onsubmit = (e) => {
     e.preventDefault();
-    let data = new URLSearchParams();
-    data.set('CSRF', inputCsrf.value);
-    data.set('file', e.target.image.files[0]);
+    let formData = new FormData(e.target);
     if (selectFileInput.value !== '') {
         fetch('/upload-file', {method: 'POST', body: formData})
             .then(response => response.text())

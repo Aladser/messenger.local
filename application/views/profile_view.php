@@ -34,7 +34,7 @@
         </div>
 
         <div class='options mb-2'>
-            <form enctype="multipart/form-data" method='post' id='upload-file-form' enctype="multipart/form-data">
+            <form enctype="multipart/form-data" method='post' id='upload-file-form'>
                 <input type="file" id="select-file-input" accept="image/*" name='image' class='d-none'>
                 <input type="submit" id='upload-file-btn' class='d-none'>
                 <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='edit-photo-btn'>Изменить фото</button>
