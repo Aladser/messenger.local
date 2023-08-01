@@ -16,11 +16,9 @@ class SetUserDataModel extends Model
 
     public function run()
     {
-
-        session_start();
         // проверка на подмену адреса
         if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
-            echo json_encode(['wrong_url' => 1]);
+            echo 'подделка URL-адреса';
             return;
         };
 
@@ -35,13 +33,13 @@ class SetUserDataModel extends Model
         $dwlDirPath = dirname(__DIR__, 1) . '\\data\profile_photos\\';
 
         $filename = $_POST['user_photo'];
-        $filename = mb_substr($filename, 0, mb_strripos($filename, '?'));
+        $filename = mb_substr($filename, 0, mb_strripos($filename, '?')); // вырезает название файла
         $fromPath = $tempDirPath . $filename;
         $toPath = $dwlDirPath . $filename;
 
         // если загружено новое изображение
         if (file_exists($fromPath)) {
-            foreach (glob("$dwlDirPath$email*") as $file) {
+            foreach (glob($dwlDirPath.$email.'*') as $file) {
                 unlink($file); // удаление старых файлов профиля
             }
             if (rename($fromPath, $toPath)) {
@@ -56,7 +54,7 @@ class SetUserDataModel extends Model
         }
 
         // удаление временных файлов профиля
-        foreach (glob("$tempDirPath$email*") as $file) {
+        foreach (glob($tempDirPath.$email.'*') as $file) {
             unlink($file);
         }
     }

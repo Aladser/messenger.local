@@ -128,16 +128,18 @@ saveBtn.addEventListener('click', () => {
     let filepathArr = document.querySelector('#profile-img').src.split('/');
     data.set('user_photo', filepathArr[filepathArr.length - 1]);
 
-    fetch('/set-userdata', {method: 'POST', body: data}).then(r => r.json()).then(data => {
-        saveBtn.classList.add('d-none');
-        if (data.hasOwnProperty('wrong_url')) {
+    fetch('/set-user-data', {method: 'POST', body: data}).then(r => r.text()).then(data => {
+        console.log(data);
+        try {
+            data = JSON.parse(data);
+        } catch (err) {
             prgError.classList.remove('d-none');
-            prgError.innerHTML = 'подмена сетевого адреса';
-        } else if (data === 0) {
-            prgError.classList.remove('d-none');
-            prgError.innerHTML = 'серверная ошибка сохранения изображения';
+            prgError.innerHTML = data;
+            return;
         }
+        saveBtn.classList.add('d-none');
     });
+
     if (inputNickname.value.trim() !== '') {
         hideEmailInputBlock.classList.remove('d-none');
     }
