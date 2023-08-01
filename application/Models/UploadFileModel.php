@@ -9,11 +9,12 @@ class UploadFileModel extends Model
 {
     public function run()
     {
-        session_start();
+
+        var_dump($_POST);
 
         // проверка на подмену адреса
         if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
-            echo json_encode(['wrong_url' => 1]);
+            echo 'Подмена URL-адреса';
             return;
         };
 
@@ -38,15 +39,15 @@ class UploadFileModel extends Model
         $fromPath = $_FILES['image']['tmp_name']; // откуда перемещается
         $toPath = "$dwlDirPath$filename"; // куда перемещается
 
+        return;
         // перемещение изображения в папку профилей
         $isMoving = move_uploaded_file($fromPath, $toPath);
         if ($isMoving) {
-            $data['result'] = 'ok';
-            $data['image'] = $filename;
+            echo json_encode(['image' => $filename]);
         } else {
-            $data['result'] = 'moving_error';
+            echo 'Ошибка загрузки файлов';
+            return;
         }
-        echo json_encode($data);
 
         // удаление предыдущих вариантов изображения
         if ($number) {

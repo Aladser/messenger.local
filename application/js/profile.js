@@ -102,20 +102,27 @@ selectFileInput.onchange = () => {
 // показ выбранного изображения как фото профиля
 document.querySelector('#upload-file-form').onsubmit = (e) => {
     e.preventDefault();
-    let formData = new FormData(e.target);
-    formData.append('CSRF', inputCsrf.value);
+    let data = new URLSearchParams();
+    data.set('CSRF', inputCsrf.value);
+    data.set('file', e.target.image.files[0]);
     if (selectFileInput.value !== '') {
-        fetch('/upload-file', {method: 'POST', body: formData}).then(response => response.text()).then(data => {
-            data = JSON.parse(data);
-            if (data.hasOwnProperty('wrong_url')) {
-                prgError.classList.remove('d-none');
-                prgError.innerHTML = 'подмена сетевого адреса';
-            } else if (data.result === 'ok') {
-                data.image = data.image.trim();
-                profileImageField.src = data.image !== '' ? `application/data/temp/${data.image}?r=${randomNumber++}` : 'application/images/ava_profile.png';
-                selectFileInput.value = ''; // очистка элемента выбора файлов
+        fetch('/upload-file', {method: 'POST', body: formData})
+            .then(response => response.text())
+            .then(data => {
+                try{
+                    data = JSON.parse(data).trim();
+                    if (data.image !== '') {
+                        profileImageField.src = `application/data/temp/${data.image}?r=${randomNumber++}`;
+                    } else {
+                        profileImageField.src = 'application/images/ava_profile.png';
+                    }
+                    selectFileInput.value = ''; // очистка элемента выбора файлов
+                } catch (err) {
+                    prgError.classList.remove('d-none');
+                    prgError.innerHTML = data;
+                }
             }
-        });
+        );
     }
 }
 
@@ -129,7 +136,6 @@ saveBtn.addEventListener('click', () => {
     data.set('user_photo', filepathArr[filepathArr.length - 1]);
 
     fetch('/set-user-data', {method: 'POST', body: data}).then(r => r.text()).then(data => {
-        console.log(data);
         try {
             data = JSON.parse(data);
         } catch (err) {
