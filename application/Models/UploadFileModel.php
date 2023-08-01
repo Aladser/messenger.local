@@ -9,26 +9,22 @@ class UploadFileModel extends Model
 {
     public function run()
     {
-
-        var_dump($_FILES);
-        return;
-
-        // проверка на подмену адреса
-        if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
-            echo 'Подмена URL-адреса';
+        // проверка размера файла
+        if (!array_key_exists('image', $_FILES)) {
+            echo 'Размер файла превышает 10 Мб';
             return;
-        };
+        }
 
         // почта пользователя
         $email = Model::getUserMailFromClient();
         $ext = explode('.', $_FILES['image']['name'])[1];
 
         // поиск других загрузок изображений этого профиля и установка нового имени файла
-        $dwlDirPath = dirname(__DIR__, 1) . "\data\\temp\\"; // папка, куда перемещается изображение из $_POST
+        $dwlDirPath = dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR; // папка, куда перемещается изображение из $_POST
         $dwlFiles = glob($dwlDirPath . $email . '*'); // поиск файлов по шаблону
         $number = false;
         if (count($dwlFiles) == 0) {
-            $filename = $email . '.1.' . $ext;
+            $filename =  "$email.1.$ext";
         } else {
             $dwlFile = $dwlFiles[count($dwlFiles) - 1];           // последний файл
             $dwlFiles = explode('.', $dwlFile);                 // имя разбивается по точкам в массив
@@ -36,19 +32,11 @@ class UploadFileModel extends Model
             $filename = $email . '.' . ++$number . '.' . $ext;
         }
 
-
         $fromPath = $_FILES['image']['tmp_name']; // откуда перемещается
-        $toPath = "$dwlDirPath$filename"; // куда перемещается
+        $toPath = $dwlDirPath.$filename; // куда перемещается
 
-        return;
         // перемещение изображения в папку профилей
-        $isMoving = move_uploaded_file($fromPath, $toPath);
-        if ($isMoving) {
-            echo json_encode(['image' => $filename]);
-        } else {
-            echo 'Ошибка загрузки файлов';
-            return;
-        }
+        echo move_uploaded_file($fromPath, $toPath) ? json_encode(['image' => $filename]) : 'Ошибка загрузки файлов';
 
         // удаление предыдущих вариантов изображения
         if ($number) {

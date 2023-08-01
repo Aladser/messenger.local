@@ -20,8 +20,8 @@ class ChatsModel extends Model
         $publicUsername = $this->userTable->getPublicUsernameFromEmail($userEmail);
         $userId = $this->userTable->getUserId($userEmail);
 
-        // удаление временных файлов профиля, откуда был переход
-        $tempDirPath = dirname(__DIR__, 1) . "\data\\temp\\";
+        // удаление временных файлов профиля
+        $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
         foreach (glob($tempDirPath . $userEmail . '*') as $file) {
             unlink($file);
         }

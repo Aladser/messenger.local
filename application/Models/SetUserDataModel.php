@@ -29,11 +29,13 @@ class SetUserDataModel extends Model
         $data['user_hide_email'] = $_POST['user_hide_email'];
 
         // перемещение изображения профиля из временой папки в папку изображений профилей
-        $tempDirPath = dirname(__DIR__, 1) . '\\data\temp\\';
-        $dwlDirPath = dirname(__DIR__, 1) . '\\data\profile_photos\\';
+        $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
+        $dwlDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'profile_photos'.DIRECTORY_SEPARATOR;
 
         $filename = $_POST['user_photo'];
-        $filename = mb_substr($filename, 0, mb_strripos($filename, '?')); // вырезает название файла
+        // вырезает название файла
+        $filename = mb_substr($filename, 0, mb_strripos($filename, '?'));
+
         $fromPath = $tempDirPath . $filename;
         $toPath = $dwlDirPath . $filename;
 
@@ -51,11 +53,6 @@ class SetUserDataModel extends Model
         } else {
             $data['user_photo'] = $filename;
             echo $this->users->setUserData($data) ? 1 : 0;
-        }
-
-        // удаление временных файлов профиля
-        foreach (glob($tempDirPath.$email.'*') as $file) {
-            unlink($file);
         }
     }
 }

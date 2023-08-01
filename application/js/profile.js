@@ -1,3 +1,4 @@
+const uploadForm = document.querySelector('#upload-file-form');
 /** скрытый элемент выбора файлов */
 const selectFileInput = document.querySelector('#select-file-input');
 /** блок чекбокса скрытия почты */
@@ -12,6 +13,7 @@ const inputNickname = document.querySelector('#input-nickname');
 const prgError = document.querySelector('#prg-error');
 const editNicknameBtn = document.querySelector('#btn-edit-nickname');
 const editPhotoBtn = document.querySelector('#edit-photo-btn');
+
 /** изображение профиля */
 const profileImageField = document.querySelector('#profile-img');
 /** инпут CSRF-токена */
@@ -100,24 +102,30 @@ selectFileInput.onchange = () => {
 }
 
 // показ выбранного изображения как фото профиля
-document.querySelector('#upload-file-form').onsubmit = (e) => {
+uploadForm.onsubmit = e => {
     e.preventDefault();
-    let formData = new FormData(e.target);
-    if (selectFileInput.value !== '') {
+    let file = e.target.image.files[0];
+    if(file !== undefined){
+        let formData = new FormData();
+        formData.set('image', file, file.name);
         fetch('/upload-file', {method: 'POST', body: formData})
             .then(response => response.text())
             .then(data => {
-                try{
-                    data = JSON.parse(data).trim();
+                try {
+                    data = JSON.parse(data);
+                    data.image = data.image.trim();
                     if (data.image !== '') {
                         profileImageField.src = `application/data/temp/${data.image}?r=${randomNumber++}`;
                     } else {
                         profileImageField.src = 'application/images/ava_profile.png';
                     }
-                    selectFileInput.value = ''; // очистка элемента выбора файлов
+                    // очистка элемента выбора файлов
+                    selectFileInput.value = '';
+                    prgError.classList.add('d-none');
                 } catch (err) {
                     prgError.classList.remove('d-none');
                     prgError.innerHTML = data;
+                    saveBtn.classList.add('d-none');
                 }
             }
         );
