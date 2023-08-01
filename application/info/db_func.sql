@@ -1,4 +1,5 @@
 # --триггер проверки тип чата: dialog или discussion--
+drop trigger if exists check_chat_type;
 delimiter //
 CREATE TRIGGER check_chat_type
     BEFORE INSERT
@@ -12,8 +13,8 @@ begin
 end //
 delimiter ;
 
-
 # --триггер на добавление сообщений. Проверка существования пользователя--
+drop trigger if exists check_message;
 delimiter //
 CREATE TRIGGER check_message
     BEFORE INSERT
@@ -30,6 +31,7 @@ END //
 delimiter ;
 
 # --функция получить публчное имя пользователя
+DROP FUNCTION IF EXISTS getPublicUserName; 
 DELIMITER //
 CREATE FUNCTION getPublicUserName(email varchar(100), nickname varchar(100), hide_email int(1))
     returns varchar(100)

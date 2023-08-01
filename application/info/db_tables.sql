@@ -10,8 +10,7 @@ create table users
     user_hash            varchar(255),
     user_email_confirmed boolean default false,
     user_hide_email      int(1)  default 0,
-    user_photo           varchar(255),
-
+    user_photo           varchar(255)
 );
 insert into users(user_email, user_nickname, user_password)
 values ('aladser@mail.ru', 'Admin', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
