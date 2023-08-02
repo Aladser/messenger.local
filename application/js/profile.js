@@ -101,13 +101,12 @@ selectFileInput.onchange = () => {
     document.querySelector('#upload-file-btn').click();
 }
 
-// показ выбранного изображения как фото профиля
+// показ выбранного изображения в проводнике как фото профиля
 uploadForm.onsubmit = e => {
     e.preventDefault();
     let file = e.target.image.files[0];
-    if(file !== undefined){
-        let formData = new FormData();
-        formData.set('image', file, file.name);
+    if (file !== undefined) {
+        let formData = new FormData(e.target);
         fetch('/upload-file', {method: 'POST', body: formData})
             .then(response => response.text())
             .then(data => {
@@ -124,11 +123,10 @@ uploadForm.onsubmit = e => {
                     prgError.classList.add('d-none');
                 } catch (err) {
                     prgError.classList.remove('d-none');
-                    prgError.innerHTML = data;
                     saveBtn.classList.add('d-none');
+                    prgError.innerHTML = data;
                 }
-            }
-        );
+            });
     }
 }
 

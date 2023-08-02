@@ -11,6 +11,17 @@ class ContactsDBTableModel extends DBTableModel
         return $this->db->exec("insert into contacts(cnt_user_id, cnt_contact_id) values($userId, $contactId)");
     }
 
+    /** удалить контакт */
+    public function removeContact($contactId, $userId)
+    {
+        $sql = "
+            delete from contacts 
+            where (cnt_user_id=$userId and cnt_contact_id=$contactId) 
+            or (cnt_contact_id=$userId and cnt_user_id=$contactId)
+        ";
+        return $this->db->exec($sql);
+    }
+
     // проверка существования
     public function existsContact($contactId, $userId)
     {

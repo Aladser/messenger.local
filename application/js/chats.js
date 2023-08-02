@@ -39,17 +39,19 @@ const resetForwardtBtn = document.querySelector('#btn-resend-reset');
 
 /** контекстное меню сообщения*/
 const msgContextMenu = document.querySelector('#msg-context-menu');
-/** кнопка контекстного меню: Редактировать сообщение*/
+/** кнопка контекстное меню: Редактировать сообщение*/
 const editMsgContextMenuBtn = document.querySelector('#edit-msg');
-/** кнопка контекстного меню: Удалить сообщение*/
+/** кнопка контекстное меню: Удалить сообщение*/
 const removeMsgContextMenuBtn = document.querySelector('#remove-msg');
-/** кнопка контекстного меню: Переслать сообщение*/
+/** кнопка контекстное меню: Переслать сообщение*/
 const forwardMsgContextMenuBtn = document.querySelector('#resend-msg');
-/** контексное меню контакта*/
+/** кнопка контексное меню контакта*/
 const contactContextMenu = document.querySelector('#contact-context-menu');
-/** контекстное меню: изменить показ уведомлений*/
+/** кнопка контекстное меню: изменить показ уведомлений*/
 const editNoticeShowContextMenuBtn = document.querySelector('#contact-notice-edit');
-/** инпут CSRF-токена */
+/** кнопка контекстное меню: удалить контакт-группу*/
+const removeContactContextMenuBtn = document.querySelector('#contact-remove-contact');
+/** элемент CSRF-токена */
 const inputCsrf = document.querySelector('#input-csrf');
 
 /** Выбранное сообщение */
@@ -578,6 +580,23 @@ function editNoticeShowContextMenu() {
     });
 }
 
+/** контекстное меню: удалить контакт/групповой чат */
+function removeContactContextMenu() {
+    let urlParams = new URLSearchParams();
+    urlParams.set('name', selectedContact.title);
+    urlParams.set('type', selectedContact.className === 'group' ? 'group' : 'contact');
+    if (selectedContact.className !== 'group') {
+        urlParams.set('clientName', clientUsername);
+    }
+    hideContextMenu();
+
+    fetch('/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+        data = parseInt(data);
+        if (data > 0) {
+            selectedContact.remove();
+        }
+    });
+}
 
 window.addEventListener('DOMContentLoaded', () => {
     resetFindContactsBtn.onclick = showContacts;
@@ -634,6 +653,7 @@ window.addEventListener('DOMContentLoaded', () => {
     removeMsgContextMenuBtn.onclick = removeMessageContextMenu;
     forwardMsgContextMenuBtn.onclick = forwardMessageContextMenu;
     editNoticeShowContextMenuBtn.onclick = editNoticeShowContextMenu;
+    removeContactContextMenuBtn.onclick = removeContactContextMenu;
 
     forwardBtn.onclick = forwardMessage;
     resetForwardtBtn.onclick = resetForwardMessage;
@@ -644,7 +664,6 @@ window.addEventListener('DOMContentLoaded', () => {
 window.oncontextmenu = event => {
     if (['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forward'].includes(event.target.className)) {
         // клик на элементе сообщения
-
         if (['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)) {
             selectedMessage = event.target.parentNode.parentNode.parentNode.parentNode;
         } else if (event.target.className === 'msg__forward') {
@@ -655,9 +674,9 @@ window.oncontextmenu = event => {
 
         showContextMenu(msgContextMenu, event);
         let msgUserhost = selectedMessage.getAttribute('data-author');
-        // отображение кнопки изменить сообщение
+        // отображение кнопки - зменить сообщение
         editMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
-        // отображение кнопки удалить сообщение
+        // отображение кнопки - удалить сообщение
         removeMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
 
         if (selectedMessage.getAttribute('data-forward') == 1) {
@@ -665,7 +684,6 @@ window.oncontextmenu = event => {
         }
     } else if (['contact__name', 'contact__img img pe-2', 'contact position-relative mb-2', 'group', 'notice-soundless'].includes(event.target.className)) {
         // клик на элементе контакта
-
         if (event.target.className === 'contact__img img pe-2') {
             selectedContact = event.target.parentNode.parentNode;
         } else if (event.target.className === 'contact__name' || event.target.className === 'notice-soundless') {
@@ -675,8 +693,10 @@ window.oncontextmenu = event => {
         }
 
         let isNotice = selectedContact.getAttribute('data-notice');
-        // показ кнопки включения - выключения уведомлений
+        // показ кнопки - включение/выключение уведомлений
         editNoticeShowContextMenuBtn.innerHTML = isNotice == 1 ? 'Отключить уведомления' : 'Включить уведомления';
+        // показ кнопки - удалить группу
+        removeContactContextMenuBtn.innerHTML= event.target.className === 'group' ? 'Удалить группу' : 'Удалить контакт';
 
         showContextMenu(contactContextMenu, event);
     } else {

@@ -78,6 +78,7 @@
 <!-- общий CSRF для всех запросов страницы -->
 <input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
 
+<!-- контектсное меню сообщения -->
 <div class='context-menu' id='msg-context-menu'>
     <ul class='list-group m-0'>
         <li class='list-group-item' id='edit-msg'>Редактировать</li>
@@ -86,8 +87,10 @@
     </ul>
 </div>
 
+<!-- контекстное меню контакта -->
 <div class='context-menu' id='contact-context-menu'>
     <ul class='list-group m-0'>
         <li class='list-group-item' id='contact-notice-edit'>Отключить уведомления</li>
+        <li class='list-group-item' id='contact-remove-contact'>Удалить группу</li>
     </ul>
 </div>

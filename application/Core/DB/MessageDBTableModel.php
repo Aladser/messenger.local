@@ -46,6 +46,21 @@ class MessageDBTableModel extends DBTableModel
         return intval($query['chat_id']);
     }
 
+    /** получить ID группового чата*/
+    public function getDiscussionId(string $groupName)
+    {
+        return $this->db->queryPrepared('select chat_id from chat where chat_name = :groupName', ['groupName' => $groupName], false)[0]['chat_id'];
+    }
+
+    /** удалить чат */
+    public function removeChat($dialogId)
+    {   
+        $result = $this->db->exec("delete from chat_participant where chat_participant_chatid  = $dialogId");
+        $result += $this->db->exec("delete from chat_message where chat_message_chatid  = $dialogId");
+        $result += $this->db->exec("delete from chat where chat_id = $dialogId");
+        return $result;
+    }
+
     // создать групповой чат
     public function createDiscussion(int $userHostId)
     {
@@ -53,6 +68,7 @@ class MessageDBTableModel extends DBTableModel
         $sql = 'select chat_id as chat, chat_name as name from chat where chat_id = :groupId';
         return $this->db->queryPrepared($sql, ['groupId' => $groupId]);
     }
+
 
     // возвращает групповые чаты пользователя
     public function getDiscussions(int $userHostId)
