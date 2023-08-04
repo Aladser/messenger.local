@@ -55,19 +55,3 @@
 * Для защиты от SQL-инъекций используются подготовленные запросы PHP PDO.
 * Для защиты от XSS-атак используется экранирование символов при отправке каких-либо данных. В сообщениях можно увидеть HTML-код.
 
-#### Страница входа
-![Окно входа](/application/images/readme/login.png)
-#### Письмо с подтверждением профиля
-![Письмо с подтверждением](/application/images/readme/email.png))
-#### Окно чатов
-![Окно чатов](/application/images/readme/chats.png))
-#### Поиск контактов
-![Поиск пользователей](/application/images/readme/seacrh.png))
-#### Меню профиля, где можно изменить аватар и никнейм
-![Профиль](/application/images/readme/profile.png))
-#### Меню изменения, переотправки и удаления сообщения
-![Изменить сообщение](/application/images/readme/edit-msg.png))
-![Пересылка сообщений](/application/images/readme/forward-msg.png))
-#### Меню включения/отключения уведомлений
-![Пересылка сообщений](/application/images/readme/notice.png))
-
