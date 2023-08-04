@@ -1,0 +1,2 @@
+www-data   13260  0.0  0.0   2888  1536 ?        S    19:00   0:00 sh -c ps aux | grep chat-server > /var/www/messenger.local/application/pids.txt
+www-data   13262  0.0  0.0  17712  2304 ?        S    19:00   0:00 grep chat-server

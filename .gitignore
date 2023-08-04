@@ -2,3 +2,4 @@
 .php-cs-fixer.cache
 application/logs.txt
 logs/access.log
+logs/error.log
