@@ -1,3 +1,4 @@
 .idea
 .php-cs-fixer.cache
 application/logs.txt
+logs/access.log
