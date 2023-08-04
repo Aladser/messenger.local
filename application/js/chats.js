@@ -136,7 +136,7 @@ webSocket.onmessage = e => {
         }
 
         // сообщения открытого чата
-        if (openChatId === data.chat) {
+        if (openChatId == data.chat) {
             // изменение сообщения
             if (data.messageType === 'EDIT') {
                 let messageDOMElem = document.querySelector(`[data-msg="${data.msg}"]`);
