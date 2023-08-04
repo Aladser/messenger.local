@@ -87,7 +87,7 @@ webSocket.onmessage = e => {
     console.clear();
     console.log(data);
 
-    // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения серверу текущего пользователя
+    // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу 
     if (data.onconnection) {
         webSocket.send(JSON.stringify({
             'messageOnconnection': 1,
@@ -110,10 +110,9 @@ webSocket.onmessage = e => {
         // уведомления о новых сообщениях чатов
         // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
         if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== publicClientUsername) {
-            let foundedContactChat = contactList.find(el => el.chat === data.chat); // поиск чата среди списка чатов контактов
-            let foundedGroupChat = groupList.find(el => el.chat === data.chat);     // поиск чата среди групповых чатов
+            let foundedContactChat = contactList.find(el => el.chat == data.chat); // поиск чата среди списка чатов контактов
+            let foundedGroupChat = groupList.find(el => el.chat == data.chat);     // поиск чата среди групповых чатов
             let isChat = (foundedContactChat !== undefined) || (foundedGroupChat !== undefined);
-
 
             // сделано специально множественное создание объектов звука
             if (isChat) {

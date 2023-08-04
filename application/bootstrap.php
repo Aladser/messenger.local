@@ -15,4 +15,11 @@ exec("ps aux | grep chat-server > $pidFile"); // новая таблица pidо
 $isWebSocket = count(file($pidFile)) > 2; // чтение новой таблицы pidов, поиск запущенного демона
 fclose($fd);
 
+$filepath = __DIR__ . '/chat-server.php';
+$logFilepath =  dirname(__DIR__, 1) . '/logs/websocket.log';
+// запуск вебосокета, если не запущен
+if (!$isWebSocket) {
+    exec("php $filepath > $logFilepath &");
+}
+
 Route::start();

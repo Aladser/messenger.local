@@ -10,6 +10,10 @@ use Ratchet\WebSocket\WsServer;
 
 require __DIR__ . '/vendor/autoload.php';
 
+// чистка логов при запуске вебосокета
+$logFilepath =  dirname(__DIR__, 1) . '/logs/websocket.log';
+file_put_contents($logFilepath, '');
+
 // Объявляем сервер
 $CONFIG = new ConfigClass();
 $users = $CONFIG->getUsers();
