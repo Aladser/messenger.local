@@ -3,3 +3,4 @@
 application/logs.txt
 logs/access.log
 logs/error.log
+application/pids.txt
