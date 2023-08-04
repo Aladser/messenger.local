@@ -8,7 +8,7 @@ require __DIR__ . '/vendor/autoload.php';
 date_default_timezone_set('Europe/Moscow');
 
 //**** поиск запущенного демона вебсокета ****
-$pidFile = __DIR__.'/pids.txt';
+$pidFile = dirname(__DIR__, 1).'/logs/pids.log';
 $fd = fopen($pidFile, 'w');
 fwrite($fd, ''); // чистка файла от старых данных
 exec("ps aux | grep chat-server > $pidFile"); // новая таблица pidов
