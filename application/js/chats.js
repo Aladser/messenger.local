@@ -87,7 +87,7 @@ webSocket.onmessage = e => {
     //console.clear();
     //console.log(data);
 
-    // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу 
+    // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу
     if (data.onconnection) {
         webSocket.send(JSON.stringify({
             'messageOnconnection': 1,
@@ -158,7 +158,8 @@ webSocket.onmessage = e => {
  * @param message текст сообщения
  * @param messageType тип сообщения: NEW, EDIT, REMOVE или FORWARD
  */
-function sendData(message, messageType) {
+function sendData(message, messageType)
+{
     // проверка сокета
     if (webSocket.readyState !== 1) {
         alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
@@ -196,7 +197,8 @@ function sendData(message, messageType) {
 
 
 /** создать DOM-элемент сообщения чата*/
-function appendMessage(data) {
+function appendMessage(data)
+{
     // показ местного времени
     // YYYY.MM.DD HH:ii:ss
     let timeInMs = Date.parse(data.time);
@@ -242,7 +244,8 @@ function appendMessage(data) {
 }
 
 /** создать DOM-элемент контакта списка контактов*/
-function appendContactDOMElement(contact) {
+function appendContactDOMElement(contact)
+{
     // контейнер контакта
     let contactBlock = document.createElement('div');    // блок контакта
     let contactImgBlock = document.createElement('div'); // блок изображения профиля
@@ -276,7 +279,8 @@ function appendContactDOMElement(contact) {
  * @param {*} group БД данные группы
  * @param {*} place куда добавить: START - начало списка, END - конец
  */
-function appendGroupDOMElement(group, place = 'END') {
+function appendGroupDOMElement(group, place = 'END')
+{
     let groupsItem = document.createElement('div');
     groupsItem.className = 'group';
     groupsItem.title = group.name;
@@ -392,7 +396,8 @@ const showChat = (urlParams, bdChatName, type) => {
 
 
 /** показать на странице получателя пересылаемого сообщения*/
-function showForwardedMessageRecipient(contactDomElem) {
+function showForwardedMessageRecipient(contactDomElem)
+{
     let contactNameElem = contactDomElem.querySelector('.contact__name');
     if (contactNameElem) {
         forwardedMessageRecipientElement = contactDomElem;
@@ -407,7 +412,8 @@ function showForwardedMessageRecipient(contactDomElem) {
 }
 
 /** удаление DOM узлов участников текущего выбранного группового чата */
-function removeGroupPatricipantDOMElements() {
+function removeGroupPatricipantDOMElements()
+{
     let groupContactsElement = document.querySelector('.group__contacts');
     if (groupContactsElement) {
         groupContactsElement.remove();
@@ -423,7 +429,8 @@ function removeGroupPatricipantDOMElements() {
  * @param {*} type тип диалога
  * @returns
  */
-function setContactOrGroupClick(domElement, urlArg, type) {
+function setContactOrGroupClick(domElement, urlArg, type)
+{
     return function () {
         // если пересылается сообщение, показать, кому пересылается
         if (isForwaredMessage) {
@@ -469,7 +476,8 @@ function setContactOrGroupClick(domElement, urlArg, type) {
 
 
 /** Переотправить сообщение */
-function forwardMessage() {
+function forwardMessage()
+{
     sendData(selectedMessage.querySelector('.msg__text').innerHTML, 'FORWARD');
 
     forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
@@ -480,7 +488,8 @@ function forwardMessage() {
 }
 
 /** Отменяет пересылку сообщения */
-function resetForwardMessage() {
+function resetForwardMessage()
+{
     forwardBtnBlock.classList.remove('btn-resend-block_active');
     isForwaredMessage = null;
     selectedMessage = null;
@@ -494,14 +503,16 @@ function resetForwardMessage() {
 
 // ----- Контекстное меню
 /** показать контекстное меню */
-function showContextMenu(contextMenu, event) {
+function showContextMenu(contextMenu, event)
+{
     contextMenu.style.left = event.pageX + 'px';
     contextMenu.style.top = event.pageY + 'px';
     contextMenu.style.display = 'block';
 }
 
 /** скрыть контекстное меню*/
-function hideContextMenu() {
+function hideContextMenu()
+{
     msgContextMenu.style.left = '0px';
     msgContextMenu.style.top = '1000px';
     msgContextMenu.style.display = 'none';
@@ -511,7 +522,8 @@ function hideContextMenu() {
 }
 
 /** контекстное меню: изменить сообщение */
-function editMessageContextMenu() {
+function editMessageContextMenu()
+{
     isEditMessage = true;
     hideContextMenu();
     messageInput.value = selectedMessage.querySelector('.msg__text').innerHTML;
@@ -519,7 +531,8 @@ function editMessageContextMenu() {
 }
 
 /** контекстное меню: удалить сообщение  */
-function removeMessageContextMenu() {
+function removeMessageContextMenu()
+{
     let msg = selectedMessage.querySelector('.msg__text').innerHTML;
     sendData(msg, 'REMOVE');
     selectedMessage = null;
@@ -527,14 +540,16 @@ function removeMessageContextMenu() {
 }
 
 /** контекстное меню: переотправить сообщение */
-function forwardMessageContextMenu() {
+function forwardMessageContextMenu()
+{
     hideContextMenu();
     isForwaredMessage = true;
     forwardBtnBlock.classList.add('btn-resend-block_active');
 }
 
 /** контекстное меню: включить/отключить уведомления */
-function editNoticeShowContextMenu() {
+function editNoticeShowContextMenu()
+{
     // создание пакета с id чата, значением о показе уведомлений
     let data = {};
 
@@ -580,7 +595,8 @@ function editNoticeShowContextMenu() {
 }
 
 /** контекстное меню: удалить контакт/групповой чат */
-function removeContactContextMenu() {
+function removeContactContextMenu()
+{
     let urlParams = new URLSearchParams();
     urlParams.set('name', selectedContact.title);
     urlParams.set('type', selectedContact.className === 'group' ? 'group' : 'contact');

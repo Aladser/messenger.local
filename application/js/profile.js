@@ -23,9 +23,11 @@ let randomNumber = Math.round(Math.random() * 100000);
 
 
 /** изменить видимость кнопки Сохранить при переключении чекбокса скрытия почты */
-function changeHideEmailInputVisibility(input, btn) {
+function changeHideEmailInputVisibility(input, btn)
+{
     let startState = input.checked; // изначальное состояние чекбокса скрытия почты
-    return function func() {
+    return function func()
+    {
         if (input.checked !== startState) {
             btn.classList.remove('d-none');
         } else {
@@ -35,9 +37,11 @@ function changeHideEmailInputVisibility(input, btn) {
 }
 
 /** проверить введенный никнейм */
-function writeNickname(input, btn) {
+function writeNickname(input, btn)
+{
     let startValue = input.value; // изначальный никнейм
-    return function func() {
+    return function func()
+    {
         if (input.value !== startValue) {
             let data = new URLSearchParams();
             data.set('nickname', input.value);
@@ -48,7 +52,6 @@ function writeNickname(input, btn) {
                 inputNickname.classList.add('input-nickname-error');
                 prgError.classList.remove('d-none');
                 prgError.innerHTML = 'Логин не должен содержать кирриллицу или быть пустым';
-                return;
             } else {
                 // проверить уникальность никнейма
                 inputNickname.classList.remove('input-nickname-error');
@@ -150,9 +153,9 @@ saveBtn.addEventListener('click', () => {
         saveBtn.classList.add('d-none');
     });
 
-    if (inputNickname.value.trim() !== '') {
-        hideEmailInputBlock.classList.remove('d-none');
-    }
+if (inputNickname.value.trim() !== '') {
+    hideEmailInputBlock.classList.remove('d-none');
+}
 });
 
 window.addEventListener('DOMContentLoaded', () => {

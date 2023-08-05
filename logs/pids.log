@@ -1,3 +1,0 @@
-www-data    4367  0.3  0.3  90900 30388 ?        S    09:21   0:00 php /var/www/messenger.local/application/chat-server.php
-www-data    4380  0.0  0.0   2888  1536 ?        S    09:21   0:00 sh -c ps aux | grep chat-server > /var/www/messenger.local/logs/pids.log
-www-data    4382  0.0  0.0  17712  2304 ?        R    09:21   0:00 grep chat-server

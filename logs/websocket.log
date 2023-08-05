@@ -1,0 +1,12 @@
+
+Warning: file_put_contents(C:\domains\messenger.local/logs/websocket.log): Failed to open stream: Resource temporarily unavailable in C:\domains\messenger.local\application\chat-server.php on line 15
+{"messageOnconnection":1,"author":"sendlyamobile@gmail.com","wsId":62}
+Connection sendlyamobile@gmail.com completed
+{"messageOnconnection":1,"author":"sendlyamobile@gmail.com","wsId":101}
+Connection sendlyamobile@gmail.com completed
+{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":111}
+Connection aladser@mail.ru completed
+{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":121}
+Connection aladser@mail.ru completed
+{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":131}
+Connection aladser@mail.ru completed
