@@ -84,8 +84,8 @@ let webSocket = new WebSocket(wsUri);
 webSocket.onerror = () => systemMessagePrg.innerHTML = 'Ошибка подключения к серверу';
 webSocket.onmessage = e => {
     let data = JSON.parse(e.data);
-    console.clear();
-    console.log(data);
+    //console.clear();
+    //console.log(data);
 
     // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу 
     if (data.onconnection) {

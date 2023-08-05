@@ -21,5 +21,6 @@ $logFilepath =  dirname(__DIR__, 1) . '/logs/websocket.log';
 if (!$isWebSocket) {
     exec("php $filepath > $logFilepath &");
 }
+// php /var/www/messenger.local/application/chat-server.php > /var/www/messenger.local/logs/websocket.log &
 
 Route::start();

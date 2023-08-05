@@ -9,9 +9,10 @@ class UploadFileModel extends Model
 {
     public function run()
     {
+        $infoMsg = 'Размер файла превышает ' . ini_get('upload_max_filesize') . 'б';
         // проверка размера файла
         if (!array_key_exists('image', $_FILES)) {
-            echo 'Размер файла превышает 10 Мб';
+            echo $infoMsg;
             return;
         }
 
@@ -36,7 +37,9 @@ class UploadFileModel extends Model
         $toPath = $dwlDirPath.$filename; // куда перемещается
 
         // перемещение изображения в папку профилей
-        echo move_uploaded_file($fromPath, $toPath) ? json_encode(['image' => $filename]) : 'Ошибка загрузки файлов';
+        //echo ini_get('upload_max_filesize');
+        //echo ini_get('post_max_size');
+        echo move_uploaded_file($fromPath, $toPath) ? json_encode(['image' => $filename]) : $infoMsg;
 
         // удаление предыдущих вариантов изображения
         if ($number) {
