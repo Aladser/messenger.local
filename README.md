@@ -62,6 +62,7 @@
 * Включить перенаправление URL-адресов
 ``sudo a2enmod rewrite``
 * Записать в etc/apache2/sites-available/messenger.local.conf
+  
 ``
 <VirtualHost *:80>
 ServerName messenger.local
