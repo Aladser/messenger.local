@@ -65,14 +65,24 @@
   
 ``
 <VirtualHost *:80>
+
 ServerName messenger.local
+
 DocumentRoot /var/www/messenger.local
+
 ErrorLog /var/www/messenger.local/logs/error.log
+
 CustomLog /var/www/messenger.local/logs/access.log combined
+
         <Directory /var/www/messenger.local>
+        
                 Options Indexes FollowSymLinks
+                
                 AllowOverride All
+                
                 Require all granted
+                
         </Directory>
+        
 </VirtualHost>
 ``
