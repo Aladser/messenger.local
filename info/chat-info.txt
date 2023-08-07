@@ -1,3 +1,0 @@
-запуск демона
-cd C:\domains\messenger.local\application\core\chat
-php chat-server.php

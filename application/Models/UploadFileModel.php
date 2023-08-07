@@ -21,7 +21,12 @@ class UploadFileModel extends Model
         $ext = explode('.', $_FILES['image']['name'])[1];
 
         // поиск других загрузок изображений этого профиля и установка нового имени файла
-        $dwlDirPath = dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR; // папка, куда перемещается изображение из $_POST
+
+        // папка, куда перемещается изображение из $_POST
+        $dwlDirPath = dirname(__DIR__, 1)
+            . DIRECTORY_SEPARATOR
+            . 'data' . DIRECTORY_SEPARATOR
+            . 'temp' . DIRECTORY_SEPARATOR;
         $dwlFiles = glob($dwlDirPath . $email . '*'); // поиск файлов по шаблону
         $number = false;
         if (count($dwlFiles) == 0) {

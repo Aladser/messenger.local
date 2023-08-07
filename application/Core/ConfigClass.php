@@ -114,7 +114,7 @@ class ConfigClass
         return new MessageDBTableModel($this->dbQueryCtl);
     }
 
-    public function getWebsocketProcess(): ScriptLinuxProcess 
+    public function getWebsocketProcess(): ScriptLinuxProcess
     {
         return new ScriptLinuxProcess(
             $this->websocketProcessName,

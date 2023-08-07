@@ -1,7 +1,7 @@
 # messenger.local
 
 * Сайт сделан на основе **MVC-фреймворка** в *Linux Ubuntu 22.02*.
-* Бэк-часть: **PHP 7.4**.
+* Бэк-часть: **PHP 8.1**.
 * Фронт-часть: чистый **JavaScript**, **Bootstrap** CSS и чистый **CSS**.
 * В качестве асинхронного общения между клиентом и сервером используется **вебсокет**: встроенная **JS-библиотека** и **PHP Ratchet**.
 Обмен сообщениями вебсокета происходит с помощью бэк-класса *Aladser\Core\Chat* и фронт-файла *chats.js*
@@ -55,3 +55,23 @@
 * Для защиты от SQL-инъекций используются подготовленные запросы PHP PDO.
 * Для защиты от XSS-атак используется экранирование символов при отправке каких-либо данных. В сообщениях можно увидеть HTML-код.
 
+### Настройка запуска
+
+* Установить модуль:
+``apt-get install php8.1-mysql``
+* Включить перенаправление URL-адресов
+``sudo a2enmod rewrite``
+* Записать в etc/apache2/sites-available/messenger.local.conf
+``
+<VirtualHost *:80>
+ServerName messenger.local
+DocumentRoot /var/www/messenger.local
+ErrorLog /var/www/messenger.local/logs/error.log
+CustomLog /var/www/messenger.local/logs/access.log combined
+        <Directory /var/www/messenger.local>
+                Options Indexes FollowSymLinks
+                AllowOverride All
+                Require all granted
+        </Directory>
+</VirtualHost>
+``
