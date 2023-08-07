@@ -59,8 +59,6 @@
 
 * Установить модуль:
 ``apt-get install php8.1-mysql``
-* Включить перенаправление URL-адресов
-``sudo a2enmod rewrite``
 * Записать в etc/apache2/sites-available/messenger.local.conf
 
 ```
@@ -76,3 +74,5 @@
         </Directory>      
 </VirtualHost>
 ```
+* Включить перенаправление URL-адресов
+``sudo a2enmod rewrite``
