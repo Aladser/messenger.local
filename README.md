@@ -62,8 +62,6 @@
 * Включить перенаправление URL-адресов
 ``sudo a2enmod rewrite``
 * Записать в etc/apache2/sites-available/messenger.local.conf
-  
-``
 
 <VirtualHost *:80>
 
@@ -86,5 +84,3 @@ CustomLog /var/www/messenger.local/logs/access.log combined
         </Directory>
         
 </VirtualHost>
-
-``
