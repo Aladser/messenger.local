@@ -15,7 +15,6 @@
   + MessageDBTableModel - модель БД таблицы сообщений
   + ContactsDBTableModel- модель БД таблицы контактов
   + ConnectionsDBTableModel - модель БД таблицы соединений пользователей
-* Автозагрузка классов сайта, библиотек Ratchet и phpmailer производится через composer
 * *boostrap.php* - запуск сайта и бэка вебсокета, *chat-server.php* - работа бэк-вебсокета
 * Изображения профилей хранятся в */application/data/profile_photos*. Когда выбирается файл изображения в проводнике, временно файл загружается в */application/data/temp*. При сохранении
   файл перемещается в profile_photos
