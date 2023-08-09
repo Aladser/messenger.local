@@ -7,7 +7,7 @@ class DBTableModel
 {
     protected $db;
 
-    public function __construct(DBQueryCtl $db)
+    public function __construct(DBQueryClass $db)
     {
         $this->db = $db;
     }

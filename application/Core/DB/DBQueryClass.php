@@ -6,7 +6,7 @@ use PDO;
 use PDOException;
 
 /** Класс запросов в БД на основе PDO */
-class DBQueryCtl
+class DBQueryClass
 {
     private $dbConnection;
     private $host;

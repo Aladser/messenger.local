@@ -4,7 +4,7 @@ namespace Aladser\Core;
 
 use Aladser\Core\DB\ConnectionsDBTableModel;
 use Aladser\Core\DB\ContactsDBTableModel;
-use Aladser\Core\DB\DBQueryCtl;
+use Aladser\Core\DB\DBQueryClass;
 use Aladser\Core\DB\MessageDBTableModel;
 use Aladser\Core\DB\UsersDBTableModel;
 use Aladser\Core\ScriptLinuxProcess;
@@ -36,7 +36,7 @@ class ConfigClass
 
     public function __construct()
     {
-        $this->dbQueryCtl = new DBQueryCtl(
+        $this->dbQueryCtl = new DBQueryClass(
             self::HOST_DB,
             self::NAME_DB,
             self::USER_DB,
