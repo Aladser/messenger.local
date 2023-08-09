@@ -108,6 +108,7 @@ webSocket.onmessage = e => {
         systemMessagePrg.innerHTML = `${data.user} не в сети`;
     } else {
         // уведомления о новых сообщениях чатов
+        
         // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
         if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== publicClientUsername) {
             let foundedContactChat = contactList.find(el => el.chat == data.chat); // поиск чата среди списка чатов контактов

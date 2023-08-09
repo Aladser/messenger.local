@@ -112,6 +112,7 @@ class ConfigClass
         return new MessageDBTableModel($this->dbQueryCtl);
     }
 
+    /** получить linux-процесс скрипта */
     public function getWebsocketProcess(): ScriptLinuxProcess
     {
         return new ScriptLinuxProcess(
@@ -120,5 +121,12 @@ class ConfigClass
             $this->websocketProcessLogFile,
             $this->pidsListFile
         );
+    }
+
+    /** очистить логи вебсокета */
+    public function clearLogs()
+    {
+        file_put_contents($this->websocketProcessLogFile, '');
+        file_put_contents($this->pidsListFile, '');
     }
 }

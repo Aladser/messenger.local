@@ -27,7 +27,6 @@ class ScriptLinuxProcess
         $this->processLogFile = $processLogFilepath;
         $this->pidsParseFile = $pidParseFilepath;
         $this->PID = $this->findPID();
-        file_put_contents($this->processLogFile, '');
     }
 
     /** проверить наличие процесса */

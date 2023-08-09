@@ -33,7 +33,7 @@
 }
 
 .messages {
-    height: 83.5%;
+    height: 86%;
     padding-right: 0.5rem;
     overflow: auto;
     position: relative;
@@ -65,10 +65,10 @@
 /* контакты */
 .contact {
     border-radius: 3px;
+    cursor: pointer;
     overflow: hidden;
     text-overflow: clip;
     white-space: nowrap;
-    cursor: pointer;
 }
 
 .contact-recipient {
@@ -129,8 +129,11 @@
     padding: 0.4rem;
     padding-bottom: 0.2rem;
     cursor: pointer;
-    white-space: nowrap;
     position: relative;
+
+    overflow: hidden;
+    text-overflow: clip;
+    white-space: nowrap;
 }
 
 .group:hover {

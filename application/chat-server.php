@@ -15,6 +15,7 @@ $CONFIG = new ConfigClass();
 $users = $CONFIG->getUsers();
 $connections = $CONFIG->getConnections();
 $messages = $CONFIG->getMessageDBTable();
+$CONFIG->clearLogs();
 
 $server = IoServer::factory(
     new HttpServer(

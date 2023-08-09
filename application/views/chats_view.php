@@ -11,13 +11,11 @@
             <div id='contacts'></div>
             <div class='btn-resend-block' id='btn-resend-block'>
                 <button class='btn-resend' id='btn-resend' disabled>
-                    <div class='btn-resend__img-block'><img src="application/images/resend.png" class='img'
-                                                            title='Переслать'></div>
+                    <div class='btn-resend__img-block'><img src="application/images/resend.png" class='img' title='Переслать'></div>
                     <span class='btn-resend__name'>Переслать</span>
                 </button>
                 <button class='btn-resend' id='btn-resend-reset'>
-                    <div class='btn-resend__img-block'><img src="application/images/cancel.png" class='img'
-                                                            title='Отменить'></div>
+                    <div class='btn-resend__img-block'><img src="application/images/cancel.png" class='img' title='Отменить'></div>
                     <span class='btn-resend__name'>Отменить</span>
                 </button>
             </div>
@@ -31,15 +29,12 @@
             <span class='chat-username' id='chat-username'></span>
         </p>
 
-        <div class='messages' id='messages'>
-        </div>
+        <div class='messages' id='messages'></div>
 
         <p class="messages-container__system" id="message-system">Проверка подключения</p>
         <div class='input-group d-flex justify-content-between pb-2'>
-            <textarea class="messages-container__message-input input-group-prepend border-0 form-control" rows='2'
-                      placeholder='Сообщение' id='message-input' disabled></textarea>
-            <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn" disabled><img
-                    src="application/images/sendbtn.png"></button>
+            <textarea class="messages-container__message-input input-group-prepend border-0 form-control" rows='2'placeholder='Сообщение' id='message-input' disabled></textarea>
+            <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn" disabled><img src="application/images/sendbtn.png"></button>
         </div>
     </div>
 
@@ -71,7 +66,6 @@
                 <span class='option-name'>Выйти</span>
             </a>
         </div>
-
     </div>
 </div>
 
