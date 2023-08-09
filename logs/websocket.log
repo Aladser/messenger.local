@@ -1,6 +1,22 @@
-{"onconnection":59}
-{"messageOnconnection":1,"author":"Admin","wsId":59}
-{"message":"1","author":"Admin","chat":1,"chatType":"dialog","messageType":"NEW","time":"2023-08-09 11:56:05","msg":"52"}
-{"msg":"52","chat":"1","message":"111","time":"2023-08-09 11:56:05","messageType":"EDIT"}
-{"msg":"52","chat":"1","messageType":"REMOVE"}
+{"onconnection":56}
+{"messageOnconnection":1,"author":"Admin","wsId":56}
+{"msg":"58","chat":"1","messageType":"REMOVE"}
+Connection Admin completed
+{"onconnection":96}
+{"messageOnconnection":1,"author":"Admin","wsId":96}
+Connection Admin completed
+{"onconnection":104}
+{"messageOnconnection":1,"author":"Admin","wsId":104}
+{"message":"1","author":"Admin","chat":1,"chatType":"dialog","messageType":"NEW","time":"2023-08-09 18:17:03","msg":"59"}
+Connection Admin completed
+{"onconnection":113}
+{"messageOnconnection":1,"author":"Admin","wsId":113}
+{"msg":"59","chat":"1","message":"11","time":"2023-08-09 18:17:03","messageType":"EDIT"}
+{"msg":"59","chat":"1","messageType":"REMOVE"}
+Connection Admin completed
+{"onconnection":125}
+{"messageOnconnection":1,"author":"Admin","wsId":125}
+Connection Admin completed
+{"onconnection":133}
+{"messageOnconnection":1,"author":"Admin","wsId":133}
 Connection Admin completed

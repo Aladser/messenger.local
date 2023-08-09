@@ -22,7 +22,6 @@ class DBQueryClass
         $this->passwordDB = $passwordDB;
     }
 
-
     private function connect()
     {
         try {
@@ -41,9 +40,7 @@ class DBQueryClass
         $this->dbConnection = null;
     }
 
-
-    /**
-     * выполняет подготовленный запрос
+    /** выполняет подготовленный запрос
      * @param string $sql sql-запрос
      * @param array $args массив переменных запроса
      * @param bool $isOneValue одно или множество запрашиваемых полей
@@ -58,8 +55,7 @@ class DBQueryClass
         return $isOneValue ? $stmt->fetch(PDO::FETCH_ASSOC) : $stmt->fetchAll();
     }
 
-    /**
-     * выполняет запрос
+    /** выполняет запрос
      * @param string $sql запрос
      * @param bool $isOneValue одно или множество запрашиваемых полей
      * @return mixed массив строк или одно значение
@@ -72,9 +68,7 @@ class DBQueryClass
         return $isOneValue ? $query->fetch(PDO::FETCH_ASSOC) : $query->fetchAll();
     }
 
-
-    /**
-     * выполняет изменения данных
+    /** выполняет изменения данных
      * @param string $sql запрос
      * @return mixed число измененных строк
      */
@@ -86,8 +80,7 @@ class DBQueryClass
         return $numRows;
     }
 
-    /**
-     * выполняет процедуру с возвращаемым результатом
+    /** выполняет процедуру с возвращаемым результатом
      * @param mixed $sql выражение
      * @param mixed $out выходная переменная, куда будет возвращен результат
      */

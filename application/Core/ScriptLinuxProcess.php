@@ -40,6 +40,7 @@ class ScriptLinuxProcess
     /** создает процесс */
     public function enable()
     {
+        $this->clearLogs();
         exec("php $this->processFile > $this->processLogFile &");
         $this->PID = $this->findPID();
     }
@@ -63,5 +64,12 @@ class ScriptLinuxProcess
             }
         }
         return -1;
+    }
+
+    /** очистить логи вебсокета */
+    public function clearLogs()
+    {
+        file_put_contents($this->processLogFile, '');
+        file_put_contents($this->pidsParseFile, '');
     }
 }

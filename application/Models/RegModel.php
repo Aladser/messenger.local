@@ -3,6 +3,8 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\EMailSender;
+use Aladser\Core\ConfigClass;
 
 /***** Класс регистрации пользователя ****/
 class RegModel extends Model
@@ -13,7 +15,15 @@ class RegModel extends Model
     public function __construct($CONFIG)
     {
         $this->userTable = $CONFIG->getUsers();
-        $this->eMailSender = $CONFIG->getEmailSender();
+        $this->eMailSender = new EMailSender(
+            ConfigClass::SMTP_SRV,
+            ConfigClass::EMAIL_USERNAME,
+            ConfigClass::EMAIL_PASSWORD,
+            ConfigClass::SMTP_SECURE,
+            ConfigClass::SMTP_PORT,
+            ConfigClass::EMAIL_SENDER,
+            ConfigClass::EMAIL_SENDER_NAME
+        );
     }
 
     public function run()

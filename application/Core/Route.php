@@ -2,6 +2,9 @@
 
 namespace Aladser\Core;
 
+use Aladser\Core\DB\DBCtl;
+use Aladser\Core\ConfigClass;
+
 class Route
 {
     public static function start()
@@ -80,7 +83,7 @@ class Route
         $model = null;
         if (file_exists($model_path)) {
             $model_name = "\\Aladser\\Models\\$model_name";
-            $model = new $model_name(new ConfigClass());
+            $model = new $model_name(new DBCtl(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB));
         }
 
         // создаем контроллер
