@@ -48,6 +48,8 @@ class ConfigClass
         $this->pidsListFile = dirname(__DIR__, 2).'/logs/pids.log';
     }
 
+
+    
     /**
      * Возвращает класс запросов БД
      * @return DBQueryCtl

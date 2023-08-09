@@ -7,11 +7,11 @@ class ScriptLinuxProcess
 {
     /** имя процесса */
     private $processName;
-    /** путь к скрипту-процессу  */
+    /** путь скрипта */
     private $processFile;
     /** путь к логам процесса */
     private $processLogFile;
-    /** путь к фйлу парсинга процессов Linux */
+    /** путь к файлу парсинга процессов Linux */
     private $pidsParseFile;
     /** PID процесса */
     private $PID;

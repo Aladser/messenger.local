@@ -14,9 +14,7 @@ class Chat implements MessageComponentInterface
     private $clients;           // хранение всех подключенных пользователей
     private $connectionsTable;  // таблица подключений
     private $messageTable;      // таблица сообщений
-    private $usersTable;      // таблица сообщений
-    private $logFile;
-    private $logfileContent;
+    private $usersTable;      //
 
     public function __construct(
         ConnectionsDBTableModel $connectionsTable,
@@ -28,9 +26,6 @@ class Chat implements MessageComponentInterface
         $this->messageTable = $messageTable;
         $this->usersTable = $usersTable;
         $this->connectionsTable->removeConnections(); // удаление старых соединений
-        // обнуления содержания файла логов
-        $this->logFile = dirname(__DIR__, 1) . '/logs.txt';
-        file_put_contents($this->logFile, "");
     }
 
     /**
@@ -41,6 +36,7 @@ class Chat implements MessageComponentInterface
     {
         $this->clients->attach($conn); // добавление клиента
         $message = json_encode(['onconnection' => $conn->resourceId]);
+        echo "$message\n";
         foreach ($this->clients as $client) {
             $client->send($message); // рассылка остальным клиентам
         }
@@ -58,7 +54,6 @@ class Chat implements MessageComponentInterface
         // удаление соединения из БД
         $this->connectionsTable->removeConnection($conn->resourceId);
         echo "Connection $publicUsername completed\n";
-        $this->writeLog("Connection $publicUsername completed");
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
         foreach ($this->clients as $client) {
             $client->send($message);
@@ -102,11 +97,9 @@ class Chat implements MessageComponentInterface
                 $data->msg = $this->messageTable->addForwardedMessage($data);
             }
         }
-        // htmlspecialchars("<a href='test'>Test</a>", ENT_QUOTES)
 
         $msg = json_encode($data);
-        echo $msg . "\n";
-        $this->writeLog($msg);
+        echo "$msg\n";
         foreach ($this->clients as $client) {
             $client->send($msg);
         }
@@ -119,16 +112,7 @@ class Chat implements MessageComponentInterface
      */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
-        $this->writeLog("error: {$e->getMessage()}");
+        echo "error: {$e->getMessage()}\n";
         $conn->close();
-    }
-
-    /**
-     * Запись логов
-     * @param mixed $message лог
-     */
-    public function writeLog($message)
-    {
-        file_put_contents($this->logFile, $message . "\n", FILE_APPEND | LOCK_EX);
     }
 }
