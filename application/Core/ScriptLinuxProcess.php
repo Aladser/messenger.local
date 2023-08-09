@@ -42,7 +42,6 @@ class ScriptLinuxProcess
     public function enable()
     {
         exec("php $this->processFile > $this->processLogFile &");
-        echo "php $this->processFile > $this->processLogFile &";
         $this->PID = $this->findPID();
     }
 

@@ -12,30 +12,27 @@ use Aladser\Core\ScriptLinuxProcess;
 class ConfigClass
 {
     // подключение к БД
-    private const HOST_DB = 'localhost';
-    private const NAME_DB = 'messenger';
-    private const USER_DB = 'admin';
-    private const PASS_DB = '@admin@';
+    public const HOST_DB = 'localhost';
+    public const NAME_DB = 'messenger';
+    public const USER_DB = 'admin';
+    public const PASS_DB = '@admin@';
 
     // настройки почтового сервера
-    private const SMTP_SRV = 'smtp.mail.ru';
-    private const EMAIL_USERNAME = 'aladser@mail.ru';
-    private const EMAIL_PASSWORD = 'BEt7tei0Nc2YhK4s1jix';
-    private const SMTP_SECURE = 'ssl';
-    private const SMTP_PORT = 465;
-    private const EMAIL_SENDER = 'aladser@mail.ru';
-    private const EMAIL_SENDER_NAME = 'Messenger Admin';
-
-    // класс запросов к БД
-    private $dbQueryCtl;
+    public const SMTP_SRV = 'smtp.mail.ru';
+    public const EMAIL_USERNAME = 'aladser@mail.ru';
+    public const EMAIL_PASSWORD = 'BEt7tei0Nc2YhK4s1jix';
+    public const SMTP_SECURE = 'ssl';
+    public const SMTP_PORT = 465;
+    public const EMAIL_SENDER = 'aladser@mail.ru';
+    public const EMAIL_SENDER_NAME = 'Messenger Admin';
 
     // демон вебсокета сообщений
-    private $websocketProcessName;
+    public const CHAT_WS_PORT = 8888;
+    public const SITE_ADDR = '127.0.0.1';
+    public const WEBSOCKET_PROCESSNAME = 'chat-server';
     private $websocketProcessFile;
     private $websocketProcessLogFile;
     private $pidsListFile;
-    public const CHAT_WS_PORT = 8888;
-    public const SITE_ADDR = '127.0.0.1';
 
     public function __construct()
     {
@@ -46,7 +43,6 @@ class ConfigClass
             self::PASS_DB
         );
 
-        $this->websocketProcessName = 'chat-server';
         $this->websocketProcessFile = dirname(__DIR__, 1) . '/chat-server.php';
         $this->websocketProcessLogFile = dirname(__DIR__, 2) . '/logs/websocket.log';
         $this->pidsListFile = dirname(__DIR__, 2).'/logs/pids.log';
@@ -117,7 +113,7 @@ class ConfigClass
     public function getWebsocketProcess(): ScriptLinuxProcess
     {
         return new ScriptLinuxProcess(
-            $this->websocketProcessName,
+            self::WEBSOCKET_PROCESSNAME,
             $this->websocketProcessFile,
             $this->websocketProcessLogFile,
             $this->pidsListFile
