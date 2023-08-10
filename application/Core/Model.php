@@ -2,9 +2,26 @@
 
 namespace Aladser\Core;
 
-use Exception;
 
-abstract class Model
+use Exception;
+use Aladser\Core\DB\DBCtl;
+
+class Model
 {
-    abstract public function run();
+    protected DBCtl $dbCtl;
+
+    public function __construct(DBCtl $dbCtl)
+    {
+        $this->dbCtl = $dbCtl;
+    }
+
+    public function getUserId($userEmail)
+    {
+        return $this->dbCtl->getUsers()->getUserId($userEmail);
+    }
+
+    public function getPublicName($userEmail)
+    {
+        return $this->dbCtl->getUsers()->getPublicUsernameFromEmail($userEmail);
+    }
 }

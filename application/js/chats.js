@@ -154,8 +154,7 @@ webSocket.onmessage = e => {
 };
 
 
-/**
- * Отправить сообщение на сервер
+/** Отправить сообщение на сервер
  * @param message текст сообщения
  * @param messageType тип сообщения: NEW, EDIT, REMOVE или FORWARD
  */
@@ -275,8 +274,7 @@ function appendContactDOMElement(contact)
     contactsContainer.append(contactBlock);
 }
 
-/**
- * создать DOM-элемент группового чата списка групповых чатов
+/** создать DOM-элемент группового чата списка групповых чатов
  * @param {*} group БД данные группы
  * @param {*} place куда добавить: START - начало списка, END - конец
  */
@@ -310,7 +308,6 @@ const showContacts = () => fetch('/get-contacts').then(r => r.json()).then(data 
         contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
         appendContactDOMElement(contact);
     });
-    // console.log(data);
 });
 
 /** показать групповые чаты пользователя-клиента */
@@ -320,7 +317,6 @@ const showGroups = () => fetch('/get-groups').then(r => r.json()).then(data => {
         groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
         appendGroupDOMElement(group);
     });
-    // console.log(data);
 });
 
 
@@ -466,7 +462,10 @@ function setContactOrGroupClick(domElement, urlArg, type)
             urlParams.set('discussionid', urlArg);
             removeGroupPatricipantDOMElements();
             showGroupRecipients(domElement, urlArg) // показать участников группового чата
-            groupChatName = groupList.find(el => el.chat == urlArg).name;
+            let groupChat = groupList.find(el => el.chat == urlArg);
+            if (groupChat !== undefined) {
+                groupChatName = groupChat.name;
+            }
         } else {
             return;
         }
@@ -619,9 +618,7 @@ window.addEventListener('DOMContentLoaded', () => {
     showContacts();
     showGroups();
     // создание группового чата
-    createGroupOption.onclick = () => fetch('/create-group')
-        .then(r => r.json())
-        .then(data => appendGroupDOMElement(data, 'START'));
+    createGroupOption.onclick = () => fetch('/create-group').then(r => r.json()).then(data => appendGroupDOMElement(data, 'START'));
 
     // запрет контекстного меню
     document.oncontextmenu = function () {
