@@ -14,7 +14,7 @@ class Chat implements MessageComponentInterface
     private $clients;           // хранение всех подключенных пользователей
     private $connectionsTable;  // таблица подключений
     private $messageTable;      // таблица сообщений
-    private $usersTable;      //
+    private $usersTable;        // таблица пользователей
 
     public function __construct(
         ConnectionsDBTableModel $connectionsTable,
@@ -28,8 +28,7 @@ class Chat implements MessageComponentInterface
         $this->connectionsTable->removeConnections(); // удаление старых соединений
     }
 
-    /**
-     * открыть соединение
+    /** открыть соединение
      * @param ConnectionInterface $conn соединение
      */
     public function onOpen(ConnectionInterface $conn)
@@ -42,8 +41,7 @@ class Chat implements MessageComponentInterface
         }
     }
 
-    /**
-     * закрыть соединение
+    /** закрыть соединение
      * @param ConnectionInterface $conn соединение
      */
     public function onClose(ConnectionInterface $conn)
@@ -60,8 +58,7 @@ class Chat implements MessageComponentInterface
         }
     }
 
-    /**
-     * получить соообщения от клиентов
+    /** получить/отправить соообщения
      * @param ConnectionInterface $from соединение
      * @param mixed $msg сообщение
      */

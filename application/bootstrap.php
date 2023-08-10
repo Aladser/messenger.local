@@ -15,8 +15,11 @@ $websocket = new ScriptLinuxProcess(
     ConfigClass::getWebsocketProcessLogFile(),
     ConfigClass::getPidsListFile()
 );
-if (!$websocket->isActive()){
+if (!$websocket->isActive()) {
     $websocket->enable();
+    // чистка логов веб-сервера
+    file_put_contents(dirname(__DIR__, 1) . '/logs/access.log', '');
+    file_put_contents(dirname(__DIR__, 1) . '/logs/error.log', '');
 }
 
 Route::start();
