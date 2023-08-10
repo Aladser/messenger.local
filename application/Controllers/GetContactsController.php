@@ -9,6 +9,8 @@ class GetContactsController extends Controller
 {
     public function actionIndex()
     {
-        $this->model->run();
+        $email = Controller::getUserMailFromClient();
+        $userId = $this->model->getUserId($email);
+        echo json_encode($this->model->getContacts($userId));
     }
 }

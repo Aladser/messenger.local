@@ -300,7 +300,8 @@ function appendGroupDOMElement(group, place = 'END')
 
 
 /** показать контакты пользователя-клиента*/
-const showContacts = () => fetch('/get-contacts').then(r => r.json()).then(data => {
+const showContacts = () => fetch('/get-contacts').then(r => r.text()).then(data => {
+    data = JSON.parse(data);
     findContactsInput.value = '';
     contactsContainer.innerHTML = '';
     contactList = [];
@@ -722,7 +723,6 @@ window.oncontextmenu = event => {
 
 // нажатия левой кнопкой мыши на странице
 window.onclick = event => {
-    showContacts();
     if (event.target.className !== 'list-group-item') {
         hideContextMenu();
     }

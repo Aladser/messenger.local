@@ -9,6 +9,11 @@ class GetGroupContactsController extends Controller
 {
     public function actionIndex()
     {
-        $this->model->run();
+        $discussionId = $_POST['discussionid'];
+        $creatorId = $this->model->getDiscussionCreatorId($discussionId);
+        echo json_encode([
+            'participants' => $this->model->getGroupContacts($discussionId),
+            'creatorName' => $this->model->getPublicNameFromID($creatorId)
+        ]);
     }
 }

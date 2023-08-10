@@ -20,8 +20,13 @@ class Model
         return $this->dbCtl->getUsers()->getUserId($userEmail);
     }
 
-    public function getPublicName($userEmail)
+    public function getPublicName(string $userEmail)
     {
         return $this->dbCtl->getUsers()->getPublicUsernameFromEmail($userEmail);
+    }
+
+    public function getPublicNameFromID(int $id)
+    {
+        return $this->dbCtl->getUsers()->getPublicUsername($id);
     }
 }

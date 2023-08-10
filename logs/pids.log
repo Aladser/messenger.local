@@ -1,5 +1,4 @@
-www-data   17062  0.0  0.2 117584 19988 ?        S    09:38   0:00 php /var/www/messenger.local/application/chat-server.php
-www-data   36686  0.0  0.0   2888  1536 ?        S    14:19   0:00 sh -c ps aux | grep chat-server > /var/www/messenger.local/logs/pids.log
-www-data   36687  0.0  0.0   2888  1536 ?        S    14:19   0:00 sh -c ps aux | grep chat-server > /var/www/messenger.local/logs/pids.log
-www-data   36690  0.0  0.0  17712  2432 ?        S    14:19   0:00 grep chat-server
-www-data   36691  0.0  0.0  17712  2304 ?        R    14:19   0:00 grep chat-server
+www-data    8440  1.0  0.4 117452 32408 ?        S    16:38   0:00 php /var/www/messenger.local/application/chat-server.php
+www-data    8444  0.0  0.0   2888  1536 ?        S    16:38   0:00 sh -c ps aux | grep chat-server > /var/www/messenger.local/logs/pids.log
+www-data    8446  0.0  0.0  17712  2304 ?        S    16:38   0:00 grep chat-server
+www-data    8444  0.0  0.0   2888  1536 ?        S    16:38   0:00 sh -c ps aux | grep chat-server > /var/www/messenger.local/logs/pids.log
