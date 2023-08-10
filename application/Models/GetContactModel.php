@@ -21,12 +21,12 @@ class GetContactModel extends Model
     public function run()
     {
         // CSRF-проверка на подмену адреса
-        if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
             echo json_encode(['wrong_url' => 1]);
             exit;
         };
 
-        $userHostName = Model::getUserMailFromClient();                // имя клиента-хоста
+        $userHostName = Controller::getUserMailFromClient();                // имя клиента-хоста
         $userId = $this->usersTable->getUserId($userHostName);         // id клиента-хоста
         $contactId = $this->usersTable->getUserId($_POST['contact']);  // id клиента-контакта
 

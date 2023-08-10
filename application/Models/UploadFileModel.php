@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 /** Загрузка временного изображения на сервер  */
 class UploadFileModel extends Model
@@ -17,7 +18,7 @@ class UploadFileModel extends Model
         }
 
         // почта пользователя
-        $email = Model::getUserMailFromClient();
+        $email = Controller::getUserMailFromClient();
         $ext = explode('.', $_FILES['image']['name'])[1];
 
         // поиск других загрузок изображений этого профиля и установка нового имени файла

@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 /** Добавить контакт(чат) с пользователем */
 class ChatsModel extends Model
@@ -16,7 +17,7 @@ class ChatsModel extends Model
 
     public function run()
     {
-        $userEmail = Model::getUserMailFromClient();
+        $userEmail = Controller::getUserMailFromClient();
         $publicUsername = $this->userTable->getPublicUsernameFromEmail($userEmail);
         $userId = $this->userTable->getUserId($userEmail);
 
@@ -29,7 +30,7 @@ class ChatsModel extends Model
         $data['user-email'] = $userEmail;
         $data['publicUsername'] = $publicUsername;
         $data['userhostId'] = $userId;
-        $data['csrfToken'] = Model::createCSRFToken();
+        $data['csrfToken'] = Controller::createCSRFToken();
         return $data;
     }
 }

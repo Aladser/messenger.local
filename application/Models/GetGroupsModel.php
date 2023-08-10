@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 /** Получить группы пользователя */
 class GetGroupsModel extends Model
@@ -18,7 +19,7 @@ class GetGroupsModel extends Model
 
     public function run()
     {
-        $username = Model::getUserMailFromClient();
+        $username = Controller::getUserMailFromClient();
         $userId = $this->userTable->getUserId($username);
         echo json_encode($this->messageTable->getDiscussions($userId));
     }

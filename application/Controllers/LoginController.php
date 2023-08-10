@@ -25,7 +25,7 @@ class LoginController extends Controller
                 '',
                 'login.js',
                 'Месенджер: войти',
-                ['csrfToken' => Model::createCSRFToken()]
+                ['csrfToken' => Controller::createCSRFToken()]
             );
         }
     }

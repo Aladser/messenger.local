@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 /** Создать групповой чат */
 class CreateGroupModel extends Model
@@ -21,7 +22,7 @@ class CreateGroupModel extends Model
      */
     public function run()
     {
-        $userId = $this->userTable->getUserId(Model::getUserMailFromClient());
+        $userId = $this->userTable->getUserId(Controller::getUserMailFromClient());
         $data = $this->messageTable->createDiscussion($userId);
         echo json_encode($data);
     }

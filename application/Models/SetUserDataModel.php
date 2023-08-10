@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 /** Изменить пользовательские данные */
 class SetUserDataModel extends Model
@@ -17,12 +18,12 @@ class SetUserDataModel extends Model
     public function run()
     {
         // проверка на подмену адреса
-        if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
             echo 'подделка URL-адреса';
             return;
         };
 
-        $email = Model::getUserMailFromClient();
+        $email = Controller::getUserMailFromClient();
         $data['user_email'] = $email;
         $_POST['user_nickname'] = trim($_POST['user_nickname']);
         $data['user_nickname'] = $_POST['user_nickname'] == '' ? null : $_POST['user_nickname'];

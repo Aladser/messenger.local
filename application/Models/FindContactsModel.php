@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 /** Поиск контактов пользователя */
 class FindContactsModel extends Model
@@ -16,6 +17,6 @@ class FindContactsModel extends Model
 
     public function run()
     {
-        echo json_encode($this->users->getUsers($_POST['userphrase'], Model::getUserMailFromClient()));
+        echo json_encode($this->users->getUsers($_POST['userphrase'], Controller::getUserMailFromClient()));
     }
 }

@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 /** список сообщений чата с пользователем*/
 class GetMessagesModel extends Model
@@ -23,7 +24,7 @@ class GetMessagesModel extends Model
         $type = null;
         // диалоги
         if (isset($_POST['contact'])) {
-            $userHostName = Model::getUserMailFromClient();  // имя клиента-хоста
+            $userHostName = Controller::getUserMailFromClient();  // имя клиента-хоста
             $userId = $this->usersTable->getUserId($userHostName);                              // id клиента-хоста
             $contactId = $this->usersTable->getUserId($_POST['contact']);                        // id клиента-контакта
             $chatId = $this->messageTable->getDialogId($userId, $contactId);

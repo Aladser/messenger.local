@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 // Контакты пользователя
 class GetContactsModel extends Model
@@ -18,7 +19,7 @@ class GetContactsModel extends Model
 
     public function run()
     {
-        $email = Model::getUserMailFromClient();
+        $email = Controller::getUserMailFromClient();
         $userId = $this->usersTable->getUserId($email);
         echo json_encode($this->contactsTable->getContacts($userId));
     }

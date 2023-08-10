@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 /** АУТЕНТИФИКАЦИЯ И АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ */
 class LoginModel extends Model
@@ -16,7 +17,7 @@ class LoginModel extends Model
 
     public function run()
     {
-        if (!Model::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
             // проверка на подмену адреса
             echo 'Подмена URL-адреса';
         } elseif ($this->users->existsUser($_POST['email'])) {
