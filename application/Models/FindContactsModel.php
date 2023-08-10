@@ -8,15 +8,8 @@ use Aladser\Core\Controller;
 /** Поиск контактов пользователя */
 class FindContactsModel extends Model
 {
-    private $users;
-
-    public function __construct($CONFIG)
+    public function getUsers($userphrase)
     {
-        $this->users = $CONFIG->getUsers();
-    }
-
-    public function run()
-    {
-        echo json_encode($this->users->getUsers($_POST['userphrase'], Controller::getUserMailFromClient()));
+        return $this->dbCtl->getUsers()->getUsers($userphrase, Controller::getUserMailFromClient());
     }
 }

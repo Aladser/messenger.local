@@ -3,6 +3,7 @@
 namespace Aladser\Models;
 
 use Aladser\Core\Model;
+use Aladser\Core\Controller;
 
 // Контакты пользователя
 class GetContactModel extends Model

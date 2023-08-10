@@ -310,6 +310,16 @@ const showContacts = () => fetch('/get-contacts').then(r => r.json()).then(data 
     });
 });
 
+/** поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов */
+function findContacts(){
+    let urlParams = new URLSearchParams();
+    urlParams.set('userphrase', this.value);
+    fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
+        contactsContainer.innerHTML = '';
+        data.forEach(element => appendContactDOMElement(element));
+    });
+ }
+
 /** показать групповые чаты пользователя-клиента */
 const showGroups = () => fetch('/get-groups').then(r => r.json()).then(data => {
     groupList = [];
@@ -419,8 +429,7 @@ function removeGroupPatricipantDOMElements()
     contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.remove());
 }
 
-/**
- * НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
+/** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
  * @param {*} domElement DOM-элемент контакта или чата
  * @param {*} urlArg что ищется: контакт или групповой чат
  * @param {*} type тип диалога
@@ -501,7 +510,7 @@ function resetForwardMessage()
 }
 
 
-// ----- Контекстное меню
+// ***** Контекстное меню *****
 /** показать контекстное меню */
 function showContextMenu(contextMenu, event)
 {
@@ -626,14 +635,7 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
-    findContactsInput.addEventListener('input', function () {
-        const urlParams = new URLSearchParams();
-        urlParams.set('userphrase', this.value);
-        fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
-            contactsContainer.innerHTML = '';
-            data.forEach(element => appendContactDOMElement(element));
-        });
-    });
+    findContactsInput.addEventListener('input', findContacts);
 
     //----- ОТПРАВКА СООБЩЕНИЯ -----
     sendMsgBtn.onclick = () => sendData(messageInput.value, 'NEW');
@@ -720,6 +722,7 @@ window.oncontextmenu = event => {
 
 // нажатия левой кнопкой мыши на странице
 window.onclick = event => {
+    showContacts();
     if (event.target.className !== 'list-group-item') {
         hideContextMenu();
     }

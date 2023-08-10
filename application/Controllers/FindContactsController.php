@@ -9,6 +9,6 @@ class FindContactsController extends Controller
 {
     public function actionIndex()
     {
-        $this->model->run();
+        echo json_encode($this->model->getUsers($_POST['userphrase']));
     }
 }
