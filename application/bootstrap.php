@@ -16,6 +16,7 @@ $websocket = new ScriptLinuxProcess(
     ConfigClass::getPidsListFile()
 );
 if (!$websocket->isActive()) {
+    // php /var/www/messenger.local/application/chat-server.php > /var/www/messenger.local/logs/websocket.log &
     $websocket->enable();
     // чистка логов веб-сервера
     file_put_contents(dirname(__DIR__, 1) . '/logs/access.log', '');

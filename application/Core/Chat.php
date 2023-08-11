@@ -2,9 +2,9 @@
 
 namespace Aladser\Core;
 
-use Aladser\Core\DB\ConnectionsDBTableModel;
-use Aladser\Core\DB\MessageDBTableModel;
-use Aladser\Core\DB\UsersDBTableModel;
+use Aladser\Models\ConnectionsDBTableModel;
+use Aladser\Models\MessageDBTableModel;
+use Aladser\Models\UsersDBTableModel;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 

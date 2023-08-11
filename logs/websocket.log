@@ -1,88 +1,10 @@
 {"onconnection":57}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":57}
-Connection aladser@mail.ru completed
+{"messageOnconnection":1,"author":"Admin","wsId":57}
+Connection Admin completed
 {"onconnection":95}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":95}
-Connection aladser@mail.ru completed
-{"onconnection":103}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":103}
-Connection aladser@mail.ru completed
-{"onconnection":111}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":111}
-Connection aladser@mail.ru completed
-{"onconnection":119}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":119}
-Connection aladser@mail.ru completed
-{"onconnection":127}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":127}
-Connection aladser@mail.ru completed
-{"onconnection":135}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":135}
-Connection aladser@mail.ru completed
-{"onconnection":143}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":143}
-Connection aladser@mail.ru completed
-{"onconnection":151}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":151}
-Connection aladser@mail.ru completed
-{"onconnection":159}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":159}
-Connection aladser@mail.ru completed
-{"onconnection":167}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":167}
-Connection aladser@mail.ru completed
-{"onconnection":175}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":175}
-Connection aladser@mail.ru completed
-{"onconnection":183}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":183}
-Connection aladser@mail.ru completed
-{"onconnection":191}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":191}
-Connection aladser@mail.ru completed
-{"onconnection":199}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":199}
-Connection aladser@mail.ru completed
-{"onconnection":207}
-{"messageOnconnection":1,"author":"aladser@mail.ru","wsId":207}
-Connection aladser@mail.ru completed
-{"onconnection":215}
-{"messageOnconnection":1,"author":"Admin","wsId":215}
-Connection Admin completed
-{"onconnection":223}
-{"messageOnconnection":1,"author":"Admin","wsId":223}
-{"message":"\u0410\u0434\u043c\u0438\u043d","author":"Admin","chat":24,"chatType":"discussion","messageType":"NEW","time":"2023-08-11 09:41:53","msg":"1"}
-{"message":"\u0410\u0434\u043c\u0438\u043d \u0410\u043b\u0430\u0434\u0441\u0435\u0440\u0443","author":"Admin","chat":15,"chatType":"dialog","messageType":"NEW","time":"2023-08-11 09:42:00","msg":"2"}
-Connection Admin completed
-{"onconnection":233}
-{"messageOnconnection":1,"author":"Aladser","wsId":233}
-{"message":"\u0410\u043b\u0430\u0434\u0441\u0435\u0440","author":"Aladser","chat":24,"chatType":"discussion","messageType":"NEW","time":"2023-08-11 09:42:15","msg":"3"}
-{"message":"\u0410\u043b\u0430\u0434\u0441\u0435\u0440 \u0410\u0434\u043c\u0438\u043d\u0443","author":"Aladser","chat":15,"chatType":"dialog","messageType":"NEW","time":"2023-08-11 09:42:23","msg":"4"}
-{"message":"\u0410\u043b\u0430\u0434\u0441\u0435\u0440 \u0410\u0434\u043c\u0438\u043d\u0443","author":"Aladser","chat":27,"messageType":"FORWARD","msgId":4,"time":"2023-08-11 09:42:42","authorId":2,"msg":"5"}
-{"message":"\u0410\u0434\u043c\u0438\u043d \u0410\u043b\u0430\u0434\u0441\u0435\u0440\u0443","author":"Aladser","chat":27,"messageType":"FORWARD","msgId":2,"time":"2023-08-11 09:42:46","authorId":2,"msg":"6"}
-Connection Aladser completed
-{"onconnection":247}
-{"messageOnconnection":1,"author":"lauxtec@gmail.com","wsId":247}
-{"message":"Lauxtec","author":"lauxtec@gmail.com","chat":24,"chatType":"discussion","messageType":"NEW","time":"2023-08-11 09:43:21","msg":"7"}
-Connection lauxtec@gmail.com completed
-{"onconnection":256}
-{"messageOnconnection":1,"author":"Admin","wsId":256}
-Connection Admin completed
-{"onconnection":264}
-{"messageOnconnection":1,"author":"Admin","wsId":264}
-Connection Admin completed
-{"onconnection":272}
-{"messageOnconnection":1,"author":"Admin","wsId":272}
-{"message":"1","author":"Admin","chat":24,"chatType":"discussion","messageType":"NEW","time":"2023-08-11 09:57:40","msg":"8"}
-Connection Admin completed
-{"onconnection":281}
-{"messageOnconnection":1,"author":"Admin","wsId":281}
-{"msg":"8","chat":"24","message":"111","time":"2023-08-11 09:57:40","messageType":"EDIT"}
-Connection Admin completed
-{"onconnection":291}
-{"messageOnconnection":1,"author":"Admin","wsId":291}
-{"msg":"8","chat":"24","messageType":"REMOVE"}
-Connection Admin completed
-{"onconnection":301}
-{"messageOnconnection":1,"author":"Admin","wsId":301}
+{"messageOnconnection":1,"author":"Admin","wsId":95}
+{"message":"1","author":"Admin","chat":15,"chatType":"dialog","messageType":"NEW","time":"2023-08-11 10:38:55","msg":"10"}
+{"msg":"10","chat":"15","message":"111","time":"2023-08-11 10:38:55","messageType":"EDIT"}
+{"msg":"10","chat":"15","messageType":"REMOVE"}
+{"message":"\u0410\u043b\u0430\u0434\u0441\u0435\u0440 \u0410\u0434\u043c\u0438\u043d\u0443","author":"Admin","chat":17,"messageType":"FORWARD","msgId":4,"time":"2023-08-11 10:39:09","authorId":1,"msg":"11"}
 Connection Admin completed
