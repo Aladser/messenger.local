@@ -1,6 +1,8 @@
 <?php
 
-namespace Aladser\Core\DB;
+namespace Aladser\Models;
+
+use Aladser\Core\DB\DBQueryClass;
 
 /** Класс модели таблицы БД */
 class DBTableModel

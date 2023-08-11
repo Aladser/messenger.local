@@ -2,15 +2,17 @@
 
 namespace Aladser\Core;
 
+use Aladser\Core\DB\DBCtl;
+
 class Controller
 {
     public $view;
-    public $model;
 
-    public function __construct($modelName = null)
+
+    public function __construct(DBCtl $dbCtl)
     {
         $this->view = new View();
-        $this->model = is_null($modelName) ? null : $modelName;
+        $this->dbCtl = $dbCtl;
     }
 
     /** получить почту пользователя из сессии или куки */

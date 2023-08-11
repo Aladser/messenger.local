@@ -3,7 +3,6 @@
 namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
-use Aladser\Core\Model;
 
 /** контроллер страницы чатов */
 class ChatsController extends Controller
@@ -11,8 +10,8 @@ class ChatsController extends Controller
     public function actionIndex()
     {
         $userEmail = Controller::getUserMailFromClient();
-        $publicUsername = $this->model->getPublicName($userEmail);
-        $userId = $this->model->getUserId($userEmail);
+        $publicUsername = $this->dbCtl->getUsers()->getPublicUsernameFromEmail($userEmail);
+        $userId = $this->dbCtl->getUsers()->getUserId($userEmail);
 
         // удаление временных файлов профиля
         $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;

@@ -88,7 +88,7 @@ class Route
 
         // создаем контроллер
         $controller_name = "\\Aladser\\Controllers\\$controller_name";
-        $controller = file_exists($model_path) ? new $controller_name($model) : new $controller_name();
+        $controller = new $controller_name(new DBCtl(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB));
 
         $action = $action_name;
         if (method_exists($controller, $action)) {

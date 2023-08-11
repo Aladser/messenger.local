@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\Core\DB;
+namespace Aladser\Models;
 
 /** класс БД таблицы сообщений чатов */
 class MessageDBTableModel extends DBTableModel

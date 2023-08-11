@@ -9,6 +9,6 @@ class IsUniqueNicknameController extends Controller
 {
     public function actionIndex()
     {
-        $this->model->run();
+        echo $this->dbCtl->getUsers()->isUniqueNickname($_POST['nickname']) ? 1 : 0;
     }
 }

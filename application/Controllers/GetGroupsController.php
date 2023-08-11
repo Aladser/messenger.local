@@ -9,6 +9,8 @@ class GetGroupsController extends Controller
 {
     public function actionIndex()
     {
-        $this->model->run();
+        $username = Controller::getUserMailFromClient();
+        $userId = $this->dbCtl->getUsers()->getUserId($username);
+        echo json_encode($this->dbCtl->getMessageDBTable()->getDiscussions($userId));
     }
 }

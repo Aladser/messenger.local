@@ -301,13 +301,31 @@ function appendGroupDOMElement(group, place = 'END')
 
 /** показать контакты пользователя-клиента*/
 const showContacts = () => fetch('/get-contacts').then(r => r.text()).then(data => {
-    data = JSON.parse(data);
+    try {
+        data = JSON.parse(data);
+    } catch(err) {
+        alert(data);
+    }
     findContactsInput.value = '';
     contactsContainer.innerHTML = '';
     contactList = [];
     data.forEach(contact => {
         contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
         appendContactDOMElement(contact);
+    });
+});
+
+/** показать групповые чаты пользователя-клиента */
+const showGroups = () => fetch('/get-groups').then(r => r.text()).then(data => {
+    try {
+        data = JSON.parse(data);
+    } catch(err) {
+        alert(data);
+    }
+    groupList = [];
+    data.forEach(group => {
+        groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
+        appendGroupDOMElement(group);
     });
 });
 
@@ -319,17 +337,7 @@ function findContacts(){
         contactsContainer.innerHTML = '';
         data.forEach(element => appendContactDOMElement(element));
     });
- }
-
-/** показать групповые чаты пользователя-клиента */
-const showGroups = () => fetch('/get-groups').then(r => r.json()).then(data => {
-    groupList = [];
-    data.forEach(group => {
-        groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
-        appendGroupDOMElement(group);
-    });
-});
-
+}
 
 /** показать участников группового чата*/
 const showGroupRecipients = (domElement, discussionid) => {
@@ -456,7 +464,13 @@ function setContactOrGroupClick(domElement, urlArg, type)
             urlParams.set('CSRF', inputCsrf.value);
             removeGroupPatricipantDOMElements();
             // поиск пользователя в массиве контактов на клиенте и добавление, если отсутствует
-            fetch('/get-contact', {method: 'POST', body: urlParams}).then(r => r.json()).then(dbContact => {
+            fetch('/get-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(dbContact => {
+                try{
+                    dbContact = JSON.parse(dbContact);
+                } catch(err) {
+                    console.clear();
+                    console.log(dbContact);
+                }
                 // проверка на подмену адреса
                 if (dbContact.hasOwnProperty('wrong_url')) {
                     alert('Подмена URL-адреса запроса');
@@ -560,18 +574,18 @@ function forwardMessageContextMenu()
 /** контекстное меню: включить/отключить уведомления */
 function editNoticeShowContextMenu()
 {
-    // создание пакета с id чата, значением о показе уведомлений
+    // создание пакета с id чата, значением статуса показа уведомлений
     let data = {};
 
-    // поиск выбранного группового чата
     if (selectedContact.className === 'group') {
+        // поиск выбранного группового чата
         data.chat = groupList.find(el => el.name === selectedContact.title).chat;
     } else {
         //  поиск выбранного контакта
         let name = selectedContact.querySelector('.contact__name').innerHTML;
         data.chat = contactList.find(el => el.name === name).chat;
     }
-    data.notice = !(selectedContact.getAttribute('data-notice') == 1) ? 1 : 0; //инвертирование значения. Это значение будет записано в БД
+    data.notice = selectedContact.getAttribute('data-notice') == 1 ? 0 : 1; //инвертирование значения. Это значение будет записано в БД
     hideContextMenu();
 
     // отправка данных на сервер
@@ -616,8 +630,7 @@ function removeContactContextMenu()
     hideContextMenu();
 
     fetch('/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-        data = parseInt(data);
-        if (data > 0) {
+        if (parseInt(data) > 0) {
             selectedContact.remove();
         }
     });
@@ -628,7 +641,12 @@ window.addEventListener('DOMContentLoaded', () => {
     showContacts();
     showGroups();
     // создание группового чата
-    createGroupOption.onclick = () => fetch('/create-group').then(r => r.json()).then(data => appendGroupDOMElement(data, 'START'));
+    createGroupOption.onclick = () => fetch('/create-group').then(r => r.json()).then(data => {
+        // добавление в список групповых чатов текущего пользователя в браузере
+        groupList.push({'name': data.name, 'chat':data.chat, 'notice': 1});
+        
+        appendGroupDOMElement(data, 'START');
+    });
 
     // запрет контекстного меню
     document.oncontextmenu = function () {

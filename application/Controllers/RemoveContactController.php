@@ -9,6 +9,15 @@ class RemoveContactController extends Controller
 {
     public function actionIndex()
     {
-        $this->model->run();
+        if ($_POST['type'] === 'group') {
+            $chatId = $this->dbCtl->getMessageDBTable()->getDiscussionId($_POST['name']);
+        } else {
+            $clientId = $this->dbCtl->getUsers()->getUserId($_POST['clientName']);
+            $contactId = $this->dbCtl->getUsers()->getUserId($_POST['name']);
+            $chatId = $this->dbCtl->getMessageDBTable()->getDialogId($clientId, $contactId);
+            
+            $this->dbCtl->getContacts()->removeContact($clientId, $contactId);
+        }
+        echo $this->dbCtl->getMessageDBTable()->removeChat($chatId);
     }
 }

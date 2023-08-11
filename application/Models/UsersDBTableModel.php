@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\Core\DB;
+namespace Aladser\Models;
 
 /** класс БД таблицы пользователей */
 class UsersDBTableModel extends DBTableModel
@@ -62,12 +62,12 @@ class UsersDBTableModel extends DBTableModel
     /** получить публичное имя пользователя из ID */
     public function getPublicUsername(int $userId)
     {
-        $sql = '
+        $sql = "
             select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
             from users 
-            where user_id = :userId
-        ';
-        return $this->db->queryPrepared($sql, ['userId' => $userId])['username'];
+            where user_id = $userId
+        ";
+        return $this->db->query($sql)['username'];
     }
 
     // получить публичное имя пользователя из почты

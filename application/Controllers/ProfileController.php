@@ -9,14 +9,9 @@ class ProfileController extends Controller
 {
     public function actionIndex()
     {
-        $data = $this->model->run();
-        $this->view->generate(
-            'template_view.php',
-            'profile_view.php',
-            'profile.css',
-            'profile.js',
-            'Профиль',
-            $data
-        );
+        $email = Controller::getUserMailFromClient();
+        $data = $this->dbCtl->getUsers()->getUserData($email);
+        $data['csrfToken'] = Controller::createCSRFToken();
+        $this->view->generate('template_view.php', 'profile_view.php', 'profile.css', 'profile.js', 'Профиль', $data);
     }
 }

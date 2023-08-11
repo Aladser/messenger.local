@@ -15,16 +15,16 @@ class GetContactController extends Controller
             exit;
         };
 
-        $userHostName = Controller::getUserMailFromClient();           // имя клиента-хоста
-        $userId = $this->model->getUserId($userHostName);         // id клиента-хоста
-        $contactId = $this->model->getUserId($_POST['contact']);  // id клиента-контакта
+        $userHostName = Controller::getUserMailFromClient();
+        $userId = $this->dbCtl->getUsers()->getUserId($userHostName);
+        $contactId = $this->dbCtl->getUsers()->getUserId($_POST['contact']);
 
         // добавляется контакт, если не существует
-        $isContact = $this->model->existsContact($contactId, $userId);
+        $isContact = $this->dbCtl->getContacts()->existsContact($contactId, $userId);
         if (!$isContact) {
-            $this->model->addContact($contactId, $userId);
-            $chatId = $this->model->getDialogId($userId, $contactId); // создается диалог, если не существует
-            $contactName = $this->model->getPublicNameFromID($contactId);
+            $this->dbCtl->getContacts()->addContact($contactId, $userId);
+            $chatId = $this->dbCtl->getMessageDBTable()->getDialogId($userId, $contactId);
+            $contactName = $this->dbCtl->getUsers()->getPublicUsername($contactId);
             $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 0];
         } else {
             $contact = $this->model->getContact($userId, $contactId);

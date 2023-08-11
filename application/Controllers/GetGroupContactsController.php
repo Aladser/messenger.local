@@ -10,10 +10,10 @@ class GetGroupContactsController extends Controller
     public function actionIndex()
     {
         $discussionId = $_POST['discussionid'];
-        $creatorId = $this->model->getDiscussionCreatorId($discussionId);
+        $creatorId = $this->dbCtl->getMessageDBTable()->getDiscussionCreatorId($discussionId);
         echo json_encode([
-            'participants' => $this->model->getGroupContacts($discussionId),
-            'creatorName' => $this->model->getPublicNameFromID($creatorId)
+            'participants' => $this->dbCtl->getContacts()->getGroupContacts($discussionId),
+            'creatorName' => $this->dbCtl->getUsers()->getPublicUsername($creatorId)
         ]);
     }
 }
