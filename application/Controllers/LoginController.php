@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контрллер страницы авторизации */
 class LoginController extends Controller
 {
-    public function actionIndex()
+    public function index()
     {
         if (isset($_POST['CSRF'])) {
             // проверка аутентификации

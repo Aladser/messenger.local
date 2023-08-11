@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контрллер проверки уникальности никнейма */
 class IsUniqueNicknameController extends Controller
 {
-    public function actionIndex()
+    public function index()
     {
         echo $this->dbCtl->getUsers()->isUniqueNickname($_POST['nickname']) ? 1 : 0;
     }

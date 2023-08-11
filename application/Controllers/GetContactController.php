@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер получения информации о контакте */
 class GetContactController extends Controller
 {
-    public function actionIndex()
+    public function index()
     {
         // CSRF-проверка на подмену адреса
         if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {

@@ -4,10 +4,10 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 
-/** контроллер создания группового чата */
-class AddGroupContactController extends Controller
+/** контроллер контактов */
+class ContactController extends Controller
 {
-    public function index()
+    public function createGroupContact()
     {
         $discussionId = $_POST['discussionid'];
         $userId = $this->dbCtl->getUsers()->getUserId($_POST['username']);

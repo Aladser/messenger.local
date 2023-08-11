@@ -11,25 +11,18 @@ class Route
     {
         session_start();
 
-        // контроллер и действие по умолчанию
+        // контроллер и действие
         if (array_key_exists('REDIRECT_URL', $_SERVER)) {
-            // Windows - убираем '/'
-            if ($_SERVER['REDIRECT_URL'][0] === '/') {
-                $routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
-            } else {
-                $routes = $_SERVER['REDIRECT_URL'];
-            }
-
+            $routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
             $controller_name = !empty($routes) ? ucfirst($routes) : 'main';
+            // преобразовать url в название класса
+            $controller_name = str_replace('-', ' ', $controller_name);
+            $controller_name = ucwords($controller_name);
+            $controller_name = str_replace(' ', '', $controller_name);
         } else {
-            $controller_name = 'main';
+            $controller_name = 'Main';
         }
-        $action_name = 'Index';
-
-        // преобразовать url в название класса
-        $controller_name = str_replace('-', ' ', $controller_name);
-        $controller_name = ucwords($controller_name);
-        $controller_name = str_replace(' ', '', $controller_name);
+        $action = 'index';
 
         // авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> messenger.local/chats
         if ($controller_name === 'Main'
@@ -49,7 +42,6 @@ class Route
         // добавляем префиксы
         $model_name = $controller_name.'Model';
         $controller_name = $controller_name.'Controller';
-        $action_name = 'action'.$action_name;
 
         // подцепляем файл с классом модели
         $model_path =
@@ -90,10 +82,7 @@ class Route
         $controller_name = "\\Aladser\\Controllers\\$controller_name";
         $controller = new $controller_name(new DBCtl(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB));
 
-        $action = $action_name;
         if (method_exists($controller, $action)) {
-            // вызываем действие контроллера
-
             $controller->$action();
         } else {
             Route::errorPage404();

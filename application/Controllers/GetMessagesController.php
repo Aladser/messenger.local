@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контрллер получения сообщений открытого чата */
 class GetMessagesController extends Controller
 {
-    public function actionIndex()
+    public function index()
     {
         $chatId = null;
         $type = null;
@@ -24,7 +24,10 @@ class GetMessagesController extends Controller
             $type = 'discussion';
         }
 
-        $messages = ['current_chat' => $chatId, 'type' => $type, 'messages' => $this->dbCtl->getMessageDBTable()->getMessages($chatId)];
+        $messages = [
+            'current_chat' => $chatId, 'type' => $type, 
+            'messages' => $this->dbCtl->getMessageDBTable()->getMessages($chatId)
+        ];
         echo json_encode($messages);
     }
 }
