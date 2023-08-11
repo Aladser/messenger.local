@@ -9,7 +9,7 @@ use Aladser\Core\ConfigClass;
 /** контрллер страницы регистрации */
 class RegController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         if (isset($_POST['registration'])) {
             $this->registerUser();

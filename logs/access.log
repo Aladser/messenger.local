@@ -1,3 +1,0 @@
-192.168.48.130 - - [11/Aug/2023:14:09:58 +0900] "GET / HTTP/1.1" 200 2339 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-192.168.48.130 - - [11/Aug/2023:14:09:58 +0900] "GET /get-contacts HTTP/1.1" 200 596 "http://messenger.local/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-192.168.48.130 - - [11/Aug/2023:14:09:58 +0900] "GET /get-groups HTTP/1.1" 200 462 "http://messenger.local/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"

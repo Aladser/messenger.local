@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер загрузки временного изображения профиля */
 class UploadFileController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         $filesizeErrMsg = 'Размер файла превышает ' . ini_get('upload_max_filesize') . 'б';
         // проверка размера файла

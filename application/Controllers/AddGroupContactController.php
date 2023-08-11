@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер создания группового чата */
 class AddGroupContactController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         $discussionId = $_POST['discussionid'];
         $userId = $this->dbCtl->getUsers()->getUserId($_POST['username']);

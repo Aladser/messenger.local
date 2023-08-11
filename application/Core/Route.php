@@ -11,7 +11,8 @@ class Route
     {
         session_start();
 
-        // контроллер и действие
+        // контроллер и аргументы
+        $getArgs = null;
         if (array_key_exists('REDIRECT_URL', $_SERVER)) {
             $routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
             $controller_name = !empty($routes) ? ucfirst($routes) : 'main';
@@ -22,7 +23,6 @@ class Route
         } else {
             $controller_name = 'Main';
         }
-        $action = 'index';
 
         // авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> messenger.local/chats
         if ($controller_name === 'Main'
@@ -39,30 +39,11 @@ class Route
             $controller_name = 'Main';
         }
 
-        // добавляем префиксы
+        // создаем контроллер
         $controller_name = $controller_name.'Controller';
-        $action_name = 'action'.$action_name;
-
-        // подцепляем файл с классом модели
-        $model_path =
-            dirname(__DIR__, 1)
-            . DIRECTORY_SEPARATOR
-            . 'Models'
-            . DIRECTORY_SEPARATOR
-            . $model_name
-            . '.php';
-
-        if (file_exists($model_path)) {
-            require_once($model_path);
-        }
-
-        // подцепляем файл с классом контроллера
-        $controller_path =
-            dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$controller_name.'.php';
-
+        $controller_path = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$controller_name.'.php';
         if (file_exists($controller_path)) {
             require_once($controller_path);
-            // создаем контроллер
             $controller_name = "\\Aladser\\Controllers\\$controller_name";
             $controller = new $controller_name(
                 new DBCtl(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB)
@@ -72,11 +53,6 @@ class Route
             $controller = new $controller_name();
         }
 
-        if (method_exists($controller, $action)) {
-            $controller->$action();
-        } else {
-            $controller_name = "\\Aladser\\Controllers\\Page404Controller";
-            $controller = new $controller_name();
-        }
+        $controller->index($getArgs);
     }
 }

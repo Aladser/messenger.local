@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер страницы 404 */
 class Page404Controller extends Controller
 {
-    public function actionIndex()
+    public function index($getArgs)
     {
         $this->view->generate('template_view.php', 'page404_view.php', '', '', 'Ошибка 404');
     }

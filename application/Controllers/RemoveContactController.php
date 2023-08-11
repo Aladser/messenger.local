@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер удаления группового чата */
 class RemoveContactController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         if ($_POST['type'] === 'group') {
             $chatId = $this->dbCtl->getMessageDBTable()->getDiscussionId($_POST['name']);

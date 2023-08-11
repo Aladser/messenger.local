@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер получения списка участников группового чата */
 class GetGroupContactsController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         $discussionId = $_POST['discussionid'];
         $creatorId = $this->dbCtl->getMessageDBTable()->getDiscussionCreatorId($discussionId);

@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контрллер страницы профиля */
 class ProfileController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         $email = Controller::getUserMailFromClient();
         $data = $this->dbCtl->getUsers()->getUserData($email);

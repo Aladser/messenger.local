@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер страницы подтверждения почты */
 class VerifyEmailController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         $email = htmlspecialchars(str_replace('\'', '', $_GET['email']));
         $hash = htmlspecialchars(str_replace('\'', '', $_GET['hash']));

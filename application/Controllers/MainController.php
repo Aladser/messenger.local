@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контрллер главной страницы */
 class MainController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         if (isset($_GET['logout'])) {
             setcookie("email", "", time() - 3600, '/');

@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер добавления нового участника группвого чата  */
 class CreateGroupController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         $userEmail = Controller::getUserMailFromClient();
         $userId = $this->dbCtl->getUsers()->getUserId($userEmail);

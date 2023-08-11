@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контрллер получения сообщений открытого чата */
 class GetMessagesController extends Controller
 {
-    public function index()
+    public function index($getArgs)
     {
         $chatId = null;
         $type = null;

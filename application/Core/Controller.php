@@ -4,10 +4,11 @@ namespace Aladser\Core;
 
 use Aladser\Core\DB\DBCtl;
 
-class Controller
+abstract class Controller
 {
     public $view;
 
+    public abstract function index($getArgs);
 
     public function __construct(DBCtl $dbCtl= null)
     {
