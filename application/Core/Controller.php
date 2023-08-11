@@ -9,7 +9,7 @@ class Controller
     public $view;
 
 
-    public function __construct(DBCtl $dbCtl)
+    public function __construct(DBCtl $dbCtl= null)
     {
         $this->view = new View();
         $this->dbCtl = $dbCtl;

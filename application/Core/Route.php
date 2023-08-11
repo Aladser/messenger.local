@@ -3,7 +3,7 @@
 namespace Aladser\Core;
 
 use Aladser\Core\DB\DBCtl;
-use Aladser\Core\ConfigClass;
+use Aladser\Controllers\Page404Controller;
 
 class Route
 {
@@ -40,37 +40,25 @@ class Route
         }
 
         // добавляем префиксы
-        $model_name = $controller_name.'Model';
         $controller_name = $controller_name.'Controller';
-
-        // подцепляем файл с классом модели
-        $model_path =
-            dirname(__DIR__, 1)
-            . DIRECTORY_SEPARATOR
-            . 'Models'
-            . DIRECTORY_SEPARATOR
-            . $model_name
-            . '.php';
-
-        if (file_exists($model_path)) {
-            require_once($model_path);
-        }
 
         // подцепляем файл с классом контроллера
         $controller_path =
-            dirname(__DIR__, 1)
-            . DIRECTORY_SEPARATOR
-            . 'Controllers'
-            . DIRECTORY_SEPARATOR
-            . $controller_name
-            . '.php';
+            dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$controller_name.'.php';
 
         if (file_exists($controller_path)) {
             require_once($controller_path);
+            // создаем контроллер
+            $controller_name = "\\Aladser\\Controllers\\$controller_name";
+            $controller = new $controller_name(
+                new DBCtl(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB)
+            );
         } else {
-            Route::errorPage404();
+            $controller_name = "\\Aladser\\Controllers\\Page404Controller";
+            $controller = new $controller_name();
         }
 
+<<<<<<< HEAD
         // создаем модель, если существует
         $model = null;
         if (file_exists($model_path)) {
@@ -82,18 +70,14 @@ class Route
         $controller_name = "\\Aladser\\Controllers\\$controller_name";
         $controller = new $controller_name(new DBCtl(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB));
 
+=======
+        $action = $action_name;
+>>>>>>> refs/remotes/origin/main
         if (method_exists($controller, $action)) {
             $controller->$action();
         } else {
-            Route::errorPage404();
+            $controller_name = "\\Aladser\\Controllers\\Page404Controller";
+            $controller = new $controller_name();
         }
-    }
-    
-    public static function errorPage404()
-    {
-        $host = "https://'{$_SERVER['HTTP_HOST']}/";
-        header('HTTP/1.1 404 Not Found');
-        header("Status: 404 Not Found");
-        header('Location:'.$host.'404');
     }
 }
