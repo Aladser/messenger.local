@@ -41,6 +41,20 @@ class Route
 
         // добавляем префиксы
         $controller_name = $controller_name.'Controller';
+        $action_name = 'action'.$action_name;
+
+        // подцепляем файл с классом модели
+        $model_path =
+            dirname(__DIR__, 1)
+            . DIRECTORY_SEPARATOR
+            . 'Models'
+            . DIRECTORY_SEPARATOR
+            . $model_name
+            . '.php';
+
+        if (file_exists($model_path)) {
+            require_once($model_path);
+        }
 
         // подцепляем файл с классом контроллера
         $controller_path =
@@ -58,21 +72,6 @@ class Route
             $controller = new $controller_name();
         }
 
-<<<<<<< HEAD
-        // создаем модель, если существует
-        $model = null;
-        if (file_exists($model_path)) {
-            $model_name = "\\Aladser\\Models\\$model_name";
-            $model = new $model_name(new DBCtl(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB));
-        }
-
-        // создаем контроллер
-        $controller_name = "\\Aladser\\Controllers\\$controller_name";
-        $controller = new $controller_name(new DBCtl(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB));
-
-=======
-        $action = $action_name;
->>>>>>> refs/remotes/origin/main
         if (method_exists($controller, $action)) {
             $controller->$action();
         } else {
