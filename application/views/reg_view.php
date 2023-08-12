@@ -33,4 +33,4 @@
     </form>
 </div>
 
-<script type='text/javascript' src="application/js/validation.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/validation.js"></script>

@@ -15,7 +15,8 @@ class Route
         $getArgs = null;
         if (array_key_exists('REDIRECT_URL', $_SERVER)) {
             $routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
-            $controller_name = !empty($routes) ? ucfirst($routes) : 'main';
+            $routesArr = explode('/', $routes);
+            $controller_name = !empty($routes) ? ucfirst($routesArr[0]) : 'main';
             // преобразовать url в название класса
             $controller_name = str_replace('-', ' ', $controller_name);
             $controller_name = ucwords($controller_name);

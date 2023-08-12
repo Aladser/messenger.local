@@ -1,3 +1,6 @@
+/** путь к папке приложения */
+const APP_PATH = "http://messenger.local/application/";
+
 /** элемент имени клиента-пользователя*/
 const clientNameBlock = document.querySelector('#clientuser');
 /** почта пользователя-хоста */
@@ -129,7 +132,7 @@ webSocket.onmessage = e => {
 
                 // звуковое уведомление
                 if (chat.notice == 1 && data.author !== publicClientUsername) {
-                    let notice = new Audio('application/data/notice.wav');
+                    let notice = new Audio(`${APP_PATH}/data/notice.wav`);
                     notice.autoplay = true;
                 }
             }
@@ -258,7 +261,7 @@ function appendContactDOMElement(contact)
     img.className = 'contact__img img pe-2';
     name.className = 'contact__name';
 
-    img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? 'application/images/ava.png' : `application/data/profile_photos/${contact.photo}`;
+    img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${APP_PATH}images/ava.png` : `${APP_PATH}data/profile_photos/${contact.photo}`;
     name.innerHTML = contact.name;
     contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock, contact.name, 'dialog'));
     contactBlock.setAttribute('data-notice', contact.notice);

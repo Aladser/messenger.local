@@ -3,9 +3,9 @@
         <div class='profile-img-block'>
             <?php
             if (is_null($data['user_photo']) || $data['user_photo'] == 'ava_profile.png') {
-                $photo = 'application/images/ava_profile.png';
+                $photo = 'http://messenger.local/application/images/ava_profile.png';
             } else {
-                $photo = 'application/data/profile_photos//' . $data['user_photo'];
+                $photo = 'http://messenger.local/application/data/profile_photos//' . $data['user_photo'];
             }
             ?>
             <img src="<?= $photo ?>" id='profile-img' class="rounded-circle img" alt="Avatar"/>
@@ -19,8 +19,7 @@
                 </tr>
                 <tr>
                     <td data-bs-toggle="tooltip">Никнейм:</td>
-                    <td><input type="text" class='input-nickname' id='input-nickname'
-                               value="<?= is_null($data['user_nickname']) ? '' : $data['user_nickname'] ?>" disabled>
+                    <td><input type="text" class='input-nickname' id='input-nickname' value="<?= is_null($data['user_nickname']) ? '' : $data['user_nickname'] ?>" disabled>
                     </td>
                 </tr>
             </table>
@@ -50,4 +49,4 @@
     <p class='text-center text-danger fs-5 fw-bolder d-none' id='prg-error'></p>
 </div>
 
-<script type='text/javascript' src="application/js/validation.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/validation.js"></script>

@@ -23,4 +23,4 @@
     <p class='w-50 mx-auto fw-bolder text-dark-red d-none pt-2 mb-0' id='login-error'>Пользователь уже существует</p>
 </div>
 
-<script type='text/javascript' src="application/js/validation.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/validation.js"></script>
