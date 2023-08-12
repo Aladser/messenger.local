@@ -16,7 +16,13 @@ class Route
         if (array_key_exists('REDIRECT_URL', $_SERVER)) {
             $routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
             $routesArr = explode('/', $routes);
+            // выбор контроллера
             $controller_name = !empty($routes) ? ucfirst($routesArr[0]) : 'main';
+            // передача действия как GET-параметра
+            if (count($routesArr) > 1) {
+                $_GET['action'] = $routesArr[1];
+            }
+
             // преобразовать url в название класса
             $controller_name = str_replace('-', ' ', $controller_name);
             $controller_name = ucwords($controller_name);
@@ -54,6 +60,6 @@ class Route
             $controller = new $controller_name();
         }
 
-        $controller->index($getArgs);
+        $controller->index();
     }
 }

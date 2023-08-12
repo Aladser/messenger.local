@@ -303,7 +303,7 @@ function appendGroupDOMElement(group, place = 'END')
 
 
 /** показать контакты пользователя-клиента*/
-const showContacts = () => fetch('/get-contacts').then(r => r.text()).then(data => {
+const showContacts = () => fetch('/contact/show').then(r => r.text()).then(data => {
     try {
         data = JSON.parse(data);
     } catch(err) {
@@ -375,11 +375,13 @@ const showGroupRecipients = (domElement, discussionid) => {
                     let urlParams2 = new URLSearchParams();
                     urlParams2.set('discussionid', discussionid);
                     urlParams2.set('username', username);
-                    fetch('add-group-contact', {method: 'POST', body: urlParams2}).then(r => r.text()).then(data => {
-                        if (data == 1) {
+                    fetch('contact/create', {method: 'POST', body: urlParams2}).then(r => r.text()).then(data => {
+                        let isCreated = parseInt(data);
+                        if (isCreated === 1) {
                             e.target.parentNode.lastChild.remove();
                             domElement.lastChild.innerHTML += `<p class='group__contact'>${username}</p>`;
                         } else {
+                            alert(data);
                             console.log(data);
                         }
                     });
@@ -467,7 +469,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
             urlParams.set('CSRF', inputCsrf.value);
             removeGroupPatricipantDOMElements();
             // поиск пользователя в массиве контактов на клиенте и добавление, если отсутствует
-            fetch('/get-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(dbContact => {
+            fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(dbContact => {
                 try{
                     dbContact = JSON.parse(dbContact);
                 } catch(err) {
@@ -645,9 +647,7 @@ window.addEventListener('DOMContentLoaded', () => {
     showGroups();
     // создание группового чата
     createGroupOption.onclick = () => fetch('/create-group').then(r => r.json()).then(data => {
-        // добавление в список групповых чатов текущего пользователя в браузере
         groupList.push({'name': data.name, 'chat':data.chat, 'notice': 1});
-        
         appendGroupDOMElement(data, 'START');
     });
 
