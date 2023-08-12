@@ -10,15 +10,24 @@ class ContactController extends Controller
     public function index()
     {
         switch ($_GET['action']) {
-            case 'create':
+            case 'create-group-contact':
                 $this->createGroupContact();
+                break;
+            case 'show-group-contacts':
+                $this->getGroupContacts();
                 break;
             case 'get-contact':
                 $this->getContact();
                 break;
             case 'show-contacts':
                 $this->getContacts();
-                break;            
+                break;
+            case 'find-contacts':
+                $this->findContacts();
+                break;
+            case 'remove':
+                $this->removeContact();
+                break;             
         }
     }
     public function createGroupContact()
@@ -27,6 +36,17 @@ class ContactController extends Controller
         $userId = $this->dbCtl->getUsers()->getUserId($_POST['username']);
         $group = $this->dbCtl->getContacts()->addGroupContact($discussionId, $userId);
         echo json_encode($group);
+    }
+
+
+    public function getGroupContacts()
+    {
+        $discussionId = $_POST['discussionid'];
+        $creatorId = $this->dbCtl->getMessageDBTable()->getDiscussionCreatorId($discussionId);
+        echo json_encode([
+            'participants' => $this->dbCtl->getContacts()->getGroupContacts($discussionId),
+            'creatorName' => $this->dbCtl->getUsers()->getPublicUsername($creatorId)
+        ]);
     }
 
     public function getContact()
@@ -58,5 +78,24 @@ class ContactController extends Controller
         $userEmail = Controller::getUserMailFromClient();
         $userId = $this->dbCtl->getUsers()->getUserId($userEmail);
         echo json_encode($this->dbCtl->getContacts()->getContacts($userId));
+    }
+
+    public function findContacts()
+    {
+        echo json_encode($this->dbCtl->getUsers()->getUsers($_POST['userphrase'], Controller::getUserMailFromClient()));
+    }
+
+    public function removeContact()
+    {
+        if ($_POST['type'] === 'group') {
+            $chatId = $this->dbCtl->getMessageDBTable()->getDiscussionId($_POST['name']);
+        } else {
+            $clientId = $this->dbCtl->getUsers()->getUserId($_POST['clientName']);
+            $contactId = $this->dbCtl->getUsers()->getUserId($_POST['name']);
+            $chatId = $this->dbCtl->getMessageDBTable()->getDialogId($clientId, $contactId);
+            
+            $this->dbCtl->getContacts()->removeContact($clientId, $contactId);
+        }
+        echo $this->dbCtl->getMessageDBTable()->removeChat($chatId);
     }
 }

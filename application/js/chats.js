@@ -336,7 +336,7 @@ const showGroups = () => fetch('/get-groups').then(r => r.text()).then(data => {
 function findContacts(){
     let urlParams = new URLSearchParams();
     urlParams.set('userphrase', this.value);
-    fetch('/find-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
+    fetch('/contact/find-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
         contactsContainer.innerHTML = '';
         data.forEach(element => appendContactDOMElement(element));
     });
@@ -346,7 +346,7 @@ function findContacts(){
 const showGroupRecipients = (domElement, discussionid) => {
     let urlParams = new URLSearchParams();
     urlParams.set('discussionid', discussionid);
-    fetch('/get-group-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
+    fetch('/contact/show-group-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
         // создание DOM-списка участников группового чата
         let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
         prtBlock.className = 'group__contacts';
@@ -375,7 +375,7 @@ const showGroupRecipients = (domElement, discussionid) => {
                     let urlParams2 = new URLSearchParams();
                     urlParams2.set('discussionid', discussionid);
                     urlParams2.set('username', username);
-                    fetch('contact/create', {method: 'POST', body: urlParams2}).then(r => r.text()).then(data => {
+                    fetch('contact/create-group-contact', {method: 'POST', body: urlParams2}).then(r => r.text()).then(data => {
                         let isCreated = parseInt(data);
                         if (isCreated === 1) {
                             e.target.parentNode.lastChild.remove();
@@ -634,7 +634,7 @@ function removeContactContextMenu()
     }
     hideContextMenu();
 
-    fetch('/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+    fetch('/contact/remove', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
         if (parseInt(data) > 0) {
             selectedContact.remove();
         }
