@@ -39,16 +39,16 @@ class Route
             $action = 'index';
         }
 
-        // авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> messenger.local/chats
+        // авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> messenger.local/chat
         if ($controller_name === 'Main'
             && (isset($_SESSION['auth']) || isset($_COOKIE['auth']))
             && !isset($_GET['logout'])
         ) {
-            $controller_name = 'Chats';
+            $controller_name = 'Chat';
         }
 
         // редирект /chats или /profile без авторизации -> messenger.local
-        if (($controller_name === 'Chats'|| $controller_name === 'Profile')
+        if (($controller_name === 'Chat'|| $controller_name === 'Profile')
             && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))
         ) {
             $controller_name = 'Main';

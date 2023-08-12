@@ -28,10 +28,10 @@ document.querySelector('#login-form').addEventListener('submit', function (e) {
     let form = new FormData(this);
     form.append('CSRF', inputCsrf.value);
 
-    fetch('/login', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+    fetch('user/login', {method: 'POST', body: form}).then(response => response.text()).then(data => {
         try{
             JSON.parse(data);
-            window.open('/chats', '_self');
+            window.open('/chat', '_self');
         }
         catch(SyntaxError){
             loginErrorPrg.classList.remove('d-none');

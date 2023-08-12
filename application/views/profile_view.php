@@ -40,7 +40,7 @@
             </form>
 
             <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='btn-edit-nickname'>Установить nickname</button>
-            <a href="\chats" class='text-decoration-none'>
+            <a href="\chat" class='text-decoration-none'>
                 <div class='btn-bg-C4C4C4 text-white w-100 p-2 text-center'>Назад</div>
             </a>
         </div>

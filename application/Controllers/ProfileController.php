@@ -12,13 +12,6 @@ class ProfileController extends Controller
         $email = Controller::getUserMailFromClient();
         $data = $this->dbCtl->getUsers()->getUserData($email);
         $data['csrfToken'] = Controller::createCSRFToken();
-        $this->view->generate(
-            'template_view.php', 
-            'profile_view.php', 
-            'profile.css', 
-            'profile.js', 
-            'Профиль', 
-            $data
-        );
+        $this->view->generate('template_view.php', 'profile_view.php', 'profile.css', 'profile.js', 'Профиль', $data);
     }
 }

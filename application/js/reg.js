@@ -77,7 +77,7 @@ regForm.addEventListener('submit', function (e) {
     e.preventDefault();
     let form = new FormData(this);
     // Список пар ключ/значение
-    fetch('/reg', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+    fetch('user/register', {method: 'POST', body: form}).then(response => response.text()).then(data => {
         data = JSON.parse(data);
         regErrorPrg.classList.remove('d-none');
         if (data['result'] === 'user_exists') {

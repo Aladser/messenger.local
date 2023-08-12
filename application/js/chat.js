@@ -303,7 +303,7 @@ function appendGroupDOMElement(group, place = 'END')
 
 
 /** показать контакты пользователя-клиента*/
-const showContacts = () => fetch('/contact/get-contacts').then(r => r.text()).then(data => {
+const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).then(data => {
     try {
         data = JSON.parse(data);
     } catch(err) {
@@ -319,7 +319,7 @@ const showContacts = () => fetch('/contact/get-contacts').then(r => r.text()).th
 });
 
 /** показать групповые чаты пользователя-клиента */
-const showGroups = () => fetch('/get-groups').then(r => r.text()).then(data => {
+const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data => {
     try {
         data = JSON.parse(data);
     } catch(err) {
@@ -336,7 +336,7 @@ const showGroups = () => fetch('/get-groups').then(r => r.text()).then(data => {
 function findContacts(){
     let urlParams = new URLSearchParams();
     urlParams.set('userphrase', this.value);
-    fetch('/contact/find-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
+    fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
         contactsContainer.innerHTML = '';
         data.forEach(element => appendContactDOMElement(element));
     });
@@ -346,7 +346,7 @@ function findContacts(){
 const showGroupRecipients = (domElement, discussionid) => {
     let urlParams = new URLSearchParams();
     urlParams.set('discussionid', discussionid);
-    fetch('/contact/get-group-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
+    fetch('contact/get-group-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
         // создание DOM-списка участников группового чата
         let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
         prtBlock.className = 'group__contacts';
@@ -396,7 +396,7 @@ const showGroupRecipients = (domElement, discussionid) => {
 
 /** показать сообщения */
 const showChat = (urlParams, bdChatName, type) => {
-    fetch('/get-messages', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
+    fetch('chat/get-messages', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
         if (data) {
             chat.innerHTML = '';
 
@@ -599,7 +599,7 @@ function editNoticeShowContextMenu()
     urlParams.set('notice', data.notice);
     urlParams.set('username', clientUsername);
     // изменяет установленный флаг получения уведомлений
-    fetch('/edit-notice-show', {method: 'post', body: urlParams}).then(r => r.text()).then(notice => {
+    fetch('/chat/edit-notice-show', {method: 'post', body: urlParams}).then(r => r.text()).then(notice => {
         notice = parseInt(notice);
         selectedContact.setAttribute('data-notice', notice);  // меняем атрибут
         let elem;
@@ -646,7 +646,7 @@ window.addEventListener('DOMContentLoaded', () => {
     showContacts();
     showGroups();
     // создание группового чата
-    createGroupOption.onclick = () => fetch('/create-group').then(r => r.json()).then(data => {
+    createGroupOption.onclick = () => fetch('chat/create-group').then(r => r.json()).then(data => {
         groupList.push({'name': data.name, 'chat':data.chat, 'notice': 1});
         appendGroupDOMElement(data, 'START');
     });

@@ -56,7 +56,7 @@ function writeNickname(input, btn)
                 // проверить уникальность никнейма
                 inputNickname.classList.remove('input-nickname-error');
                 prgError.classList.add('d-none');
-                fetch('/is-unique-nickname', {method: 'post', body: data}).then(r => r.text().then(data => {
+                fetch('user/is-unique-nickname', {method: 'post', body: data}).then(r => r.text().then(data => {
                     // никнейм уникален
                     if (data == 1) {
                         btn.classList.remove('d-none');
@@ -142,7 +142,7 @@ saveBtn.addEventListener('click', () => {
     let filepathArr = document.querySelector('#profile-img').src.split('/');
     data.set('user_photo', filepathArr[filepathArr.length - 1]);
 
-    fetch('/set-user-data', {method: 'POST', body: data}).then(r => r.text()).then(data => {
+    fetch('user/update', {method: 'POST', body: data}).then(r => r.text()).then(data => {
         try {
             data = JSON.parse(data);
         } catch (err) {

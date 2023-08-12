@@ -14,12 +14,6 @@ class MainController extends Controller
             setcookie("auth", "", time() - 3600, '/');
             session_destroy();
         }
-        $this->view->generate(
-            'template_view.php', 
-            'main_view.php', 
-            'main.css', 
-            '', 
-            'Месенджер'
-        );
+        $this->view->generate('template_view.php', 'main_view.php', 'main.css', '', 'Меcсенджер');
     }
 }
