@@ -303,7 +303,7 @@ function appendGroupDOMElement(group, place = 'END')
 
 
 /** показать контакты пользователя-клиента*/
-const showContacts = () => fetch('/contact/show').then(r => r.text()).then(data => {
+const showContacts = () => fetch('/contact/show-contacts').then(r => r.text()).then(data => {
     try {
         data = JSON.parse(data);
     } catch(err) {

@@ -16,7 +16,7 @@ class ContactController extends Controller
             case 'get-contact':
                 $this->getContact();
                 break;
-            case 'show':
+            case 'show-contacts':
                 $this->getContacts();
                 break;            
         }
