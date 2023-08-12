@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер изменения данных пользователя */
 class SetUserDataController extends Controller
 {
-    public function index($getArgs)
+    public function index()
     {
         // проверка на подмену адреса
         if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {

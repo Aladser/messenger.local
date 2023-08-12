@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер получения списка групповых чатов пользователя */
 class GetGroupsController extends Controller
 {
-    public function index($getArgs)
+    public function index()
     {
         $username = Controller::getUserMailFromClient();
         $userId = $this->dbCtl->getUsers()->getUserId($username);

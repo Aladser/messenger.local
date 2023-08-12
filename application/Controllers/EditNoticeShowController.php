@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер изменения звукового уведомления контакта/группового чата */
 class EditNoticeShowController extends Controller
 {
-    public function index($getArgs)
+    public function index()
     {
         $userId = $this->dbCtl->getUsers()->getUserId($_POST["username"]);
         $notice = intval($_POST["notice"]);

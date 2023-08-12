@@ -8,7 +8,7 @@ abstract class Controller
 {
     public $view;
 
-    public abstract function index($getArgs);
+    public abstract function index();
 
     public function __construct(DBCtl $dbCtl= null)
     {

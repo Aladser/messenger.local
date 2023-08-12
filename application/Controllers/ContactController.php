@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер контактов */
 class ContactController extends Controller
 {
-    public function createGroupContact($getArgs)
+    public function createGroupContact()
     {
         $discussionId = $_POST['discussionid'];
         $userId = $this->dbCtl->getUsers()->getUserId($_POST['username']);

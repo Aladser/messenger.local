@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер получения списка контактов пользователя */
 class GetContactsController extends Controller
 {
-    public function index($getArgs)
+    public function index()
     {
         $userEmail = Controller::getUserMailFromClient();
         $userId = $this->dbCtl->getUsers()->getUserId($userEmail);

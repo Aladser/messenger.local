@@ -7,7 +7,7 @@ use Aladser\Core\Controller;
 /** контроллер страницы чатов */
 class ChatsController extends Controller
 {
-    public function index($getArgs)
+    public function index()
     {
         $userEmail = Controller::getUserMailFromClient();
         $publicUsername = $this->dbCtl->getUsers()->getPublicUsernameFromEmail($userEmail);
