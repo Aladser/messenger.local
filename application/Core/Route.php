@@ -18,9 +18,16 @@ class Route
             $routesArr = explode('/', $routes);
             // выбор контроллера
             $controller_name = !empty($routes) ? ucfirst($routesArr[0]) : 'main';
-            // передача действия как GET-параметра
+            // получение имени метода
             if (count($routesArr) > 1) {
-                $_GET['action'] = $routesArr[1];
+                $action = $routesArr[1];
+                $actionArr = explode('-', $action);
+                for ($i = 1; $i<count($actionArr); $i++) {
+                    $actionArr[$i] = ucfirst($actionArr[$i]);
+                }
+                $action = implode('', $actionArr);
+            } else {
+                $action = 'index';
             }
 
             // преобразовать url в название класса
@@ -29,6 +36,7 @@ class Route
             $controller_name = str_replace(' ', '', $controller_name);
         } else {
             $controller_name = 'Main';
+            $action = 'index';
         }
 
         // авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> messenger.local/chats
@@ -60,6 +68,6 @@ class Route
             $controller = new $controller_name();
         }
 
-        $controller->index();
+        $controller->$action();
     }
 }

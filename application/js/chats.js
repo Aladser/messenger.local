@@ -303,7 +303,7 @@ function appendGroupDOMElement(group, place = 'END')
 
 
 /** показать контакты пользователя-клиента*/
-const showContacts = () => fetch('/contact/show-contacts').then(r => r.text()).then(data => {
+const showContacts = () => fetch('/contact/get-contacts').then(r => r.text()).then(data => {
     try {
         data = JSON.parse(data);
     } catch(err) {
@@ -346,7 +346,7 @@ function findContacts(){
 const showGroupRecipients = (domElement, discussionid) => {
     let urlParams = new URLSearchParams();
     urlParams.set('discussionid', discussionid);
-    fetch('/contact/show-group-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
+    fetch('/contact/get-group-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
         // создание DOM-списка участников группового чата
         let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
         prtBlock.className = 'group__contacts';
@@ -634,7 +634,7 @@ function removeContactContextMenu()
     }
     hideContextMenu();
 
-    fetch('/contact/remove', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+    fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
         if (parseInt(data) > 0) {
             selectedContact.remove();
         }

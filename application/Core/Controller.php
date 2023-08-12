@@ -7,8 +7,7 @@ use Aladser\Core\DB\DBCtl;
 abstract class Controller
 {
     public $view;
-
-    public abstract function index();
+    protected $dbCtl;
 
     public function __construct(DBCtl $dbCtl= null)
     {
