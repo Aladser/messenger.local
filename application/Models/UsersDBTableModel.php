@@ -9,9 +9,9 @@ class UsersDBTableModel extends DBTableModel
     public function existsUser($email): bool
     {
         return $this->db->queryPrepared(
-                'select count(*) as count from users where user_email = :email',
-                ['email' => $email]
-            )['count'] == 1;
+            'select count(*) as count from users where user_email = :email',
+            ['email' => $email]
+        )['count'] == 1;
     }
 
     // проверка авторизации

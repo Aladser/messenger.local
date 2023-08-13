@@ -25,7 +25,7 @@ class ContactsDBTableModel extends DBTableModel
     // проверка существования
     public function existsContact($contactId, $userId)
     {
-        $isExisted = $this->db->queryPrepared(
+        return $this->db->queryPrepared(
             'select * 
             from contacts 
             where cnt_user_id = :userId and cnt_contact_id = :contactId 

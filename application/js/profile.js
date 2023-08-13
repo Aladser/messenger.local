@@ -57,8 +57,9 @@ function writeNickname(input, btn)
                 inputNickname.classList.remove('input-nickname-error');
                 prgError.classList.add('d-none');
                 fetch('user/is-unique-nickname', {method: 'post', body: data}).then(r => r.text().then(data => {
+                    data = parseInt(data);
                     // никнейм уникален
-                    if (data == 1) {
+                    if (data === 1) {
                         btn.classList.remove('d-none');
                         inputNickname.classList.remove('input-nickname-error');
                         prgError.classList.add('d-none');

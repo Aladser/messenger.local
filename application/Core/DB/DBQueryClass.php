@@ -9,10 +9,10 @@ use PDOException;
 class DBQueryClass
 {
     private $dbConnection;
-    private $host;
-    private $nameDB;
-    private $userDB;
-    private $passwordDB;
+    private string $host;
+    private string $nameDB;
+    private string $userDB;
+    private string $passwordDB;
 
     public function __construct($host, $nameDB, $userDB, $passwordDB)
     {
@@ -70,7 +70,7 @@ class DBQueryClass
 
     /** выполняет изменения данных
      * @param string $sql запрос
-     * @return mixed число измененных строк
+     * @return false|int число измененных строк
      */
     public function exec(string $sql)
     {
@@ -90,8 +90,8 @@ class DBQueryClass
         $stmt = $this->dbConnection->prepare("call $sql");
         $stmt->execute();
         $stmt->closeCursor();
-        $rslt = $this->dbConnection->query("select $out as info");
+        $procRst = $this->dbConnection->query("select $out as info");
         $this->disconnect();
-        return $rslt->fetch(PDO::FETCH_ASSOC)['info'];
+        return $procRst->fetch(PDO::FETCH_ASSOC)['info'];
     }
 }

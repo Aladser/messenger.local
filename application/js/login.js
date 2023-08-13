@@ -29,14 +29,12 @@ document.querySelector('#login-form').addEventListener('submit', function (e) {
     form.append('CSRF', inputCsrf.value);
 
     fetch('user/login', {method: 'POST', body: form}).then(response => response.text()).then(data => {
-        try{
+        try {
             JSON.parse(data);
             window.open('/chat', '_self');
-        }
-        catch(SyntaxError){
+        } catch (SyntaxError) {
             loginErrorPrg.classList.remove('d-none');
             loginErrorPrg.innerHTML = data;
-            return;
         }
     });
 });

@@ -6,13 +6,13 @@ namespace Aladser\Core;
 class ScriptLinuxProcess
 {
     /** имя процесса */
-    private $processName;
+    private string $processName;
     /** путь скрипта */
-    private $processFile;
+    private string $processFile;
     /** путь к логам процесса */
-    private $processLogFile;
+    private string $processLogFile;
     /** путь к файлу парсинга процессов Linux */
-    private $pidsParseFile;
+    private string $pidsParseFile;
     /** PID процесса */
     private $PID;
 

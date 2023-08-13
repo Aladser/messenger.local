@@ -24,17 +24,17 @@ class ConfigClass
     public const SITE_ADDR = '127.0.0.1';
     public const WEBSOCKET_PROCESSNAME = 'chat-server';
 
-    public static function getWebSocketProcessFile()
+    public static function getWebSocketProcessFile(): string
     {
         return dirname(__DIR__, 1) . '/chat-server.php';
     }
     
-    public static function getWebsocketProcessLogFile()
+    public static function getWebsocketProcessLogFile(): string
     {
         return dirname(__DIR__, 2) . '/logs/websocket.log';
     }
 
-    public static function getPidsListFile()
+    public static function getPidsListFile(): string
     {
         return dirname(__DIR__, 2) . '/logs/pids.log';
     }

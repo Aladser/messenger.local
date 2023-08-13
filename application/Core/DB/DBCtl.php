@@ -2,7 +2,6 @@
 
 namespace Aladser\Core\DB;
 
-use Aladser\Core\DB\DBQueryClass;
 use Aladser\Models\ConnectionsDBTableModel;
 use Aladser\Models\ContactsDBTableModel;
 use Aladser\Models\MessageDBTableModel;
@@ -11,11 +10,7 @@ use Aladser\Models\UsersDBTableModel;
 /** Класс модели таблицы БД */
 class DBCtl
 {
-    private $dbQueryCtl;
-    private $users;
-    private $contacts;
-    private $connections;
-    private $messages;
+    private DBQueryClass $dbQueryCtl;
 
     public function __construct($dbAddr, $dbName, $dbUser, $dbPassword)
     {

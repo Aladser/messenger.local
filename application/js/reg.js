@@ -14,7 +14,8 @@ const password2Clue = document.querySelector('#reg-form__password2-clue');
 const regForm = document.querySelector('#reg-form');
 
 //***** событие клика поля ввода данных *****/
-function clickInputElement(input, clue, isPassword) {
+function clickInputElement(input, clue, isPassword)
+{
     regErrorPrg.classList.add('d-none');
     // убирание выделения
     emailClue.classList.remove('input-clue--active');
@@ -43,7 +44,8 @@ password2Input.onclick = function () {
 
 
 //***** событие ввода данных *****/
-function inputData(input, clue, isPassword) {
+function inputData(input, clue, isPassword)
+{
     // валидация данных
     let isValid = isPassword ? validatePassword(input.value) : validateEmail(input.value);
     if (isValid) {

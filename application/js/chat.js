@@ -306,7 +306,7 @@ function appendGroupDOMElement(group, place = 'END')
 const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).then(data => {
     try {
         data = JSON.parse(data);
-    } catch(err) {
+    } catch (err) {
         alert(data);
     }
     findContactsInput.value = '';
@@ -322,7 +322,7 @@ const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).the
 const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data => {
     try {
         data = JSON.parse(data);
-    } catch(err) {
+    } catch (err) {
         alert(data);
     }
     groupList = [];
@@ -333,7 +333,8 @@ const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data 
 });
 
 /** поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов */
-function findContacts(){
+function findContacts()
+{
     let urlParams = new URLSearchParams();
     urlParams.set('userphrase', this.value);
     fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
@@ -470,9 +471,9 @@ function setContactOrGroupClick(domElement, urlArg, type)
             removeGroupPatricipantDOMElements();
             // поиск пользователя в массиве контактов на клиенте и добавление, если отсутствует
             fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(dbContact => {
-                try{
+                try {
                     dbContact = JSON.parse(dbContact);
-                } catch(err) {
+                } catch (err) {
                     console.clear();
                     console.log(dbContact);
                 }

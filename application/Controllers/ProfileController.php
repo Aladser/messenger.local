@@ -4,7 +4,7 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 
-/** контрллер страницы профиля */
+/** контроллер страницы профиля */
 class ProfileController extends Controller
 {
     public function index()

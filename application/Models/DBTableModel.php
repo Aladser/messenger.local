@@ -7,7 +7,7 @@ use Aladser\Core\DB\DBQueryClass;
 /** Класс модели таблицы БД */
 class DBTableModel
 {
-    protected $db;
+    protected DBQueryClass $db;
 
     public function __construct(DBQueryClass $db)
     {

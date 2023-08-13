@@ -3,13 +3,14 @@
 namespace Aladser\Core;
 
 use Aladser\Core\DB\DBCtl;
+use Exception;
 
 abstract class Controller
 {
-    public $view;
-    protected $dbCtl;
+    public View $view;
+    protected ?DBCtl $dbCtl;
 
-    public function __construct(DBCtl $dbCtl= null)
+    public function __construct(DBCtl $dbCtl = null)
     {
         $this->view = new View();
         $this->dbCtl = $dbCtl;
@@ -27,7 +28,9 @@ abstract class Controller
         }
     }
 
-    /** создать CSRF-токен */
+    /** создать CSRF-токен
+     * @throws Exception
+     */
     public static function createCSRFToken(): string
     {
         $csrfToken = hash('gost-crypto', random_int(0, 999999));

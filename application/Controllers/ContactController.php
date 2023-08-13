@@ -84,7 +84,7 @@ class ContactController extends Controller
         } else {
             $clientId = $this->users->getUserId($_POST['clientName']);
             $contactId = $this->users->getUserId($_POST['name']);
-            $chatId = $this->messages->getDialogId($clientId, $contactId);     
+            $chatId = $this->messages->getDialogId($clientId, $contactId);
             $this->contacts->removeContact($clientId, $contactId);
         }
         echo $this->messages->removeChat($chatId);

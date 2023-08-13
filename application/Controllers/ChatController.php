@@ -11,7 +11,7 @@ use Aladser\Models\MessageDBTableModel;
 /** контроллер чата */
 class ChatController extends Controller
 {
-    public function __construct(DBCtl $dbCtl= null)
+    public function __construct(DBCtl $dbCtl = null)
     {
         parent::__construct($dbCtl);
     }
@@ -50,7 +50,7 @@ class ChatController extends Controller
         echo $this->dbCtl->getMessageDBTable()->setNoticeShow($_POST["chat_id"], $userId, $notice);
     }
 
-    public function GetGroups()
+    public function getGroups()
     {
         $username = Controller::getUserMailFromClient();
         $userId = $this->dbCtl->getUsers()->getUserId($username);
@@ -73,7 +73,7 @@ class ChatController extends Controller
         }
 
         $messages = [
-            'current_chat' => $chatId, 'type' => $type, 
+            'current_chat' => $chatId, 'type' => $type,
             'messages' => $this->dbCtl->getMessageDBTable()->getMessages($chatId)
         ];
         echo json_encode($messages);

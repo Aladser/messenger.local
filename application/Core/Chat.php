@@ -11,10 +11,10 @@ use Ratchet\MessageComponentInterface;
 /** Чат - серверная часть */
 class Chat implements MessageComponentInterface
 {
-    private $clients;           // хранение всех подключенных пользователей
-    private $connectionsTable;  // таблица подключений
-    private $messageTable;      // таблица сообщений
-    private $usersTable;        // таблица пользователей
+    private \SplObjectStorage $clients;           // хранение всех подключенных пользователей
+    private ConnectionsDBTableModel $connectionsTable;  // таблица подключений
+    private MessageDBTableModel $messageTable;      // таблица сообщений
+    private UsersDBTableModel $usersTable;        // таблица пользователей
 
     public function __construct(
         ConnectionsDBTableModel $connectionsTable,

@@ -54,7 +54,7 @@ class MessageDBTableModel extends DBTableModel
 
     /** удалить чат */
     public function removeChat($dialogId)
-    {   
+    {
         $result = $this->db->exec("delete from chat_participant where chat_participant_chatid  = $dialogId");
         $result += $this->db->exec("delete from chat_message where chat_message_chatid  = $dialogId");
         $result += $this->db->exec("delete from chat where chat_id = $dialogId");
