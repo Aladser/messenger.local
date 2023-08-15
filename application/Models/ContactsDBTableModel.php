@@ -88,9 +88,6 @@ class ContactsDBTableModel extends DBTableModel
 
     /**
      * добавить участника группового чата
-     * @param $chatId id чата
-     * @param $userId id пользователя-контакта
-     * @return int|mixed
      */
     public function addGroupContact($chatId, $userId)
     {

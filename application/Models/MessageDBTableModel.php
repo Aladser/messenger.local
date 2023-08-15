@@ -40,8 +40,7 @@ class MessageDBTableModel extends DBTableModel
 
         // создание диалога, если не существует
         if (!$query) {
-            $chatId = $this->db->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
-            return $chatId;
+            return $this->db->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
         }
         return intval($query['chat_id']);
     }
@@ -49,7 +48,11 @@ class MessageDBTableModel extends DBTableModel
     /** получить ID группового чата*/
     public function getDiscussionId(string $groupName)
     {
-        return $this->db->queryPrepared('select chat_id from chat where chat_name = :groupName', ['groupName' => $groupName], false)[0]['chat_id'];
+        return $this->db->queryPrepared(
+            'select chat_id from chat where chat_name = :groupName',
+            ['groupName' => $groupName],
+            false
+        )[0]['chat_id'];
     }
 
     /** удалить чат */

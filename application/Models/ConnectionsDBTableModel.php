@@ -38,7 +38,6 @@ class ConnectionsDBTableModel extends DBTableModel
                 return ['publicUsername' => $user['publicusername']];
             }
         } else {
-            $rslt = ['systeminfo' => "USER $user_email NO EXISTS"];
             return ['systeminfo' => "USER $user_email NO EXISTS"]; // пользователь в БД не существует
         }
     }
