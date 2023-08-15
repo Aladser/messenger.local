@@ -1,0 +1,5 @@
+www-data   13939  0.1  0.4 117456 32532 ?        S    11:17   0:00 php /var/www/messenger.local/application/chat-server.php
+www-data   13954  0.0  0.0   2888  1536 ?        S    11:17   0:00 sh -c ps aux | grep chat-server > /var/www/messenger.local/logs/pids.log
+www-data   13956  0.0  0.0  17712  2048 ?        S    11:17   0:00 grep chat-server
+www-data   13957  0.0  0.0   2888  1536 ?        S    11:17   0:00 sh -c ps aux | grep chat-server > /var/www/messenger.local/logs/pids.log
+www-data   13959  0.0  0.0  17712  2048 ?        R    11:17   0:00 grep chat-server
