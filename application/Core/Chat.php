@@ -5,6 +5,7 @@ namespace Aladser\Core;
 use Aladser\Models\ConnectionsDBTableModel;
 use Aladser\Models\MessageDBTableModel;
 use Aladser\Models\UsersDBTableModel;
+use Exception;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 
@@ -105,9 +106,9 @@ class Chat implements MessageComponentInterface
     /**
      * ошибка подключения
      * @param ConnectionInterface $conn соединение
-     * @param \Exception $e ошибка
+     * @param Exception $e ошибка
      */
-    public function onError(ConnectionInterface $conn, \Exception $e)
+    public function onError(ConnectionInterface $conn, Exception $e)
     {
         echo "error: {$e->getMessage()}\n";
         $conn->close();

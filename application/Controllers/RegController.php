@@ -3,8 +3,6 @@
 namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
-use Aladser\Core\EMailSender;
-use Aladser\Core\ConfigClass;
 
 /** контрллер страницы регистрации */
 class RegController extends Controller
