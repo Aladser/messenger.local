@@ -2,9 +2,9 @@
 
 ### Сайт разворачивается на Ubuntu + PHP7.4 + Apache + MySQL 8. Настройка запуска
 
-```
 * Записать в etc/apache2/sites-available/messenger.local.conf
 
+```
 <VirtualHost *:80>
         ServerName messenger.local
         DocumentRoot /var/www/messenger.local
