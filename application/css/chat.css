@@ -126,8 +126,7 @@
 
 .group {
     margin: 0;
-    padding: 0.4rem;
-    padding-bottom: 0.2rem;
+    padding: 0.4rem 0.4rem 0.2rem;
     cursor: pointer;
     position: relative;
 
@@ -230,7 +229,7 @@
 }
 
 .option {
-    font-family: 'Roboto';
+    font-family: 'Roboto', serif;
     font-style: normal;
     font-weight: 400;
 }
@@ -246,16 +245,14 @@
 .option-img-block {
     width: 80%;
     height: auto;
-    margin: auto;
-    margin-bottom: 0.5rem;
+    margin: auto auto 0.5rem;
     display: none;
 }
 
 .btn-resend__img-block {
     width: 30%;
     height: auto;
-    margin: auto;
-    margin-bottom: 0.5rem;
+    margin: auto auto 0.5rem;
     display: none;
 }
 

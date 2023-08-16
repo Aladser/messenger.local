@@ -4,9 +4,6 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 use Aladser\Core\DB\DBCtl;
-use Aladser\Models\UsersDBTableModel;
-use Aladser\Models\ContactsDBTableModel;
-use Aladser\Models\MessageDBTableModel;
 
 /** контроллер чата */
 class ChatController extends Controller
