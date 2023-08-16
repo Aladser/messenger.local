@@ -29,20 +29,9 @@ CREATE TABLE `chat` (
   `chat_creatorid` int(11) DEFAULT NULL,
   PRIMARY KEY (`chat_id`),
   KEY `check_creatorid` (`chat_creatorid`),
-  KEY `i_chat_type` (`chat_type`),
-  KEY `i_getdialogid` (`chat_id`,`chat_type`),
   CONSTRAINT `check_creatorid` FOREIGN KEY (`chat_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `chat`
---
-
-LOCK TABLES `chat` WRITE;
-/*!40000 ALTER TABLE `chat` DISABLE KEYS */;
-/*!40000 ALTER TABLE `chat` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -52,11 +41,11 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`%`*/ /*!50003 TRIGGER `check_chat_type` BEFORE INSERT ON `chat` FOR EACH ROW begin
-   IF NEW.chat_type not in ('dialog', 'discussion') then
-	SIGNAL SQLSTATE '45000'
-	SET MESSAGE_TEXT = 'chat_type не равен dialog или discussion';
-   END if;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `check_chat_type` BEFORE INSERT ON `chat` FOR EACH ROW begin
+    IF NEW.chat_type not in ('dialog', 'discussion') then
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'chat_type не равен dialog или discussion';
+    END if;
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -79,22 +68,12 @@ CREATE TABLE `chat_message` (
   `chat_message_time` datetime DEFAULT NULL,
   `chat_message_forward` int(1) DEFAULT '0',
   PRIMARY KEY (`chat_message_id`),
+  KEY `check_message_chatid` (`chat_message_chatid`),
   KEY `check_message_creator` (`chat_message_creatorid`),
-  KEY `i_addmsg` (`chat_message_chatid`,`chat_message_time`),
-  KEY `i_chat_message_chatid` (`chat_message_chatid`),
   CONSTRAINT `check_message_chatid` FOREIGN KEY (`chat_message_chatid`) REFERENCES `chat` (`chat_id`) ON DELETE CASCADE,
   CONSTRAINT `check_message_creator` FOREIGN KEY (`chat_message_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `chat_message`
---
-
-LOCK TABLES `chat_message` WRITE;
-/*!40000 ALTER TABLE `chat_message` DISABLE KEYS */;
-/*!40000 ALTER TABLE `chat_message` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -104,11 +83,13 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`admin`@`%`*/ /*!50003 TRIGGER `check_message` BEFORE INSERT ON `chat_message` FOR EACH ROW BEGIN
-		if new.chat_message_creatorid not in (select chat_participant_userid from chat_participant where chat_participant_chatid=new.chat_message_chatid) then
-		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = 'пользователя нет в данном чате';
-	END IF;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `check_message` BEFORE INSERT ON `chat_message` FOR EACH ROW BEGIN
+    if new.chat_message_creatorid not in (select chat_participant_userid
+                                          from chat_participant
+                                          where chat_participant_chatid = new.chat_message_chatid) then
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'пользователя нет в данном чате';
+    END IF;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -128,21 +109,11 @@ CREATE TABLE `chat_participant` (
   `chat_participant_userid` int(11) NOT NULL,
   `chat_participant_isnotice` int(1) DEFAULT '1',
   PRIMARY KEY (`chat_participant_chatid`,`chat_participant_userid`),
-  KEY `i_chat_participant_user` (`chat_participant_userid`),
-  KEY `i_chat_participant_chat` (`chat_participant_chatid`),
+  KEY `check_participant_userid` (`chat_participant_userid`),
   CONSTRAINT `check_participant_chatid` FOREIGN KEY (`chat_participant_chatid`) REFERENCES `chat` (`chat_id`) ON DELETE CASCADE,
   CONSTRAINT `check_participant_userid` FOREIGN KEY (`chat_participant_userid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `chat_participant`
---
-
-LOCK TABLES `chat_participant` WRITE;
-/*!40000 ALTER TABLE `chat_participant` DISABLE KEYS */;
-/*!40000 ALTER TABLE `chat_participant` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `connections`
@@ -156,19 +127,9 @@ CREATE TABLE `connections` (
   `connection_userid` int(11) DEFAULT NULL,
   PRIMARY KEY (`connection_ws_id`),
   UNIQUE KEY `connection_userid` (`connection_userid`),
-  KEY `i_ws_id` (`connection_ws_id`),
   CONSTRAINT `fk_userid` FOREIGN KEY (`connection_userid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `connections`
---
-
-LOCK TABLES `connections` WRITE;
-/*!40000 ALTER TABLE `connections` DISABLE KEYS */;
-/*!40000 ALTER TABLE `connections` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `contacts`
@@ -188,29 +149,6 @@ CREATE TABLE `contacts` (
   CONSTRAINT `contacts_fk_userid` FOREIGN KEY (`cnt_user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `contacts`
---
-
-LOCK TABLES `contacts` WRITE;
-/*!40000 ALTER TABLE `contacts` DISABLE KEYS */;
-/*!40000 ALTER TABLE `contacts` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Temporary view structure for view `extended_chat`
---
-
-DROP TABLE IF EXISTS `extended_chat`;
-/*!50001 DROP VIEW IF EXISTS `extended_chat`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8mb4;
-/*!50001 CREATE VIEW `extended_chat` AS SELECT 
- 1 AS `chat_id`,
- 1 AS `chat_type`,
- 1 AS `chat_participant_userid`*/;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Temporary view structure for view `unhidden_emails`
@@ -242,19 +180,9 @@ CREATE TABLE `users` (
   `user_photo` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_email` (`user_email`),
-  UNIQUE KEY `user_nickname` (`user_nickname`),
-  KEY `i_user_publicname` (`user_nickname`,`user_email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `user_nickname` (`user_nickname`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'messenger'
@@ -269,14 +197,14 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`%` FUNCTION `getPublicUserName`( email varchar(100), nickname varchar(100), hide_email int(1) ) RETURNS varchar(100) CHARSET utf8mb4
+CREATE DEFINER=`root`@`localhost` FUNCTION `getPublicUserName`(email varchar(100), nickname varchar(100), hide_email int(1)) RETURNS varchar(100) CHARSET utf8mb4
     DETERMINISTIC
 begin
-	IF hide_email = 1 THEN
-		return nickname;
-	ELSE
-	   	return email;
-	END IF;
+    IF hide_email = 1 THEN
+        return nickname;
+    ELSE
+        return email;
+    END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -293,23 +221,29 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`%` PROCEDURE `add_forwarded_message`(
-	in msg_creatorid int,
-	in message_id int,
-	in chat_id int,
-	in msg_time datetime,
-	out new_msg_id  int
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_forwarded_message`(
+    in msg_creatorid int,
+    in message_id int,
+    in chat_id int,
+    in msg_time datetime,
+    out new_msg_id int
 )
 begin
-	# копируем сообщение
-	insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time)
-	select chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time from chat_message
-	where chat_message_id = message_id;
+    # копируем сообщение
+    insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time)
+    select chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time
+    from chat_message
+    where chat_message_id = message_id;
 
-	select last_insert_id() into new_msg_id;
+    select last_insert_id() into new_msg_id;
 
-	# обновляем чат и время строки
-	update chat_message set chat_message_chatid = chat_id, chat_message_time = msg_time, chat_message_creatorid = msg_creatorid, chat_message_forward = 1 where chat_message_id = new_msg_id;
+    # обновляем чат и время строки
+    update chat_message
+    set chat_message_chatid    = chat_id,
+        chat_message_time      = msg_time,
+        chat_message_creatorid = msg_creatorid,
+        chat_message_forward   = 1
+    where chat_message_id = new_msg_id;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -326,17 +260,18 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`%` PROCEDURE `add_message`(
-	in chat_chatid int,
-	in chat_text text,
-	in chat_user varchar(100),
-	in chat_time datetime,
-	out msg_id  int
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_message`(
+    in chat_chatid int,
+    in chat_text text,
+    in chat_user varchar(100),
+    in chat_time datetime,
+    out msg_id int
 )
 begin
-	select user_id into @userid from users where user_email = chat_user or user_nickname = chat_user;
-	insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time) values(chat_chatid, chat_text, @userid, chat_time);
-	select last_insert_id() into msg_id;
+    select user_id into @userid from users where user_email = chat_user or user_nickname = chat_user;
+    insert into chat_message(chat_message_chatid, chat_message_text, chat_message_creatorid, chat_message_time)
+    values (chat_chatid, chat_text, @userid, chat_time);
+    select last_insert_id() into msg_id;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -353,15 +288,17 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`%` PROCEDURE `create_dialog`(
-	in user1 int,
-	in user2 int,
-	out chatid int
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_dialog`(
+    in user1 int,
+    in user2 int,
+    out chatid int
 )
 begin
-	insert into chat(chat_type, chat_creatorid) values('dialog', user1);
-	select last_insert_id() into chatid;
-	insert into chat_participant(chat_participant_chatid, chat_participant_userid) values(chatid, user1), (chatid, user2);
+    insert into chat(chat_type, chat_creatorid) values ('dialog', user1);
+    select last_insert_id() into chatid;
+    insert into chat_participant(chat_participant_chatid, chat_participant_userid)
+    values (chatid, user1),
+           (chatid, user2);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -378,40 +315,24 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`admin`@`%` PROCEDURE `create_discussion`(
-	in userhost int,
-	out chatid int
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_discussion`(
+    in userhost int,
+    out chatid int
 )
 begin
-	insert into chat(chat_type, chat_creatorid) values('discussion', userhost);
-	select last_insert_id() into chatid;	
-	insert into chat_participant(chat_participant_chatid, chat_participant_userid) values(chatid, userhost); 		 # пользователи чата
-	select count(*) into @count from chat where chat_creatorid = userhost and chat_type = 'discussion';						  	# номер групповго чата пользователя
-	update chat set chat_name = concat('Групповой чат ', userhost, @count) where chat_id = chatid; # название группового чата
+    insert into chat(chat_type, chat_creatorid) values ('discussion', userhost);
+   
+    select last_insert_id() into chatid;
+   
+    insert into chat_participant(chat_participant_chatid, chat_participant_userid) values (chatid, userhost); # пользователи чата
+    
+    update chat set chat_name = concat('Групповой чат ', userhost, chatid) where chat_id = chatid; # название группового чата
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Final view structure for view `extended_chat`
---
-
-/*!50001 DROP VIEW IF EXISTS `extended_chat`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`admin`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `extended_chat` AS select `chat`.`chat_id` AS `chat_id`,`chat`.`chat_type` AS `chat_type`,`chat_participant`.`chat_participant_userid` AS `chat_participant_userid` from (`chat` join `chat_participant` on((`chat`.`chat_id` = `chat_participant`.`chat_participant_chatid`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
 -- Final view structure for view `unhidden_emails`
@@ -425,7 +346,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`admin`@`%` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `unhidden_emails` AS select `users`.`user_email` AS `user_email` from `users` where (`users`.`user_hide_email` = 0) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -440,4 +361,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-31 10:03:28
+-- Dump completed on 2023-08-17  2:21:22
