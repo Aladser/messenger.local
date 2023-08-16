@@ -46,11 +46,9 @@
 
 ### Настройка запуска
 
-* Установить модуль:
-``apt-get install php8.1-mysql``
+```
 * Записать в etc/apache2/sites-available/messenger.local.conf
 
-```
 <VirtualHost *:80>
         ServerName messenger.local
         DocumentRoot /var/www/messenger.local
@@ -63,5 +61,12 @@
         </Directory>      
 </VirtualHost>
 ```
+
+* Установить модуль:
+``apt-get install php8.1-mysql``
+
 * Включить перенаправление URL-адресов
 ``sudo a2enmod rewrite``
+
+* права на запись в файлы
+``chmod 777 -R var/messenger.local``
