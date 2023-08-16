@@ -25,15 +25,21 @@ class ContactController extends Controller
 
     public function createGroupContact()
     {
-        $discussionId = $_POST['discussionid'];
-        $userId = $this->users->getUserId($_POST['username']);
+        $discussionId = htmlspecialchars($_POST['discussionid']);
+        $username = htmlspecialchars($_POST['username']);
+        $userId = $this->users->getUserId($username);
         $group = $this->contacts->addGroupContact($discussionId, $userId);
         echo json_encode($group);
     }
 
     public function getGroupContacts()
     {
-        $discussionId = $_POST['discussionid'];
+        // проверка CSRF
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo 'Подмена URL-адреса';
+            return;
+        } 
+        $discussionId = htmlspecialchars($_POST['discussionid']);
         $creatorId = $this->messages->getDiscussionCreatorId($discussionId);
         echo json_encode([
             'participants' => $this->contacts->getGroupContacts($discussionId),
@@ -45,7 +51,8 @@ class ContactController extends Controller
     {
         $userHostName = Controller::getUserMailFromClient();
         $userId = $this->users->getUserId($userHostName);
-        $contactId = $this->users->getUserId($_POST['contact']);
+        $contact = htmlspecialchars($_POST['contact']);
+        $contactId = $this->users->getUserId($contact);
 
         // добавляется контакт, если не существует
         $isContact = $this->contacts->existsContact($contactId, $userId);
@@ -74,19 +81,34 @@ class ContactController extends Controller
 
     public function findContacts()
     {
-        echo json_encode($this->users->getUsers($_POST['userphrase'], Controller::getUserMailFromClient()));
+        // проверка CSRF
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo 'Подмена URL-адреса';
+            return;
+        } 
+        $userphrase = htmlspecialchars($_POST['userphrase']);
+        echo json_encode($this->users->getUsers($userphrase, Controller::getUserMailFromClient()));
     }
 
     public function removeContact()
     {
+        // проверка CSRF
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo 'Подмена URL-адреса';
+            return;
+        } 
+
         if ($_POST['type'] === 'group') {
             $chatId = $this->messages->getDiscussionId($_POST['name']);
         } else {
-            $clientId = $this->users->getUserId($_POST['clientName']);
-            $contactId = $this->users->getUserId($_POST['name']);
+            $clientName = htmlspecialchars($_POST['clientName']);
+            $clientId = $this->users->getUserId($clientName);
+
+            $name = htmlspecialchars($_POST['name']);
+            $contactId = $this->users->getUserId($name);
             $chatId = $this->messages->getDialogId($clientId, $contactId);
             $this->contacts->removeContact($clientId, $contactId);
         }
-        echo $this->messages->removeChat($chatId);
+        echo json_encode(['response' => $this->messages->removeChat($chatId)]);
     }
 }

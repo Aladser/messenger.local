@@ -11,7 +11,13 @@ class UserController extends Controller
 {
     public function isUniqueNickname()
     {
-        echo $this->dbCtl->getUsers()->isUniqueNickname($_POST['nickname']) ? 1 : 0;
+        // проверка CSRF
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo 'Подмена URL-адреса';
+            return;
+        } 
+        $response = $this->dbCtl->getUsers()->isUniqueNickname($_POST['nickname']) ? 1 : 0; 
+        echo json_encode(['response' => $response]);
     }
 
     public function login()

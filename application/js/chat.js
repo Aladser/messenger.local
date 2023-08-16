@@ -1,5 +1,7 @@
 /** путь к папке приложения */
 const APP_PATH = "http://messenger.local/application/";
+/** элемент CSRF-токена */
+const inputCsrf = document.querySelector('#input-csrf');
 
 /** элемент имени клиента-пользователя*/
 const clientNameBlock = document.querySelector('#clientuser');
@@ -54,8 +56,6 @@ const contactContextMenu = document.querySelector('#contact-context-menu');
 const editNoticeShowContextMenuBtn = document.querySelector('#contact-notice-edit');
 /** кнопка контекстное меню: удалить контакт-группу*/
 const removeContactContextMenuBtn = document.querySelector('#contact-remove-contact');
-/** элемент CSRF-токена */
-const inputCsrf = document.querySelector('#input-csrf');
 
 /** Выбранное сообщение */
 let selectedMessage = null;
@@ -337,9 +337,15 @@ function findContacts()
 {
     let urlParams = new URLSearchParams();
     urlParams.set('userphrase', this.value);
-    fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
-        contactsContainer.innerHTML = '';
-        data.forEach(element => appendContactDOMElement(element));
+    urlParams.set('CSRF', inputCsrf.value);
+    fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+        try {
+            data = JSON.parse(data);
+            contactsContainer.innerHTML = '';
+            data.forEach(element => appendContactDOMElement(element));
+        } catch(err) {
+            console.log(data);
+        }
     });
 }
 
@@ -347,7 +353,15 @@ function findContacts()
 const showGroupRecipients = (domElement, discussionid) => {
     let urlParams = new URLSearchParams();
     urlParams.set('discussionid', discussionid);
-    fetch('contact/get-group-contacts', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
+    urlParams.set('CSRF', inputCsrf.value);
+    fetch('contact/get-group-contacts', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+        try {
+            data = JSON.parse(data);
+        } catch(err) {
+            console.log(data);
+            return;
+        }
+
         // создание DOM-списка участников группового чата
         let prtBlock = document.createElement('div'); // блок, где будут показаны участники группы
         prtBlock.className = 'group__contacts';
@@ -397,7 +411,15 @@ const showGroupRecipients = (domElement, discussionid) => {
 
 /** показать сообщения */
 const showChat = (urlParams, bdChatName, type) => {
-    fetch('chat/get-messages', {method: 'POST', body: urlParams}).then(r => r.json()).then(data => {
+    urlParams.set('CSRF', inputCsrf.value);
+    fetch('chat/get-messages', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+        try {
+            data = JSON.parse(data);
+        } catch(err) {
+            console.log(data);
+            return;
+        }
+
         if (data) {
             chat.innerHTML = '';
 
@@ -599,8 +621,14 @@ function editNoticeShowContextMenu()
     urlParams.set('chat_id', data.chat);
     urlParams.set('notice', data.notice);
     urlParams.set('username', clientUsername);
+    urlParams.set('CSRF', inputCsrf.value);
     // изменяет установленный флаг получения уведомлений
     fetch('/chat/edit-notice-show', {method: 'post', body: urlParams}).then(r => r.text()).then(notice => {
+        if (notice === 'Подмена URL-адреса') {
+            console.log(notice);
+            return;
+        }
+
         notice = parseInt(notice);
         selectedContact.setAttribute('data-notice', notice);  // меняем атрибут
         let elem;
@@ -630,13 +658,20 @@ function removeContactContextMenu()
     let urlParams = new URLSearchParams();
     urlParams.set('name', selectedContact.title);
     urlParams.set('type', selectedContact.className === 'group' ? 'group' : 'contact');
+    urlParams.set('CSRF', inputCsrf.value);
     if (selectedContact.className !== 'group') {
         urlParams.set('clientName', clientUsername);
     }
     hideContextMenu();
 
     fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-        if (parseInt(data) > 0) {
+        try {
+            data = JSON.parse(data);
+        } catch (err) {
+            console.log(data);
+        }
+        
+        if (parseInt(data.response) > 0) {
             selectedContact.remove();
         }
     });

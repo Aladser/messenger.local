@@ -1,3 +1,6 @@
+/** инпут CSRF-токена */
+const inputCsrf = document.querySelector('#input-csrf');
+
 const uploadForm = document.querySelector('#upload-file-form');
 /** скрытый элемент выбора файлов */
 const selectFileInput = document.querySelector('#select-file-input');
@@ -16,8 +19,6 @@ const editPhotoBtn = document.querySelector('#edit-photo-btn');
 
 /** изображение профиля */
 const profileImageField = document.querySelector('#profile-img');
-/** инпут CSRF-токена */
-const inputCsrf = document.querySelector('#input-csrf');
 /** случайное число*/
 let randomNumber = Math.round(Math.random() * 100000);
 
@@ -45,6 +46,7 @@ function writeNickname(input, btn)
         if (input.value !== startValue) {
             let data = new URLSearchParams();
             data.set('nickname', input.value);
+            data.set('CSRF', inputCsrf.value);
 
             // проверить никнейм на пустое поле или кириллицу
             if (input.value === '' || input.value.search(/[А-яЁё]/) !== -1) {
@@ -57,7 +59,17 @@ function writeNickname(input, btn)
                 inputNickname.classList.remove('input-nickname-error');
                 prgError.classList.add('d-none');
                 fetch('user/is-unique-nickname', {method: 'post', body: data}).then(r => r.text().then(data => {
-                    data = parseInt(data);
+                    try {
+                        data = JSON.parse(data);
+                    } catch(err) {
+                        console.log(data);
+                        btn.classList.add('d-none');
+                        inputNickname.classList.add('input-nickname-error');
+                        prgError.classList.remove('d-none');
+                        prgError.innerHTML = 'Подмена URL-адреса';
+                        return;
+                    }
+                    data = parseInt(data.response);
                     // никнейм уникален
                     if (data === 1) {
                         btn.classList.remove('d-none');
@@ -111,6 +123,7 @@ uploadForm.onsubmit = e => {
     let file = e.target.image.files[0];
     if (file !== undefined) {
         let formData = new FormData(e.target);
+        formData.set('CSRF', inputCsrf.value);
         fetch('/upload-file', {method: 'POST', body: formData})
             .then(response => response.text())
             .then(data => {

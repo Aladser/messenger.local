@@ -69,9 +69,6 @@
     </div>
 </div>
 
-<!-- общий CSRF для всех запросов страницы -->
-<input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
-
 <!-- контектсное меню сообщения -->
 <div class='context-menu' id='msg-context-menu'>
     <ul class='list-group m-0'>
@@ -88,3 +85,6 @@
         <li class='list-group-item' id='contact-remove-contact'>Удалить группу</li>
     </ul>
 </div>
+
+<!-- CSRF страницы -->
+<input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>

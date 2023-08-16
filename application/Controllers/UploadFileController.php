@@ -21,7 +21,6 @@ class UploadFileController extends Controller
         $ext = explode('.', $_FILES['image']['name'])[1];
 
         // поиск других загрузок изображений этого профиля и установка нового имени файла
-
         // папка, куда перемещается изображение из $_POST
         $dwlDirPath = dirname(__DIR__, 1)
             . DIRECTORY_SEPARATOR

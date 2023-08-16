@@ -42,9 +42,19 @@ class ChatController extends Controller
 
     public function editNoticeShow()
     {
-        $userId = $this->dbCtl->getUsers()->getUserId($_POST["username"]);
-        $notice = intval($_POST["notice"]);
-        echo $this->dbCtl->getMessageDBTable()->setNoticeShow($_POST["chat_id"], $userId, $notice);
+        // проверка CSRF
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo 'Подмена URL-адреса';
+            return;
+        }
+
+
+        $username = htmlspecialchars($_POST["username"]);
+        $userId = $this->dbCtl->getUsers()->getUserId($username);
+        $notice = htmlspecialchars($_POST["notice"]);
+        $notice = intval($notice);
+        $chatid = htmlspecialchars($_POST["chat_id"]);
+        echo $this->dbCtl->getMessageDBTable()->setNoticeShow($chatid, $userId, $notice);
     }
 
     public function getGroups()
@@ -56,16 +66,23 @@ class ChatController extends Controller
 
     public function getMessages()
     {
+        // проверка CSRF
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo 'Подмена URL-адреса';
+            return;
+        } 
+
         // диалоги
         if (isset($_POST['contact'])) {
+            $contact = htmlspecialchars($_POST['contact']);
             $userHostName = Controller::getUserMailFromClient();
             $userId = $this->dbCtl->getUsers()->getUserId($userHostName);
-            $contactId = $this->dbCtl->getUsers()->getUserId($_POST['contact']);
+            $contactId = $this->dbCtl->getUsers()->getUserId($contact);
             $chatId = $this->dbCtl->getMessageDBTable()->getDialogId($userId, $contactId);
             $type = 'dialog';
         } elseif (isset($_POST['discussionid'])) {
             // групповые чаты
-            $chatId = $_POST['discussionid'];
+            $chatId = htmlspecialchars($_POST['discussionid']);
             $type = 'discussion';
         }
 
