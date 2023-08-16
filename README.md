@@ -1,6 +1,31 @@
 # Мессенджер
 
-#### Сайт разворачивается на Ubuntu + PHP7.4 + Apache + MySQL 8
+### Сайт разворачивается на Ubuntu + PHP7.4 + Apache + MySQL 8. Настройка запуска
+
+```
+* Записать в etc/apache2/sites-available/messenger.local.conf
+
+<VirtualHost *:80>
+        ServerName messenger.local
+        DocumentRoot /var/www/messenger.local
+        ErrorLog /var/www/messenger.local/logs/error.log
+        CustomLog /var/www/messenger.local/logs/access.log combined
+        <Directory /var/www/messenger.local>    
+                Options Indexes FollowSymLinks               
+                AllowOverride All               
+                Require all granted    
+        </Directory>      
+</VirtualHost>
+```
+
+* Установить модуль:
+``apt-get install php8.1-mysql``
+
+* Включить перенаправление URL-адресов
+``sudo a2enmod rewrite``
+
+* права на запись в файлы
+``chmod 777 -R var/messenger.local``
 
 * Сайт сделан на основе **MVC-фреймворка** в *Linux Ubuntu 22.02*.
 * В качестве асинхронного общения между клиентом и сервером используется **вебсокет**: встроенная **JS-библиотека** и **PHP Ratchet**.
@@ -43,30 +68,3 @@
 * SQL-injection защита реализована через подготовленные запросы PDO
 * XSS защита реализована через эканирование символов GET- и POST-запросов
 * как дополнительный функционал можно удалять группы и контакты
-
-### Настройка запуска
-
-```
-* Записать в etc/apache2/sites-available/messenger.local.conf
-
-<VirtualHost *:80>
-        ServerName messenger.local
-        DocumentRoot /var/www/messenger.local
-        ErrorLog /var/www/messenger.local/logs/error.log
-        CustomLog /var/www/messenger.local/logs/access.log combined
-        <Directory /var/www/messenger.local>    
-                Options Indexes FollowSymLinks               
-                AllowOverride All               
-                Require all granted    
-        </Directory>      
-</VirtualHost>
-```
-
-* Установить модуль:
-``apt-get install php8.1-mysql``
-
-* Включить перенаправление URL-адресов
-``sudo a2enmod rewrite``
-
-* права на запись в файлы
-``chmod 777 -R var/messenger.local``
