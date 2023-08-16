@@ -30,6 +30,7 @@
         </div>
 
         <p class='w-25 mx-auto fw-bolder text-dark-red d-none' id='reg-error'>Пользователь уже существует</p>
+        <input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
     </form>
 </div>
 

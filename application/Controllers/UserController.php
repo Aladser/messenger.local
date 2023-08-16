@@ -49,6 +49,12 @@ class UserController extends Controller
             ConfigClass::EMAIL_SENDER_NAME
         );
 
+        // проверка CSRF
+        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+            echo 'Подмена URL-адреса';
+            return;
+        } 
+
         if (!$this->dbCtl->getUsers()->existsUser($_POST['email'])) {
             // экранирование символов логина и пароля
             //$email = htmlspecialchars($_POST['email']);

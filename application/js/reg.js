@@ -12,6 +12,8 @@ const password1Clue = document.querySelector('#reg-form__password1-clue');
 const password2Clue = document.querySelector('#reg-form__password2-clue');
 /** форма регистрации */
 const regForm = document.querySelector('#reg-form');
+/** элемент CSRF-токена */
+const inputCsrf = document.querySelector('#input-csrf');
 
 //***** событие клика поля ввода данных *****/
 function clickInputElement(input, clue, isPassword)
@@ -78,27 +80,32 @@ password2Input.addEventListener('input', function () {
 regForm.addEventListener('submit', function (e) {
     e.preventDefault();
     let form = new FormData(this);
+    form.append('CSRF', inputCsrf.value);
     // Список пар ключ/значение
     fetch('user/register', {method: 'POST', body: form}).then(response => response.text()).then(data => {
-        data = JSON.parse(data);
         regErrorPrg.classList.remove('d-none');
-        if (data['result'] === 'user_exists') {
-            regErrorPrg.innerHTML = 'пользователь уже существует';
-            regErrorPrg.classList.remove('text-success');
-            regErrorPrg.classList.add('text-danger');
-            password1Input.value = '';
-            password2Input.value = '';
-        } else if (data['result'] === 'add_user_error') {
-            regErrorPrg.innerHTML = 'серверная ошибка создания пользователя';
-            regErrorPrg.classList.remove('text-success');
-            regErrorPrg.classList.add('text-danger');
-            password1Input.value = '';
-            password2Input.value = '';
-        } else {
-            regErrorPrg.innerHTML = 'Пользователь создан. Подтвердите ваши регистрационные данные по ссылке, указанной в письме, направленном на вашу почту';
-            regErrorPrg.classList.remove('text-danger');
-            regErrorPrg.classList.add('text-success');
-            e.target.reset(); // сбрасывает значения всех элементов в форме
+        try {
+            data = JSON.parse(data);
+            if (data['result'] === 'user_exists') {
+                regErrorPrg.innerHTML = 'пользователь уже существует';
+                regErrorPrg.classList.remove('text-success');
+                regErrorPrg.classList.add('text-danger');
+                password1Input.value = '';
+                password2Input.value = '';
+            } else if (data['result'] === 'add_user_error') {
+                regErrorPrg.innerHTML = 'серверная ошибка создания пользователя';
+                regErrorPrg.classList.remove('text-success');
+                regErrorPrg.classList.add('text-danger');
+                password1Input.value = '';
+                password2Input.value = '';
+            } else {
+                regErrorPrg.innerHTML = 'Пользователь создан. Подтвердите ваши регистрационные данные по ссылке, указанной в письме, направленном на вашу почту';
+                regErrorPrg.classList.remove('text-danger');
+                regErrorPrg.classList.add('text-success');
+                e.target.reset(); // сбрасывает значения всех элементов в форме
+            }
+        } catch(err) {
+            regErrorPrg.innerHTML = data;
         }
     });
 });

@@ -6,7 +6,7 @@ const passwordInput = document.querySelector('#login-form__password-input');
 const loginBtn = document.querySelector('#login-form__login-btn');
 // поле ошибок
 const loginErrorPrg = document.querySelector('#login-error');
-// инпут CSRF-токена
+// элемент CSRF-токена
 const inputCsrf = document.querySelector('#input-csrf');
 
 // проверка ввода почты
