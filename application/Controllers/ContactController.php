@@ -35,7 +35,7 @@ class ContactController extends Controller
     public function getGroupContacts()
     {
         // проверка CSRF
-        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
             return;
         } 
@@ -82,7 +82,7 @@ class ContactController extends Controller
     public function findContacts()
     {
         // проверка CSRF
-        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
             return;
         } 
@@ -93,7 +93,7 @@ class ContactController extends Controller
     public function removeContact()
     {
         // проверка CSRF
-        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
             return;
         } 

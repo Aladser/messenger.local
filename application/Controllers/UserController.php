@@ -22,28 +22,31 @@ class UserController extends Controller
     public function isUniqueNickname()
     {
         // проверка CSRF
-        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
             return;
         } 
-        $response = $this->users->isUniqueNickname($_POST['nickname']) ? 1 : 0; 
+
+        $nickname = htmlspecialchars($_POST['nickname']);
+        $response = $this->users->isUniqueNickname($nickname) ? 1 : 0; 
         echo json_encode(['response' => $response]);
     }
 
     public function login()
     {
+        $email = htmlspecialchars($_POST['email']);
+        $password = htmlspecialchars($_POST['password']);
         // проверка аутентификации
-        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
-            // проверка на подмену адреса
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
-        } elseif ($this->users->existsUser($_POST['email'])) {
-            // проверка введенныъ данных
-            $isValidLogin = $this->users->checkUser($_POST['email'], $_POST['password']) == 1;
+        } elseif ($this->users->existsUser($email)) {
+            // проверка введенных данных
+            $isValidLogin = $this->users->checkUser($email, $password) == 1;
             if ($isValidLogin) {
                 $_SESSION['auth'] = 1;
-                $_SESSION['email'] = $_POST['email'];
+                $_SESSION['email'] = $email;
                 setcookie('auth', 1, time() + 60 * 60 * 24, '/');
-                setcookie('email', $_POST['email'], time() + 60 * 60 * 24, '/');
+                setcookie('email', $email, time() + 60 * 60 * 24, '/');
                 echo json_encode(['result' => 1]);
             } else {
                 echo 'Неправильный пароль';
@@ -66,17 +69,16 @@ class UserController extends Controller
         );
 
         // проверка CSRF
-        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
             return;
         } 
 
         if (!$this->users->existsUser($_POST['email'])) {
-            // экранирование символов логина и пароля
-            //$email = htmlspecialchars($_POST['email']);
-            //$password = htmlspecialchars($_POST['password']);
-            $email = $_POST['email'];
-            $password = $_POST['password'];
+            $email = htmlspecialchars($_POST['email']);
+            $password = htmlspecialchars($_POST['password']);
+            $email = $email;
+            $password = $password;
 
             $isRegUser = $this->users->addUser($email, $password) === 1;
             if ($isRegUser) {
@@ -103,7 +105,7 @@ class UserController extends Controller
     public function update()
     {
         // проверка на подмену адреса
-        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'подделка URL-адреса';
             return;
         };
