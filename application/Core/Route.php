@@ -11,7 +11,6 @@ class Route
         session_start();
 
         // контроллер и аргументы
-        $getArgs = null;
         if (array_key_exists('REDIRECT_URL', $_SERVER)) {
             $routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
             $routesArr = explode('/', $routes);
