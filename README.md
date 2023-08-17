@@ -25,7 +25,7 @@
 ``sudo a2enmod rewrite``
 
 * права на запись в файлы
-``chmod 777 -R var/messenger.local``
+``chmod 777 -R var/www/messenger.local``
 
 * в папке info SQL-код для создания таблиц и процедур
 
