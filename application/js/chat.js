@@ -2,6 +2,8 @@
 const APP_PATH = "http://messenger.local/application/";
 /** элемент CSRF-токена */
 const inputCsrf = document.querySelector('#input-csrf');
+/** окно ошибок*/
+const frameError = document.querySelector('#frame-error');
 
 /** элемент имени клиента-пользователя*/
 const clientNameBlock = document.querySelector('#clientuser');
@@ -301,35 +303,42 @@ function appendGroupDOMElement(group, place = 'END')
     }
 }
 
+/** парсинг JSON-данных */
+function parseJSONData(data)
+{
+    try {
+        data = JSON.parse(data);
+        return data;
+    } catch (err) {
+        frameError.innerHTML = data;
+        return  undefined;
+    }
+}
 
 /** показать контакты пользователя-клиента*/
 const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).then(data => {
-    try {
-        data = JSON.parse(data);
-    } catch (err) {
-        alert(data);
+    data = parseJSONData(data);
+    if (data !== undefined) {
+        findContactsInput.value = '';
+        contactsContainer.innerHTML = '';
+        contactList = [];
+        data.forEach(contact => {
+            contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+            appendContactDOMElement(contact);
+        });
     }
-    findContactsInput.value = '';
-    contactsContainer.innerHTML = '';
-    contactList = [];
-    data.forEach(contact => {
-        contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
-        appendContactDOMElement(contact);
-    });
 });
 
 /** показать групповые чаты пользователя-клиента */
 const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data => {
-    try {
-        data = JSON.parse(data);
-    } catch (err) {
-        alert(data);
+    data = parseJSONData(data);
+    if (data !== undefined) {
+        groupList = [];
+        data.forEach(group => {
+            groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
+            appendGroupDOMElement(group);
+        });
     }
-    groupList = [];
-    data.forEach(group => {
-        groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
-        appendGroupDOMElement(group);
-    });
 });
 
 /** поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов */
@@ -339,12 +348,10 @@ function findContacts()
     urlParams.set('userphrase', this.value);
     urlParams.set('CSRF', inputCsrf.value);
     fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-        try {
-            data = JSON.parse(data);
+        data = parseJSONData(data);
+        if (data !== undefined) {
             contactsContainer.innerHTML = '';
             data.forEach(element => appendContactDOMElement(element));
-        } catch(err) {
-            console.log(data);
         }
     });
 }
@@ -355,10 +362,8 @@ const showGroupRecipients = (domElement, discussionid) => {
     urlParams.set('discussionid', discussionid);
     urlParams.set('CSRF', inputCsrf.value);
     fetch('contact/get-group-contacts', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-        try {
-            data = JSON.parse(data);
-        } catch(err) {
-            console.log(data);
+        data = parseJSONData(data);
+        if (data === undefined) {
             return;
         }
 
@@ -413,14 +418,10 @@ const showGroupRecipients = (domElement, discussionid) => {
 const showChat = (urlParams, bdChatName, type) => {
     urlParams.set('CSRF', inputCsrf.value);
     fetch('chat/get-messages', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-        try {
-            data = JSON.parse(data);
-        } catch(err) {
-            console.log(data);
+        data = parseJSONData(data);
+        if (data === undefined) {
             return;
-        }
-
-        if (data) {
+        } else if (data) {
             chat.innerHTML = '';
 
             chatType = data.type;
@@ -493,15 +494,8 @@ function setContactOrGroupClick(domElement, urlArg, type)
             removeGroupPatricipantDOMElements();
             // поиск пользователя в массиве контактов на клиенте и добавление, если отсутствует
             fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(dbContact => {
-                try {
-                    dbContact = JSON.parse(dbContact);
-                } catch (err) {
-                    console.clear();
-                    console.log(dbContact);
-                }
-                // проверка на подмену адреса
-                if (dbContact.hasOwnProperty('wrong_url')) {
-                    alert('Подмена URL-адреса запроса');
+                dbContact = parseJSONData(dbContact);
+                if (dbContact === undefined) {
                     return;
                 }
 
@@ -676,6 +670,7 @@ function removeContactContextMenu()
         }
     });
 }
+
 
 window.addEventListener('DOMContentLoaded', () => {
     resetFindContactsBtn.onclick = showContacts;

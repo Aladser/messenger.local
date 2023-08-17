@@ -22,6 +22,17 @@ const profileImageField = document.querySelector('#profile-img');
 /** случайное число*/
 let randomNumber = Math.round(Math.random() * 100000);
 
+function parseJSONData(data)
+{
+    try {
+        data = JSON.parse(data);
+        return data;
+    } catch(err) {
+        prgError.classList.remove('d-none');
+        prgError.innerHTML = data;
+        return undefined;
+    }
+}
 
 /** изменить видимость кнопки Сохранить при переключении чекбокса скрытия почты */
 function changeHideEmailInputVisibility(input, btn)
@@ -59,16 +70,13 @@ function writeNickname(input, btn)
                 inputNickname.classList.remove('input-nickname-error');
                 prgError.classList.add('d-none');
                 fetch('user/is-unique-nickname', {method: 'post', body: data}).then(r => r.text().then(data => {
-                    try {
-                        data = JSON.parse(data);
-                    } catch(err) {
-                        console.log(data);
+                    data = parseJSONData(data);
+                    if (data == undefined) {
                         btn.classList.add('d-none');
                         inputNickname.classList.add('input-nickname-error');
-                        prgError.classList.remove('d-none');
-                        prgError.innerHTML = 'Подмена URL-адреса';
-                        return;
+                        return;             
                     }
+
                     data = parseInt(data.response);
                     // никнейм уникален
                     if (data === 1) {
@@ -157,14 +165,10 @@ saveBtn.addEventListener('click', () => {
     data.set('user_photo', filepathArr[filepathArr.length - 1]);
 
     fetch('user/update', {method: 'POST', body: data}).then(r => r.text()).then(data => {
-        try {
-            data = JSON.parse(data);
-        } catch (err) {
-            prgError.classList.remove('d-none');
-            prgError.innerHTML = data;
-            return;
+        data = parseJSONData(data);
+        if (data !== undefined) {
+            saveBtn.classList.add('d-none');             
         }
-        saveBtn.classList.add('d-none');
     });
 
 if (inputNickname.value.trim() !== '') {
