@@ -21,9 +21,6 @@
 * Установить модуль:
 ``apt-get install php8.1-mysql``
 
-* Включить перенаправление URL-адресов
-``sudo a2enmod rewrite``
-
 * права на запись в файлы
 ``chmod 777 -R var/www/messenger.local``
 

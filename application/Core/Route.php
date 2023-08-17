@@ -11,31 +11,27 @@ class Route
         session_start();
 
         // контроллер и аргументы
-        if (array_key_exists('REDIRECT_URL', $_SERVER)) {
-            $routes = mb_substr($_SERVER['REDIRECT_URL'], 1);
-            $routesArr = explode('/', $routes);
-            // выбор контроллера
-            $controller_name = !empty($routes) ? ucfirst($routesArr[0]) : 'main';
-            // получение имени метода
-            if (count($routesArr) > 1) {
-                $action = $routesArr[1];
-                $actionArr = explode('-', $action);
-                for ($i = 1; $i<count($actionArr); $i++) {
-                    $actionArr[$i] = ucfirst($actionArr[$i]);
-                }
-                $action = implode('', $actionArr);
-            } else {
-                $action = 'index';
+        $routes = mb_substr($_SERVER['REQUEST_URI'], 1);
+        $routes = explode('?', $routes)[0];
+        $routesArr = explode('/', $routes);
+        // выбор контроллера
+        $controller_name = !empty($routes) ? ucfirst($routesArr[0]) : 'main';
+        // получение имени метода
+        if (count($routesArr) > 1) {
+            $action = $routesArr[1];
+            $actionArr = explode('-', $action);
+            for ($i = 1; $i<count($actionArr); $i++) {
+                $actionArr[$i] = ucfirst($actionArr[$i]);
             }
-
-            // преобразовать url в название класса
-            $controller_name = str_replace('-', ' ', $controller_name);
-            $controller_name = ucwords($controller_name);
-            $controller_name = str_replace(' ', '', $controller_name);
+            $action = implode('', $actionArr);
         } else {
-            $controller_name = 'Main';
             $action = 'index';
         }
+
+        // преобразовать url в название класса
+        $controller_name = str_replace('-', ' ', $controller_name);
+        $controller_name = ucwords($controller_name);
+        $controller_name = str_replace(' ', '', $controller_name);
 
         // авторизация сохраняется в куки и сессии. Если авторизация есть, то messenger.local -> messenger.local/chat
         if ($controller_name === 'Main'
