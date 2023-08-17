@@ -8,6 +8,7 @@ class Route
 {
     public static function start()
     {
+        //var_dump($_SERVER['REQUEST_URI']);
         session_start();
 
         // контроллер и аргументы
