@@ -208,9 +208,6 @@ function appendMessage(data)
     // YYYY.MM.DD HH:ii:ss
     let timeInMs = Date.parse(data.time);
     let newDate = new Date(timeInMs);
-    let timeZone = -newDate.getTimezoneOffset() / 60; // текущий часовой пояс
-    timeInMs += (timeZone - 3) * 3600000;
-    newDate = new Date(timeInMs);
     let localTime = newDate.toLocaleString("ru", {
         year: 'numeric',
         month: 'numeric',
