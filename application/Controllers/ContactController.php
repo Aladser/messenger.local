@@ -98,13 +98,14 @@ class ContactController extends Controller
             return;
         } 
 
-        if ($_POST['type'] === 'group') {
-            $chatId = $this->messages->getDiscussionId($_POST['name']);
+        $type = htmlspecialchars($_POST['type']);
+        $name = htmlspecialchars($_POST['name']);
+        if ($type === 'group') {
+            $chatId = $this->messages->getDiscussionId($name);
         } else {
             $clientName = htmlspecialchars($_POST['clientName']);
             $clientId = $this->users->getUserId($clientName);
 
-            $name = htmlspecialchars($_POST['name']);
             $contactId = $this->users->getUserId($name);
             $chatId = $this->messages->getDialogId($clientId, $contactId);
             $this->contacts->removeContact($clientId, $contactId);

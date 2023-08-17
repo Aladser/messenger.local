@@ -4,20 +4,28 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 use Aladser\Core\DB\DBCtl;
+use Aladser\Models\UsersDBTableModel;
+use Aladser\Models\ContactsDBTableModel;
+use Aladser\Models\MessageDBTableModel;
 
 /** контроллер чата */
 class ChatController extends Controller
 {
+    private UsersDBTableModel $users;
+    private MessageDBTableModel $messages;
+
     public function __construct(DBCtl $dbCtl = null)
     {
         parent::__construct($dbCtl);
+        $this->users = $dbCtl->getUsers();
+        $this->messages = $dbCtl->getMessageDBTable();
     }
 
     public function index()
     {
         $userEmail = Controller::getUserMailFromClient();
-        $publicUsername = $this->dbCtl->getUsers()->getPublicUsernameFromEmail($userEmail);
-        $userId = $this->dbCtl->getUsers()->getUserId($userEmail);
+        $publicUsername = $this->users->getPublicUsernameFromEmail($userEmail);
+        $userId = $this->users->getUserId($userEmail);
 
         // удаление временных файлов профиля
         $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
@@ -35,8 +43,8 @@ class ChatController extends Controller
     public function createGroup()
     {
         $userEmail = Controller::getUserMailFromClient();
-        $userId = $this->dbCtl->getUsers()->getUserId($userEmail);
-        $groupId = $this->dbCtl->getMessageDBTable()->createDiscussion($userId);
+        $userId = $this->users->getUserId($userEmail);
+        $groupId = $this->messages->createDiscussion($userId);
         echo json_encode($groupId);
     }
 
@@ -48,20 +56,21 @@ class ChatController extends Controller
             return;
         }
 
-
         $username = htmlspecialchars($_POST["username"]);
-        $userId = $this->dbCtl->getUsers()->getUserId($username);
+        $userId = $this->users->getUserId($username);
+
         $notice = htmlspecialchars($_POST["notice"]);
         $notice = intval($notice);
+
         $chatid = htmlspecialchars($_POST["chat_id"]);
-        echo $this->dbCtl->getMessageDBTable()->setNoticeShow($chatid, $userId, $notice);
+        echo $this->messages->setNoticeShow($chatid, $userId, $notice);
     }
 
     public function getGroups()
     {
         $username = Controller::getUserMailFromClient();
-        $userId = $this->dbCtl->getUsers()->getUserId($username);
-        echo json_encode($this->dbCtl->getMessageDBTable()->getDiscussions($userId));
+        $userId = $this->users->getUserId($username);
+        echo json_encode($this->messages->getDiscussions($userId));
     }
 
     public function getMessages()
@@ -76,9 +85,9 @@ class ChatController extends Controller
         if (isset($_POST['contact'])) {
             $contact = htmlspecialchars($_POST['contact']);
             $userHostName = Controller::getUserMailFromClient();
-            $userId = $this->dbCtl->getUsers()->getUserId($userHostName);
-            $contactId = $this->dbCtl->getUsers()->getUserId($contact);
-            $chatId = $this->dbCtl->getMessageDBTable()->getDialogId($userId, $contactId);
+            $userId = $this->users->getUserId($userHostName);
+            $contactId = $this->users->getUserId($contact);
+            $chatId = $this->messages->getDialogId($userId, $contactId);
             $type = 'dialog';
         } elseif (isset($_POST['discussionid'])) {
             // групповые чаты
@@ -88,7 +97,7 @@ class ChatController extends Controller
 
         $messages = [
             'current_chat' => $chatId, 'type' => $type,
-            'messages' => $this->dbCtl->getMessageDBTable()->getMessages($chatId)
+            'messages' => $this->messages->getMessages($chatId)
         ];
         echo json_encode($messages);
     }

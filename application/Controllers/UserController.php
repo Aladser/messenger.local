@@ -5,10 +5,20 @@ namespace Aladser\Controllers;
 use Aladser\Core\Controller;
 use Aladser\Core\EMailSender;
 use Aladser\Core\ConfigClass;
+use Aladser\Core\DB\DBCtl;
+use Aladser\Models\UsersDBTableModel;
 
 /** контрллер проверки уникальности никнейма */
 class UserController extends Controller
 {
+    private UsersDBTableModel $users;
+
+    public function __construct(DBCtl $dbCtl = null)
+    {
+        parent::__construct($dbCtl);
+        $this->users = $dbCtl->getUsers();
+    }
+
     public function isUniqueNickname()
     {
         // проверка CSRF
@@ -16,7 +26,7 @@ class UserController extends Controller
             echo 'Подмена URL-адреса';
             return;
         } 
-        $response = $this->dbCtl->getUsers()->isUniqueNickname($_POST['nickname']) ? 1 : 0; 
+        $response = $this->users->isUniqueNickname($_POST['nickname']) ? 1 : 0; 
         echo json_encode(['response' => $response]);
     }
 
@@ -26,9 +36,9 @@ class UserController extends Controller
         if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
             // проверка на подмену адреса
             echo 'Подмена URL-адреса';
-        } elseif ($this->dbCtl->getUsers()->existsUser($_POST['email'])) {
+        } elseif ($this->users->existsUser($_POST['email'])) {
             // проверка введенныъ данных
-            $isValidLogin = $this->dbCtl->getUsers()->checkUser($_POST['email'], $_POST['password']) == 1;
+            $isValidLogin = $this->users->checkUser($_POST['email'], $_POST['password']) == 1;
             if ($isValidLogin) {
                 $_SESSION['auth'] = 1;
                 $_SESSION['email'] = $_POST['email'];
@@ -61,17 +71,17 @@ class UserController extends Controller
             return;
         } 
 
-        if (!$this->dbCtl->getUsers()->existsUser($_POST['email'])) {
+        if (!$this->users->existsUser($_POST['email'])) {
             // экранирование символов логина и пароля
             //$email = htmlspecialchars($_POST['email']);
             //$password = htmlspecialchars($_POST['password']);
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-            $isRegUser = $this->dbCtl->getUsers()->addUser($email, $password) === 1;
+            $isRegUser = $this->users->addUser($email, $password) === 1;
             if ($isRegUser) {
                 $hash = md5($email . time());
-                $this->dbCtl->getUsers()->addUserHash($email, $hash);
+                $this->users->addUserHash($email, $hash);
                 $text = "
                 <body>
                 <p>Для подтверждения учетной записи в Месенджере перейдите по 
@@ -122,13 +132,13 @@ class UserController extends Controller
             }
             if (rename($fromPath, $toPath)) {
                 $data['user_photo'] = $filename;
-                echo $this->dbCtl->getUsers()->setUserData($data) ? 1 : 0;
+                echo $this->users->setUserData($data) ? 1 : 0;
             } else {
                 echo 0;
             }
         } else {
             $data['user_photo'] = $filename;
-            echo $this->dbCtl->getUsers()->setUserData($data) ? 1 : 0;
+            echo $this->users->setUserData($data) ? 1 : 0;
         }
     }
 }
