@@ -2,7 +2,7 @@
 
 ### Сайт разворачивается на Ubuntu + PHP7.4 + Apache + MySQL 8. Настройка запуска
 
-* Записать в etc/apache2/sites-available/messenger.local.conf и сделать ссылку в etc/apache2/sites-enabled/messenger.local.conf
+* Записать в *etc/apache2/sites-available/messenger.local.conf* и сделать ссылку в *etc/apache2/sites-enabled/messenger.local.conf*
 
 ```
 <VirtualHost *:80>
