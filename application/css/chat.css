@@ -263,6 +263,13 @@
     background-size: cover;
 }
 
+.frame-error{
+    width: 30rem;
+    background-color: white;
+    box-shadow: 2px 2px 5px black;
+    display: none;
+}
+.frame-error--active {display: block;}
 
 @media (max-width: 1200px) {
     .options-container {

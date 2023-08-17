@@ -310,6 +310,7 @@ function parseJSONData(data)
         data = JSON.parse(data);
         return data;
     } catch (err) {
+        frameError.classList.add('frame-error--active');
         frameError.innerHTML = data;
         return  undefined;
     }
@@ -618,10 +619,13 @@ function editNoticeShowContextMenu()
     urlParams.set('CSRF', inputCsrf.value);
     // изменяет установленный флаг получения уведомлений
     fetch('/chat/edit-notice-show', {method: 'post', body: urlParams}).then(r => r.text()).then(notice => {
-        if (notice === 'Подмена URL-адреса') {
-            console.log(notice);
+        notice = parseJSONData(notice);
+        if (notice === undefined) {
             return;
+        } else {
+            notice = notice.responce;
         }
+        console.log(notice);
 
         notice = parseInt(notice);
         selectedContact.setAttribute('data-notice', notice);  // меняем атрибут

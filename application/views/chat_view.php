@@ -71,7 +71,7 @@
     </div>
 
     <!-- окно ошибки -->
-    <div class='position-absolute top-0 left-0 p-2 ms-2 mt- text-wrap text-break text-danger fw-bold' id='frame-error'></div>
+    <div class='frame-error position-absolute top-0 left-0 p-2 ms-2 mt- text-wrap text-break text-danger fw-bold' id='frame-error'></div>
 </div>
 
 <!-- контектсное меню сообщения -->

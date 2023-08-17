@@ -51,7 +51,7 @@ class ChatController extends Controller
     public function editNoticeShow()
     {
         // проверка CSRF
-        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
             return;
         }
@@ -63,7 +63,7 @@ class ChatController extends Controller
         $notice = intval($notice);
 
         $chatid = htmlspecialchars($_POST["chat_id"]);
-        echo $this->messages->setNoticeShow($chatid, $userId, $notice);
+        echo json_encode(['responce' => $this->messages->setNoticeShow($chatid, $userId, $notice)]);
     }
 
     public function getGroups()
@@ -76,7 +76,7 @@ class ChatController extends Controller
     public function getMessages()
     {
         // проверка CSRF
-        if (!Controller::checkCSRF($_POST['CSRF'], $_SESSION['CSRF'])) {
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
             return;
         } 
