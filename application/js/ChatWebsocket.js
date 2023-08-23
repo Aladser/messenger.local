@@ -179,6 +179,11 @@ class ChatWebsocket
 
     addContact = contact => this.contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
     addGroup = group => this.groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
+
     setOpenChatopenChatId = openChatId =>  this.openChatId = openChatId;
     setSelectedMessage = selectedMessage => this.selectedMessage = selectedMessage;
+
+    getSelectedMessageText = () => this.selectedMessage.querySelector('.msg__text').innerHTML;
+    getSelectedMessageAuthor = () => this.selectedMessage.getAttribute('data-author');
+    isForwardedSelectedMessage = () => this.selectedMessage.getAttribute('data-forward') == 1;
 }

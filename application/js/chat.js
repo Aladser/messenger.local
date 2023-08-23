@@ -6,6 +6,7 @@ const inputCsrf = document.querySelector('#input-csrf');
 const frameError = document.querySelector('#frame-error');
 /** адрес вебсокета */
 const wsUri = 'ws://localhost:8888';
+
 /** ВЕБСОКЕТ СООБЩЕНИЙ */
 const websocket = new ChatWebsocket(wsUri);
 
@@ -36,8 +37,6 @@ const messageInput = document.querySelector("#message-input");
 const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
 /** кнопка отправить сообщение */
 const sendMsgBtn = document.querySelector("#send-msg-btn");
-/** элемент для системных сообщений */
-const systemMessagePrg = document.querySelector("#message-system");
 
 /** блок кнопок пересылки сообщения  */
 const forwardBtnBlock = document.querySelector('#btn-resend-block');
@@ -397,7 +396,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
 /** Переотправить сообщение */
 function forwardMessage()
 {
-    websocket.sendData(websocket.selectedMessage.querySelector('.msg__text').innerHTML, 'FORWARD');
+    websocket.sendData(websocket.getSelectedMessageText(), 'FORWARD');
 
     forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
     forwardedMessageRecipientElement.classList.remove('contact-recipient'); // убрать выделение
@@ -411,7 +410,7 @@ function resetForwardMessage()
 {
     forwardBtnBlock.classList.remove('btn-resend-block_active');
     isForwaredMessage = null;
-    websocket.selectedMessage(null);
+    websocket.setSelectedMessage(null);
     let contactRecipient = document.querySelector('.contact-recipient');
     if (contactRecipient) {
         contactRecipient.classList.remove('contact-recipient');
@@ -445,14 +444,14 @@ function editMessageContextMenu()
 {
     isEditMessage = true;
     hideContextMenu();
-    messageInput.value = websocket.selectedMessage.querySelector('.msg__text').innerHTML;
+    messageInput.value = websocket.getSelectedMessageText();
     messageInput.focus();
 }
 
 /** контекстное меню: удалить сообщение  */
 function removeMessageContextMenu()
 {
-    let msg = websocket.selectedMessage.querySelector('.msg__text').innerHTML;
+    let msg = websocket.getSelectedMessageText();
     websocket.sendData(msg, 'REMOVE');
     websocket.setSelectedMessage(null);
     hideContextMenu();
@@ -628,13 +627,13 @@ window.oncontextmenu = event => {
         websocket.setSelectedMessage(messageDOM);
 
         showContextMenu(msgContextMenu, event);
-        let msgUserhost = websocket.selectedMessage.getAttribute('data-author');
+        let msgUserhost = websocket.getSelectedMessageAuthor();
         // отображение кнопки - изменить сообщение
         editMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
         // отображение кнопки - удалить сообщение
         removeMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
 
-        if (websocket.selectedMessage.getAttribute('data-forward') == 1) {
+        if (websocket.isForwardedSelectedMessage()) {
             editMsgContextMenuBtn.style.display = 'none';
         }
     } else if (['contact__name', 'contact__img img pe-2', 'contact position-relative mb-2', 'group', 'notice-soundless'].includes(event.target.className)) {
