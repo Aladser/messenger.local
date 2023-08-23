@@ -3,6 +3,7 @@
 namespace Aladser\Core;
 
 use Aladser\Core\DB\DBCtl;
+use \Aladser\Controllers\Page404Controller;
 
 class Route
 {
@@ -58,10 +59,18 @@ class Route
                 new DBCtl(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB)
             );
         } else {
-            $controller_name = "\\Aladser\\Controllers\\Page404Controller";
-            $controller = new $controller_name();
+            $controller = new Page404Controller();
+            $controller->index();
+            return;
         }
 
-        $controller->$action();
+        // вызов метода
+        if (method_exists($controller, $action)) {
+            $controller->$action();
+        } else {
+            $controller = new Page404Controller();
+            $controller->index();
+        }
+        
     }
 }
