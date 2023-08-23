@@ -37,10 +37,4 @@ abstract class Controller
         $_SESSION["CSRF"] = $csrfToken;
         return $csrfToken;
     }
-
-    /** проверить CSRF-токен */
-    public static function checkCSRF($clientCSRF, $serverSCRF): bool
-    {
-        return $clientCSRF === $serverSCRF;
-    }
 }
