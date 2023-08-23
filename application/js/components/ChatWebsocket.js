@@ -177,10 +177,14 @@ class ChatWebsocket
         this.messageInput.value = '';
     }
 
+    /** добавить в фронти-список контактов */
     addContact = contact => this.contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+    /** добавить в фронт-список групп */
     addGroup = group => this.groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
 
-    setOpenChatopenChatId = openChatId =>  this.openChatId = openChatId;
+    /** установить ID открыторого чата */
+    setOpenChatOpenChatId = openChatId =>  this.openChatId = openChatId;
+    /** установить выбранное сообщение*/
     setSelectedMessage = selectedMessage => this.selectedMessage = selectedMessage;
 
     getSelectedMessageText = () => this.selectedMessage.querySelector('.msg__text').innerHTML;

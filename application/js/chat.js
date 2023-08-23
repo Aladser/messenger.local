@@ -297,7 +297,7 @@ const showChat = (urlParams, bdChatName, type) => {
             chat.innerHTML = '';
 
             chatType = data.type;
-            websocket.openChatId = parseInt(data.current_chat);
+            websocket.setOpenChatOpenChatId(data.current_chat);
 
             chatNameTitle.innerHTML = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
             chatNameLabel.innerHTML = bdChatName;
