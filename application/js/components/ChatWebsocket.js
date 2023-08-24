@@ -1,7 +1,5 @@
 class ChatWebsocket
 {
-    webSocket = null;
-    
     errorDomElement = document.querySelector("#message-system");
     publicClientUsername = document.querySelector('#clientuser').getAttribute('data-clientuser-publicname');
     chat = document.querySelector("#messages");
@@ -15,8 +13,8 @@ class ChatWebsocket
     chatType = null;
     openChatId = -1;
 
-    constructor(wsUri) {
-        this.webSocket = new WebSocket(wsUri);
+    constructor(webSocket) {
+        this.webSocket = webSocket;
         this.webSocket.onerror = this.onError;
         this.webSocket.onmessage = e => this.onMessage(e);
     }

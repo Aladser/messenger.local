@@ -4,11 +4,6 @@ const APP_PATH = "http://messenger.local/application/";
 const inputCsrf = document.querySelector('#input-csrf');
 /** окно ошибок*/
 const frameError = document.querySelector('#frame-error');
-/** адрес вебсокета */
-const wsUri = 'ws://localhost:8888';
-
-/** ВЕБСОКЕТ СООБЩЕНИЙ */
-const websocket = new ChatWebsocket(wsUri);
 
 /** элемент имени клиента-пользователя*/
 const clientNameBlock = document.querySelector('#clientuser');
@@ -74,6 +69,10 @@ let isForwaredMessage = false;
 let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
+
+/** ВЕБСОКЕТ СООБЩЕНИЙ */
+ws = new WebSocket('ws://localhost:8888');
+const chatWebsocket = new ChatWebsocket(ws);
 
 /** создать DOM-элемент сообщения чата*/
 function appendMessage(data)
@@ -195,7 +194,7 @@ const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).the
         contactsContainer.innerHTML = '';
         contactList = [];
         data.forEach(contact => {
-            websocket.addContact({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+            chatWebsocket.addContact({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
             appendContactDOMElement(contact);
         });
     }
@@ -207,7 +206,7 @@ const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data 
     if (data !== undefined) {
         groupList = [];
         data.forEach(group => {
-            websocket.addGroup({'name': group.name, 'chat': group.chat, 'notice': group.notice});
+            chatWebsocket.addGroup({'name': group.name, 'chat': group.chat, 'notice': group.notice});
             appendGroupDOMElement(group);
         });
     }
@@ -297,7 +296,7 @@ const showChat = (urlParams, bdChatName, type) => {
             chat.innerHTML = '';
 
             chatType = data.type;
-            websocket.setOpenChatOpenChatId(data.current_chat);
+            chatWebsocket.setOpenChatOpenChatId(data.current_chat);
 
             chatNameTitle.innerHTML = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
             chatNameLabel.innerHTML = bdChatName;
@@ -318,7 +317,7 @@ function showForwardedMessageRecipient(contactDomElem)
     let contactNameElem = contactDomElem.querySelector('.contact__name');
     if (contactNameElem) {
         forwardedMessageRecipientElement = contactDomElem;
-        websocket.forwardedMessageRecipientName = contactNameElem.innerHTML.trim();
+        chatWebsocket.forwardedMessageRecipientName = contactNameElem.innerHTML.trim();
         let contactRecipient = document.querySelector('.contact-recipient');
         if (contactRecipient) {
             contactRecipient.classList.remove('contact-recipient');
@@ -396,7 +395,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
 /** Переотправить сообщение */
 function forwardMessage()
 {
-    websocket.sendData(websocket.getSelectedMessageText(), 'FORWARD');
+    chatWebsocket.sendData(chatWebsocket.getSelectedMessageText(), 'FORWARD');
 
     forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
     forwardedMessageRecipientElement.classList.remove('contact-recipient'); // убрать выделение
@@ -410,7 +409,7 @@ function resetForwardMessage()
 {
     forwardBtnBlock.classList.remove('btn-resend-block_active');
     isForwaredMessage = null;
-    websocket.setSelectedMessage(null);
+    chatWebsocket.setSelectedMessage(null);
     let contactRecipient = document.querySelector('.contact-recipient');
     if (contactRecipient) {
         contactRecipient.classList.remove('contact-recipient');
@@ -444,16 +443,16 @@ function editMessageContextMenu()
 {
     isEditMessage = true;
     hideContextMenu();
-    messageInput.value = websocket.getSelectedMessageText();
+    messageInput.value = chatWebsocket.getSelectedMessageText();
     messageInput.focus();
 }
 
 /** контекстное меню: удалить сообщение  */
 function removeMessageContextMenu()
 {
-    let msg = websocket.getSelectedMessageText();
-    websocket.sendData(msg, 'REMOVE');
-    websocket.setSelectedMessage(null);
+    let msg = chatWebsocket.getSelectedMessageText();
+    chatWebsocket.sendData(msg, 'REMOVE');
+    chatWebsocket.setSelectedMessage(null);
     hideContextMenu();
 }
 
@@ -550,10 +549,10 @@ function removeContactContextMenu()
 function sendMessage()
 {
     if (isEditMessage) {
-        websocket.sendData(messageInput.value, 'EDIT');
+        chatWebsocket.sendData(messageInput.value, 'EDIT');
         isEditMessage = false;
     } else {
-        websocket.sendData(messageInput.value, 'NEW');
+        chatWebsocket.sendData(messageInput.value, 'NEW');
     }
 }
 
@@ -624,16 +623,16 @@ window.oncontextmenu = event => {
         } else {
             messageDOM = event.target.parentNode.parentNode.parentNode;
         }
-        websocket.setSelectedMessage(messageDOM);
+        chatWebsocket.setSelectedMessage(messageDOM);
 
         showContextMenu(msgContextMenu, event);
-        let msgUserhost = websocket.getSelectedMessageAuthor();
+        let msgUserhost = chatWebsocket.getSelectedMessageAuthor();
         // отображение кнопки - изменить сообщение
         editMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
         // отображение кнопки - удалить сообщение
         removeMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
 
-        if (websocket.isForwardedSelectedMessage()) {
+        if (chatWebsocket.isForwardedSelectedMessage()) {
             editMsgContextMenuBtn.style.display = 'none';
         }
     } else if (['contact__name', 'contact__img img pe-2', 'contact position-relative mb-2', 'group', 'notice-soundless'].includes(event.target.className)) {
