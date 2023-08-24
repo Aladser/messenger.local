@@ -15,21 +15,18 @@ class ChatWebsocket
     chatType = null;
     openChatId = -1;
 
-    constructor(wsUri)
-    {
+    constructor(wsUri) {
         this.webSocket = new WebSocket(wsUri);
         this.webSocket.onerror = this.onError;
         this.webSocket.onmessage = e => this.onMessage(e);
     }
 
     // получение ошибок вебсокета
-    onError()
-    {
+    onError() {
         this.errorDomElement.innerHTML = 'Ошибка подключения к серверу';
     }
 
-    onMessage(e)
-    {
+    onMessage(e) {
         let data = JSON.parse(e.data);
     
         // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу
@@ -99,8 +96,7 @@ class ChatWebsocket
     }
 
     /** создать DOM-элемент сообщения чата*/
-    appendMessage(data)
-    {
+    appendMessage(data) {
         // показ местного времени
         // YYYY.MM.DD HH:ii:ss
         let timeInMs = Date.parse(data.time);
@@ -146,8 +142,7 @@ class ChatWebsocket
      * @param message текст сообщения
      * @param messageType тип сообщения: NEW, EDIT, REMOVE или FORWARD
      */
-    sendData(message, messageType)
-    {
+    sendData(message, messageType) {
         // проверка сокета
         if (this.webSocket.readyState !== 1) {
             alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
