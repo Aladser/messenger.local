@@ -1,21 +1,27 @@
 /** контексное меню контакта*/
 class ContactContexMenu
 {
+    constructor(contextMenuDOM, option, selectedContac, chatWSt) {
+        suprer(contextMenuDOM, option);
+        this.selectedContact = selectedContact;
+        this.chatWS = chatWSt;
+    }
+
     /** контекстное меню: включить/отключить уведомления */
     editNoticeShowContextMenu()
     {
         // создание пакета с id чата, значением статуса показа уведомлений
         let data = {};
 
-        if (selectedContact.className === 'group') {
+        if (this.selectedContact.className === 'group') {
             // поиск выбранного группового чата
-            data.chat = groupList.find(el => el.name === selectedContact.title).chat;
+            data.chat = groupList.find(el => el.name === this.selectedContact.title).chat;
         } else {
             //  поиск выбранного контакта
-            let name = selectedContact.querySelector('.contact__name').innerHTML;
+            let name = this.selectedContact.querySelector('.contact__name').innerHTML;
             data.chat = chatWebsocket.contactList.find(el => el.name === name).chat;
         }
-        data.notice = selectedContact.getAttribute('data-notice') == 1 ? 0 : 1; //инвертирование значения. Это значение будет записано в БД
+        data.notice = this.selectedContact.getAttribute('data-notice') == 1 ? 0 : 1; //инвертирование значения. Это значение будет записано в БД
         hideContextMenu();
 
         // отправка данных на сервер
@@ -34,24 +40,24 @@ class ContactContexMenu
             }
 
             notice = parseInt(notice);
-            selectedContact.setAttribute('data-notice', notice);  // меняем атрибут
+            this.selectedContact.setAttribute('data-notice', notice);  // меняем атрибут
             let elem;
-            if (selectedContact.classList.contains('contact')) {
+            if (this.selectedContact.classList.contains('contact')) {
                 // если контакт, то изменяем значение в массиве контактов
 
-                elem = chatWebsocket.contactList.find(el => el.name === selectedContact.title);
-            } else if (selectedContact.className === 'group') {
+                elem = chatWebsocket.contactList.find(el => el.name === this.selectedContact.title);
+            } else if (this.selectedContact.className === 'group') {
                 // если групповой чат, то изменяем значение в массиве групповых чатов
 
-                elem = groupList.find(el => el.name === selectedContact.title);
+                elem = groupList.find(el => el.name === this.selectedContact.title);
             }
             elem.notice = notice;
 
             // изменение визуального уведомления
             if (notice === 1) {
-                selectedContact.querySelector('.notice-soundless').remove();
+                this.selectedContact.querySelector('.notice-soundless').remove();
             } else {
-                selectedContact.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
+                this.selectedContact.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
             }
         });
     }
