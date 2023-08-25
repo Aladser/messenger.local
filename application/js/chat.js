@@ -36,20 +36,6 @@ const forwardBtnBlock = document.querySelector('#btn-resend-block');
 const forwardBtn = document.querySelector('#btn-resend');
 /** кнопка отмены пересылки сообщения */
 const resetForwardtBtn = document.querySelector('#btn-resend-reset');
-/** контекстное меню сообщения*/
-const msgContextMenu = document.querySelector('#msg-context-menu');
-/** кнопка контекстное меню: Редактировать сообщение*/
-const editMsgContextMenuBtn = document.querySelector('#edit-msg');
-/** кнопка контекстное меню: Удалить сообщение*/
-const removeMsgContextMenuBtn = document.querySelector('#remove-msg');
-/** кнопка контекстное меню: Переслать сообщение*/
-const forwardMsgContextMenuBtn = document.querySelector('#resend-msg');
-/** кнопка контексное меню контакта*/
-const contactContextMenu = document.querySelector('#contact-context-menu');
-/** кнопка контекстное меню: изменить показ уведомлений*/
-const editNoticeShowContextMenuBtn = document.querySelector('#contact-notice-edit');
-/** кнопка контекстное меню: удалить контакт-группу*/
-const removeContactContextMenuBtn = document.querySelector('#contact-remove-contact');
 /** DOM-элемент получателя пересланного письма*/
 let forwardedMessageRecipientElement = null;
 /** текущий тип чата*/
@@ -216,19 +202,6 @@ function appendGroupDOMElement(group, place = 'END')
     }
 }
 
-/** парсинг JSON-данных */
-function parseJSONData(data)
-{
-    try {
-        data = JSON.parse(data);
-        return data;
-    } catch (err) {
-        frameError.classList.add('frame-error--active');
-        frameError.innerHTML = data;
-        return  undefined;
-    }
-}
-
 /** показать контакты пользователя-клиента*/
 const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).then(data => {
     data = parseJSONData(data);
@@ -337,7 +310,7 @@ const showChat = (urlParams, bdChatName, type) => {
             chat.innerHTML = '';
 
             chatType = data.type;
-            chatWebsocket.setOpenChatOpenChatId(data.current_chat);
+            chatWebsocket.openChatId = data.current_chat;
 
             chatNameTitle.innerHTML = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
             chatNameLabel.innerHTML = bdChatName;
@@ -449,7 +422,7 @@ function resetForwardMessage()
     forwardBtnBlock.classList.remove('btn-resend-block_active');
     messageContexMenu.option = false;
 
-    chatWebsocket.setSelectedMessage(null);
+    chatWebsocket.selectedMessage = null;
     let contactRecipient = document.querySelector('.contact-recipient');
     if (contactRecipient) {
         contactRecipient.classList.remove('contact-recipient');
@@ -485,12 +458,11 @@ window.oncontextmenu = event => {
         messageContexMenu.show(event);
         let msgUserhost = chatWebsocket.getSelectedMessageAuthor();
         // отображение кнопки - изменить сообщение
-        editMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
+        messageContexMenu.editBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
         // отображение кнопки - удалить сообщение
-        removeMsgContextMenuBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
-
+        messageContexMenu.removeBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block'; 
         if (chatWebsocket.isForwardedSelectedMessage()) {
-            editMsgContextMenuBtn.style.display = 'none';
+            messageContexMenu.editBtn.style.display = 'none';
         }
     } else if (['contact__name', 'contact__img img pe-2', 'contact position-relative mb-2', 'group', 'notice-soundless'].includes(event.target.className)) {
         // клик на элементе контакта
@@ -504,9 +476,9 @@ window.oncontextmenu = event => {
 
         let isNotice = contactContexMenu.selectedContact.getAttribute('data-notice');
         // показ кнопки - включение/выключение уведомлений
-        editNoticeShowContextMenuBtn.innerHTML = isNotice == 1 ? 'Отключить уведомления' : 'Включить уведомления';
+        contactContexMenu.editNoticeShowBtn.innerHTML = isNotice == 1 ? 'Отключить уведомления' : 'Включить уведомления';
         // показ кнопки - удалить группу
-        removeContactContextMenuBtn.innerHTML= event.target.className === 'group' ? 'Удалить группу' : 'Удалить контакт';
+        contactContexMenu.removeContactBtn.innerHTML = event.target.className === 'group' ? 'Удалить группу' : 'Удалить контакт';
 
         contactContexMenu.show(event);
     } else {
@@ -520,6 +492,19 @@ window.onclick = event => {
         hide();
     }
 };
+
+/** парсинг JSON-данных */
+function parseJSONData(data)
+{
+    try {
+        data = JSON.parse(data);
+        return data;
+    } catch (err) {
+        frameError.classList.add('frame-error--active');
+        frameError.innerHTML = data;
+        return  undefined;
+    }
+}
 
 /** скрыть контекстные меню */
 function hide()

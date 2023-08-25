@@ -71,7 +71,7 @@ class ContactContexMenu extends ContexMenu
         });
     }
 
-    /** контекстное меню: удалить контакт/групповой чат */
+    /** удалить контакт/групповой чат */
     removeContact()
     {
         let urlParams = new URLSearchParams();

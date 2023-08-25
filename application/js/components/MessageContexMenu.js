@@ -9,14 +9,18 @@ class MessageContexMenu extends ContexMenu
     constructor(contexMenuDOM, chatWS)
     {
         super(contexMenuDOM);
-        this.chatWS = chatWS;
         
-        document.querySelector('#edit-msg').onclick = () => this.editMessage();
-        document.querySelector('#remove-msg').onclick = () => this.removeMessage();
-        document.querySelector('#resend-msg').onclick = () => this.forwardMessage();
+        this.chatWS = chatWS;
+        this.editBtn = contexMenuDOM.querySelector('#edit-msg');
+        this.removeBtn = contexMenuDOM.querySelector('#remove-msg');
+        this.forwardBtn = contexMenuDOM.querySelector('#resend-msg');
+
+        this.editBtn.onclick = () => this.editMessage();
+        this.removeBtn.onclick = () => this.removeMessage();
+        this.forwardBtn.onclick = () => this.forwardMessage();
     }
 
-    /** контекстное меню: изменить сообщение */
+    /** изменить сообщение */
     editMessage()
     {
         this.option = 'EDIT';
@@ -25,7 +29,7 @@ class MessageContexMenu extends ContexMenu
         this.hide();
     }
 
-    /** контекстное меню: переотправить сообщение */
+    /** переотправить сообщение */
     forwardMessage()
     {
         this.option = 'FORWARD';
@@ -33,7 +37,7 @@ class MessageContexMenu extends ContexMenu
         this.hide();
     }
         
-    /** контекстное меню: удалить сообщение  */
+    /** удалить сообщение  */
     removeMessage()
     {
         let msg = this.chatWS.getSelectedMessageText();
