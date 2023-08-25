@@ -44,16 +44,24 @@ let chatType = null;
 let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
+/** флаг поиска */
+let isSearch = false;
+
 /** вебсокет */
 const ws = new WebSocket('ws://localhost:8888');
 /** ВЕБСОКЕТ СООБЩЕНИЙ */
 const chatWebsocket = new ChatWebsocket(ws);
+
 /** контекстные меню */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf);
 
 window.addEventListener('DOMContentLoaded', () => {
-    resetFindContactsBtn.onclick = showContacts;
+    resetFindContactsBtn.onclick = () => {
+        isSearch = false;
+        showContacts();
+    }
+
     chat.onscroll = () => {
         hide();
     }
@@ -230,6 +238,7 @@ const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data 
 /** поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов */
 function findContacts()
 {
+    isSearch = true;
     let urlParams = new URLSearchParams();
     urlParams.set('userphrase', this.value);
     urlParams.set('CSRF', inputCsrf.value);
@@ -363,7 +372,6 @@ function setContactOrGroupClick(domElement, urlArg, type)
         // если пересылается сообщение, показать, кому пересылается
         if (messageContexMenu.option == 'FORWARD') {
             showForwardedMessageRecipient(domElement);
-            messageContexMenu.option = false;
             return;
         }
 
@@ -400,6 +408,12 @@ function setContactOrGroupClick(domElement, urlArg, type)
             return;
         }
 
+        // если поиск контакта
+        if (isSearch) {
+            isSearch = false;
+            showContacts();
+        }
+        
         showChat(urlParams, type === 'dialog' ? urlArg : groupChatName, type); // показать чат
     };
 }
