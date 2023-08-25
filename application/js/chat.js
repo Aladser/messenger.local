@@ -61,10 +61,6 @@ let selectedContact = null;
 let forwardedMessageRecipientElement = null;
 /** текущий тип чата*/
 let chatType = null;
-/** флаг измененного сообщения */
-let isEditMessage = false;
-/** флаг пересылаемого сообщения*/
-let isForwaredMessage = false;
 /** список участников выбранной группы */
 let groupContacts = [];
 /** массив нажатых клавиш */
@@ -72,7 +68,63 @@ let pressedKeys = [];
 
 /** ВЕБСОКЕТ СООБЩЕНИЙ */
 ws = new WebSocket('ws://localhost:8888');
+/** тип сообщения */
+const messageType = {
+    value: null
+};
+
 const chatWebsocket = new ChatWebsocket(ws);
+const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'), messageType, chatWebsocket);
+
+window.addEventListener('DOMContentLoaded', () => {
+    resetFindContactsBtn.onclick = showContacts;
+    chat.onscroll = hideContextMenu;
+    editNoticeShowContextMenuBtn.onclick = editNoticeShowContextMenu;
+    removeContactContextMenuBtn.onclick = removeContactContextMenu;
+    forwardBtn.onclick = forwardMessage;
+    resetForwardtBtn.onclick = resetForwardMessage;
+    // запрет контекстного меню
+    document.oncontextmenu = () => false;
+
+    showContacts();
+    showGroups();
+
+    // создание группового чата
+    createGroupOption.onclick = () => fetch('chat/create-group').then(r => r.json()).then(data => {
+        groupList.push({'name': data.name, 'chat':data.chat, 'notice': 1});
+        appendGroupDOMElement(data, 'START');
+    });
+
+    // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
+    findContactsInput.addEventListener('input', findContacts);
+
+    //----- ОТПРАВКА СООБЩЕНИЯ -----
+    sendMsgBtn.onclick = sendMessage;
+
+    // нажатие клавиши в поле ввода сообщения
+    messageInput.onkeydown = event => {
+        if (event.code === 'Enter' || event.code === 'ControlLeft') {
+            pressedKeys.push(event.code);
+        }
+    };
+
+    // отпускание клавиши в поле ввода сообщения
+    messageInput.onkeyup = event => {
+        if (event.code === 'Enter') {
+            if (pressedKeys.indexOf('ControlLeft') !== -1) {
+                messageInput.value += '\n';
+            } else {
+                // отправка сообщения, если Enter
+                // если поседний символ - перевод строки
+                if (messageInput.value[messageInput.value.length - 1] === '\n') {
+                    messageInput.value = messageInput.value.substring(0, messageInput.value.length - 1);
+                }
+                sendMessage();
+            }
+        }
+        pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
+    };
+});
 
 /** создать DOM-элемент сообщения чата*/
 function appendMessage(data)
@@ -192,7 +244,6 @@ const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).the
     if (data !== undefined) {
         findContactsInput.value = '';
         contactsContainer.innerHTML = '';
-        contactList = [];
         data.forEach(contact => {
             chatWebsocket.addContact({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
             appendContactDOMElement(contact);
@@ -284,7 +335,6 @@ const showGroupRecipients = (domElement, discussionid) => {
     });
 };
 
-
 /** показать сообщения */
 const showChat = (urlParams, bdChatName, type) => {
     urlParams.set('CSRF', inputCsrf.value);
@@ -309,7 +359,6 @@ const showChat = (urlParams, bdChatName, type) => {
         }
     });
 };
-
 
 /** показать на странице получателя пересылаемого сообщения*/
 function showForwardedMessageRecipient(contactDomElem)
@@ -348,9 +397,9 @@ function setContactOrGroupClick(domElement, urlArg, type)
 {
     return function () {
         // если пересылается сообщение, показать, кому пересылается
-        if (isForwaredMessage) {
+        if (messageType.value == 'FORWARD') {
             showForwardedMessageRecipient(domElement);
-            isForwaredMessage = false;
+            messageType.value = false;
             return;
         }
 
@@ -370,9 +419,9 @@ function setContactOrGroupClick(domElement, urlArg, type)
                     return;
                 }
 
-                let contact = contactList.find(elem => elem.chat == dbContact.chat_id);
+                let contact = chatWebsocket.contactList.find(elem => elem.chat == dbContact.chat_id);
                 if (contact === undefined) {
-                    contactList.push(dbContact);
+                    chatWebsocket.addContact(dbContact);
                 }
             });
         } else if (type === 'discussion') {
@@ -390,7 +439,6 @@ function setContactOrGroupClick(domElement, urlArg, type)
         showChat(urlParams, type === 'dialog' ? urlArg : groupChatName, type); // показать чат
     };
 }
-
 
 /** Переотправить сообщение */
 function forwardMessage()
@@ -417,8 +465,6 @@ function resetForwardMessage()
     forwardBtn.disabled = true;
 }
 
-
-// ***** Контекстное меню *****
 /** показать контекстное меню */
 function showContextMenu(contextMenu, event)
 {
@@ -430,38 +476,9 @@ function showContextMenu(contextMenu, event)
 /** скрыть контекстное меню*/
 function hideContextMenu()
 {
-    msgContextMenu.style.left = '0px';
-    msgContextMenu.style.top = '1000px';
-    msgContextMenu.style.display = 'none';
     contactContextMenu.style.left = '100px';
     contactContextMenu.style.top = '1000px';
     contactContextMenu.style.display = 'none';
-}
-
-/** контекстное меню: изменить сообщение */
-function editMessageContextMenu()
-{
-    isEditMessage = true;
-    hideContextMenu();
-    messageInput.value = chatWebsocket.getSelectedMessageText();
-    messageInput.focus();
-}
-
-/** контекстное меню: удалить сообщение  */
-function removeMessageContextMenu()
-{
-    let msg = chatWebsocket.getSelectedMessageText();
-    chatWebsocket.sendData(msg, 'REMOVE');
-    chatWebsocket.setSelectedMessage(null);
-    hideContextMenu();
-}
-
-/** контекстное меню: переотправить сообщение */
-function forwardMessageContextMenu()
-{
-    hideContextMenu();
-    isForwaredMessage = true;
-    forwardBtnBlock.classList.add('btn-resend-block_active');
 }
 
 /** контекстное меню: включить/отключить уведомления */
@@ -476,7 +493,7 @@ function editNoticeShowContextMenu()
     } else {
         //  поиск выбранного контакта
         let name = selectedContact.querySelector('.contact__name').innerHTML;
-        data.chat = contactList.find(el => el.name === name).chat;
+        data.chat = chatWebsocket.contactList.find(el => el.name === name).chat;
     }
     data.notice = selectedContact.getAttribute('data-notice') == 1 ? 0 : 1; //инвертирование значения. Это значение будет записано в БД
     hideContextMenu();
@@ -495,7 +512,6 @@ function editNoticeShowContextMenu()
         } else {
             notice = notice.responce;
         }
-        console.log(notice);
 
         notice = parseInt(notice);
         selectedContact.setAttribute('data-notice', notice);  // меняем атрибут
@@ -503,7 +519,7 @@ function editNoticeShowContextMenu()
         if (selectedContact.classList.contains('contact')) {
             // если контакт, то изменяем значение в массиве контактов
 
-            elem = contactList.find(el => el.name === selectedContact.title);
+            elem = chatWebsocket.contactList.find(el => el.name === selectedContact.title);
         } else if (selectedContact.className === 'group') {
             // если групповой чат, то изменяем значение в массиве групповых чатов
 
@@ -548,68 +564,13 @@ function removeContactContextMenu()
 /** отправить сообщение на сервер*/
 function sendMessage()
 {
-    if (isEditMessage) {
+    if (messageType.value === 'EDIT') {
         chatWebsocket.sendData(messageInput.value, 'EDIT');
-        isEditMessage = false;
+        messageType.value = false;
     } else {
         chatWebsocket.sendData(messageInput.value, 'NEW');
     }
 }
-
-window.addEventListener('DOMContentLoaded', () => {
-    resetFindContactsBtn.onclick = showContacts;
-    showContacts();
-    showGroups();
-    // создание группового чата
-    createGroupOption.onclick = () => fetch('chat/create-group').then(r => r.json()).then(data => {
-        groupList.push({'name': data.name, 'chat':data.chat, 'notice': 1});
-        appendGroupDOMElement(data, 'START');
-    });
-
-    // запрет контекстного меню
-    document.oncontextmenu = () => false;
-
-    // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
-    findContactsInput.addEventListener('input', findContacts);
-
-    //----- ОТПРАВКА СООБЩЕНИЯ -----
-    sendMsgBtn.onclick = sendMessage;
-
-    // нажатие клавиши в поле ввода сообщения
-    messageInput.onkeydown = event => {
-        if (event.code === 'Enter' || event.code === 'ControlLeft') {
-            pressedKeys.push(event.code);
-        }
-    };
-
-    // отпускание клавиши в поле ввода сообщения
-    messageInput.onkeyup = event => {
-        // перевод строки, если Ctrl+Enter
-        if (event.code === 'Enter' && pressedKeys.indexOf('ControlLeft') !== -1) {
-            messageInput.value += '\n';
-        } else if (event.code === 'Enter') {
-            // отправка сообщения, если Enter
-
-            // если поседний символ - перевод строки
-            if (messageInput.value[messageInput.value.length - 1] === '\n') {
-                messageInput.value = messageInput.value.substring(0, messageInput.value.length - 1);
-            }
-            sendMessage();
-        }
-        pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
-    };
-    chat.onscroll = hideContextMenu; // скрыть контекстное меню сообщения при прокрутке диалога
-
-    editMsgContextMenuBtn.onclick = editMessageContextMenu;
-    removeMsgContextMenuBtn.onclick = removeMessageContextMenu;
-    forwardMsgContextMenuBtn.onclick = forwardMessageContextMenu;
-    editNoticeShowContextMenuBtn.onclick = editNoticeShowContextMenu;
-    removeContactContextMenuBtn.onclick = removeContactContextMenu;
-
-    forwardBtn.onclick = forwardMessage;
-    resetForwardtBtn.onclick = resetForwardMessage;
-});
-
 
 // нажатия правой кнопкой мыши на странице
 window.oncontextmenu = event => {
@@ -656,7 +617,6 @@ window.oncontextmenu = event => {
         hideContextMenu();
     }
 };
-
 
 // нажатия левой кнопкой мыши на странице
 window.onclick = event => {

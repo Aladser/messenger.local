@@ -13,18 +13,18 @@ class ChatWebsocket
     chatType = null;
     openChatId = -1;
 
-    constructor(webSocket) {
+    constructor(webSocket)
+    {
         this.webSocket = webSocket;
         this.webSocket.onerror = this.onError;
         this.webSocket.onmessage = e => this.onMessage(e);
     }
 
     // получение ошибок вебсокета
-    onError() {
-        this.errorDomElement.innerHTML = 'Ошибка подключения к серверу';
-    }
+    onError = () => this.errorDomElement.innerHTML = 'Ошибка подключения к серверу';
 
-    onMessage(e) {
+    onMessage(e)
+    {
         let data = JSON.parse(e.data);
     
         // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу
@@ -94,7 +94,8 @@ class ChatWebsocket
     }
 
     /** создать DOM-элемент сообщения чата*/
-    appendMessage(data) {
+    appendMessage(data)
+    {
         // показ местного времени
         // YYYY.MM.DD HH:ii:ss
         let timeInMs = Date.parse(data.time);
@@ -140,7 +141,8 @@ class ChatWebsocket
      * @param message текст сообщения
      * @param messageType тип сообщения: NEW, EDIT, REMOVE или FORWARD
      */
-    sendData(message, messageType) {
+    sendData(message, messageType)
+    {
         // проверка сокета
         if (this.webSocket.readyState !== 1) {
             alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
@@ -170,7 +172,7 @@ class ChatWebsocket
         this.messageInput.value = '';
     }
 
-    /** добавить в фронти-список контактов */
+    /** добавить в фронт-список контактов */
     addContact = contact => this.contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
     /** добавить в фронт-список групп */
     addGroup = group => this.groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
