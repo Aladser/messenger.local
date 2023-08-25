@@ -30,6 +30,7 @@ const messageInput = document.querySelector("#message-input");
 const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
 /** кнопка отправить сообщение */
 const sendMsgBtn = document.querySelector("#send-msg-btn");
+
 /** блок кнопок пересылки сообщения  */
 const forwardBtnBlock = document.querySelector('#btn-resend-block');
 /** кнопка пересылки сообщения */
@@ -38,8 +39,7 @@ const forwardBtn = document.querySelector('#btn-resend');
 const resetForwardtBtn = document.querySelector('#btn-resend-reset');
 /** DOM-элемент получателя пересланного письма*/
 let forwardedMessageRecipientElement = null;
-/** текущий тип чата*/
-let chatType = null;
+
 /** список участников выбранной группы */
 let groupContacts = [];
 /** массив нажатых клавиш */
@@ -147,7 +147,7 @@ function appendMessage(data)
     } // надпись о пересланном сообщении
     msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`; // текст сообщения
     msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;   // время сообщения
-    if (chatType === 'discussion') {
+    if (chatWebsocket.chatType === 'discussion') {
         msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.author}</td></tr>`;
     }     // показ автора сообщения в групповом чате
 
@@ -318,7 +318,7 @@ const showChat = (urlParams, bdChatName, type) => {
         } else if (data) {
             chat.innerHTML = '';
 
-            chatType = data.type;
+            chatWebsocket.chatType = data.type;
             chatWebsocket.openChatId = data.current_chat;
 
             chatNameTitle.innerHTML = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';

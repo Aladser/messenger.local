@@ -7,7 +7,6 @@ class ChatWebsocket
 
     contactList = [];
     groupList = [];
-    groupContacts = [];
 
     selectedMessage = null;
     forwardedMessageRecipientName = null;
@@ -130,7 +129,7 @@ class ChatWebsocket
         } // надпись о пересланном сообщении
         msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`; // текст сообщения
         msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;   // время сообщения
-        if (chatType === 'discussion') {
+        if (this.chatType === 'discussion') {
             msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.author}</td></tr>`;
         }     // показ автора сообщения в групповом чате
 
