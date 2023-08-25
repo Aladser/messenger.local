@@ -9,10 +9,10 @@ class ContactContexMenu extends ContexMenu
         this.chatWS = chatWS;
         this.clientUsername = clientUsername;
         this.inputCsrf = inputCsrf;
-        /** кнопка контекстное меню: изменить показ уведомлений*/
-        this.editNoticeShowBtn = contexMenuDOM.childNodes[1].childNodes[1].onclick = this.editNoticeShow;
-        /** кнопка контекстное меню: удалить контакт-группу*/
-        this.removeContactBtn = contexMenuDOM.childNodes[1].childNodes[3].onclick = this.removeContact;
+        this.editNoticeShowBtn = contexMenuDOM.childNodes[1].childNodes[1]; 
+        this.editNoticeShowBtn.onclick = () => this.editNoticeShow();
+        this.removeContactBtn = contexMenuDOM.childNodes[1].childNodes[3]; 
+        this.removeContactBtn.onclick = () => this.removeContact();
     }
 
     /** изменить звуковые уведомления
@@ -81,7 +81,7 @@ class ContactContexMenu extends ContexMenu
         if (this.selectedContact.className !== 'group') {
             urlParams.set('clientName', this.clientUsername);
         }
-        hideContextMenu();
+        this.hide();
 
         fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
             try {

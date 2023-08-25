@@ -10,7 +10,7 @@ class ContexMenu
     {
         this.contextMenuDOM.style.left = event.pageX + 'px';
         this.contextMenuDOM.style.top = event.pageY + 'px';
-        this.contextMenuDOm.style.display = 'block';
+        this.contextMenuDOM.style.display = 'block';
     }
 
     /** скрыть контекстное меню*/

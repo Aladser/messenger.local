@@ -38,7 +38,7 @@ class MessageContexMenu extends ContexMenu
     {
         let msg = this.chatWS.getSelectedMessageText();
         this.chatWS.sendData(msg, 'REMOVE');
-        this.chatWS.setSelectedMessage(null);
+        this.chatWS.selectedMessage = null;
         this.hide();
     }
 }

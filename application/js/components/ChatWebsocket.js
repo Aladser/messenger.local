@@ -180,8 +180,6 @@ class ChatWebsocket
 
     /** установить ID открыторого чата */
     setOpenChatOpenChatId = openChatId =>  this.openChatId = openChatId;
-    /** установить выбранное сообщение*/
-    setSelectedMessage = selectedMessage => this.selectedMessage = selectedMessage;
 
     getSelectedMessageText = () => this.selectedMessage.querySelector('.msg__text').innerHTML;
     getSelectedMessageAuthor = () => this.selectedMessage.getAttribute('data-author');
