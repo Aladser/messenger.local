@@ -4,9 +4,11 @@ class MessageContexMenu extends ContexMenu
 {
     messageInput = document.querySelector("#message-input");
     forwardBtnBlock = document.querySelector('#btn-resend-block');
+    option = false;
 
-    constructor(contexMenuDOM, option, chatWS) {
-        super(contexMenuDOM, option);
+    constructor(contexMenuDOM, chatWS)
+    {
+        super(contexMenuDOM);
         this.chatWS = chatWS;
         
         document.querySelector('#edit-msg').onclick = () => this.editMessage();
@@ -17,7 +19,7 @@ class MessageContexMenu extends ContexMenu
     /** контекстное меню: изменить сообщение */
     editMessage()
     {
-        this.option.value = 'EDIT';
+        this.option = 'EDIT';
         this.messageInput.value = this.chatWS.getSelectedMessageText();
         this.messageInput.focus();
         this.hide();
@@ -26,7 +28,7 @@ class MessageContexMenu extends ContexMenu
     /** контекстное меню: переотправить сообщение */
     forwardMessage()
     {
-        this.option.value = 'FORWARD';
+        this.option = 'FORWARD';
         this.forwardBtnBlock.classList.add('btn-resend-block_active');
         this.hide();
     }

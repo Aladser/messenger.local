@@ -97,4 +97,5 @@
 <script type='text/javascript' src="http://messenger.local/application/js/components/ChatWebsocket.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/components/ContexMenu.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/components/MessageContexMenu.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/components/ContactContexMenu.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/chat.js"></script>

@@ -7,6 +7,7 @@ class ChatWebsocket
 
     contactList = [];
     groupList = [];
+    groupContacts = [];
 
     selectedMessage = null;
     forwardedMessageRecipientName = null;

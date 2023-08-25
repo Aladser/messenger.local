@@ -1,9 +1,8 @@
 class ContexMenu 
 {
-    constructor(contextMenuDOM, option)
+    constructor(contextMenuDOM)
     {
         this.contextMenuDOM = contextMenuDOM;
-        this.option = option;
     }
 
     /** показать контекстное меню */

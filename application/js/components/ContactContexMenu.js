@@ -1,35 +1,46 @@
 /** контексное меню контакта*/
-class ContactContexMenu
+class ContactContexMenu extends ContexMenu
 {
-    constructor(contextMenuDOM, option, selectedContac, chatWSt) {
-        suprer(contextMenuDOM, option);
-        this.selectedContact = selectedContact;
-        this.chatWS = chatWSt;
+    contactContexOption;
+    selectedContact;
+
+    constructor(contexMenuDOM, chatWS, clientUsername, inputCsrf) {
+        super(contexMenuDOM);
+        this.chatWS = chatWS;
+        this.clientUsername = clientUsername;
+        this.inputCsrf = inputCsrf;
+        /** кнопка контекстное меню: изменить показ уведомлений*/
+        this.editNoticeShowBtn = contexMenuDOM.childNodes[1].childNodes[1].onclick = this.editNoticeShow;
+        /** кнопка контекстное меню: удалить контакт-группу*/
+        this.removeContactBtn = contexMenuDOM.childNodes[1].childNodes[3].onclick = this.removeContact;
     }
 
-    /** контекстное меню: включить/отключить уведомления */
-    editNoticeShowContextMenu()
+    /** изменить звуковые уведомления
+     * @param {*} clientUsername имя килента браузера
+     * @param {*} inputCsrf  CSRF
+     */
+    editNoticeShow()
     {
         // создание пакета с id чата, значением статуса показа уведомлений
         let data = {};
 
         if (this.selectedContact.className === 'group') {
             // поиск выбранного группового чата
-            data.chat = groupList.find(el => el.name === this.selectedContact.title).chat;
+            data.chat = this.chatWS.groupList.find(el => el.name === this.chatWS.selectedContact.title).chat;
         } else {
             //  поиск выбранного контакта
             let name = this.selectedContact.querySelector('.contact__name').innerHTML;
-            data.chat = chatWebsocket.contactList.find(el => el.name === name).chat;
+            data.chat = this.chatWS.contactList.find(el => el.name === name).chat;
         }
         data.notice = this.selectedContact.getAttribute('data-notice') == 1 ? 0 : 1; //инвертирование значения. Это значение будет записано в БД
-        hideContextMenu();
+        this.hide();
 
         // отправка данных на сервер
         let urlParams = new URLSearchParams();
         urlParams.set('chat_id', data.chat);
         urlParams.set('notice', data.notice);
-        urlParams.set('username', clientUsername);
-        urlParams.set('CSRF', inputCsrf.value);
+        urlParams.set('username', this.clientUsername);
+        urlParams.set('CSRF', this.inputCsrf.value);
         // изменяет установленный флаг получения уведомлений
         fetch('/chat/edit-notice-show', {method: 'post', body: urlParams}).then(r => r.text()).then(notice => {
             notice = parseJSONData(notice);
@@ -44,12 +55,10 @@ class ContactContexMenu
             let elem;
             if (this.selectedContact.classList.contains('contact')) {
                 // если контакт, то изменяем значение в массиве контактов
-
-                elem = chatWebsocket.contactList.find(el => el.name === this.selectedContact.title);
-            } else if (this.selectedContact.className === 'group') {
+                elem = this.chatWS.contactList.find(el => el.name === this.selectedContact.title);
+            } else if (this.chatWS.selectedContact.className === 'group') {
                 // если групповой чат, то изменяем значение в массиве групповых чатов
-
-                elem = groupList.find(el => el.name === this.selectedContact.title);
+                elem = this.chatWS.groupList.find(el => el.name === this.selectedContact.title);
             }
             elem.notice = notice;
 
@@ -63,26 +72,25 @@ class ContactContexMenu
     }
 
     /** контекстное меню: удалить контакт/групповой чат */
-    removeContactContextMenu()
+    removeContact()
     {
         let urlParams = new URLSearchParams();
-        urlParams.set('name', selectedContact.title);
-        urlParams.set('type', selectedContact.className === 'group' ? 'group' : 'contact');
-        urlParams.set('CSRF', inputCsrf.value);
-        if (selectedContact.className !== 'group') {
-            urlParams.set('clientName', clientUsername);
+        urlParams.set('name', this.selectedContact.title);
+        urlParams.set('type', this.selectedContact.className === 'group' ? 'group' : 'contact');
+        urlParams.set('CSRF', this.inputCsrf.value);
+        if (this.selectedContact.className !== 'group') {
+            urlParams.set('clientName', this.clientUsername);
         }
         hideContextMenu();
 
         fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
             try {
                 data = JSON.parse(data);
+                if (parseInt(data.response) > 0) {
+                    this.selectedContact.remove();
+                }
             } catch (err) {
                 console.log(data);
-            }
-            
-            if (parseInt(data.response) > 0) {
-                selectedContact.remove();
             }
         });
     }
