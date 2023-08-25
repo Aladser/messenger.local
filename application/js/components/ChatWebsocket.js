@@ -178,9 +178,6 @@ class ChatWebsocket
     /** добавить в фронт-список групп */
     addGroup = group => this.groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
 
-    /** установить ID открыторого чата */
-    setOpenChatOpenChatId = openChatId =>  this.openChatId = openChatId;
-
     getSelectedMessageText = () => this.selectedMessage.querySelector('.msg__text').innerHTML;
     getSelectedMessageAuthor = () => this.selectedMessage.getAttribute('data-author');
     isForwardedSelectedMessage = () => this.selectedMessage.getAttribute('data-forward') == 1;
