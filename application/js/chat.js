@@ -8,8 +8,6 @@ const clientNameBlock = document.querySelector('#clientuser');
 const clientUsername = clientNameBlock.innerHTML.trim();
 /** публичное имя пользователя-хоста */
 const publicClientUsername = clientNameBlock.getAttribute('data-clientuser-publicname');
-/** контейнер контактов */
-const contactsContainer = document.querySelector('#contacts');
 /** контейнер сообщений */
 const chat = document.querySelector("#messages");
 /** элемент начальной подписи чата */
@@ -18,8 +16,6 @@ const chatNameTitle = document.querySelector('#chat-title');
 const chatNameLabel = document.querySelector('#chat-username');
 /** кнопка создать групповой чат */
 const createGroupOption = document.querySelector('#create-group-option');
-/** поле поиска пользователя */
-const findContactsInput = document.querySelector('#find-contacts-input');
 /** контейнер групповых чатов */
 const groupChatsContainer = document.querySelector("#group-chats");
 /** поле ввода сообщения */
@@ -47,8 +43,13 @@ let isSearch = false;
 
 /** вебсокет */
 const ws = new WebSocket('ws://localhost:8888');
-/** ВЕБСОКЕТ СООБЩЕНИЙ */
+/** вебсокет сообщений */
 const chatWebsocket = new ChatWebsocket(ws);
+/** поле поиска пользователя */
+const findContactsInput = document.querySelector('#find-contacts-input');
+/** контейнер контактов */
+const contacts = new ContactContainer(document.querySelector('#contacts'), findContactsInput, ws, chatWebsocket);
+
 
 /** контекстные меню */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
@@ -57,19 +58,17 @@ const contactContexMenu = new ContactContexMenu(document.querySelector('#contact
 window.addEventListener('DOMContentLoaded', () => {
     resetFindContactsBtn.onclick = () => {
         isSearch = false;
-        showContacts();
+        contacts.show();
     }
 
-    chat.onscroll = () => {
-        hide();
-    }
+    chat.onscroll = () => hide();
 
     forwardBtn.onclick = forwardMessage;
     resetForwardtBtn.onclick = resetForwardMessage;
     // запрет контекстного меню
     document.oncontextmenu = () => false;
 
-    showContacts();
+    contacts.show();
     showGroups();
 
     // создание группового чата
@@ -109,19 +108,6 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 });
 
-/** показать контакты пользователя-клиента*/
-const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).then(data => {
-    data = parseJSONData(data);
-    if (data !== undefined) {
-        findContactsInput.value = '';
-        contactsContainer.innerHTML = '';
-        data.forEach(contact => {
-            chatWebsocket.addContact({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
-            ChatDOMElementCreator.contact(contactsContainer, contact);
-        });
-    }
-});
-
 /** показать групповые чаты пользователя-клиента */
 const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data => {
     data = parseJSONData(data);
@@ -144,8 +130,8 @@ function findContacts()
     fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
         data = parseJSONData(data);
         if (data !== undefined) {
-            contactsContainer.innerHTML = '';
-            data.forEach(contact => ChatDOMElementCreator.contact(contactsContainer, contact));
+            contacts.clear();
+            data.forEach(contact => ChatDOMElementCreator.contact(contacts.container, contact));
         }
     });
 }
@@ -173,7 +159,7 @@ const showGroupRecipients = (domElement, discussionid) => {
         });
 
         // добавить новые кнопки добавления в группу у контактов-неучастников выбранной группы
-        contactsContainer.querySelectorAll('.contact').forEach(cnt => {
+        contacts.container.querySelectorAll('.contact').forEach(cnt => {
             let cntName = cnt.lastChild.innerHTML;
             if (!groupContacts.includes(cntName)) {
                 let plus = document.createElement('div');
@@ -259,7 +245,7 @@ function removeGroupPatricipantDOMElements()
         groupContactsElement.remove();
     }
     // удаление кнопок добавления в группу у контактов-неучастников
-    contactsContainer.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.remove());
+    contacts.container.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.remove());
 }
 
 /** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
@@ -313,7 +299,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
         // если поиск контакта
         if (isSearch) {
             isSearch = false;
-            showContacts();
+            contacts.show();
         }
         
         showChat(urlParams, type === 'dialog' ? urlArg : groupChatName, type); // показать чат

@@ -99,4 +99,6 @@
 <script type='text/javascript' src="http://messenger.local/application/js/components/contex-menu/ContexMenu.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/components/contex-menu/MessageContexMenu.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/components/contex-menu/ContactContexMenu.js"></script>
+
+<script type='text/javascript' src="http://messenger.local/application/js/ContactContainer.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/chat.js"></script>
