@@ -32,7 +32,7 @@ class ContactContainer {
             this.findContactsInput.value = '';
             this.container.innerHTML = '';
             contacts.forEach(contact => {
-                this.addContact({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+                this.addContactToList({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
                 this.add(contact);
             });
         }
@@ -109,5 +109,5 @@ class ContactContainer {
     /** очистить контейнер */
     clear = () => this.container.innerHTML = '';
     /** добавить в фронт-список контактов */
-    addContactList = contact => this.contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+    addContactToList = contact => this.contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
 }
