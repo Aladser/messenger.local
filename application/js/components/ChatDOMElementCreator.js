@@ -47,4 +47,6 @@ class ChatDOMElementCreator {
         msgBlock.append(msgTable);
         chatDOM.append(msgBlock);
     }
+
+    
 }
