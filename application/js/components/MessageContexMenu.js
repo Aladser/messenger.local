@@ -9,12 +9,11 @@ class MessageContexMenu extends ContexMenu
     constructor(contexMenuDOM, chatWS)
     {
         super(contexMenuDOM);
-        
         this.chatWS = chatWS;
+        
         this.editBtn = contexMenuDOM.querySelector('#edit-msg');
         this.removeBtn = contexMenuDOM.querySelector('#remove-msg');
         this.forwardBtn = contexMenuDOM.querySelector('#resend-msg');
-
         this.editBtn.onclick = () => this.editMessage();
         this.removeBtn.onclick = () => this.removeMessage();
         this.forwardBtn.onclick = () => this.forwardMessage();
