@@ -1,7 +1,5 @@
 /** Создатель DOM-элементов чата */
 class ChatDOMElementCreator {
-    static APP_PATH = "http://messenger.local/application/";
-
     /** создать DOM-элемент сообщения чата*
      * @param {*} chatDOM DOM чата
      * @param {*} chatType типа чата: диалог или групповой чат 
@@ -49,37 +47,6 @@ class ChatDOMElementCreator {
 
         msgBlock.append(msgTable);
         chatContainer.append(msgBlock);
-    }
-
-    /** создать DOM-элемент контакта списка контактов*/
-    static contact(contactContainer, contact)
-    {
-        // контейнер контакта
-        let contactBlock = document.createElement('div');    // блок контакта
-        let contactImgBlock = document.createElement('div'); // блок изображения профиля
-        let img = document.createElement('img'); // фото профиля
-        let name = document.createElement('span'); // имя контакта
-
-        contactBlock.className = 'contact position-relative mb-2';
-        contactBlock.title = contact.name;
-        contactImgBlock.className = 'profile-img';
-        img.className = 'contact__img img pe-2';
-        name.className = 'contact__name';
-
-        img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.APP_PATH}images/ava.png` : `${this.APP_PATH}data/profile_photos/${contact.photo}`;
-        name.innerHTML = contact.name;
-        contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock, contact.name, 'dialog'));
-        contactBlock.setAttribute('data-notice', contact.notice);
-
-        contactImgBlock.append(img);
-        contactBlock.append(contactImgBlock);
-        contactBlock.append(name);
-        // добавление значка без уведомлений, если они отключены
-        if (contact.notice == 0) {
-            contactBlock.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
-        }
-
-        contactContainer.append(contactBlock);
     }
 
     /** создать DOM-элемент группового чата списка групповых чатов

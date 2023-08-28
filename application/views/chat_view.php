@@ -94,11 +94,11 @@
 <!-- CSRF страницы -->
 <input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
 
-<script type='text/javascript' src="http://messenger.local/application/js/components/ChatDOMElementCreator.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/components/ChatWebsocket.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/components/contex-menu/ContexMenu.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/components/contex-menu/MessageContexMenu.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/components/contex-menu/ContactContexMenu.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/ChatDOMElementCreator.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/ChatWebsocket.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/contex-menu/ContexMenu.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/contex-menu/MessageContexMenu.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/contex-menu/ContactContexMenu.js"></script>
 
 <script type='text/javascript' src="http://messenger.local/application/js/ContactContainer.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/chat.js"></script>

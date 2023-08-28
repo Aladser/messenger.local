@@ -1,5 +1,6 @@
 /** элемент CSRF-токена */
 const inputCsrf = document.querySelector('#input-csrf');
+
 /** окно ошибок*/
 const frameError = document.querySelector('#frame-error');
 /** элемент имени клиента-пользователя*/
@@ -48,14 +49,14 @@ const chatWebsocket = new ChatWebsocket(ws);
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
 /** контейнер контактов */
-const contacts = new ContactContainer(document.querySelector('#contacts'), findContactsInput, ws, chatWebsocket);
-
+const contacts = new ContactContainer(document.querySelector('#contacts'), findContactsInput, ws, chatWebsocket, inputCsrf);
 
 /** контекстные меню */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf);
 
 window.addEventListener('DOMContentLoaded', () => {
+    findContactsInput.oninput = () => contacts.find();
     resetFindContactsBtn.onclick = () => {
         isSearch = false;
         contacts.show();
@@ -76,9 +77,6 @@ window.addEventListener('DOMContentLoaded', () => {
         groupList.push({'name': data.name, 'chat':data.chat, 'notice': 1});
         ChatDOMElementCreator.group(groupChatsContainer, data, 'START');
     });
-
-    // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
-    findContactsInput.addEventListener('input', findContacts);
 
     //----- ОТПРАВКА СООБЩЕНИЯ -----
     sendMsgBtn.onclick = sendMessage;
@@ -119,22 +117,6 @@ const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data 
         });
     }
 });
-
-/** поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов */
-function findContacts()
-{
-    isSearch = true;
-    let urlParams = new URLSearchParams();
-    urlParams.set('userphrase', this.value);
-    urlParams.set('CSRF', inputCsrf.value);
-    fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-        data = parseJSONData(data);
-        if (data !== undefined) {
-            contacts.clear();
-            data.forEach(contact => ChatDOMElementCreator.contact(contacts.container, contact));
-        }
-    });
-}
 
 /** показать участников группового чата*/
 const showGroupRecipients = (domElement, discussionid) => {
@@ -297,8 +279,8 @@ function setContactOrGroupClick(domElement, urlArg, type)
         }
 
         // если поиск контакта
-        if (isSearch) {
-            isSearch = false;
+        if (contacts.isSearch) {
+            contacts.isSearch = false;
             contacts.show();
         }
         
