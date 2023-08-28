@@ -1,11 +1,11 @@
 class ChatWebsocket
 {
+    siteAddr = "http://messenger.local/application/";
     errorDomElement = document.querySelector("#message-system");
     publicClientUsername = document.querySelector('#clientuser').getAttribute('data-clientuser-publicname');
     chat = document.querySelector("#messages");
     messageInput = document.querySelector("#message-input");
 
-    contactList = [];
     groupList = [];
 
     selectedMessage = null;
@@ -13,11 +13,12 @@ class ChatWebsocket
     chatType = null;
     openChatId = -1;
 
-    constructor(webSocket)
+    constructor(webSocket, contactList)
     {
         this.webSocket = webSocket;
         this.webSocket.onerror = this.onError;
         this.webSocket.onmessage = e => this.onMessage(e);
+        this.contactList = contactList;
     }
 
     // получение ошибок вебсокета
@@ -69,7 +70,7 @@ class ChatWebsocket
                     // звуковое уведомление
                     // сделано специально множественное создание объектов звука
                     if (chat.notice == 1 && data.author !== this.publicClientUsername) {
-                        let notice = new Audio(`${APP_PATH}/data/notice.wav`);
+                        let notice = new Audio(`${this.siteAddr}/data/notice.wav`);
                         notice.autoplay = true;
                     }
                 }
@@ -128,8 +129,6 @@ class ChatWebsocket
         this.messageInput.value = '';
     }
 
-    /** добавить в фронт-список контактов */
-    addContact = contact => this.contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
     /** добавить в фронт-список групп */
     addGroup = group => this.groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
 

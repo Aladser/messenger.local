@@ -4,11 +4,13 @@ class ContactContexMenu extends ContexMenu
     contactContexOption;
     selectedContact;
 
-    constructor(contexMenuDOM, chatWS, clientUsername, inputCsrf) {
+    constructor(contexMenuDOM, chatWS, clientUsername, inputCsrf, contacts) {
         super(contexMenuDOM);
+        this.contacts = contacts;
         this.chatWS = chatWS;
         this.clientUsername = clientUsername;
         this.inputCsrf = inputCsrf;
+        
         this.editNoticeShowBtn = contexMenuDOM.childNodes[1].childNodes[1]; 
         this.editNoticeShowBtn.onclick = () => this.editNoticeShow();
         this.removeContactBtn = contexMenuDOM.childNodes[1].childNodes[3]; 
@@ -74,24 +76,25 @@ class ContactContexMenu extends ContexMenu
     /** удалить контакт/групповой чат */
     removeContact()
     {
-        let urlParams = new URLSearchParams();
-        urlParams.set('name', this.selectedContact.title);
-        urlParams.set('type', this.selectedContact.className === 'group' ? 'group' : 'contact');
-        urlParams.set('CSRF', this.inputCsrf.value);
-        if (this.selectedContact.className !== 'group') {
-            urlParams.set('clientName', this.clientUsername);
+        if (this.selectedContact.className === 'contact') {
+            this.contacts.remove(this.selectedContact, this.clientUsername);
+        } else {
+            let urlParams = new URLSearchParams();
+            urlParams.set('name', this.selectedContact.title);
+            urlParams.set('type', this.selectedContact.className === 'group' ? 'group' : 'contact');
+            urlParams.set('CSRF', this.inputCsrf.value);
+    
+            fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+                try {
+                    data = JSON.parse(data);
+                    if (parseInt(data.response) > 0) {
+                        this.selectedContact.remove();
+                    }
+                } catch (err) {
+                    console.log(data);
+                }
+            });
         }
         this.hide();
-
-        fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-            try {
-                data = JSON.parse(data);
-                if (parseInt(data.response) > 0) {
-                    this.selectedContact.remove();
-                }
-            } catch (err) {
-                console.log(data);
-            }
-        });
     }
 }

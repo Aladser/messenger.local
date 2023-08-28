@@ -1,18 +1,16 @@
 class ContactContainer {
     siteAddr = "http://messenger.local/application/";
+    errorDomElement = document.querySelector("#message-system");
 
     /** контейнер контактов */
     container = document.querySelector('#contacts');
     /** поле поиска пользователя */
     findContactsInput = document.querySelector('#find-contacts-input');
-    /** вебсокет */
-    ws = new WebSocket('ws://localhost:8888');
-    /** вебсокет сообщений */
-    chatWebsocket = new ChatWebsocket(this.ws);
     /** CSRF */
     CSRFElement;
 
     isSearch = false;
+    contactList = [];
 
     /**
      * 
@@ -21,11 +19,9 @@ class ContactContainer {
      * @param {*} ws вебсокет
      * @param {*} chatWebsocket чат вебсокета 
      */
-    constructor(container, findContactsInput, ws, chatWebsocket, CSRFElement) {
+    constructor(container, findContactsInput, CSRFElement) {
         this.container = container;
         this.findContactsInput = findContactsInput;
-        this.ws = ws;
-        this.chatWebsocket = chatWebsocket;
         this.CSRFElement = CSRFElement;
     }
 
@@ -36,7 +32,7 @@ class ContactContainer {
             this.findContactsInput.value = '';
             this.container.innerHTML = '';
             contacts.forEach(contact => {
-                this.chatWebsocket.addContact({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+                this.addContact({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
                 this.add(contact);
             });
         }
@@ -58,7 +54,7 @@ class ContactContainer {
         });
     }
 
-    /** создать DOM-элемент контакта списка контактов*/
+    /** создать DOM-элемент контакта в списке контактов */
     add(contact)
     {
         // контейнер контакта
@@ -89,6 +85,29 @@ class ContactContainer {
         this.container.append(contactBlock);
     }
 
+    /** удалить контакт из списка контактов */
+    remove(contact, clientUsername)
+    {
+        let urlParams = new URLSearchParams();
+        urlParams.set('name', contact.title);
+        urlParams.set('type', contact.className === 'group' ? 'group' : 'contact');
+        urlParams.set('CSRF', this.CSRFElement.value);
+        urlParams.set('clientName', clientUsername);
+
+        fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
+            try {
+                data = JSON.parse(data);
+                if (parseInt(data.response) > 0) {
+                    contact.remove();
+                }
+            } catch (err) {
+                this.errorDomElement.innerHTML = data;
+            }
+        });
+    }
+
     /** очистить контейнер */
     clear = () => this.container.innerHTML = '';
+    /** добавить в фронт-список контактов */
+    addContactList = contact => this.contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
 }

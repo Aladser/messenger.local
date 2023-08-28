@@ -42,18 +42,18 @@ let pressedKeys = [];
 /** флаг поиска */
 let isSearch = false;
 
-/** вебсокет */
-const ws = new WebSocket('ws://localhost:8888');
-/** вебсокет сообщений */
-const chatWebsocket = new ChatWebsocket(ws);
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
 /** контейнер контактов */
-const contacts = new ContactContainer(document.querySelector('#contacts'), findContactsInput, ws, chatWebsocket, inputCsrf);
+const contacts = new ContactContainer(document.querySelector('#contacts'), findContactsInput, inputCsrf);
+/** вебсокет */
+const ws = new WebSocket('ws://localhost:8888');
+/** вебсокет сообщений */
+const chatWebsocket = new ChatWebsocket(ws, contacts.contactList);
 
 /** контекстные меню */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
-const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf);
+const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf, contacts);
 
 window.addEventListener('DOMContentLoaded', () => {
     findContactsInput.oninput = () => contacts.find();
@@ -263,7 +263,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
 
                 let contact = chatWebsocket.contactList.find(elem => elem.chat == dbContact.chat_id);
                 if (contact === undefined) {
-                    chatWebsocket.addContact(dbContact);
+                    contacts.addContactList(dbContact);
                 }
             });
         } else if (type === 'discussion') {
