@@ -1,5 +1,3 @@
-/** путь к папке приложения */
-const APP_PATH = "http://messenger.local/application/";
 /** элемент CSRF-токена */
 const inputCsrf = document.querySelector('#input-csrf');
 /** окно ошибок*/
@@ -77,7 +75,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // создание группового чата
     createGroupOption.onclick = () => fetch('chat/create-group').then(r => r.json()).then(data => {
         groupList.push({'name': data.name, 'chat':data.chat, 'notice': 1});
-        appendGroupDOMElement(data, 'START');
+        ChatDOMElementCreator.group(groupChatsContainer, data, 'START');
     });
 
     // поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов
@@ -111,61 +109,6 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 });
 
-/** создать DOM-элемент контакта списка контактов*/
-function appendContactDOMElement(contact)
-{
-    // контейнер контакта
-    let contactBlock = document.createElement('div');    // блок контакта
-    let contactImgBlock = document.createElement('div'); // блок изображения профиля
-    let img = document.createElement('img'); // фото профиля
-    let name = document.createElement('span'); // имя контакта
-
-    contactBlock.className = 'contact position-relative mb-2';
-    contactBlock.title = contact.name;
-    contactImgBlock.className = 'profile-img';
-    img.className = 'contact__img img pe-2';
-    name.className = 'contact__name';
-
-    img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${APP_PATH}images/ava.png` : `${APP_PATH}data/profile_photos/${contact.photo}`;
-    name.innerHTML = contact.name;
-    contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock, contact.name, 'dialog'));
-    contactBlock.setAttribute('data-notice', contact.notice);
-
-    contactImgBlock.append(img);
-    contactBlock.append(contactImgBlock);
-    contactBlock.append(name);
-    // добавление значка без уведомлений, если они отключены
-    if (contact.notice == 0) {
-        contactBlock.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
-    }
-
-    contactsContainer.append(contactBlock);
-}
-
-/** создать DOM-элемент группового чата списка групповых чатов
- * @param {*} group БД данные группы
- * @param {*} place куда добавить: START - начало списка, END - конец
- */
-function appendGroupDOMElement(group, place = 'END')
-{
-    let groupsItem = document.createElement('div');
-    groupsItem.className = 'group';
-    groupsItem.title = group.name;
-    groupsItem.innerHTML = group.name;
-    groupsItem.addEventListener('click', setContactOrGroupClick(groupsItem, group.chat, 'discussion'));
-    groupsItem.setAttribute('data-notice', group.notice);
-
-    if (place === 'START') {
-        groupChatsContainer.prepend(groupsItem);
-    } else if (place === 'END') {
-        groupChatsContainer.append(groupsItem);
-    }
-
-    if (group.notice == 0) {
-        groupsItem.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
-    }
-}
-
 /** показать контакты пользователя-клиента*/
 const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).then(data => {
     data = parseJSONData(data);
@@ -174,7 +117,7 @@ const showContacts = () => fetch('contact/get-contacts').then(r => r.text()).the
         contactsContainer.innerHTML = '';
         data.forEach(contact => {
             chatWebsocket.addContact({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
-            appendContactDOMElement(contact);
+            ChatDOMElementCreator.contact(contactsContainer, contact);
         });
     }
 });
@@ -186,7 +129,7 @@ const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data 
         groupList = [];
         data.forEach(group => {
             chatWebsocket.addGroup({'name': group.name, 'chat': group.chat, 'notice': group.notice});
-            appendGroupDOMElement(group);
+            ChatDOMElementCreator.group(groupChatsContainer, group);
         });
     }
 });
@@ -202,7 +145,7 @@ function findContacts()
         data = parseJSONData(data);
         if (data !== undefined) {
             contactsContainer.innerHTML = '';
-            data.forEach(element => appendContactDOMElement(element));
+            data.forEach(contact => ChatDOMElementCreator.contact(contactsContainer, contact));
         }
     });
 }
