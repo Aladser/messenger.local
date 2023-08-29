@@ -42,8 +42,9 @@ let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
 
-/** контейнер контактов */
 const contacts = new ContactContainer(document.querySelector('#contacts'), inputCsrf);
+const groups = new GroupContainer(document.querySelector('#group-chats'), inputCsrf);
+
 /** вебсокет */
 const ws = new WebSocket('ws://localhost:8888');
 /** вебсокет сообщений */
@@ -54,7 +55,7 @@ const contactContexMenu = new ContactContexMenu(document.querySelector('#contact
 
 window.addEventListener('DOMContentLoaded', () => {
     contacts.show();
-    showGroups();
+    groups.show();
 
     forwardBtn.onclick = forwardMessage;
     resetForwardtBtn.onclick = resetForwardMessage;
@@ -71,9 +72,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     // создание группового чата
-    createGroupOption.onclick = () => fetch('chat/create-group').then(r => r.json()).then(data => {
-        groupList.push({'name': data.name, 'chat':data.chat, 'notice': 1});
-        ChatDOMElementCreator.group(groupChatsContainer, data, 'START');
+    createGroupOption.onclick = () => fetch('chat/create-group').then(resp => resp.json()).then(data => {
+        groups.addGroupToList({'name': data.name, 'chat':data.chat, 'notice': 1});
+        groups.add(data, 'START');
     });
 
     // нажатие клавиши в поле ввода сообщения
@@ -107,8 +108,8 @@ const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data 
     if (data !== undefined) {
         groupList = [];
         data.forEach(group => {
-            chatWebsocket.addGroup({'name': group.name, 'chat': group.chat, 'notice': group.notice});
-            ChatDOMElementCreator.group(groupChatsContainer, group);
+            contacts.add({'name': group.name, 'chat': group.chat, 'notice': group.notice});
+            groups.add(group);
         });
     }
 });
@@ -265,7 +266,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
             urlParams.set('discussionid', urlArg);
             removeGroupPatricipantDOMElements();
             showGroupRecipients(domElement, urlArg) // показать участников группового чата
-            let groupChat = groupList.find(el => el.chat == urlArg);
+            let groupChat = groups.groupList.find(el => el.chat == urlArg);
             if (groupChat !== undefined) {
                 groupChatName = groupChat.name;
             }

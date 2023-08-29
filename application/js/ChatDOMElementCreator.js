@@ -48,28 +48,4 @@ class ChatDOMElementCreator {
         msgBlock.append(msgTable);
         chatContainer.append(msgBlock);
     }
-
-    /** создать DOM-элемент группового чата списка групповых чатов
-     * @param {*} group БД данные группы
-     * @param {*} place куда добавить: START - начало списка, END - конец
-     */
-    static group(groupsContainer, group, place = 'END')
-    {
-        let groupsItem = document.createElement('div');
-        groupsItem.className = 'group';
-        groupsItem.title = group.name;
-        groupsItem.innerHTML = group.name;
-        groupsItem.addEventListener('click', setContactOrGroupClick(groupsItem, group.chat, 'discussion'));
-        groupsItem.setAttribute('data-notice', group.notice);
-
-        if (place === 'START') {
-            groupsContainer.prepend(groupsItem);
-        } else {
-            groupsContainer.append(groupsItem);
-        }
-
-        if (group.notice == 0) {
-            groupsItem.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
-        }
-    }
 }

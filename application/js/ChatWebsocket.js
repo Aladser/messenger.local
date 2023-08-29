@@ -129,9 +129,6 @@ class ChatWebsocket
         this.messageInput.value = '';
     }
 
-    /** добавить в фронт-список групп */
-    addGroup = group => this.groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
-
     getSelectedMessageText = () => this.selectedMessage.querySelector('.msg__text').innerHTML;
     getSelectedMessageAuthor = () => this.selectedMessage.getAttribute('data-author');
     isForwardedSelectedMessage = () => this.selectedMessage.getAttribute('data-forward') == 1;

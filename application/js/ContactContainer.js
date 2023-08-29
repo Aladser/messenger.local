@@ -36,7 +36,26 @@ class ContactContainer {
         });
     }
 
-    /** поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов */
+    /** поиск контакта и добавление, если отсутствует */
+    check(id) {
+        let urlParams = new URLSearchParams();
+        urlParams.set('contact', id);
+        urlParams.set('CSRF', this.CSRFElement.value);
+        urlParams.set('1', 1);
+        fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(dbContact => {
+            dbContact = parseJSONData(dbContact);
+            if (dbContact === undefined) {
+                return;
+            }
+
+            let contact = this.contactList.find(elem => elem.chat == dbContact.chat_id);
+            if (contact === undefined) {
+                contacts.addContactList(dbContact);
+            }
+        });
+    }
+
+    /** поиск пользователей-контактов */
     find(userphrase)
     {
         this.isSearch = true;
