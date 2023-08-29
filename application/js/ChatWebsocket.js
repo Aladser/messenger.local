@@ -25,8 +25,7 @@ class ChatWebsocket
     onMessage(e)
     {
         let data = JSON.parse(e.data);
-        console.clear();
-
+        
         // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу
         if (data.onconnection) {
             this.webSocket.send(JSON.stringify({
@@ -52,8 +51,8 @@ class ChatWebsocket
             // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
             if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== this.publicClientUsername) {
 
-                let foundedContactChat = this.contacts.contactList.find(el => el.chat == data.chat); // поиск чата среди списка чатов контактов
-                let foundedGroupChat = this.groups.groupList.find(el => el.chat == data.chat);     // поиск чата среди групповых чатов
+                let foundedContactChat = this.contacts.list.find(el => el.chat == data.chat); // поиск чата среди списка чатов контактов
+                let foundedGroupChat = this.groups.list.find(el => el.chat == data.chat);     // поиск чата среди групповых чатов
     
                 let isChat = (foundedContactChat !== undefined) || (foundedGroupChat !== undefined);
                 if (isChat) {

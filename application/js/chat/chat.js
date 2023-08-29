@@ -42,8 +42,8 @@ let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
 
-const contacts = new ContactContainer(document.querySelector('#contacts'), inputCsrf);
-const groups = new GroupContainer(document.querySelector('#group-chats'), inputCsrf);
+const contacts = new ContactContainer(document.querySelector('#contacts'), frameError, inputCsrf);
+const groups = new GroupContainer(document.querySelector('#group-chats'), frameError, inputCsrf);
 
 /** вебсокет */
 const ws = new WebSocket('ws://localhost:8888');
@@ -148,18 +148,6 @@ function setContactOrGroupClick(domElement, urlArg, type)
         showChat(urlParams, type === 'dialog' ? urlArg : groupChatName, type); // показать чат
     };
 }
-
-/** показать групповые чаты пользователя-клиента */
-const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data => {
-    data = parseJSONData(data);
-    if (data !== undefined) {
-        groupList = [];
-        data.forEach(group => {
-            contacts.add({'name': group.name, 'chat': group.chat, 'notice': group.notice});
-            groups.add(group);
-        });
-    }
-});
 
 /** показать участников группового чата*/
 const showGroupRecipients = (domElement, discussionid) => {

@@ -1,17 +1,5 @@
 /** Контейнер контактов */
-class GroupContainer {
-    errorDomElement = document.querySelector("#message-system");
-    groupList = [];
-
-    /** Контейнер контактов
-     * @param {*} container DOM-контейнер
-     * @param {*} CSRFElement
-     */
-    constructor(container, CSRFElement) {
-        this.container = container;
-        this.CSRFElement = CSRFElement;
-    }
-
+class GroupContainer extends TemplateContainer{
     show() {
         fetch('chat/get-groups').then(r => r.text()).then(data => {
         data = parseJSONData(data);

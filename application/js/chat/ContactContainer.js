@@ -1,33 +1,14 @@
 /** Контейнер контактов */
-class ContactContainer {
+class ContactContainer extends TemplateContainer{
     siteAddr = "http://messenger.local/application/";
-    errorDomElement = document.querySelector("#message-system");
-
-    /** DOM-контейнер контактов */
-    container = document.querySelector('#contacts');
-    /** CSRF */
-    CSRFElement;
-
     isSearch = false;
-    contactList = [];
-
-    /** Контейнер контактов
-     * @param {*} contactsContainer контейнер контактов
-     * @param {*} findContactsInput поле поиска контактов
-     * @param {*} ws вебсокет
-     * @param {*} chatWebsocket чат вебсокета 
-     */
-    constructor(container, CSRFElement) {
-        this.container = container;
-        this.CSRFElement = CSRFElement;
-    }
 
     /** показать контакты пользователя браузера */
     show() {
         fetch('contact/get-contacts').then(resp => resp.text()).then(contacts => {
             contacts = parseJSONData(contacts);
             if (contacts !== undefined) {
-                this.container.innerHTML = '';
+                this.clear();
                 contacts.forEach(contact => {
                     this.addContactToList({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
                     this.add(contact);
@@ -41,23 +22,22 @@ class ContactContainer {
         let urlParams = new URLSearchParams();
         urlParams.set('contact', id);
         urlParams.set('CSRF', this.CSRFElement.value);
-        urlParams.set('1', 1);
-        fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(dbContact => {
+
+        fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(dbContact => {
             dbContact = parseJSONData(dbContact);
             if (dbContact === undefined) {
                 return;
             }
 
-            let contact = this.contactList.find(elem => elem.chat == dbContact.chat_id);
+            let contact = this.list.find(elem => elem.chat == dbContact.chat_id);
             if (contact === undefined) {
-                this.contacts.addContactList(dbContact);
+                this.addContactToList(dbContact);
             }
         });
     }
 
-    /** поиск пользователей-контактов */
-    find(userphrase)
-    {
+    /** поиск пользователя-контакта */
+    find(userphrase) {
         this.isSearch = true;
         let urlParams = new URLSearchParams();
         urlParams.set('userphrase', userphrase);
@@ -72,8 +52,7 @@ class ContactContainer {
     }
 
     /** создать DOM-элемент контакта в списке контактов */
-    add(contact)
-    {
+    add(contact) {
         // контейнер контакта
         let contactBlock = document.createElement('div');    // блок контакта
         let contactImgBlock = document.createElement('div'); // блок изображения профиля
@@ -103,8 +82,7 @@ class ContactContainer {
     }
 
     /** удалить контакт из списка контактов */
-    remove(contact, clientUsername)
-    {
+    remove(contact, clientUsername) {
         let urlParams = new URLSearchParams();
         urlParams.set('name', contact.title);
         urlParams.set('type', contact.className === 'group' ? 'group' : 'contact');
@@ -124,7 +102,12 @@ class ContactContainer {
     }
 
     /** очистить контейнер */
-    clear = () => this.container.innerHTML = '';
+    clear() {
+        this.container.innerHTML = '';
+    }
+
     /** добавить в фронт-список контактов */
-    addContactToList = contact => this.contactList.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+    addContactToList(contact) {
+        this.list.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+    }
 }
