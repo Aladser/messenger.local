@@ -5,20 +5,18 @@ class ChatWebsocket
     publicClientUsername = document.querySelector('#clientuser').getAttribute('data-clientuser-publicname');
     chat = document.querySelector("#messages");
     messageInput = document.querySelector("#message-input");
-
-    groupList = [];
-
     selectedMessage = null;
     forwardedMessageRecipientName = null;
     chatType = null;
     openChatId = -1;
 
-    constructor(webSocket, contactList)
+    constructor(webSocket, contacts, groups)
     {
         this.webSocket = webSocket;
         this.webSocket.onerror = this.onError;
         this.webSocket.onmessage = e => this.onMessage(e);
-        this.contactList = contactList;
+        this.contacts = contacts;
+        this.groups = groups;
     }
 
     // получение ошибок вебсокета
@@ -27,7 +25,8 @@ class ChatWebsocket
     onMessage(e)
     {
         let data = JSON.parse(e.data);
-    
+        console.clear();
+
         // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу
         if (data.onconnection) {
             this.webSocket.send(JSON.stringify({
@@ -52,8 +51,10 @@ class ChatWebsocket
             
             // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
             if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== this.publicClientUsername) {
-                let foundedContactChat = this.contactList.find(el => el.chat == data.chat); // поиск чата среди списка чатов контактов
-                let foundedGroupChat = this.groupList.find(el => el.chat == data.chat);     // поиск чата среди групповых чатов
+                console.log(data);
+
+                let foundedContactChat = this.contacts.contactList.find(el => el.chat == data.chat); // поиск чата среди списка чатов контактов
+                let foundedGroupChat = this.groups.groupList.find(el => el.chat == data.chat);     // поиск чата среди групповых чатов
     
                 let isChat = (foundedContactChat !== undefined) || (foundedGroupChat !== undefined);
                 if (isChat) {

@@ -110,7 +110,7 @@ class ContactContainer {
         urlParams.set('type', contact.className === 'group' ? 'group' : 'contact');
         urlParams.set('CSRF', this.CSRFElement.value);
         urlParams.set('clientName', clientUsername);
-
+        
         fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
             try {
                 data = JSON.parse(data);

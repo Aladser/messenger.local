@@ -48,10 +48,10 @@ const groups = new GroupContainer(document.querySelector('#group-chats'), inputC
 /** вебсокет */
 const ws = new WebSocket('ws://localhost:8888');
 /** вебсокет сообщений */
-const chatWebsocket = new ChatWebsocket(ws, contacts.contactList);
+const chatWebsocket = new ChatWebsocket(ws, contacts, groups);
 /** контекстные меню */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
-const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf, contacts);
+const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf, contacts, groups);
 
 window.addEventListener('DOMContentLoaded', () => {
     contacts.show();
@@ -101,6 +101,53 @@ window.addEventListener('DOMContentLoaded', () => {
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
 });
+
+/** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
+ * @param {*} domElement DOM-элемент контакта или чата
+ * @param {*} urlArg что ищется: контакт или групповой чат
+ * @param {*} type тип диалога
+ * @returns
+ */
+function setContactOrGroupClick(domElement, urlArg, type)
+{
+    return function () {
+        // если пересылается сообщение, показать, кому пересылается
+        if (messageContexMenu.option == 'FORWARD') {
+            showForwardedMessageRecipient(domElement);
+            return;
+        }
+
+        // если открывается диалог или обсуждение для открытия переписки
+        domElement.classList.remove('isnewmessage'); // если есть класс нового сообщения, удаляется
+
+        let urlParams = new URLSearchParams();
+        let groupChatName;
+        removeGroupPatricipantDOMElements();
+        if (type === 'dialog') {
+            urlParams.set('contact', urlArg);
+            urlParams.set('CSRF', inputCsrf.value);
+            contacts.check(urlArg);
+        } else if (type === 'discussion') {
+            urlParams.set('discussionid', urlArg);
+            showGroupRecipients(domElement, urlArg) // показать участников группового чата
+            let groupChat = groups.groupList.find(el => el.chat == urlArg);
+            if (groupChat !== undefined) {
+                groupChatName = groupChat.name;
+            }
+        } else {
+            return;
+        }
+
+        // если поиск контакта
+        if (contacts.isSearch) {
+            contacts.isSearch = false;
+            findContactsInput.value = '';
+            contacts.show();
+        }
+        
+        showChat(urlParams, type === 'dialog' ? urlArg : groupChatName, type); // показать чат
+    };
+}
 
 /** показать групповые чаты пользователя-клиента */
 const showGroups = () => fetch('chat/get-groups').then(r => r.text()).then(data => {
@@ -224,65 +271,6 @@ function removeGroupPatricipantDOMElements()
     }
     // удаление кнопок добавления в группу у контактов-неучастников
     contacts.container.querySelectorAll('.contact-addgroup').forEach(cnt => cnt.remove());
-}
-
-/** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
- * @param {*} domElement DOM-элемент контакта или чата
- * @param {*} urlArg что ищется: контакт или групповой чат
- * @param {*} type тип диалога
- * @returns
- */
-function setContactOrGroupClick(domElement, urlArg, type)
-{
-    return function () {
-        // если пересылается сообщение, показать, кому пересылается
-        if (messageContexMenu.option == 'FORWARD') {
-            showForwardedMessageRecipient(domElement);
-            return;
-        }
-
-        // если открывается диалог или обсуждение для открытия переписки
-        domElement.classList.remove('isnewmessage'); // если есть класс нового сообщения, удаляется
-
-        let urlParams = new URLSearchParams();
-        let groupChatName;
-        if (type === 'dialog') {
-            urlParams.set('contact', urlArg);
-            urlParams.set('CSRF', inputCsrf.value);
-            removeGroupPatricipantDOMElements();
-            // поиск пользователя в массиве контактов на клиенте и добавление, если отсутствует
-            fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(dbContact => {
-                dbContact = parseJSONData(dbContact);
-                if (dbContact === undefined) {
-                    return;
-                }
-
-                let contact = chatWebsocket.contactList.find(elem => elem.chat == dbContact.chat_id);
-                if (contact === undefined) {
-                    contacts.addContactList(dbContact);
-                }
-            });
-        } else if (type === 'discussion') {
-            urlParams.set('discussionid', urlArg);
-            removeGroupPatricipantDOMElements();
-            showGroupRecipients(domElement, urlArg) // показать участников группового чата
-            let groupChat = groups.groupList.find(el => el.chat == urlArg);
-            if (groupChat !== undefined) {
-                groupChatName = groupChat.name;
-            }
-        } else {
-            return;
-        }
-
-        // если поиск контакта
-        if (contacts.isSearch) {
-            contacts.isSearch = false;
-            findContactsInput.value = '';
-            contacts.show();
-        }
-        
-        showChat(urlParams, type === 'dialog' ? urlArg : groupChatName, type); // показать чат
-    };
 }
 
 /** Переотправить сообщение */

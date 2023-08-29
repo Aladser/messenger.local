@@ -4,12 +4,13 @@ class ContactContexMenu extends ContexMenu
     contactContexOption;
     selectedContact;
 
-    constructor(contexMenuDOM, chatWS, clientUsername, inputCsrf, contacts) {
+    constructor(contexMenuDOM, chatWS, clientUsername, inputCsrf, contacts, groups) {
         super(contexMenuDOM);
         this.contacts = contacts;
         this.chatWS = chatWS;
         this.clientUsername = clientUsername;
         this.inputCsrf = inputCsrf;
+        this.groups = groups;
         
         this.editNoticeShowBtn = contexMenuDOM.childNodes[1].childNodes[1]; 
         this.editNoticeShowBtn.onclick = () => this.editNoticeShow();
@@ -21,18 +22,17 @@ class ContactContexMenu extends ContexMenu
      * @param {*} clientUsername имя килента браузера
      * @param {*} inputCsrf  CSRF
      */
-    editNoticeShow()
-    {
+    editNoticeShow() {
         // создание пакета с id чата, значением статуса показа уведомлений
         let data = {};
 
         if (this.selectedContact.className === 'group') {
             // поиск выбранного группового чата
-            data.chat = this.chatWS.groupList.find(el => el.name === this.chatWS.selectedContact.title).chat;
+            data.chat = this.groups.groupList.find(el => el.name === this.selectedContact.title).chat;
         } else {
             //  поиск выбранного контакта
             let name = this.selectedContact.querySelector('.contact__name').innerHTML;
-            data.chat = this.chatWS.contactList.find(el => el.name === name).chat;
+            data.chat = this.contacts.contactList.find(el => el.name === name).chat;
         }
         data.notice = this.selectedContact.getAttribute('data-notice') == 1 ? 0 : 1; //инвертирование значения. Это значение будет записано в БД
         this.hide();
@@ -57,10 +57,10 @@ class ContactContexMenu extends ContexMenu
             let elem;
             if (this.selectedContact.classList.contains('contact')) {
                 // если контакт, то изменяем значение в массиве контактов
-                elem = this.chatWS.contactList.find(el => el.name === this.selectedContact.title);
-            } else if (this.chatWS.selectedContact.className === 'group') {
+                elem = this.contacts.contactList.find(el => el.name === this.selectedContact.title);
+            } else if (this.selectedContact.className === 'group') {
                 // если групповой чат, то изменяем значение в массиве групповых чатов
-                elem = this.chatWS.groupList.find(el => el.name === this.selectedContact.title);
+                elem = this.groups.groupList.find(el => el.name === this.selectedContact.title);
             }
             elem.notice = notice;
 
@@ -74,9 +74,8 @@ class ContactContexMenu extends ContexMenu
     }
 
     /** удалить контакт/групповой чат */
-    removeContact()
-    {
-        if (this.selectedContact.className === 'contact') {
+    removeContact() {
+        if (this.selectedContact.classList.contains('contact')) {
             this.contacts.remove(this.selectedContact, this.clientUsername);
         } else {
             let urlParams = new URLSearchParams();
