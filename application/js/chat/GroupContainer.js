@@ -31,8 +31,23 @@ class GroupContainer extends TemplateContainer{
         }
     }
 
-    /** удалить контакт из списка контактов */
-    remove() {
+    /** удалить группу из списка групп пользователя */
+    remove(group) {
+        let urlParams = new URLSearchParams();
+        urlParams.set('name', group.title);
+        urlParams.set('type', group.className === 'group' ? 'group' : 'contact');
+        urlParams.set('CSRF', this.CSRFElement.value);
+
+        fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+            try {
+                data = JSON.parse(data);
+                if (parseInt(data.response) > 0) {
+                    group.remove();
+                }
+            } catch (err) {
+                this.errorPrg.innerHTML = data;
+            }
+        });
     }
 
     /** добавить в фронт-список групп */

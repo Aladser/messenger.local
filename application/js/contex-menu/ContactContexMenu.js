@@ -78,21 +78,7 @@ class ContactContexMenu extends ContexMenu
         if (this.selectedContact.classList.contains('contact')) {
             this.contacts.remove(this.selectedContact, this.clientUsername);
         } else {
-            let urlParams = new URLSearchParams();
-            urlParams.set('name', this.selectedContact.title);
-            urlParams.set('type', this.selectedContact.className === 'group' ? 'group' : 'contact');
-            urlParams.set('CSRF', this.inputCsrf.value);
-    
-            fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-                try {
-                    data = JSON.parse(data);
-                    if (parseInt(data.response) > 0) {
-                        this.selectedContact.remove();
-                    }
-                } catch (err) {
-                    console.log(data);
-                }
-            });
+            this.groups.remove(this.selectedContact);
         }
         this.hide();
     }
