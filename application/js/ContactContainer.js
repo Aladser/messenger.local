@@ -1,49 +1,47 @@
+/** Контейнер контактов */
 class ContactContainer {
     siteAddr = "http://messenger.local/application/";
     errorDomElement = document.querySelector("#message-system");
 
-    /** контейнер контактов */
+    /** DOM-контейнер контактов */
     container = document.querySelector('#contacts');
-    /** поле поиска пользователя */
-    findContactsInput = document.querySelector('#find-contacts-input');
     /** CSRF */
     CSRFElement;
 
     isSearch = false;
     contactList = [];
 
-    /**
-     * 
+    /** Контейнер контактов
      * @param {*} contactsContainer контейнер контактов
      * @param {*} findContactsInput поле поиска контактов
      * @param {*} ws вебсокет
      * @param {*} chatWebsocket чат вебсокета 
      */
-    constructor(container, findContactsInput, CSRFElement) {
+    constructor(container, CSRFElement) {
         this.container = container;
-        this.findContactsInput = findContactsInput;
         this.CSRFElement = CSRFElement;
     }
 
     /** показать контакты пользователя браузера */
-    show = () => fetch('contact/get-contacts').then(resp => resp.text()).then(contacts => {
-        contacts = parseJSONData(contacts);
-        if (contacts !== undefined) {
-            this.findContactsInput.value = '';
-            this.container.innerHTML = '';
-            contacts.forEach(contact => {
-                this.addContactToList({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
-                this.add(contact);
-            });
-        }
-    });
+    show() {
+        fetch('contact/get-contacts').then(resp => resp.text()).then(contacts => {
+            contacts = parseJSONData(contacts);
+            if (contacts !== undefined) {
+                this.container.innerHTML = '';
+                contacts.forEach(contact => {
+                    this.addContactToList({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+                    this.add(contact);
+                });
+            }
+        });
+    }
 
     /** поиск пользователей-контактов в БД по введенному слову и отображение найденных контактов в списке контактов */
-    find()
+    find(userphrase)
     {
         this.isSearch = true;
         let urlParams = new URLSearchParams();
-        urlParams.set('userphrase', this.findContactsInput.value);
+        urlParams.set('userphrase', userphrase);
         urlParams.set('CSRF', this.CSRFElement.value);
         fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
             data = parseJSONData(data);

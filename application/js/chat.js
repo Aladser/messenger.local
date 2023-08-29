@@ -1,5 +1,7 @@
 /** элемент CSRF-токена */
 const inputCsrf = document.querySelector('#input-csrf');
+/** поле поиска пользователя */
+const findContactsInput = document.querySelector('#find-contacts-input');
 
 /** окно ошибок*/
 const frameError = document.querySelector('#frame-error');
@@ -39,47 +41,40 @@ let forwardedMessageRecipientElement = null;
 let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
-/** флаг поиска */
-let isSearch = false;
 
-/** поле поиска пользователя */
-const findContactsInput = document.querySelector('#find-contacts-input');
 /** контейнер контактов */
-const contacts = new ContactContainer(document.querySelector('#contacts'), findContactsInput, inputCsrf);
+const contacts = new ContactContainer(document.querySelector('#contacts'), inputCsrf);
 /** вебсокет */
 const ws = new WebSocket('ws://localhost:8888');
 /** вебсокет сообщений */
 const chatWebsocket = new ChatWebsocket(ws, contacts.contactList);
-
 /** контекстные меню */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf, contacts);
 
 window.addEventListener('DOMContentLoaded', () => {
-    findContactsInput.oninput = () => contacts.find();
-    resetFindContactsBtn.onclick = () => {
-        isSearch = false;
-        contacts.show();
-    }
-
-    chat.onscroll = () => hide();
+    contacts.show();
+    showGroups();
 
     forwardBtn.onclick = forwardMessage;
     resetForwardtBtn.onclick = resetForwardMessage;
-    // запрет контекстного меню
-    document.oncontextmenu = () => false;
 
-    contacts.show();
-    showGroups();
+    findContactsInput.oninput = () => contacts.find(findContactsInput.value);
+    document.oncontextmenu = () => false;
+    sendMsgBtn.onclick = sendMessage;
+    chat.onscroll = hide;
+
+    resetFindContactsBtn.onclick = () => {
+        contacts.isSearch = false;
+        findContactsInput.value = '';
+        contacts.show();
+    }
 
     // создание группового чата
     createGroupOption.onclick = () => fetch('chat/create-group').then(r => r.json()).then(data => {
         groupList.push({'name': data.name, 'chat':data.chat, 'notice': 1});
         ChatDOMElementCreator.group(groupChatsContainer, data, 'START');
     });
-
-    //----- ОТПРАВКА СООБЩЕНИЯ -----
-    sendMsgBtn.onclick = sendMessage;
 
     // нажатие клавиши в поле ввода сообщения
     messageInput.onkeydown = event => {
@@ -281,6 +276,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
         // если поиск контакта
         if (contacts.isSearch) {
             contacts.isSearch = false;
+            findContactsInput.value = '';
             contacts.show();
         }
         
