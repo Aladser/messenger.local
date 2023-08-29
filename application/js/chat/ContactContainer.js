@@ -50,7 +50,7 @@ class ContactContainer {
 
             let contact = this.contactList.find(elem => elem.chat == dbContact.chat_id);
             if (contact === undefined) {
-                contacts.addContactList(dbContact);
+                this.contacts.addContactList(dbContact);
             }
         });
     }

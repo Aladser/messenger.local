@@ -51,7 +51,6 @@ class ChatWebsocket
             
             // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
             if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== this.publicClientUsername) {
-                console.log(data);
 
                 let foundedContactChat = this.contacts.contactList.find(el => el.chat == data.chat); // поиск чата среди списка чатов контактов
                 let foundedGroupChat = this.groups.groupList.find(el => el.chat == data.chat);     // поиск чата среди групповых чатов
@@ -122,7 +121,7 @@ class ChatWebsocket
             }
     
             if (messageType === 'FORWARD') {
-                data.chat = this.contactList.find(el => el.name === this.forwardedMessageRecipientName).chat; // чат, куда пересылается
+                data.chat = this.contacts.contactList.find(el => el.name === this.forwardedMessageRecipientName).chat; // чат, куда пересылается
                 delete data['chatType'];
             }
             this.webSocket.send(JSON.stringify(data));
