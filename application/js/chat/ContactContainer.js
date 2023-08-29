@@ -101,11 +101,6 @@ class ContactContainer extends TemplateContainer{
         });
     }
 
-    /** очистить контейнер */
-    clear() {
-        this.container.innerHTML = '';
-    }
-
     /** добавить в фронт-список контактов */
     addContactToList(contact) {
         this.list.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});

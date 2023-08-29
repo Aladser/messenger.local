@@ -6,4 +6,9 @@ class TemplateContainer {
         this.errorPrg = errorPrg;
         this.CSRFElement = CSRFElement;
     }
+
+    /** очистить контейнер */
+    clear() {
+        this.container.innerHTML = '';
+    }
 }

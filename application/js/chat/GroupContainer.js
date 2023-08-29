@@ -35,8 +35,6 @@ class GroupContainer extends TemplateContainer{
     remove() {
     }
 
-    /** очистить контейнер */
-    clear = () => this.container.innerHTML = '';
     /** добавить в фронт-список групп */
     addGroupToList = group => this.groupList.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
 }
