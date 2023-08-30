@@ -32,7 +32,7 @@ class ContactContexMenu extends ContexMenu
         } else {
             //  поиск выбранного контакта
             let name = this.selectedContact.querySelector('.contact__name').innerHTML;
-            data.chat = this.contacts.contactList.find(el => el.name === name).chat;
+            data.chat = this.contacts.list.find(el => el.name === name).chat;
         }
         data.notice = this.selectedContact.getAttribute('data-notice') == 1 ? 0 : 1; //инвертирование значения. Это значение будет записано в БД
         this.hide();
@@ -57,7 +57,7 @@ class ContactContexMenu extends ContexMenu
             let elem;
             if (this.selectedContact.classList.contains('contact')) {
                 // если контакт, то изменяем значение в массиве контактов
-                elem = this.contacts.contactList.find(el => el.name === this.selectedContact.title);
+                elem = this.contacts.list.find(el => el.name === this.selectedContact.title);
             } else if (this.selectedContact.className === 'group') {
                 // если групповой чат, то изменяем значение в массиве групповых чатов
                 elem = this.groups.groupList.find(el => el.name === this.selectedContact.title);
