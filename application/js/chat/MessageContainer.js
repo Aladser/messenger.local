@@ -6,7 +6,7 @@ class MessageContainer extends TemplateContainer{
         this.title = msgContainerTitle;
     }
 
-    show(urlParams, bdChatName, type, publicClientUsername) {
+    show(urlParams, dbChatName, type, publicClientUsername) {
         urlParams.set('CSRF', inputCsrf.value);
         fetch('chat/get-messages', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
             data = parseJSONData(data);
@@ -19,7 +19,7 @@ class MessageContainer extends TemplateContainer{
                 this.chatWebsocket.openChatId = data.current_chat;
     
                 let chatHeader = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
-                let chatName = bdChatName;;
+                let chatName = dbChatName;
                 this.title.innerHTML = `<p class='messages-container__title'><span id='chat-title'>${chatHeader}</span><span class='chat-username' id='chat-username'>${chatName}</span></p>`;
     
                 // сообщения
@@ -73,4 +73,24 @@ class MessageContainer extends TemplateContainer{
         msgBlock.append(msgTable);
         this.container.append(msgBlock);
     }
+
+    /** показать на странице получателя пересылаемого сообщения
+     * @param {*} contactDomElem
+     * @returns получатель
+     */
+    showForwardedMessageRecipient(contactDomElem)
+    {
+        let contactNameElem = contactDomElem.querySelector('.contact__name');
+        if (contactNameElem) {
+            this.chatWebsocket.forwardedMessageRecipientName = contactNameElem.innerHTML.trim();
+            let contactRecipient = document.querySelector('.contact-recipient');
+            if (contactRecipient) {
+                contactRecipient.classList.remove('contact-recipient');
+            }
+            contactDomElem.classList.add('contact-recipient');
+            return contactDomElem;
+        }
+        return false;
+    }
+
 }

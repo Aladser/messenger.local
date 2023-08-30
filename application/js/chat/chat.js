@@ -120,7 +120,10 @@ function setContactOrGroupClick(domElement, urlArg, type)
     return function () {
         // если пересылается сообщение, показать, кому пересылается
         if (messageContexMenu.option == 'FORWARD') {
-            showForwardedMessageRecipient(domElement);
+            forwardedMessageRecipientElement = messages.showForwardedMessageRecipient(domElement);
+            if (forwardedMessageRecipientElement) {
+                forwardBtn.disabled = false;
+            }
             return;
         }
 
@@ -156,22 +159,6 @@ function setContactOrGroupClick(domElement, urlArg, type)
         messageInput.disabled = false;
         sendMsgBtn.disabled = false;
     };
-}
-
-/** показать на странице получателя пересылаемого сообщения*/
-function showForwardedMessageRecipient(contactDomElem)
-{
-    let contactNameElem = contactDomElem.querySelector('.contact__name');
-    if (contactNameElem) {
-        forwardedMessageRecipientElement = contactDomElem;
-        chatWebsocket.forwardedMessageRecipientName = contactNameElem.innerHTML.trim();
-        let contactRecipient = document.querySelector('.contact-recipient');
-        if (contactRecipient) {
-            contactRecipient.classList.remove('contact-recipient');
-        }
-        contactDomElem.classList.add('contact-recipient');
-        forwardBtn.disabled = false;
-    }
 }
 
 /** Переотправить сообщение */

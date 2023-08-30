@@ -10,13 +10,14 @@ class ChatWebsocket
     chatType = null;
     openChatId = -1;
 
-    constructor(webSocket, contacts, groups)
+    constructor(webSocket, contacts, groups, messages)
     {
         this.webSocket = webSocket;
         this.webSocket.onerror = this.onError;
         this.webSocket.onmessage = e => this.onMessage(e);
         this.contacts = contacts;
         this.groups = groups;
+        this.messages;
     }
 
     // получение ошибок вебсокета
@@ -87,7 +88,7 @@ class ChatWebsocket
                     messageDOMElem.remove();
                 } else {
                     // новое сообщение
-                    ChatDOMElementCreator.message(chat, this.chatType, data, this.publicClientUsername);
+                    messages.add(this.chatType, data, this.publicClientUsername);
                 }
             }
         }

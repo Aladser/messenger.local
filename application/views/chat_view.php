@@ -94,7 +94,6 @@
 <!-- CSRF страницы -->
 <input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
 
-<script type='text/javascript' src="http://messenger.local/application/js/ChatDOMElementCreator.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/ChatWebsocket.js"></script>
 
 <script type='text/javascript' src="http://messenger.local/application/js/contex-menu/ContexMenu.js"></script>
