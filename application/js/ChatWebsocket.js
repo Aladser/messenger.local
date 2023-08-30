@@ -120,7 +120,7 @@ class ChatWebsocket
             }
     
             if (messageType === 'FORWARD') {
-                data.chat = this.contacts.contactList.find(el => el.name === this.forwardedMessageRecipientName).chat; // чат, куда пересылается
+                data.chat = this.contacts.list.find(el => el.name === this.forwardedMessageRecipientName).chat; // чат, куда пересылается
                 delete data['chatType'];
             }
             this.webSocket.send(JSON.stringify(data));

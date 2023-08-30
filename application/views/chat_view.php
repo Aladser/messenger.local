@@ -102,6 +102,7 @@
 <script type='text/javascript' src="http://messenger.local/application/js/contex-menu/ContactContexMenu.js"></script>
 
 <script type='text/javascript' src="http://messenger.local/application/js/chat/TemplateContainer.js"></script>
+<script type='text/javascript' src="http://messenger.local/application/js/chat/MessageContainer.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/chat/ContactContainer.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/chat/GroupContainer.js"></script>
 <script type='text/javascript' src="http://messenger.local/application/js/chat/chat.js"></script>

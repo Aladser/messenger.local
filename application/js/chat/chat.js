@@ -13,6 +13,7 @@ const clientUsername = clientNameBlock.innerHTML.trim();
 const publicClientUsername = clientNameBlock.getAttribute('data-clientuser-publicname');
 /** контейнер сообщений */
 const chat = document.querySelector("#messages");
+
 /** элемент начальной подписи чата */
 const chatNameTitle = document.querySelector('#chat-title');
 /** С кем открыт чат */
@@ -45,11 +46,17 @@ let pressedKeys = [];
 const contacts = new ContactContainer(document.querySelector('#contacts'), frameError, inputCsrf);
 const groups = new GroupContainer(document.querySelector('#group-chats'), frameError, inputCsrf);
 
-/** вебсокет */
 const ws = new WebSocket('ws://localhost:8888');
-/** вебсокет сообщений */
 const chatWebsocket = new ChatWebsocket(ws, contacts, groups);
-/** контекстные меню */
+
+const messages = new MessageContainer(
+    document.querySelector("#messages"),
+    frameError,
+    inputCsrf,
+    chatWebsocket,
+    document.querySelector('.messages-container__title')
+    );
+
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf, contacts, groups);
 
@@ -145,37 +152,11 @@ function setContactOrGroupClick(domElement, urlArg, type)
             contacts.show();
         }
         
-        showChat(urlParams, type === 'dialog' ? urlArg : groupChatName, type); // показать чат
+        messages.show(urlParams, type === 'dialog' ? urlArg : groupChatName, type, publicClientUsername);
+        messageInput.disabled = false;
+        sendMsgBtn.disabled = false;
     };
 }
-
-/** показать сообщения */
-const showChat = (urlParams, bdChatName, type) => {
-    urlParams.set('CSRF', inputCsrf.value);
-    fetch('chat/get-messages', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-        data = parseJSONData(data);
-        if (data === undefined) {
-            return;
-        } else if (data) {
-            chat.innerHTML = '';
-
-            chatWebsocket.chatType = data.type;
-            chatWebsocket.openChatId = data.current_chat;
-
-            chatNameTitle.innerHTML = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
-            chatNameLabel.innerHTML = bdChatName;
-
-            messageInput.disabled = false;
-            sendMsgBtn.disabled = false;
-
-            // сообщения
-            data.messages.forEach(elem => {
-                ChatDOMElementCreator.message(chat, type, elem, publicClientUsername);
-            });
-            chat.scrollTo(0, chat.scrollHeight); // прокрутка сообщений в конец
-        }
-    });
-};
 
 /** показать на странице получателя пересылаемого сообщения*/
 function showForwardedMessageRecipient(contactDomElem)
