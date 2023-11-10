@@ -2,10 +2,10 @@
 
 namespace Aladser\Controllers;
 
-use Aladser\Core\Controller;
-use Aladser\Core\EMailSender;
 use Aladser\Core\ConfigClass;
+use Aladser\Core\Controller;
 use Aladser\Core\DB\DBCtl;
+use Aladser\EMailSender;
 use Aladser\Models\UsersDBTableModel;
 
 /** контрллер проверки уникальности никнейма */
@@ -24,11 +24,12 @@ class UserController extends Controller
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
+
             return;
-        } 
+        }
 
         $nickname = htmlspecialchars($_POST['nickname']);
-        $response = $this->users->isUniqueNickname($nickname) ? 1 : 0; 
+        $response = $this->users->isUniqueNickname($nickname) ? 1 : 0;
         echo json_encode(['response' => $response]);
     }
 
@@ -71,8 +72,9 @@ class UserController extends Controller
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
+
             return;
-        } 
+        }
 
         if (!$this->users->existsUser($_POST['email'])) {
             $email = htmlspecialchars($_POST['email']);
@@ -82,7 +84,7 @@ class UserController extends Controller
 
             $isRegUser = $this->users->addUser($email, $password) === 1;
             if ($isRegUser) {
-                $hash = md5($email . time());
+                $hash = md5($email.time());
                 $this->users->addUserHash($email, $hash);
                 $text = "
                 <body>
@@ -107,8 +109,9 @@ class UserController extends Controller
         // проверка на подмену адреса
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'подделка URL-адреса';
+
             return;
-        };
+        }
 
         $email = Controller::getUserMailFromClient();
         $data['user_email'] = $email;
@@ -124,8 +127,8 @@ class UserController extends Controller
         // вырезает название файла
         $filename = mb_substr($filename, 0, mb_strripos($filename, '?'));
 
-        $fromPath = $tempDirPath . $filename;
-        $toPath = $dwlDirPath . $filename;
+        $fromPath = $tempDirPath.$filename;
+        $toPath = $dwlDirPath.$filename;
 
         // если загружено новое изображение
         if (file_exists($fromPath)) {
