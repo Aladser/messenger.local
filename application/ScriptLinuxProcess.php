@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\Core;
+namespace Aladser;
 
 /** PHP-скрипт как Linux процесс */
 class ScriptLinuxProcess
@@ -13,8 +13,6 @@ class ScriptLinuxProcess
     private string $processLogFile;
     /** путь к файлу парсинга процессов Linux */
     private string $pidsParseFile;
-    /** PID процесса */
-    private $PID;
 
     public function __construct(
         string $processName,
@@ -26,50 +24,40 @@ class ScriptLinuxProcess
         $this->processFile = $scriptFilepath;
         $this->processLogFile = $processLogFilepath;
         $this->pidsParseFile = $pidParseFilepath;
-        $this->PID = $this->findPID();
     }
 
     /** проверить наличие процесса */
     public function isActive(): bool
     {
-        file_put_contents($this->pidsParseFile, '');
+        $this->clearLogs(false);
         exec("ps aux | grep {$this->processName} > $this->pidsParseFile"); // новая таблица pidов
+
         return count(file($this->pidsParseFile)) > 2; // 2 строки будут всегда
     }
 
     /** создает процесс */
-    public function enable()
+    public function run(): void
     {
         $this->clearLogs();
         exec("php $this->processFile > $this->processLogFile &");
-        $this->PID = $this->findPID();
     }
 
     /** убивает процесс */
-    public function disable()
+    public function kill(): void
     {
-        exec("kill {$this->PID}");
+        $this->clearLogs();
+        exec("pkill -f {$this->processName}");
     }
 
-    /** поиск PID */
-    private function findPID()
+    /** очистить файлы логов.
+     *
+     * @param mixed $bothFiles true - оба файла
+     */
+    public function clearLogs($bothFiles = true): void
     {
-        $pidsArr = file($this->pidsParseFile);
-        for ($i=0; $i<count($pidsArr); $i++) {
-            if (mb_stripos($pidsArr[$i], "php {$this->processFile}" != -1)) {
-                $processArr = explode('    ', $pidsArr[$i]);
-                $processArr = $processArr[1];
-                $processArr = explode(' ', $processArr);
-                return $processArr[0];
-            }
-        }
-        return -1;
-    }
-
-    /** очистить логи вебсокета */
-    public function clearLogs()
-    {
-        file_put_contents($this->processLogFile, '');
         file_put_contents($this->pidsParseFile, '');
+        if ($bothFiles) {
+            file_put_contents($this->processLogFile, '');
+        }
     }
 }

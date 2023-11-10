@@ -2,11 +2,10 @@
 
 namespace Aladser;
 
-use Aladser\Core\Route;
 use Aladser\Core\ConfigClass;
-use Aladser\Core\ScriptLinuxProcess;
+use Aladser\Core\Route;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 date_default_timezone_set('Europe/Moscow');
 
 $os = explode(' ', php_uname())[0];
@@ -18,11 +17,7 @@ if ($os !== 'Windows') {
         ConfigClass::getPidsListFile()
     );
     if (!$websocket->isActive()) {
-        // php /var/www/messenger.local/application/chat-server.php > /var/www/messenger.local/logs/websocket.log &
-        $websocket->enable();
-        // чистка логов веб-сервера
-        file_put_contents(dirname(__DIR__, 1) . '/logs/access.log', '');
-        file_put_contents(dirname(__DIR__, 1) . '/logs/error.log', '');
+        $websocket->run();
     }
 }
 
