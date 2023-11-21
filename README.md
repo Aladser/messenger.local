@@ -25,18 +25,23 @@
 ### Структура сайта
 
 + Главная страница
+
 ![main](storage/images/main.png)
 
 + Регистрация нового пользователя
+
 ![register](storage/images/register.png)
 
 + Авторизация
+
 ![login](storage/images/login.png)
 
 + Чаты
+
 ![chat](storage/images/chat.png)
 
 + Профиль
+
 ![profile](storage/images/profile.png)
 
 ### Структура БД:
