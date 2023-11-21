@@ -22,18 +22,21 @@
 * Авторизация пользователя сохраняется в куки без возможности отключения
 * есть файлы логов сервера Apache, вебосокета, парсинга PID-процессов Linux в папке *logs*
 
+### Структура сайта
+
++ Главная страница
 ![main](storage/images/main.png)
-<hr><br>
 
++ Регистрация нового пользователя
 ![register](storage/images/register.png)
-<hr><br>
 
++ Авторизация
 ![login](storage/images/login.png)
-<hr><br>
 
++ Чаты
 ![chat](storage/images/chat.png)
-<hr><br>
 
++ Профиль
 ![profile](storage/images/profile.png)
 
 ### Структура БД:
