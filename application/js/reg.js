@@ -82,7 +82,7 @@ regForm.addEventListener('submit', function (e) {
     let form = new FormData(this);
     form.append('CSRF', inputCsrf.value);
     // Список пар ключ/значение
-    fetch('user/register', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+    fetch('user/store', {method: 'POST', body: form}).then(response => response.text()).then(data => {
         regErrorPrg.classList.remove('d-none');
         try {
             data = JSON.parse(data);

@@ -33,7 +33,7 @@ class UserController extends Controller
         echo json_encode(['response' => $response]);
     }
 
-    public function login()
+    public function auth()
     {
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
@@ -57,7 +57,7 @@ class UserController extends Controller
         }
     }
 
-    public function register()
+    public function store()
     {
         $eMailSender = new EMailSender(
             ConfigClass::SMTP_SRV,

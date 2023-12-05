@@ -28,7 +28,7 @@ document.querySelector('#login-form').addEventListener('submit', function (e) {
     let form = new FormData(this);
     form.append('CSRF', inputCsrf.value);
 
-    fetch('user/login', {method: 'POST', body: form}).then(response => response.text()).then(data => {
+    fetch('user/auth', {method: 'POST', body: form}).then(response => response.text()).then(data => {
         try {
             JSON.parse(data);
             window.open('/chat', '_self');
