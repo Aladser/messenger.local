@@ -8,7 +8,7 @@ use Aladser\Core\DB\DBCtl;
 use Aladser\EMailSender;
 use Aladser\Models\UsersDBTableModel;
 
-/** контрллер проверки уникальности никнейма */
+/** Контроллер пользователей */
 class UserController extends Controller
 {
     private UsersDBTableModel $users;
@@ -19,36 +19,7 @@ class UserController extends Controller
         $this->users = $dbCtl->getUsers();
     }
 
-    public function auth(): void
-    {
-        // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
-
-            return;
-        }
-
-        $email = htmlspecialchars($_POST['email']);
-        $password = htmlspecialchars($_POST['password']);
-
-        // проверка аутентификации
-        if ($this->users->exists('users', 'user_email', $email)) {
-            // проверка введенных данных
-            $isValidLogin = $this->users->verify($email, $password) == 1;
-            if ($isValidLogin) {
-                $_SESSION['auth'] = 1;
-                $_SESSION['email'] = $email;
-                setcookie('auth', 1, time() + 60 * 60 * 24, '/');
-                setcookie('email', $email, time() + 60 * 60 * 24, '/');
-                echo json_encode(['result' => 1]);
-            } else {
-                echo 'Неправильный пароль';
-            }
-        } else {
-            echo 'Пользователь не существует';
-        }
-    }
-
+    // добавить пользователя в БД
     public function store(): void
     {
         // проверка CSRF
@@ -93,6 +64,7 @@ class UserController extends Controller
         echo json_encode($data);
     }
 
+    // обновить данные пользователя в БД
     public function update(): void
     {
         // проверка на подмену адреса
@@ -136,9 +108,41 @@ class UserController extends Controller
         }
     }
 
+    // станица авторизации
     public function login()
     {
         $data = ['csrfToken' => Controller::createCSRFToken()];
         $this->view->generate('template_view.php', 'login_view.php', '', 'login.js', 'Месенджер: войдите в систему', $data);
+    }
+
+    // авторизация
+    public function auth(): void
+    {
+        // проверка CSRF
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
+            echo 'Подмена URL-адреса';
+
+            return;
+        }
+
+        $email = htmlspecialchars($_POST['email']);
+        $password = htmlspecialchars($_POST['password']);
+
+        // проверка аутентификации
+        if ($this->users->exists('users', 'user_email', $email)) {
+            // проверка введенных данных
+            $isValidLogin = $this->users->verify($email, $password) == 1;
+            if ($isValidLogin) {
+                $_SESSION['auth'] = 1;
+                $_SESSION['email'] = $email;
+                setcookie('auth', 1, time() + 60 * 60 * 24, '/');
+                setcookie('email', $email, time() + 60 * 60 * 24, '/');
+                echo json_encode(['result' => 1]);
+            } else {
+                echo 'Неправильный пароль';
+            }
+        } else {
+            echo 'Пользователь не существует';
+        }
     }
 }
