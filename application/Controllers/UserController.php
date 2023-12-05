@@ -19,7 +19,7 @@ class UserController extends Controller
         $this->users = $dbCtl->getUsers();
     }
 
-    public function isUniqueNickname()
+    public function auth(): void
     {
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
@@ -28,19 +28,11 @@ class UserController extends Controller
             return;
         }
 
-        $nickname = htmlspecialchars($_POST['nickname']);
-        $response = $this->users->isUniqueNickname($nickname) ? 1 : 0;
-        echo json_encode(['response' => $response]);
-    }
-
-    public function auth(): void
-    {
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
+
         // проверка аутентификации
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
-        } elseif ($this->users->exists('users', 'user_email', $email)) {
+        if ($this->users->exists('users', 'user_email', $email)) {
             // проверка введенных данных
             $isValidLogin = $this->users->checkUser($email, $password) == 1;
             if ($isValidLogin) {
@@ -59,6 +51,13 @@ class UserController extends Controller
 
     public function store(): void
     {
+        // проверка CSRF
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
+            echo 'Подмена URL-адреса';
+
+            return;
+        }
+
         $eMailSender = new EMailSender(
             ConfigClass::SMTP_SRV,
             ConfigClass::EMAIL_USERNAME,
@@ -69,19 +68,11 @@ class UserController extends Controller
             ConfigClass::EMAIL_SENDER_NAME
         );
 
-        // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
-
-            return;
-        }
-
         $email = htmlspecialchars($_POST['email']);
         if (!$this->users->exists('users', 'user_email', $email)) {
             $password = htmlspecialchars($_POST['password']);
-
-            $isRegUser = $this->users->addUser($email, $password) === 1;
-            if ($isRegUser) {
+            $isAdded = $this->users->add($email, $password);
+            if ($isAdded) {
                 $hash = md5($email.time());
                 $this->users->addUserHash($email, $hash);
                 $text = "
@@ -102,7 +93,7 @@ class UserController extends Controller
         echo json_encode($data);
     }
 
-    public function update()
+    public function update(): void
     {
         // проверка на подмену адреса
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {

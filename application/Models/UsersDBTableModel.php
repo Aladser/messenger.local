@@ -17,12 +17,12 @@ class UsersDBTableModel extends DBTableModel
     }
 
     // добавить нового пользователя
-    public function addUser($email, $password)
+    public function add($email, $password): bool
     {
         $password = password_hash($password, PASSWORD_DEFAULT);
         $sql = "insert into users(user_email, user_password) values('$email', '$password')";
 
-        return $this->db->exec($sql);
+        return $this->db->exec($sql) > 0;
     }
 
     // добавить хэш пользователю
