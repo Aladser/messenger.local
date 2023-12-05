@@ -33,14 +33,14 @@ class UserController extends Controller
         echo json_encode(['response' => $response]);
     }
 
-    public function auth()
+    public function auth(): void
     {
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
         // проверка аутентификации
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
-        } elseif ($this->users->existsUser($email)) {
+        } elseif ($this->users->exists('users', 'user_email', $email)) {
             // проверка введенных данных
             $isValidLogin = $this->users->checkUser($email, $password) == 1;
             if ($isValidLogin) {
@@ -57,7 +57,7 @@ class UserController extends Controller
         }
     }
 
-    public function store()
+    public function store(): void
     {
         $eMailSender = new EMailSender(
             ConfigClass::SMTP_SRV,
@@ -76,11 +76,9 @@ class UserController extends Controller
             return;
         }
 
-        if (!$this->users->existsUser($_POST['email'])) {
-            $email = htmlspecialchars($_POST['email']);
+        $email = htmlspecialchars($_POST['email']);
+        if (!$this->users->exists('users', 'user_email', $email)) {
             $password = htmlspecialchars($_POST['password']);
-            $email = $email;
-            $password = $password;
 
             $isRegUser = $this->users->addUser($email, $password) === 1;
             if ($isRegUser) {
