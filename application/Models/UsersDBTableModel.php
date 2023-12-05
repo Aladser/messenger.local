@@ -6,7 +6,7 @@ namespace Aladser\Models;
 class UsersDBTableModel extends DBTableModel
 {
     // проверка авторизации
-    public function checkUser($email, $password): bool
+    public function verify($email, $password): bool
     {
         $passHash = $this->db->queryPrepared(
             'select user_password from users where user_email=:email',

@@ -34,7 +34,7 @@ class UserController extends Controller
         // проверка аутентификации
         if ($this->users->exists('users', 'user_email', $email)) {
             // проверка введенных данных
-            $isValidLogin = $this->users->checkUser($email, $password) == 1;
+            $isValidLogin = $this->users->verify($email, $password) == 1;
             if ($isValidLogin) {
                 $_SESSION['auth'] = 1;
                 $_SESSION['email'] = $email;
@@ -77,9 +77,9 @@ class UserController extends Controller
                 $this->users->addUserHash($email, $hash);
                 $text = "
                 <body>
-                <p>Для подтверждения учетной записи в Месенджере перейдите по 
-                <a href=\"http://messenger.local/verify-email?email='$email'&hash='$hash'\">ссылке</a>
-                </p>
+                    <p>Для подтверждения учетной записи в Месенджере перейдите по 
+                        <a href=\"http://messenger.local/verify-email?email='$email'&hash='$hash'\">ссылке</a>
+                    </p>
                 </body>
                 ";
                 $data['result'] = $eMailSender->send('Месенджер: подтвердите e-mail', $text, $email);
