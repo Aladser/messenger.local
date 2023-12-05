@@ -135,4 +135,10 @@ class UserController extends Controller
             echo $this->users->setUserData($data) ? 1 : 0;
         }
     }
+
+    public function login()
+    {
+        $data = ['csrfToken' => Controller::createCSRFToken()];
+        $this->view->generate('template_view.php', 'login_view.php', '', 'login.js', 'Месенджер: войдите в систему', $data);
+    }
 }
