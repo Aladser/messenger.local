@@ -5,6 +5,14 @@ namespace Aladser\Models;
 /** класс БД таблицы пользователей */
 class UsersDBTableModel extends DBTableModel
 {
+    // проверка существования значения
+    public function exists($field, $value)
+    {
+        $sql = "select count(*) as count from users where $field = :value";
+
+        return $this->db->queryPrepared($sql, ['value' => $value])['count'] > 0;
+    }
+
     // проверка авторизации
     public function verify($email, $password): bool
     {
