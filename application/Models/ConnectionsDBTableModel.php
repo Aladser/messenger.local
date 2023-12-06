@@ -2,8 +2,10 @@
 
 namespace Aladser\Models;
 
+use Aladser\Core\Model;
+
 /** Класс БД таблицы соединений вебсокета */
-class ConnectionsDBTableModel extends DBTableModel
+class ConnectionsDBTableModel extends Model
 {
     // сохранить подключение в БД
     public function addConnection(array $data): array
@@ -29,6 +31,7 @@ class ConnectionsDBTableModel extends DBTableModel
                 $sqlRslt = $this->db->exec("
                     insert connections(connection_ws_id, connection_userid) values($connection_ws_id, $userId)
                 ");
+
                 // при добавлении соединения возвращается публичное имя пользователя или ошибка добавления
                 return $sqlRslt == 1
                     ? ['publicUsername' => $user['publicusername']]
@@ -51,6 +54,7 @@ class ConnectionsDBTableModel extends DBTableModel
             where connection_ws_id = :connId)
         ';
         $query = $this->db->queryPrepared($sql, ['connId' => $connId]);
+
         return $query['username'] ?? '';
     }
 

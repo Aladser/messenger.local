@@ -2,8 +2,10 @@
 
 namespace Aladser\Models;
 
+use Aladser\Core\Model;
+
 /** класс БД таблицы сообщений чатов */
-class MessageDBTableModel extends DBTableModel
+class MessageDBTableModel extends Model
 {
     // возвращает сообшения диалога
     public function getMessages(int $chatId)
@@ -18,6 +20,7 @@ class MessageDBTableModel extends DBTableModel
             from chat_message join users on user_id = chat_message_creatorid
             where chat_message_chatid = :chatId
         ';
+
         return $this->db->queryPrepared($sql, ['chatId' => $chatId], false);
     }
 
@@ -42,6 +45,7 @@ class MessageDBTableModel extends DBTableModel
         if (!$query) {
             return $this->db->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
         }
+
         return intval($query['chat_id']);
     }
 
@@ -61,6 +65,7 @@ class MessageDBTableModel extends DBTableModel
         $result = $this->db->exec("delete from chat_participant where chat_participant_chatid  = $dialogId");
         $result += $this->db->exec("delete from chat_message where chat_message_chatid  = $dialogId");
         $result += $this->db->exec("delete from chat where chat_id = $dialogId");
+
         return $result;
     }
 
@@ -69,9 +74,9 @@ class MessageDBTableModel extends DBTableModel
     {
         $groupId = $this->db->executeProcedure("create_discussion($userHostId, @info)", '@info');
         $sql = 'select chat_id as chat, chat_name as name from chat where chat_id = :groupId';
+
         return $this->db->queryPrepared($sql, ['groupId' => $groupId]);
     }
-
 
     // возвращает групповые чаты пользователя
     public function getDiscussions(int $userHostId)
@@ -82,6 +87,7 @@ class MessageDBTableModel extends DBTableModel
         join chat on chat_participant.chat_participant_chatid = chat.chat_id
         where chat_type = \'discussion\' and chat_participant_userid = :userHostId
         ';
+
         return $this->db->queryPrepared($sql, ['userHostId' => $userHostId], false);
     }
 
@@ -89,6 +95,7 @@ class MessageDBTableModel extends DBTableModel
     public function getDiscussionCreatorId($chatId)
     {
         $sql = 'select chat_creatorid from chat where chat_id = :chatId';
+
         return $this->db->queryPrepared($sql, ['chatId' => $chatId])['chat_creatorid'];
     }
 
@@ -97,6 +104,7 @@ class MessageDBTableModel extends DBTableModel
     {
         $out = '@chatid';
         $func = "add_message($msg->chat, '$msg->message', '$msg->author', '$msg->time', $out)";
+
         return $this->db->executeProcedure($func, $out);
     }
 
@@ -105,6 +113,7 @@ class MessageDBTableModel extends DBTableModel
     {
         $out = '@chatid';
         $func = "add_forwarded_message($msg->authorId, $msg->msgId, $msg->chat, '$msg->time', $out)";
+
         return $this->db->executeProcedure($func, $out);
     }
 
@@ -123,6 +132,7 @@ class MessageDBTableModel extends DBTableModel
             where chat_message_id = :msgId
         ', ['msgId' => $msgId]);
         $rslt['messageType'] = 'EDIT';
+
         return $rslt;
     }
 
@@ -139,6 +149,7 @@ class MessageDBTableModel extends DBTableModel
         $this->db->exec("delete from chat_message where chat_message_id = $msgId");
         // возвращаем информацию удаляемой строки
         $rslt['messageType'] = 'REMOVE';
+
         return $rslt;
     }
 
@@ -158,6 +169,7 @@ class MessageDBTableModel extends DBTableModel
             where chat_participant_chatid = :chatid 
               and chat_participant_userid = :userid
         ';
+
         return $this->db->queryPrepared($sql, ['chatid' => $chatid, 'userid' => $userid])['chat_participant_isnotice'];
     }
 }

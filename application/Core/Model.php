@@ -1,11 +1,10 @@
 <?php
 
-namespace Aladser\Models;
+namespace Aladser\Core;
 
 use Aladser\Core\DB\DBQueryClass;
 
-/** Класс модели таблицы БД */
-class DBTableModel
+class Model
 {
     protected DBQueryClass $db;
 

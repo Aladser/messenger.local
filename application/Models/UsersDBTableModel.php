@@ -2,8 +2,10 @@
 
 namespace Aladser\Models;
 
+use Aladser\Core\Model;
+
 /** класс БД таблицы пользователей */
-class UsersDBTableModel extends DBTableModel
+class UsersDBTableModel extends Model
 {
     // проверка существования значения
     public function exists($field, $value)

@@ -2,8 +2,10 @@
 
 namespace Aladser\Models;
 
+use Aladser\Core\Model;
+
 /** класс БД таблицы контактов пользователей, контактов групповых чатов */
-class ContactsDBTableModel extends DBTableModel
+class ContactsDBTableModel extends Model
 {
     // добавить контакт
     public function addContact($contactId, $userId)
@@ -19,6 +21,7 @@ class ContactsDBTableModel extends DBTableModel
             where (cnt_user_id=$userId and cnt_contact_id=$contactId) 
             or (cnt_contact_id=$userId and cnt_user_id=$contactId)
         ";
+
         return $this->db->exec($sql);
     }
 
@@ -57,6 +60,7 @@ class ContactsDBTableModel extends DBTableModel
             )
             and user_id = :contactId
         ';
+
         return $this->db->queryPrepared($sql, ['userId' => $userId, 'contactId' => $contactId], false);
     }
 
@@ -83,11 +87,12 @@ class ContactsDBTableModel extends DBTableModel
             )
             and user_id != :userId
         ';
+
         return $this->db->queryPrepared($sql, ['userId' => $userId], false);
     }
 
     /**
-     * добавить участника группового чата
+     * добавить участника группового чата.
      */
     public function addGroupContact($chatId, $userId)
     {
@@ -101,6 +106,7 @@ class ContactsDBTableModel extends DBTableModel
                 insert into chat_participant(chat_participant_chatid, chat_participant_userid)
                 values ($chatId, $userId)
             ";
+
             return $this->db->exec($sql);
         }
     }
@@ -114,6 +120,7 @@ class ContactsDBTableModel extends DBTableModel
             join users on chat_participant.chat_participant_userid = users.user_id
             where chat_participant_chatid = :groupId
         ';
+
         return $this->db->queryPrepared($sql, ['groupId' => $groupId], false);
     }
 }
