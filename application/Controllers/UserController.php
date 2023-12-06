@@ -145,4 +145,27 @@ class UserController extends Controller
         $data = ['csrfToken' => Controller::createCSRFToken()];
         $this->view->generate('template_view.php', 'login_view.php', '', 'login.js', 'Месенджер: войдите в систему', $data);
     }
+
+    // страница регистрации
+    public function register()
+    {
+        $data = ['csrfToken' => Controller::createCSRFToken()];
+        $this->view->generate('template_view.php', 'reg_view.php', 'reg.css', 'reg.js', 'Месенджер: регистрация', $data);
+    }
+
+    // подтверждение почты после регистрации
+    public function verifyEmail()
+    {
+        $email = htmlspecialchars(str_replace('\'', '', $_GET['email']));
+        $hash = htmlspecialchars(str_replace('\'', '', $_GET['hash']));
+
+        if ($this->dbCtl->getUsers()->checkUserHash($email, $hash)) {
+            $this->dbCtl->getUsers()->confirmEmail($email);
+            $data = 'Электронная почта подтверждена';
+        } else {
+            $data = 'Ссылка недействительная или некорректная';
+        }
+
+        $this->view->generate('template_view.php', 'verify-email_view.php', '', '', 'Подтверждение почты', $data);
+    }
 }

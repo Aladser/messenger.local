@@ -12,14 +12,24 @@ class Route
         session_start();
 
         // URL
+        // вырезается "/"
         $url = mb_substr($_SERVER['REQUEST_URI'], 1);
+        // вырезаются get-аргументы
+        $url = explode('?', $url)[0];
         // контроллер и метод
         if ($url === 'login') {
             // страница входа
             $controller_name = 'User';
             $action = 'login';
+        } elseif ($url === 'register') {
+            // страница регистрации
+            $controller_name = 'User';
+            $action = 'register';
+        } elseif ($url === 'verify-email') {
+            // подтверждение почты
+            $controller_name = 'User';
+            $action = 'verifyEmail';
         } else {
-            $url = explode('?', $url)[0];
             $routesArr = explode('/', $url);
             // выбор контроллера
             $controller_name = !empty($url) ? ucfirst($routesArr[0]) : 'main';
