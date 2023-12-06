@@ -113,20 +113,22 @@ class UserController extends Controller
 
         // перемещение изображения профиля из временой папки в папку изображений профилей
         $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
-        $dwlDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'profile_photos'.DIRECTORY_SEPARATOR;
+        $downloadDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'profile_photos'.DIRECTORY_SEPARATOR;
 
         $filename = $_POST['user_photo'];
-        // вырезает название файла
+        // вырезает название файла без учета регистра
         $filename = mb_substr($filename, 0, mb_strripos($filename, '?'));
 
         $fromPath = $tempDirPath.$filename;
-        $toPath = $dwlDirPath.$filename;
+        $toPath = $downloadDirPath.$filename;
 
         // если загружено новое изображение
         if (file_exists($fromPath)) {
-            foreach (glob($dwlDirPath.$email.'*') as $file) {
-                unlink($file); // удаление старых файлов профиля
+            // удаление старых файлов профиля
+            foreach (glob($downloadDirPath.$email.'*') as $file) {
+                unlink($file);
             }
+            // переименование файла
             if (rename($fromPath, $toPath)) {
                 $data['user_photo'] = $filename;
                 echo $this->users->setUserData($data) ? 1 : 0;
