@@ -21,7 +21,7 @@ class UsersDBTableModel extends DBTableModel
             ['email' => $email]
         )['user_password'];
 
-        return password_verify($password, $passHash);
+        return password_verify($password, $passHash) == 1;
     }
 
     // добавить нового пользователя

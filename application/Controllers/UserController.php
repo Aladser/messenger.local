@@ -35,7 +35,7 @@ class UserController extends Controller
         // проверка аутентификации
         if ($this->users->exists('user_email', $email)) {
             // проверка введенных данных
-            $isValidLogin = $this->users->verify($email, $password) == 1;
+            $isValidLogin = $this->users->verify($email, $password);
             if ($isValidLogin) {
                 $_SESSION['auth'] = 1;
                 $_SESSION['email'] = $email;
