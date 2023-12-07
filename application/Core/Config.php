@@ -2,7 +2,7 @@
 
 namespace Aladser\Core;
 
-class ConfigClass
+class Config
 {
     // подключение к БД
     public const HOST_DB = 'localhost';
@@ -26,16 +26,16 @@ class ConfigClass
 
     public static function getWebSocketProcessFile(): string
     {
-        return dirname(__DIR__, 1) . '/chat-server.php';
+        return dirname(__DIR__, 1).'/chat-server.php';
     }
-    
+
     public static function getWebsocketProcessLogFile(): string
     {
-        return dirname(__DIR__, 2) . '/logs/websocket.log';
+        return dirname(__DIR__, 2).'/logs/websocket.log';
     }
 
     public static function getPidsListFile(): string
     {
-        return dirname(__DIR__, 2) . '/logs/pids.log';
+        return dirname(__DIR__, 2).'/logs/pids.log';
     }
 }

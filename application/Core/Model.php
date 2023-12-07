@@ -8,6 +8,6 @@ class Model
 
     public function __construct()
     {
-        $this->dbQuery = new DBQuery(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB);
+        $this->dbQuery = new DBQuery(Config::HOST_DB, Config::NAME_DB, Config::USER_DB, Config::PASS_DB);
     }
 }
