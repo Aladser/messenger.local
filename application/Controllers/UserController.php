@@ -104,7 +104,7 @@ class UserController extends Controller
             return;
         }
 
-        $email = Controller::getUserMailFromClient();
+        $email = Config::getEmailFromClient();
         $data['user_email'] = $email;
         $nickname = trim($_POST['user_nickname']);
         $data['user_nickname'] = $nickname == '' ? null : $nickname;

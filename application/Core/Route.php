@@ -11,6 +11,7 @@ class Route
     private static $specificRoutes = [
      'login' => 'UserController',
      'register' => 'UserController',
+     'update' => 'UserController',
      'verify-email' => 'UserController',
      'upload-file' => 'MainController',
     ];
@@ -65,6 +66,8 @@ class Route
 
         // --- подключение контроллера и вызов метода контроллера---
         $controller_path = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$controller_name.'.php';
+        // echo $url.', ';
+        // echo $controller_name.' '.$action;
         try {
             // подключение класса контроллера
             if (!file_exists($controller_path)) {

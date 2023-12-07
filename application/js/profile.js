@@ -164,7 +164,7 @@ saveBtn.addEventListener('click', () => {
     let filepathArr = document.querySelector('#profile-img').src.split('/');
     data.set('user_photo', filepathArr[filepathArr.length - 1]);
 
-    fetch('user/update', {method: 'POST', body: data}).then(r => r.text()).then(data => {
+    fetch('/update', {method: 'POST', body: data}).then(r => r.text()).then(data => {
         data = parseJSONData(data);
         if (data !== undefined) {
             saveBtn.classList.add('d-none');             
