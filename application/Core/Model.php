@@ -4,10 +4,10 @@ namespace Aladser\Core;
 
 class Model
 {
-    protected DBQuery $db;
+    protected DBQuery $dbQuery;
 
-    public function __construct(DBQuery $db)
+    public function __construct()
     {
-        $this->db = $db;
+        $this->dbQuery = new DBQuery(ConfigClass::HOST_DB, ConfigClass::NAME_DB, ConfigClass::USER_DB, ConfigClass::PASS_DB);
     }
 }

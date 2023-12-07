@@ -4,7 +4,6 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\ConfigClass;
 use Aladser\Core\Controller;
-use Aladser\Core\DBCtl;
 use Aladser\EMailSender;
 use Aladser\Models\UserEntity;
 
@@ -13,10 +12,10 @@ class UserController extends Controller
 {
     private UserEntity $users;
 
-    public function __construct(DBCtl $dbCtl = null)
+    public function __construct()
     {
-        parent::__construct($dbCtl);
-        $this->users = $dbCtl->getUsers();
+        parent::__construct();
+        $this->users = new UserEntity();
     }
 
     // авторизация пользователя

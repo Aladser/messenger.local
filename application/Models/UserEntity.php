@@ -12,13 +12,13 @@ class UserEntity extends Model
     {
         $sql = "select count(*) as count from users where $field = :value";
 
-        return $this->db->queryPrepared($sql, ['value' => $value])['count'] > 0;
+        return $this->dbQuery->queryPrepared($sql, ['value' => $value])['count'] > 0;
     }
 
     // проверка авторизации
     public function verify($email, $password): bool
     {
-        $passHash = $this->db->queryPrepared(
+        $passHash = $this->dbQuery->queryPrepared(
             'select user_password from users where user_email=:email',
             ['email' => $email]
         )['user_password'];
@@ -32,7 +32,7 @@ class UserEntity extends Model
         $password = password_hash($password, PASSWORD_DEFAULT);
         $sql = "insert into users(user_email, user_password) values('$email', '$password')";
 
-        return $this->db->exec($sql) > 0;
+        return $this->dbQuery->exec($sql) > 0;
     }
 
     // добавить хэш пользователю
@@ -40,7 +40,7 @@ class UserEntity extends Model
     {
         $sql = "UPDATE users SET user_hash='$hash' WHERE user_email='$email'";
 
-        return $this->db->exec($sql);
+        return $this->dbQuery->exec($sql);
     }
 
     // проверить хэш пользователя
@@ -48,13 +48,13 @@ class UserEntity extends Model
     {
         $sql = 'select count(*) as count from users where user_email = :email and user_hash = :hash';
 
-        return $this->db->queryPrepared($sql, ['email' => $email, 'hash' => $hash])['count'] === 1;
+        return $this->dbQuery->queryPrepared($sql, ['email' => $email, 'hash' => $hash])['count'] === 1;
     }
 
     /** подтвердить почту */
     public function confirmEmail($email)
     {
-        return $this->db->exec("update users set user_email_confirmed = 1, user_hash = null where user_email='$email'");
+        return $this->dbQuery->exec("update users set user_email_confirmed = 1, user_hash = null where user_email='$email'");
     }
 
     // проверить уникальность никнейма
@@ -62,7 +62,7 @@ class UserEntity extends Model
     {
         $sql = 'select count(*) as count from users where user_nickname=:nickname';
 
-        return $this->db->queryPrepared($sql, ['nickname' => $nickname])['count'] == 0;
+        return $this->dbQuery->queryPrepared($sql, ['nickname' => $nickname])['count'] == 0;
     }
 
     /** получить публичное имя пользователя из ID */
@@ -74,7 +74,7 @@ class UserEntity extends Model
             where user_id = $userId
         ";
 
-        return $this->db->query($sql)['username'];
+        return $this->dbQuery->query($sql)['username'];
     }
 
     // получить публичное имя пользователя из почты
@@ -86,7 +86,7 @@ class UserEntity extends Model
             where user_email = :userEmail
         ';
 
-        return $this->db->queryPrepared($sql, ['userEmail' => $userEmail])['username'];
+        return $this->dbQuery->queryPrepared($sql, ['userEmail' => $userEmail])['username'];
     }
 
     // получить ID пользователя
@@ -98,7 +98,7 @@ class UserEntity extends Model
             where user_email = :publicUserName or user_nickname=:publicUserName
         ';
 
-        return $this->db->queryPrepared($sql, ['publicUserName' => $publicUserName])['user_id'];
+        return $this->dbQuery->queryPrepared($sql, ['publicUserName' => $publicUserName])['user_id'];
     }
 
     // список пользователей по шаблону почты или никнейма
@@ -118,13 +118,13 @@ class UserEntity extends Model
             where user_hide_email  = 0 and user_email != :email and user_email like :phrase;
         ';
 
-        return $this->db->queryPrepared($sql, ['email' => $email, 'phrase' => $phrase], false);
+        return $this->dbQuery->queryPrepared($sql, ['email' => $email, 'phrase' => $phrase], false);
     }
 
     // получить пользовательские данные
     public function getUserData($email): array
     {
-        $dbData = $this->db->queryPrepared(
+        $dbData = $this->dbQuery->queryPrepared(
             '
             select user_nickname, user_hide_email, user_photo 
             from users 
@@ -151,19 +151,19 @@ class UserEntity extends Model
         $nickname = $data['user_nickname'];
         $rslt |= $this->isEqualData($nickname, 'user_nickname', $email) ?
             true :
-            $this->db->exec("update users set user_nickname = '$nickname' where user_email='$email'");
+            $this->dbQuery->exec("update users set user_nickname = '$nickname' where user_email='$email'");
 
         // запись скрытия почты
         $hideEmail = $data['user_hide_email'];
         $rslt |= $this->isEqualData($hideEmail, 'user_hide_email', $email) ?
             true :
-            $this->db->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
+            $this->dbQuery->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
 
         // запись фото
         $photo = $data['user_photo'];
         $rslt |= $this->isEqualData($photo, 'user_photo', $email) ?
             true :
-            $this->db->exec("update users set user_photo = '$photo' where user_email='$email'");
+            $this->dbQuery->exec("update users set user_photo = '$photo' where user_email='$email'");
 
         return $rslt;
     }
@@ -171,7 +171,7 @@ class UserEntity extends Model
     // сравнение новых данных и в БД
     private function isEqualData($data, $field, $email): bool
     {
-        $dbData = $this->db->queryPrepared(
+        $dbData = $this->dbQuery->queryPrepared(
             "select $field from users WHERE user_email=:email",
             ['email' => $email]
         )[$field];

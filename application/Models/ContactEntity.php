@@ -10,7 +10,7 @@ class ContactEntity extends Model
     // добавить контакт
     public function addContact($contactId, $userId)
     {
-        return $this->db->exec("insert into contacts(cnt_user_id, cnt_contact_id) values($userId, $contactId)");
+        return $this->dbQuery->exec("insert into contacts(cnt_user_id, cnt_contact_id) values($userId, $contactId)");
     }
 
     /** удалить контакт */
@@ -22,13 +22,13 @@ class ContactEntity extends Model
             or (cnt_contact_id=$userId and cnt_user_id=$contactId)
         ";
 
-        return $this->db->exec($sql);
+        return $this->dbQuery->exec($sql);
     }
 
     // проверка существования
     public function existsContact($contactId, $userId)
     {
-        return $this->db->queryPrepared(
+        return $this->dbQuery->queryPrepared(
             'select * 
             from contacts 
             where cnt_user_id = :userId and cnt_contact_id = :contactId 
@@ -61,7 +61,7 @@ class ContactEntity extends Model
             and user_id = :contactId
         ';
 
-        return $this->db->queryPrepared($sql, ['userId' => $userId, 'contactId' => $contactId], false);
+        return $this->dbQuery->queryPrepared($sql, ['userId' => $userId, 'contactId' => $contactId], false);
     }
 
     // получить контакты пользователя
@@ -88,7 +88,7 @@ class ContactEntity extends Model
             and user_id != :userId
         ';
 
-        return $this->db->queryPrepared($sql, ['userId' => $userId], false);
+        return $this->dbQuery->queryPrepared($sql, ['userId' => $userId], false);
     }
 
     /**
@@ -96,7 +96,7 @@ class ContactEntity extends Model
      */
     public function addGroupContact($chatId, $userId)
     {
-        $isContact = $this->db->queryPrepared('
+        $isContact = $this->dbQuery->queryPrepared('
             select * from chat_participant where chat_participant_chatid = :chatId and chat_participant_userid = :userId
         ', ['chatId' => $chatId, 'userId' => $userId]);
         if ($isContact) {
@@ -107,7 +107,7 @@ class ContactEntity extends Model
                 values ($chatId, $userId)
             ";
 
-            return $this->db->exec($sql);
+            return $this->dbQuery->exec($sql);
         }
     }
 
@@ -121,6 +121,6 @@ class ContactEntity extends Model
             where chat_participant_chatid = :groupId
         ';
 
-        return $this->db->queryPrepared($sql, ['groupId' => $groupId], false);
+        return $this->dbQuery->queryPrepared($sql, ['groupId' => $groupId], false);
     }
 }

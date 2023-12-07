@@ -3,7 +3,6 @@
 namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
-use Aladser\Core\DBCtl;
 use Aladser\Models\MessageEntity;
 use Aladser\Models\UserEntity;
 
@@ -13,11 +12,11 @@ class ChatController extends Controller
     private UserEntity $users;
     private MessageEntity $messages;
 
-    public function __construct(DBCtl $dbCtl = null)
+    public function __construct()
     {
-        parent::__construct($dbCtl);
-        $this->users = $dbCtl->getUsers();
-        $this->messages = $dbCtl->getMessageDBTable();
+        parent::__construct();
+        $this->messages = new MessageEntity();
+        $this->users = new UserEntity();
     }
 
     public function index()

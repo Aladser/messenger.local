@@ -3,7 +3,6 @@
 namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
-use Aladser\Core\DBCtl;
 use Aladser\Models\ContactEntity;
 use Aladser\Models\MessageEntity;
 use Aladser\Models\UserEntity;
@@ -15,12 +14,12 @@ class ContactController extends Controller
     private MessageEntity $messages;
     private UserEntity $users;
 
-    public function __construct(DBCtl $dbCtl = null)
+    public function __construct()
     {
-        parent::__construct($dbCtl);
-        $this->users = $this->dbCtl->getUsers();
-        $this->contacts = $this->dbCtl->getContacts();
-        $this->messages = $this->dbCtl->getMessageDBTable();
+        parent::__construct();
+        $this->users = new UserEntity();
+        $this->contacts = new ContactEntity();
+        $this->messages = new MessageEntity();
     }
 
     public function createGroupContact()

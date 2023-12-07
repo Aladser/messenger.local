@@ -22,7 +22,7 @@ class MessageEntity extends Model
             order by time
         ';
 
-        return $this->db->queryPrepared($sql, ['chatId' => $chatId], false);
+        return $this->dbQuery->queryPrepared($sql, ['chatId' => $chatId], false);
     }
 
     // получить ID диалога
@@ -40,11 +40,11 @@ class MessageEntity extends Model
 	            where chat_participant_userid = :user2Id
             );
         ';
-        $query = $this->db->queryPrepared($sql, ['user1Id' => $user1Id, 'user2Id' => $user2Id]);
+        $query = $this->dbQuery->queryPrepared($sql, ['user1Id' => $user1Id, 'user2Id' => $user2Id]);
 
         // создание диалога, если не существует
         if (!$query) {
-            return $this->db->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
+            return $this->dbQuery->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
         }
 
         return intval($query['chat_id']);
@@ -53,7 +53,7 @@ class MessageEntity extends Model
     /** получить ID группового чата*/
     public function getDiscussionId(string $groupName)
     {
-        return $this->db->queryPrepared(
+        return $this->dbQuery->queryPrepared(
             'select chat_id from chat where chat_name = :groupName',
             ['groupName' => $groupName],
             false
@@ -63,9 +63,9 @@ class MessageEntity extends Model
     /** удалить чат */
     public function removeChat($dialogId)
     {
-        $result = $this->db->exec("delete from chat_participant where chat_participant_chatid  = $dialogId");
-        $result += $this->db->exec("delete from chat_message where chat_message_chatid  = $dialogId");
-        $result += $this->db->exec("delete from chat where chat_id = $dialogId");
+        $result = $this->dbQuery->exec("delete from chat_participant where chat_participant_chatid  = $dialogId");
+        $result += $this->dbQuery->exec("delete from chat_message where chat_message_chatid  = $dialogId");
+        $result += $this->dbQuery->exec("delete from chat where chat_id = $dialogId");
 
         return $result;
     }
@@ -73,10 +73,10 @@ class MessageEntity extends Model
     // создать групповой чат
     public function createDiscussion(int $userHostId)
     {
-        $groupId = $this->db->executeProcedure("create_discussion($userHostId, @info)", '@info');
+        $groupId = $this->dbQuery->executeProcedure("create_discussion($userHostId, @info)", '@info');
         $sql = 'select chat_id as chat, chat_name as name from chat where chat_id = :groupId';
 
-        return $this->db->queryPrepared($sql, ['groupId' => $groupId]);
+        return $this->dbQuery->queryPrepared($sql, ['groupId' => $groupId]);
     }
 
     // возвращает групповые чаты пользователя
@@ -89,7 +89,7 @@ class MessageEntity extends Model
         where chat_type = \'discussion\' and chat_participant_userid = :userHostId
         ';
 
-        return $this->db->queryPrepared($sql, ['userHostId' => $userHostId], false);
+        return $this->dbQuery->queryPrepared($sql, ['userHostId' => $userHostId], false);
     }
 
     // возвращает создателя группового чата
@@ -97,7 +97,7 @@ class MessageEntity extends Model
     {
         $sql = 'select chat_creatorid from chat where chat_id = :chatId';
 
-        return $this->db->queryPrepared($sql, ['chatId' => $chatId])['chat_creatorid'];
+        return $this->dbQuery->queryPrepared($sql, ['chatId' => $chatId])['chat_creatorid'];
     }
 
     // добавить сообщение
@@ -106,7 +106,7 @@ class MessageEntity extends Model
         $out = '@chatid';
         $func = "add_message($msg->chat, '$msg->message', '$msg->author', '$msg->time', $out)";
 
-        return $this->db->executeProcedure($func, $out);
+        return $this->dbQuery->executeProcedure($func, $out);
     }
 
     // добавить пересылаемое сообщение
@@ -115,16 +115,16 @@ class MessageEntity extends Model
         $out = '@chatid';
         $func = "add_forwarded_message($msg->authorId, $msg->msgId, $msg->chat, '$msg->time', $out)";
 
-        return $this->db->executeProcedure($func, $out);
+        return $this->dbQuery->executeProcedure($func, $out);
     }
 
     // изменить сообщение
     public function editMessage(string $msg, int $msgId)
     {
         // изменяем строку
-        $this->db->exec("update chat_message set chat_message_text = '$msg' where chat_message_id = $msgId");
+        $this->dbQuery->exec("update chat_message set chat_message_text = '$msg' where chat_message_id = $msgId");
         // возвращаем строку
-        $rslt = $this->db->queryPrepared('
+        $rslt = $this->dbQuery->queryPrepared('
             select chat_message_id as msg, 
                    chat_message_chatid as chat, 
                    chat_message_text as message, 
@@ -141,13 +141,13 @@ class MessageEntity extends Model
     public function removeMessage(int $msgId)
     {
         // получиим удаляемую строку
-        $rslt = $this->db->queryPrepared('
+        $rslt = $this->dbQuery->queryPrepared('
             select chat_message_id as msg, chat_message_chatid as chat 
             from chat_message 
             where chat_message_id = :msgId
         ', ['msgId' => $msgId]);
         // удаляем
-        $this->db->exec("delete from chat_message where chat_message_id = $msgId");
+        $this->dbQuery->exec("delete from chat_message where chat_message_id = $msgId");
         // возвращаем информацию удаляемой строки
         $rslt['messageType'] = 'REMOVE';
 
@@ -157,7 +157,7 @@ class MessageEntity extends Model
     // установить показ уведомлений чатов
     public function setNoticeShow($chatid, $userid, $notice)
     {
-        $this->db->exec("
+        $this->dbQuery->exec("
             update chat_participant 
             set chat_participant_isnotice = $notice 
             where chat_participant_chatid = $chatid 
@@ -171,6 +171,6 @@ class MessageEntity extends Model
               and chat_participant_userid = :userid
         ';
 
-        return $this->db->queryPrepared($sql, ['chatid' => $chatid, 'userid' => $userid])['chat_participant_isnotice'];
+        return $this->dbQuery->queryPrepared($sql, ['chatid' => $chatid, 'userid' => $userid])['chat_participant_isnotice'];
     }
 }

@@ -13,7 +13,7 @@ class ConnectionEntity extends Model
         $connection_ws_id = intval($data['wsId']);
         $user_email = trim($data['author']);
 
-        $user = $this->db->queryPrepared('
+        $user = $this->dbQuery->queryPrepared('
             select user_id, getPublicUserName(user_email, user_nickname, user_hide_email) as publicusername 
             from users 
             where user_email = :email
@@ -22,13 +22,13 @@ class ConnectionEntity extends Model
         if ($user) {
             // поиск соединения в БД
             $userId = $user['user_id'];
-            $isConnection = $this->db->queryPrepared(
+            $isConnection = $this->dbQuery->queryPrepared(
                 'select * from connections where connection_userid = :id',
                 ['id' => $userId]
             );
             // не могу понять откуда берется нулевой connId из Ratchet. Удаляю его
             if (!$isConnection && $connection_ws_id != 0) {
-                $sqlRslt = $this->db->exec("
+                $sqlRslt = $this->dbQuery->exec("
                     insert connections(connection_ws_id, connection_userid) values($connection_ws_id, $userId)
                 ");
 
@@ -53,7 +53,7 @@ class ConnectionEntity extends Model
             from users where user_id = (select connection_userid from connections 
             where connection_ws_id = :connId)
         ';
-        $query = $this->db->queryPrepared($sql, ['connId' => $connId]);
+        $query = $this->dbQuery->queryPrepared($sql, ['connId' => $connId]);
 
         return $query['username'] ?? '';
     }
@@ -61,12 +61,12 @@ class ConnectionEntity extends Model
     // удалить закрытое соединение из БД
     public function removeConnection(int $connId)
     {
-        return $this->db->exec("delete from connections where connection_ws_id = $connId");
+        return $this->dbQuery->exec("delete from connections where connection_ws_id = $connId");
     }
 
     // очистить таблицу соединений
     public function removeConnections()
     {
-        $this->db->exec('delete from connections');
+        $this->dbQuery->exec('delete from connections');
     }
 }
