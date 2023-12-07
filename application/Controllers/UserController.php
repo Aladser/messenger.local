@@ -2,7 +2,7 @@
 
 namespace Aladser\Controllers;
 
-use Aladser\Core\ConfigClass;
+use Aladser\Core\Config;
 use Aladser\Core\Controller;
 use Aladser\EMailSender;
 use Aladser\Models\UserEntity;
@@ -60,13 +60,13 @@ class UserController extends Controller
         }
 
         $eMailSender = new EMailSender(
-            ConfigClass::SMTP_SRV,
-            ConfigClass::EMAIL_USERNAME,
-            ConfigClass::EMAIL_PASSWORD,
-            ConfigClass::SMTP_SECURE,
-            ConfigClass::SMTP_PORT,
-            ConfigClass::EMAIL_SENDER,
-            ConfigClass::EMAIL_SENDER_NAME
+            Config::SMTP_SRV,
+            Config::EMAIL_USERNAME,
+            Config::EMAIL_PASSWORD,
+            Config::SMTP_SECURE,
+            Config::SMTP_PORT,
+            Config::EMAIL_SENDER,
+            Config::EMAIL_SENDER_NAME
         );
 
         $email = htmlspecialchars($_POST['email']);
@@ -143,14 +143,14 @@ class UserController extends Controller
     // станица авторизации
     public function login(): void
     {
-        $data = ['csrfToken' => Controller::createCSRFToken()];
+        $data = ['csrfToken' => Config::createCSRFToken()];
         $this->view->generate('template_view.php', 'login_view.php', '', 'login.js', 'Месенджер: войдите в систему', $data);
     }
 
     // страница регистрации
     public function register(): void
     {
-        $data = ['csrfToken' => Controller::createCSRFToken()];
+        $data = ['csrfToken' => Config::createCSRFToken()];
         $this->view->generate('template_view.php', 'reg_view.php', 'reg.css', 'reg.js', 'Месенджер: регистрация', $data);
     }
 
@@ -174,13 +174,13 @@ class UserController extends Controller
     public function show(): void
     {
         // почта
-        $email = Controller::getUserMailFromClient();
+        $email = Config::getEmailFromClient();
         // пользователи
         $users = new UserEntity();
         // данные пользователя
         $data = $users->getUserData($email);
         // CSRF
-        $data['csrfToken'] = Controller::createCSRFToken();
+        $data['csrfToken'] = Config::createCSRFToken();
 
         $this->view->generate('template_view.php', 'profile_view.php', 'profile.css', 'profile.js', 'Профиль', $data);
     }

@@ -38,4 +38,25 @@ class Config
     {
         return dirname(__DIR__, 2).'/logs/pids.log';
     }
+
+    /** получить почту пользователя из сессии или куки */
+    public static function getEmailFromClient()
+    {
+        if (isset($_COOKIE['email'])) {
+            return $_COOKIE['email'];
+        } elseif (isset($_SESSION['email'])) {
+            return $_SESSION['email'];
+        } else {
+            return null;
+        }
+    }
+
+    /** создать CSRF-токен */
+    public static function createCSRFToken(): string
+    {
+        $csrfToken = hash('gost-crypto', random_int(0, 999999));
+        $_SESSION['CSRF'] = $csrfToken;
+
+        return $csrfToken;
+    }
 }

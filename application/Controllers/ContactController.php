@@ -2,6 +2,7 @@
 
 namespace Aladser\Controllers;
 
+use Aladser\Core\Config;
 use Aladser\Core\Controller;
 use Aladser\Models\ContactEntity;
 use Aladser\Models\MessageEntity;
@@ -49,7 +50,7 @@ class ContactController extends Controller
 
     public function getContact()
     {
-        $userHostName = Controller::getUserMailFromClient();
+        $userHostName = Config::getEmailFromClient();
         $userId = $this->users->getUserId($userHostName);
         $contact = htmlspecialchars($_POST['contact']);
         $contactId = $this->users->getUserId($contact);
@@ -74,7 +75,7 @@ class ContactController extends Controller
 
     public function getContacts()
     {
-        $userEmail = Controller::getUserMailFromClient();
+        $userEmail = Config::getEmailFromClient();
         $userId = $this->users->getUserId($userEmail);
         echo json_encode($this->contacts->getContacts($userId));
     }
@@ -88,7 +89,7 @@ class ContactController extends Controller
             return;
         }
         $userphrase = htmlspecialchars($_POST['userphrase']);
-        echo json_encode($this->users->getUsers($userphrase, Controller::getUserMailFromClient()));
+        echo json_encode($this->users->getUsers($userphrase, Config::getEmailFromClient()));
     }
 
     public function removeContact()
