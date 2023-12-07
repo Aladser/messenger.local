@@ -5,7 +5,7 @@ namespace Aladser\Models;
 use Aladser\Core\Model;
 
 /** Класс БД таблицы соединений вебсокета */
-class ConnectionsDBTableModel extends Model
+class ConnectionEntity extends Model
 {
     // сохранить подключение в БД
     public function addConnection(array $data): array

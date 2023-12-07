@@ -4,16 +4,16 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 use Aladser\Core\DB\DBCtl;
-use Aladser\Models\UsersDBTableModel;
-use Aladser\Models\ContactsDBTableModel;
-use Aladser\Models\MessageDBTableModel;
+use Aladser\Models\ContactEntity;
+use Aladser\Models\MessageEntity;
+use Aladser\Models\UserEntity;
 
 /** контроллер контактов */
 class ContactController extends Controller
 {
-    private UsersDBTableModel $users;
-    private ContactsDBTableModel $contacts;
-    private MessageDBTableModel $messages;
+    private ContactEntity $contacts;
+    private MessageEntity $messages;
+    private UserEntity $users;
 
     public function __construct(DBCtl $dbCtl = null)
     {
@@ -37,13 +37,14 @@ class ContactController extends Controller
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
+
             return;
-        } 
+        }
         $discussionId = htmlspecialchars($_POST['discussionid']);
         $creatorId = $this->messages->getDiscussionCreatorId($discussionId);
         echo json_encode([
             'participants' => $this->contacts->getGroupContacts($discussionId),
-            'creatorName' => $this->users->getPublicUsername($creatorId)
+            'creatorName' => $this->users->getPublicUsername($creatorId),
         ]);
     }
 
@@ -66,7 +67,7 @@ class ContactController extends Controller
             $userData = [
                 'username' => $contact[0]['username'],
                 'chat_id' => $contact[0]['chat_id'],
-                'isnotice' => $contact[0]['isnotice']
+                'isnotice' => $contact[0]['isnotice'],
             ];
         }
         echo json_encode($userData);
@@ -84,8 +85,9 @@ class ContactController extends Controller
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
+
             return;
-        } 
+        }
         $userphrase = htmlspecialchars($_POST['userphrase']);
         echo json_encode($this->users->getUsers($userphrase, Controller::getUserMailFromClient()));
     }
@@ -95,8 +97,9 @@ class ContactController extends Controller
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
+
             return;
-        } 
+        }
 
         $type = htmlspecialchars($_POST['type']);
         $name = htmlspecialchars($_POST['name']);

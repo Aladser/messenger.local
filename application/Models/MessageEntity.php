@@ -5,7 +5,7 @@ namespace Aladser\Models;
 use Aladser\Core\Model;
 
 /** класс БД таблицы сообщений чатов */
-class MessageDBTableModel extends Model
+class MessageEntity extends Model
 {
     // возвращает сообшения диалога
     public function getMessages(int $chatId)
@@ -19,6 +19,7 @@ class MessageDBTableModel extends Model
             chat_message_forward as forward
             from chat_message join users on user_id = chat_message_creatorid
             where chat_message_chatid = :chatId
+            order by time
         ';
 
         return $this->db->queryPrepared($sql, ['chatId' => $chatId], false);

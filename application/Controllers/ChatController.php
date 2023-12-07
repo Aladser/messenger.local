@@ -4,15 +4,14 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 use Aladser\Core\DB\DBCtl;
-use Aladser\Models\UsersDBTableModel;
-use Aladser\Models\ContactsDBTableModel;
-use Aladser\Models\MessageDBTableModel;
+use Aladser\Models\MessageEntity;
+use Aladser\Models\UserEntity;
 
 /** контроллер чата */
 class ChatController extends Controller
 {
-    private UsersDBTableModel $users;
-    private MessageDBTableModel $messages;
+    private UserEntity $users;
+    private MessageEntity $messages;
 
     public function __construct(DBCtl $dbCtl = null)
     {
@@ -29,7 +28,7 @@ class ChatController extends Controller
 
         // удаление временных файлов профиля
         $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
-        foreach (glob($tempDirPath . $userEmail . '*') as $file) {
+        foreach (glob($tempDirPath.$userEmail.'*') as $file) {
             unlink($file);
         }
 
@@ -53,16 +52,17 @@ class ChatController extends Controller
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
+
             return;
         }
 
-        $username = htmlspecialchars($_POST["username"]);
+        $username = htmlspecialchars($_POST['username']);
         $userId = $this->users->getUserId($username);
 
-        $notice = htmlspecialchars($_POST["notice"]);
+        $notice = htmlspecialchars($_POST['notice']);
         $notice = intval($notice);
 
-        $chatid = htmlspecialchars($_POST["chat_id"]);
+        $chatid = htmlspecialchars($_POST['chat_id']);
         echo json_encode(['responce' => $this->messages->setNoticeShow($chatid, $userId, $notice)]);
     }
 
@@ -78,8 +78,9 @@ class ChatController extends Controller
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
+
             return;
-        } 
+        }
 
         // диалоги
         if (isset($_POST['contact'])) {
@@ -97,7 +98,7 @@ class ChatController extends Controller
 
         $messages = [
             'current_chat' => $chatId, 'type' => $type,
-            'messages' => $this->messages->getMessages($chatId)
+            'messages' => $this->messages->getMessages($chatId),
         ];
         echo json_encode($messages);
     }

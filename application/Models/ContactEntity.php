@@ -5,7 +5,7 @@ namespace Aladser\Models;
 use Aladser\Core\Model;
 
 /** класс БД таблицы контактов пользователей, контактов групповых чатов */
-class ContactsDBTableModel extends Model
+class ContactEntity extends Model
 {
     // добавить контакт
     public function addContact($contactId, $userId)

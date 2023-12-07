@@ -6,12 +6,12 @@ use Aladser\Core\ConfigClass;
 use Aladser\Core\Controller;
 use Aladser\Core\DB\DBCtl;
 use Aladser\EMailSender;
-use Aladser\Models\UsersDBTableModel;
+use Aladser\Models\UserEntity;
 
 /** Контроллер пользователей */
 class UserController extends Controller
 {
-    private UsersDBTableModel $users;
+    private UserEntity $users;
 
     public function __construct(DBCtl $dbCtl = null)
     {

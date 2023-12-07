@@ -2,10 +2,10 @@
 
 namespace Aladser\Core\DB;
 
-use Aladser\Models\ConnectionsDBTableModel;
-use Aladser\Models\ContactsDBTableModel;
-use Aladser\Models\MessageDBTableModel;
-use Aladser\Models\UsersDBTableModel;
+use Aladser\Models\ConnectionEntity;
+use Aladser\Models\ContactEntity;
+use Aladser\Models\MessageEntity;
+use Aladser\Models\UserEntity;
 
 /** Класс модели таблицы БД */
 class DBCtl
@@ -17,35 +17,27 @@ class DBCtl
         $this->dbQueryCtl = new DBQueryClass($dbAddr, $dbName, $dbUser, $dbPassword);
     }
 
-    /** Возвращает таблицу пользователей
-     * @return UsersDBTableModel
-     */
-    public function getUsers(): UsersDBTableModel
+    /** Возвращает таблицу пользователей. */
+    public function getUsers(): UserEntity
     {
-        return new UsersDBTableModel($this->dbQueryCtl);
+        return new UserEntity($this->dbQueryCtl);
     }
 
-    /** Возвращает таблицу контактов
-     * @return ContactsDBTableModel
-     */
-    public function getContacts(): ContactsDBTableModel
+    /** Возвращает таблицу контактов.*/
+    public function getContacts(): ContactEntity
     {
-        return new ContactsDBTableModel($this->dbQueryCtl);
+        return new ContactEntity($this->dbQueryCtl);
     }
 
-    /** Возвращает таблицу соединений
-     * @return ConnectionsDBTableModel
-     */
-    public function getConnections(): ConnectionsDBTableModel
+    /** Возвращает таблицу соединений.*/
+    public function getConnections(): ConnectionEntity
     {
-        return new ConnectionsDBTableModel($this->dbQueryCtl);
+        return new ConnectionEntity($this->dbQueryCtl);
     }
 
-    /** Возвращает таблицу сообщений
-     * @return MessageDBTableModel
-     */
-    public function getMessageDBTable(): MessageDBTableModel
+    /** Возвращает таблицу сообщений.*/
+    public function getMessageDBTable(): MessageEntity
     {
-        return new MessageDBTableModel($this->dbQueryCtl);
+        return new MessageEntity($this->dbQueryCtl);
     }
 }
