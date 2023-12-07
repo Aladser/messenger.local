@@ -2,6 +2,7 @@
 
 namespace Aladser\Controllers;
 
+use Aladser\Core\Config;
 use Aladser\Core\Controller;
 
 /** контроллер главной страницы */
@@ -36,7 +37,7 @@ class MainController extends Controller
         }
 
         // почта пользователя
-        $email = Controller::getUserMailFromClient();
+        $email = Config::getEmailFromClient();
         $ext = explode('.', $_FILES['image']['name'])[1];
 
         // поиск других загрузок изображений этого профиля и установка нового имени файла

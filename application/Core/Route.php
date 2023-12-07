@@ -7,11 +7,12 @@ use Aladser\Controllers\MainController;
 class Route
 {
     // специфичные роуты
+    // роут - действие, $specificRoutes[роут] - контроллер
     private static $specificRoutes = [
-     'login' => 'User',
-     'register' => 'User',
-     'verify-email' => 'User',
-     'upload-file' => 'Main',
+     'login' => 'UserController',
+     'register' => 'UserController',
+     'verify-email' => 'UserController',
+     'upload-file' => 'MainController',
     ];
 
     public static function start()
@@ -27,7 +28,7 @@ class Route
         // ---имя контроллера и метод---
         if (array_key_exists($url, self::$specificRoutes)) {
             $controller_name = self::$specificRoutes[$url];
-            $action = $url;
+            $action = self::convertName($url);
         } else {
             $routesArr = explode('/', $url);
             // выбор контроллера
@@ -44,45 +45,51 @@ class Route
                 $action = 'index';
             }
             // преобразовать url в название класса
-            $controller_name = str_replace('-', ' ', $controller_name);
-            $controller_name = ucwords($controller_name);
-            $controller_name = str_replace(' ', '', $controller_name);
+            $controller_name = self::convertName($controller_name).'Controller';
         }
 
         // ---авторизация сохраняется в куки и сессии. Если авторизация есть, то / => /chat---
-        if ($controller_name === 'Main'
+        if ($controller_name === 'MainController'
+            && $action === 'index'
             && (isset($_SESSION['auth']) || isset($_COOKIE['auth']))
             && !isset($_GET['logout'])
         ) {
-            $controller_name = 'Chat';
+            $controller_name = 'ChatController';
         }
         // ---редирект /chats или /profile без авторизации => /---
-        if (($controller_name === 'Chat' || $controller_name === 'Profile')
+        if (($controller_name === 'ChatController')
             && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))
         ) {
-            $controller_name = 'Main';
+            $controller_name = 'MainController';
         }
 
-        // ---контроллер---
-        $controller_name .= 'Controller';
+        // --- подключение контроллера и вызов метода контроллера---
         $controller_path = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$controller_name.'.php';
-        if (file_exists($controller_path)) {
+        try {
+            // подключение класса контроллера
+            if (!file_exists($controller_path)) {
+                throw new \Exception();
+            }
             require_once $controller_path;
             $controller_name = '\\Aladser\\Controllers\\'.$controller_name;
             $controller = new $controller_name();
-        } else {
-            $controller = new MainController();
-            $controller->error404();
-
-            return;
-        }
-
-        // ---вызов метода---
-        if (method_exists($controller, $action)) {
+            // вызов метода
+            if (!method_exists($controller, $action)) {
+                throw new \Exception();
+            }
             $controller->$action();
-        } else {
+        } catch (\Exception $err) {
             $controller = new MainController();
             $controller->error404();
         }
+    }
+
+    private static function convertName($name)
+    {
+        $name = str_replace('-', ' ', $name);
+        $name = ucwords($name);
+        $name = str_replace(' ', '', $name);
+
+        return $name;
     }
 }
