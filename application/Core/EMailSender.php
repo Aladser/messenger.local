@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser;
+namespace Aladser\Core;
 
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -8,7 +8,7 @@ class EMailSender
 {
     private $mail;
 
-    public function __construct($smtpSrv, $username, $password, $smtpSecure, $port, $emailSender, $emailSenderName)
+    public function __construct()
     {
         $this->mail = new PHPMailer();
 
@@ -20,12 +20,12 @@ class EMailSender
             $GLOBALS['data']['debug'][] = $str;
         };
 
-        $this->mail->Host = $smtpSrv;     // SMTP сервера почты
-        $this->mail->Username = $username;    // логин на почте
-        $this->mail->Password = $password;    // пароль на почте
-        $this->mail->SMTPSecure = $smtpSecure;  // тип шифрования
-        $this->mail->Port = $port;        // порт
-        $this->mail->setFrom($emailSender, $emailSenderName); // адрес почты и имя отправителя
+        $this->mail->Host = Config::SMTP_SRV;           // SMTP сервера почты
+        $this->mail->Username = Config::EMAIL_USERNAME; // логин на почте
+        $this->mail->Password = Config::EMAIL_PASSWORD; // пароль на почте
+        $this->mail->SMTPSecure = Config::SMTP_SECURE;  // тип шифрования
+        $this->mail->Port = Config::SMTP_PORT;          // порт
+        $this->mail->setFrom(Config::EMAIL_SENDER, Config::EMAIL_SENDER_NAME); // адрес почты и имя отправителя
     }
 
     public function send($title, $text, $emailRecipient)

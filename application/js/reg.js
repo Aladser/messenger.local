@@ -86,6 +86,7 @@ regForm.addEventListener('submit', function (e) {
         regErrorPrg.classList.remove('d-none');
         try {
             data = JSON.parse(data);
+            console.log(data);
             if (data['result'] === 'user_exists') {
                 regErrorPrg.innerHTML = 'пользователь уже существует';
                 regErrorPrg.classList.remove('text-success');

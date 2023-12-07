@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser;
+namespace Aladser\Core;
 
 /** PHP-скрипт как Linux процесс */
 class ScriptLinuxProcess

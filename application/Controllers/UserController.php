@@ -4,7 +4,7 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Config;
 use Aladser\Core\Controller;
-use Aladser\EMailSender;
+use Aladser\Core\EMailSender;
 use Aladser\Models\UserEntity;
 
 /** Контроллер пользователей */
@@ -59,16 +59,7 @@ class UserController extends Controller
             return;
         }
 
-        $eMailSender = new EMailSender(
-            Config::SMTP_SRV,
-            Config::EMAIL_USERNAME,
-            Config::EMAIL_PASSWORD,
-            Config::SMTP_SECURE,
-            Config::SMTP_PORT,
-            Config::EMAIL_SENDER,
-            Config::EMAIL_SENDER_NAME
-        );
-
+        $eMailSender = new EMailSender();
         $email = htmlspecialchars($_POST['email']);
         if (!$this->users->exists('user_email', $email)) {
             $password = htmlspecialchars($_POST['password']);
@@ -160,8 +151,8 @@ class UserController extends Controller
         $email = htmlspecialchars(str_replace('\'', '', $_GET['email']));
         $hash = htmlspecialchars(str_replace('\'', '', $_GET['hash']));
 
-        if ($this->dbCtl->getUsers()->checkUserHash($email, $hash)) {
-            $this->dbCtl->getUsers()->confirmEmail($email);
+        if ($this->users->checkUserHash($email, $hash)) {
+            $this->users->confirmEmail($email);
             $data = 'Электронная почта подтверждена';
         } else {
             $data = 'Ссылка недействительная или некорректная';
