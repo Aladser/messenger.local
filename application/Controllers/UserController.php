@@ -169,4 +169,19 @@ class UserController extends Controller
 
         $this->view->generate('template_view.php', 'verify-email_view.php', '', '', 'Подтверждение почты', $data);
     }
+
+    // страница авторизованного пользователя
+    public function show()
+    {
+        // почта
+        $email = Controller::getUserMailFromClient();
+        // пользователи
+        $users = new UserEntity();
+        // данные пользователя
+        $data = $users->getUserData($email);
+        // CSRF
+        $data['csrfToken'] = Controller::createCSRFToken();
+
+        $this->view->generate('template_view.php', 'profile_view.php', 'profile.css', 'profile.js', 'Профиль', $data);
+    }
 }

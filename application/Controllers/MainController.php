@@ -4,7 +4,7 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\Controller;
 
-/** контрллер главной страницы */
+/** контроллер главной страницы */
 class MainController extends Controller
 {
     // индексная страница

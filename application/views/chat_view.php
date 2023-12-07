@@ -41,7 +41,7 @@
 
         <div class='options-container pt-2'>
             <div class='option'>
-                <a href="/profile" class='option-link'>
+                <a href="/user/show" class='option-link'>
                     <div class='option-img-block'><img src="application/images/profile.png" class='img' title='Профиль'>
                     </div>
                     <span class='option-name'>Профиль</span>
@@ -92,7 +92,7 @@
 </div>
 
 <!-- CSRF страницы -->
-<input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
+<input type="hidden" id="input-csrf" value=<?php echo $data['csrfToken']; ?>>
 
 <script type='text/javascript' src="http://messenger.local/application/js/ChatWebsocket.js"></script>
 
