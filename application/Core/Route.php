@@ -3,7 +3,6 @@
 namespace Aladser\Core;
 
 use Aladser\Controllers\Page404Controller;
-use Aladser\Core\DB\DBCtl;
 
 class Route
 {

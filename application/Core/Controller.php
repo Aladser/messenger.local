@@ -2,9 +2,6 @@
 
 namespace Aladser\Core;
 
-use Aladser\Core\DB\DBCtl;
-use Exception;
-
 abstract class Controller
 {
     public View $view;
@@ -28,13 +25,14 @@ abstract class Controller
         }
     }
 
-    /** создать CSRF-токен
-     * @throws Exception
+    /** создать CSRF-токен.
+     * @throws \Exception
      */
     public static function createCSRFToken(): string
     {
         $csrfToken = hash('gost-crypto', random_int(0, 999999));
-        $_SESSION["CSRF"] = $csrfToken;
+        $_SESSION['CSRF'] = $csrfToken;
+
         return $csrfToken;
     }
 }

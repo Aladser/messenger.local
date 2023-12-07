@@ -4,7 +4,7 @@ namespace Aladser\Controllers;
 
 use Aladser\Core\ConfigClass;
 use Aladser\Core\Controller;
-use Aladser\Core\DB\DBCtl;
+use Aladser\Core\DBCtl;
 use Aladser\EMailSender;
 use Aladser\Models\UserEntity;
 

@@ -2,13 +2,11 @@
 
 namespace Aladser\Core;
 
-use Aladser\Core\DB\DBQueryClass;
-
 class Model
 {
-    protected DBQueryClass $db;
+    protected DBQuery $db;
 
-    public function __construct(DBQueryClass $db)
+    public function __construct(DBQuery $db)
     {
         $this->db = $db;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\Core\DB;
+namespace Aladser\Core;
 
 use Aladser\Models\ConnectionEntity;
 use Aladser\Models\ContactEntity;
@@ -10,11 +10,11 @@ use Aladser\Models\UserEntity;
 /** Класс модели таблицы БД */
 class DBCtl
 {
-    private DBQueryClass $dbQueryCtl;
+    private DBQuery $dbQueryCtl;
 
     public function __construct($dbAddr, $dbName, $dbUser, $dbPassword)
     {
-        $this->dbQueryCtl = new DBQueryClass($dbAddr, $dbName, $dbUser, $dbPassword);
+        $this->dbQueryCtl = new DBQuery($dbAddr, $dbName, $dbUser, $dbPassword);
     }
 
     /** Возвращает таблицу пользователей. */
