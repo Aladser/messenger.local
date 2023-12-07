@@ -6,6 +6,14 @@ use Aladser\Controllers\MainController;
 
 class Route
 {
+    // специфичные роуты
+    private static $specificRoutes = [
+     'login' => 'User',
+     'register' => 'User',
+     'verify-email' => 'User',
+     'upload-file' => 'Main',
+    ];
+
     public static function start()
     {
         session_start();
@@ -16,23 +24,10 @@ class Route
         // вырезаются get-аргументы
         $url = explode('?', $url)[0];
 
-        // ---контроллер и метод---
-        if ($url === 'login') {
-            // страница входа
-            $controller_name = 'User';
-            $action = 'login';
-        } elseif ($url === 'register') {
-            // страница регистрации
-            $controller_name = 'User';
-            $action = 'register';
-        } elseif ($url === 'verify-email') {
-            // подтверждение почты
-            $controller_name = 'User';
-            $action = 'verifyEmail';
-        } elseif ($url === 'upload-file') {
-            // подтверждение почты
-            $controller_name = 'Main';
-            $action = 'uploadFile';
+        // ---имя контроллера и метод---
+        if (array_key_exists($url, self::$specificRoutes)) {
+            $controller_name = self::$specificRoutes[$url];
+            $action = $url;
         } else {
             $routesArr = explode('/', $url);
             // выбор контроллера

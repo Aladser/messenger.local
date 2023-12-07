@@ -3,7 +3,7 @@
 namespace Aladser;
 
 use Aladser\Core\ChatWebsocketServer;
-use Aladser\Core\ConfigClass;
+use Aladser\Core\Config;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
@@ -16,6 +16,6 @@ $server = IoServer::factory(
             new ChatWebsocketServer()
         )
     ),
-    ConfigClass::CHAT_WS_PORT
+    Config::CHAT_WS_PORT
 );
 $server->run();
