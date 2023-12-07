@@ -1,5 +1,3 @@
-.idea
-.php-cs-fixer.cache
 logs/*
 application/data/profile_photos/*
 application/data/temp/*
