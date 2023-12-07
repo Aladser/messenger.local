@@ -2,7 +2,7 @@
 
 namespace Aladser\Core;
 
-use Aladser\Controllers\Page404Controller;
+use Aladser\Controllers\MainController;
 
 class Route
 {
@@ -72,8 +72,8 @@ class Route
             $controller_name = '\\Aladser\\Controllers\\'.$controller_name;
             $controller = new $controller_name();
         } else {
-            $controller = new Page404Controller();
-            $controller->index();
+            $controller = new MainController();
+            $controller->error404();
 
             return;
         }
@@ -82,8 +82,8 @@ class Route
         if (method_exists($controller, $action)) {
             $controller->$action();
         } else {
-            $controller = new Page404Controller();
-            $controller->index();
+            $controller = new MainController();
+            $controller->error404();
         }
     }
 }
