@@ -18,6 +18,13 @@ if ($os !== 'Windows') {
         Config::getPidsListFile()
     );
     if (!$websocket->isActive()) {
+        // чистка логов
+        $rootDir = dirname('.');
+        exec("echo > $rootDir/logs/access.log");
+        exec("echo > $rootDir/logs/error.log");
+        exec("echo > $rootDir/logs/pids.log");
+        exec("echo > $rootDir/logs/websocket.log");
+        // запуск вебсокета
         $websocket->run();
     }
 }
