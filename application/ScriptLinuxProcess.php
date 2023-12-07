@@ -29,7 +29,6 @@ class ScriptLinuxProcess
     /** проверить наличие процесса */
     public function isActive(): bool
     {
-        $this->clearLogs(false);
         exec("ps aux | grep {$this->processName} > $this->pidsParseFile"); // новая таблица pidов
 
         return count(file($this->pidsParseFile)) > 2; // 2 строки будут всегда
@@ -38,26 +37,12 @@ class ScriptLinuxProcess
     /** создает процесс */
     public function run(): void
     {
-        $this->clearLogs();
         exec("php $this->processFile > $this->processLogFile &");
     }
 
     /** убивает процесс */
     public function kill(): void
     {
-        $this->clearLogs();
         exec("pkill -f {$this->processName}");
-    }
-
-    /** очистить файлы логов.
-     *
-     * @param mixed $bothFiles true - оба файла
-     */
-    public function clearLogs($bothFiles = true): void
-    {
-        file_put_contents($this->pidsParseFile, '');
-        if ($bothFiles) {
-            file_put_contents($this->processLogFile, '');
-        }
     }
 }
