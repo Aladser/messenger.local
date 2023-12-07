@@ -141,21 +141,21 @@ class UserController extends Controller
     }
 
     // станица авторизации
-    public function login()
+    public function login(): void
     {
         $data = ['csrfToken' => Controller::createCSRFToken()];
         $this->view->generate('template_view.php', 'login_view.php', '', 'login.js', 'Месенджер: войдите в систему', $data);
     }
 
     // страница регистрации
-    public function register()
+    public function register(): void
     {
         $data = ['csrfToken' => Controller::createCSRFToken()];
         $this->view->generate('template_view.php', 'reg_view.php', 'reg.css', 'reg.js', 'Месенджер: регистрация', $data);
     }
 
     // подтверждение почты после регистрации
-    public function verifyEmail()
+    public function verifyEmail(): void
     {
         $email = htmlspecialchars(str_replace('\'', '', $_GET['email']));
         $hash = htmlspecialchars(str_replace('\'', '', $_GET['hash']));
@@ -171,7 +171,7 @@ class UserController extends Controller
     }
 
     // страница авторизованного пользователя
-    public function show()
+    public function show(): void
     {
         // почта
         $email = Controller::getUserMailFromClient();

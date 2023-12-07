@@ -29,6 +29,10 @@ class Route
             // подтверждение почты
             $controller_name = 'User';
             $action = 'verifyEmail';
+        } elseif ($url === 'upload-file') {
+            // подтверждение почты
+            $controller_name = 'Main';
+            $action = 'uploadFile';
         } else {
             $routesArr = explode('/', $url);
             // выбор контроллера
