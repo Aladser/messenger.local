@@ -12,6 +12,7 @@ class Route
      'login' => 'UserController',
      'register' => 'UserController',
      'update' => 'UserController',
+     'profile' => 'UserController',
      'is_nickname_unique' => 'UserController',
      'verify-email' => 'UserController',
      'upload-file' => 'MainController',

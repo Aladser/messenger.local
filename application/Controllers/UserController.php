@@ -140,14 +140,29 @@ class UserController extends Controller
     public function login(): void
     {
         $data = ['csrfToken' => MainController::createCSRFToken()];
-        $this->view->generate('template_view.php', 'login_view.php', '', 'login.js', 'Месенджер: войдите в систему', $data);
+        $this->view->generate('template_view.php', 'users/login_view.php', '', 'login.js', 'Месенджер: войдите в систему', $data);
     }
 
     // страница регистрации
     public function register(): void
     {
         $data = ['csrfToken' => MainController::createCSRFToken()];
-        $this->view->generate('template_view.php', 'reg_view.php', 'reg.css', 'reg.js', 'Месенджер: регистрация', $data);
+        $this->view->generate('template_view.php', 'users/register_view.php', 'reg.css', 'reg.js', 'Месенджер: регистрация', $data);
+    }
+
+    // страница пользователя
+    public function profile(): void
+    {
+        // почта
+        $email = self::getEmailFromClient();
+        // пользователи
+        $users = new UserEntity();
+        // данные пользователя
+        $data = $users->getUserData($email);
+        // CSRF
+        $data['csrfToken'] = MainController::createCSRFToken();
+
+        $this->view->generate('template_view.php', 'users/profile_view.php', 'profile.css', 'profile.js', 'Профиль', $data);
     }
 
     // подтверждение почты после регистрации
@@ -164,21 +179,6 @@ class UserController extends Controller
         }
 
         $this->view->generate('template_view.php', 'verify-email_view.php', '', '', 'Подтверждение почты', $data);
-    }
-
-    // страница авторизованного пользователя
-    public function show(): void
-    {
-        // почта
-        $email = self::getEmailFromClient();
-        // пользователи
-        $users = new UserEntity();
-        // данные пользователя
-        $data = $users->getUserData($email);
-        // CSRF
-        $data['csrfToken'] = MainController::createCSRFToken();
-
-        $this->view->generate('template_view.php', 'profile_view.php', 'profile.css', 'profile.js', 'Профиль', $data);
     }
 
     /** получить почту пользователя из сессии или куки */

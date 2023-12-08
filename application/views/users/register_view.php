@@ -24,13 +24,13 @@
         <div>
             <input type="submit" class='btn w-25 mb-2 btn-bg-C4C4C4 text-white' value="Регистрация" disabled
                    id='reg-form__reg-btn'>
-            <a href="/main" class='text-decoration-none'>
+            <a href="/" class='text-decoration-none'>
                 <div class='mx-auto w-25 btn-bg-C4C4C4 text-white p-2'>Назад</div>
             </a>
         </div>
 
         <p class='w-25 mx-auto fw-bolder text-dark-red d-none' id='reg-error'>Пользователь уже существует</p>
-        <input type="hidden" id="input-csrf" value=<?= $data['csrfToken'] ?>>
+        <input type="hidden" id="input-csrf" value=<?php echo $data['csrfToken']; ?>>
     </form>
 </div>
 

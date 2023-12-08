@@ -41,7 +41,7 @@
 
         <div class='options-container pt-2'>
             <div class='option'>
-                <a href="/user/show" class='option-link'>
+                <a href="/profile" class='option-link'>
                     <div class='option-img-block'><img src="application/images/profile.png" class='img' title='Профиль'>
                     </div>
                     <span class='option-name'>Профиль</span>

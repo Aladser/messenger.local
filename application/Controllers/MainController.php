@@ -8,7 +8,7 @@ use Aladser\Core\Controller;
 class MainController extends Controller
 {
     // индексная страница
-    public function index()
+    public function index(): void
     {
         if (isset($_GET['logout'])) {
             setcookie('email', '', time() - 3600, '/');
@@ -19,7 +19,7 @@ class MainController extends Controller
     }
 
     // 404 страница
-    public function error404()
+    public function error404(): void
     {
         $this->view->generate('template_view.php', 'page404_view.php', '', '', 'Ошибка 404');
     }
