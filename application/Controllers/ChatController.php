@@ -2,7 +2,6 @@
 
 namespace Aladser\Controllers;
 
-use Aladser\Core\Config;
 use Aladser\Core\Controller;
 use Aladser\Models\MessageEntity;
 use Aladser\Models\UserEntity;
@@ -22,7 +21,7 @@ class ChatController extends Controller
 
     public function index()
     {
-        $userEmail = Config::getEmailFromClient();
+        $userEmail = UserController::getEmailFromClient();
         $publicUsername = $this->users->getPublicUsernameFromEmail($userEmail);
         $userId = $this->users->getUserId($userEmail);
 
@@ -35,13 +34,13 @@ class ChatController extends Controller
         $data['user-email'] = $userEmail;
         $data['publicUsername'] = $publicUsername;
         $data['userhostId'] = $userId;
-        $data['csrfToken'] = Config::createCSRFToken();
+        $data['csrfToken'] = MainController::createCSRFToken();
         $this->view->generate('template_view.php', 'chat_view.php', 'chat.css', '', 'Чат', $data);
     }
 
     public function createGroup()
     {
-        $userEmail = Controller::getUserMailFromClient();
+        $userEmail = UserController::getEmailFromClient();
         $userId = $this->users->getUserId($userEmail);
         $groupId = $this->messages->createDiscussion($userId);
         echo json_encode($groupId);
@@ -68,7 +67,7 @@ class ChatController extends Controller
 
     public function getGroups()
     {
-        $username = Config::getEmailFromClient();
+        $username = UserController::getEmailFromClient();
         $userId = $this->users->getUserId($username);
         echo json_encode($this->messages->getDiscussions($userId));
     }
@@ -85,7 +84,7 @@ class ChatController extends Controller
         // диалоги
         if (isset($_POST['contact'])) {
             $contact = htmlspecialchars($_POST['contact']);
-            $userHostName = Config::getEmailFromClient();
+            $userHostName = UserController::getEmailFromClient();
             $userId = $this->users->getUserId($userHostName);
             $contactId = $this->users->getUserId($contact);
             $chatId = $this->messages->getDialogId($userId, $contactId);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\Core;
+namespace Aladser;
 
 class Config
 {
@@ -26,37 +26,16 @@ class Config
 
     public static function getWebSocketProcessFile(): string
     {
-        return dirname(__DIR__, 1).'/chat-server.php';
+        return dirname(__DIR__).'/chat-server.php';
     }
 
     public static function getWebsocketProcessLogFile(): string
     {
-        return dirname(__DIR__, 2).'/logs/websocket.log';
+        return dirname(__DIR__, 1).'/logs/websocket.log';
     }
 
     public static function getPidsListFile(): string
     {
-        return dirname(__DIR__, 2).'/logs/pids.log';
-    }
-
-    /** получить почту пользователя из сессии или куки */
-    public static function getEmailFromClient()
-    {
-        if (isset($_COOKIE['email'])) {
-            return $_COOKIE['email'];
-        } elseif (isset($_SESSION['email'])) {
-            return $_SESSION['email'];
-        } else {
-            return null;
-        }
-    }
-
-    /** создать CSRF-токен */
-    public static function createCSRFToken(): string
-    {
-        $csrfToken = hash('gost-crypto', random_int(0, 999999));
-        $_SESSION['CSRF'] = $csrfToken;
-
-        return $csrfToken;
+        return dirname(__DIR__, 1).'/logs/pids.log';
     }
 }

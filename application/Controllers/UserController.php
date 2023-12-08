@@ -2,7 +2,6 @@
 
 namespace Aladser\Controllers;
 
-use Aladser\Core\Config;
 use Aladser\Core\Controller;
 use Aladser\Core\EMailSender;
 use Aladser\Models\UserEntity;
@@ -16,6 +15,12 @@ class UserController extends Controller
     {
         parent::__construct();
         $this->users = new UserEntity();
+    }
+
+    public function is_nickname_unique()
+    {
+        $isExisted = $this->users->exists('user_nickname', $_POST['nickname']);
+        echo json_encode(['unique' => !$isExisted ? 1 : 0]);
     }
 
     // авторизация пользователя
@@ -95,7 +100,7 @@ class UserController extends Controller
             return;
         }
 
-        $email = Config::getEmailFromClient();
+        $email = self::getEmailFromClient();
         $data['user_email'] = $email;
         $nickname = trim($_POST['user_nickname']);
         $data['user_nickname'] = $nickname == '' ? null : $nickname;
@@ -134,14 +139,14 @@ class UserController extends Controller
     // станица авторизации
     public function login(): void
     {
-        $data = ['csrfToken' => Config::createCSRFToken()];
+        $data = ['csrfToken' => MainController::createCSRFToken()];
         $this->view->generate('template_view.php', 'login_view.php', '', 'login.js', 'Месенджер: войдите в систему', $data);
     }
 
     // страница регистрации
     public function register(): void
     {
-        $data = ['csrfToken' => Config::createCSRFToken()];
+        $data = ['csrfToken' => MainController::createCSRFToken()];
         $this->view->generate('template_view.php', 'reg_view.php', 'reg.css', 'reg.js', 'Месенджер: регистрация', $data);
     }
 
@@ -165,14 +170,26 @@ class UserController extends Controller
     public function show(): void
     {
         // почта
-        $email = Config::getEmailFromClient();
+        $email = self::getEmailFromClient();
         // пользователи
         $users = new UserEntity();
         // данные пользователя
         $data = $users->getUserData($email);
         // CSRF
-        $data['csrfToken'] = Config::createCSRFToken();
+        $data['csrfToken'] = MainController::createCSRFToken();
 
         $this->view->generate('template_view.php', 'profile_view.php', 'profile.css', 'profile.js', 'Профиль', $data);
+    }
+
+    /** получить почту пользователя из сессии или куки */
+    public static function getEmailFromClient()
+    {
+        if (isset($_COOKIE['email'])) {
+            return $_COOKIE['email'];
+        } elseif (isset($_SESSION['email'])) {
+            return $_SESSION['email'];
+        } else {
+            return null;
+        }
     }
 }

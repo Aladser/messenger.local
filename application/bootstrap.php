@@ -2,7 +2,6 @@
 
 namespace Aladser;
 
-use Aladser\Core\Config;
 use Aladser\Core\Route;
 use Aladser\Core\ScriptLinuxProcess;
 

@@ -22,18 +22,6 @@ const profileImageField = document.querySelector('#profile-img');
 /** случайное число*/
 let randomNumber = Math.round(Math.random() * 100000);
 
-function parseJSONData(data)
-{
-    try {
-        data = JSON.parse(data);
-        return data;
-    } catch(err) {
-        prgError.classList.remove('d-none');
-        prgError.innerHTML = data;
-        return undefined;
-    }
-}
-
 /** изменить видимость кнопки Сохранить при переключении чекбокса скрытия почты */
 function changeHideEmailInputVisibility(input, btn)
 {
@@ -48,7 +36,7 @@ function changeHideEmailInputVisibility(input, btn)
     }
 }
 
-/** проверить введенный никнейм */
+/** проверить введенный НИКНЕЙМ */
 function writeNickname(input, btn)
 {
     let startValue = input.value; // изначальный никнейм
@@ -69,7 +57,7 @@ function writeNickname(input, btn)
                 // проверить уникальность никнейма
                 inputNickname.classList.remove('input-nickname-error');
                 prgError.classList.add('d-none');
-                fetch('user/is-unique-nickname', {method: 'post', body: data}).then(r => r.text().then(data => {
+                fetch('/is_nickname_unique', {method: 'post', body: data}).then(r => r.text().then(data => {
                     data = parseJSONData(data);
                     if (data == undefined) {
                         btn.classList.add('d-none');
@@ -77,9 +65,9 @@ function writeNickname(input, btn)
                         return;             
                     }
 
-                    data = parseInt(data.response);
+                    data.unique = data.unique == 1;
                     // никнейм уникален
-                    if (data === 1) {
+                    if (data) {
                         btn.classList.remove('d-none');
                         inputNickname.classList.remove('input-nickname-error');
                         prgError.classList.add('d-none');
@@ -185,3 +173,16 @@ window.addEventListener('DOMContentLoaded', () => {
         hideEmailInputBlock.classList.remove('d-none');
     }
 });
+
+/** парсинг ответа сервера */
+function parseJSONData(data)
+{
+    try {
+        data = JSON.parse(data);
+        return data;
+    } catch(err) {
+        prgError.classList.remove('d-none');
+        prgError.innerHTML = data;
+        return undefined;
+    }
+}

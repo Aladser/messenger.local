@@ -2,6 +2,8 @@
 
 namespace Aladser\Core;
 
+use Aladser\Config;
+
 class Model
 {
     protected DBQuery $dbQuery;

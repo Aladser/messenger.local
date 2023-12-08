@@ -4,6 +4,7 @@ class ContactContexMenu extends ContexMenu
     contactContexOption;
     selectedContact;
 
+    
     constructor(contexMenuDOM, chatWS, clientUsername, inputCsrf, contacts, groups) {
         super(contexMenuDOM);
         this.contacts = contacts;

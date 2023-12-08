@@ -3,7 +3,6 @@
 namespace Aladser;
 
 use Aladser\Core\ChatWebsocketServer;
-use Aladser\Core\Config;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;

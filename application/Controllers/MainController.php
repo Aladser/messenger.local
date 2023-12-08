@@ -2,7 +2,6 @@
 
 namespace Aladser\Controllers;
 
-use Aladser\Core\Config;
 use Aladser\Core\Controller;
 
 /** контроллер главной страницы */
@@ -37,7 +36,7 @@ class MainController extends Controller
         }
 
         // почта пользователя
-        $email = Config::getEmailFromClient();
+        $email = UserController::getEmailFromClient();
         $ext = explode('.', $_FILES['image']['name'])[1];
 
         // поиск других загрузок изображений этого профиля и установка нового имени файла
@@ -74,5 +73,14 @@ class MainController extends Controller
                 }
             }
         }
+    }
+
+    /** создать CSRF-токен */
+    public static function createCSRFToken(): string
+    {
+        $csrfToken = hash('gost-crypto', random_int(0, 999999));
+        $_SESSION['CSRF'] = $csrfToken;
+
+        return $csrfToken;
     }
 }
