@@ -44,6 +44,7 @@ let groupContacts = [];
 let pressedKeys = [];
 
 const contacts = new ContactContainer(document.querySelector('#contacts'), frameError, inputCsrf);
+
 const groups = new GroupContainer(document.querySelector('#group-chats'), frameError, inputCsrf);
 
 const ws = new WebSocket('ws://messenger.local:8888');
@@ -57,7 +58,9 @@ const messages = new MessageContainer(
     document.querySelector('.messages-container__title')
     );
 
+//** контекстное меню сообщения */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
+//** контекстное меню группы */
 const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf, contacts, groups);
 
 window.addEventListener('DOMContentLoaded', () => {

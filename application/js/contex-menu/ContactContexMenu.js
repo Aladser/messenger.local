@@ -29,7 +29,7 @@ class ContactContexMenu extends ContexMenu
 
         if (this.selectedContact.className === 'group') {
             // поиск выбранного группового чата
-            data.chat = this.groups.groupList.find(el => el.name === this.selectedContact.title).chat;
+            data.chat = this.groups.list.find(el => el.name === this.selectedContact.title).chat;
         } else {
             //  поиск выбранного контакта
             let name = this.selectedContact.querySelector('.contact__name').innerHTML;
@@ -61,7 +61,7 @@ class ContactContexMenu extends ContexMenu
                 elem = this.contacts.list.find(el => el.name === this.selectedContact.title);
             } else if (this.selectedContact.className === 'group') {
                 // если групповой чат, то изменяем значение в массиве групповых чатов
-                elem = this.groups.groupList.find(el => el.name === this.selectedContact.title);
+                elem = this.groups.list.find(el => el.name === this.selectedContact.title);
             }
             elem.notice = notice;
 

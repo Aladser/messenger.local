@@ -1,0 +1,1 @@
+const APP_NAME = 'messenger.local';

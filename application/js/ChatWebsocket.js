@@ -1,6 +1,5 @@
 class ChatWebsocket
 {
-    siteAddr = "http://messenger.local/application/";
     errorDomElement = document.querySelector("#message-system");
     publicClientUsername = document.querySelector('#clientuser').getAttribute('data-clientuser-publicname');
     chat = document.querySelector("#messages");
@@ -70,7 +69,7 @@ class ChatWebsocket
                     // звуковое уведомление
                     // сделано специально множественное создание объектов звука
                     if (chat.notice == 1 && data.author !== this.publicClientUsername) {
-                        let notice = new Audio(`${this.siteAddr}/data/notice.wav`);
+                        let notice = new Audio('http://'+APP_NAME+'/application//data/notice.wav');
                         notice.autoplay = true;
                     }
                 }
