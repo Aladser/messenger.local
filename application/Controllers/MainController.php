@@ -10,12 +10,16 @@ class MainController extends Controller
     // индексная страница
     public function index(): void
     {
-        if (isset($_GET['logout'])) {
-            setcookie('email', '', time() - 3600, '/');
-            setcookie('auth', '', time() - 3600, '/');
-            session_destroy();
-        }
         $this->view->generate('template_view.php', 'main_view.php', 'main.css', '', 'Меcсенджер');
+    }
+
+    // выход из системы пользователем
+    public function quit()
+    {
+        setcookie('email', '', time() - 3600, '/');
+        setcookie('auth', '', time() - 3600, '/');
+        session_destroy();
+        header('Location: /');
     }
 
     // 404 страница

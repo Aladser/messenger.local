@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class='option'>
-                <a href="/Main?logout=true" class='option-link'>
+                <a href="/quit?logout=true" class='option-link'>
                     <div class='option-img-block'><img src="application/images/exit.png" class='img' title='Выход'></div>
                     <span class='option-name'>Выйти</span>
                 </a>

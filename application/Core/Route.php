@@ -16,6 +16,7 @@ class Route
      'is_nickname_unique' => 'UserController',
      'verify-email' => 'UserController',
      'upload-file' => 'MainController',
+     'quit' => 'MainController',
     ];
 
     public static function start()
@@ -28,8 +29,24 @@ class Route
         // вырезаются get-аргументы
         $url = explode('?', $url)[0];
 
+        // --- редирект "/chats" или "/profile" без авторизации => "/" ---
+        if (($url === 'dialogs' || $url === 'profile')
+            && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))
+        ) {
+            header('Location: /');
+        }
+        // --- авторизация сохраняется в куки и сессии. Если авторизация есть, то "/" => "/chat" ---
+        if ($url === '' && (isset($_SESSION['auth']) || isset($_COOKIE['auth']))
+        && !isset($_GET['logout'])
+        ) {
+            header('Location: /dialogs');
+        }
+
         // ---имя контроллера и метод---
-        if (array_key_exists($url, self::$specificRoutes)) {
+        if ($url === 'dialogs') {
+            $controller_name = 'ChatController';
+            $action = 'index';
+        } elseif (array_key_exists($url, self::$specificRoutes)) {
             $controller_name = self::$specificRoutes[$url];
             $action = self::convertName($url);
         } else {
@@ -49,21 +66,6 @@ class Route
             }
             // преобразовать url в название класса
             $controller_name = self::convertName($controller_name).'Controller';
-        }
-
-        // ---авторизация сохраняется в куки и сессии. Если авторизация есть, то / => /chat---
-        if ($controller_name === 'MainController'
-            && $action === 'index'
-            && (isset($_SESSION['auth']) || isset($_COOKIE['auth']))
-            && !isset($_GET['logout'])
-        ) {
-            $controller_name = 'ChatController';
-        }
-        // ---редирект /chats или /profile без авторизации => /---
-        if (($controller_name === 'ChatController')
-            && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))
-        ) {
-            $controller_name = 'MainController';
         }
 
         // --- подключение контроллера и вызов метода контроллера---

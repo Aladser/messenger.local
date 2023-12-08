@@ -31,7 +31,7 @@ document.querySelector('#login-form').addEventListener('submit', function (e) {
     fetch('user/auth', {method: 'POST', body: form}).then(response => response.text()).then(data => {
         try {
             JSON.parse(data);
-            window.open('/chat', '_self');
+            window.open('/dialogs', '_self');
         } catch (SyntaxError) {
             loginErrorPrg.classList.remove('d-none');
             loginErrorPrg.innerHTML = data;
