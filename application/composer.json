@@ -1,5 +1,6 @@
 {
   "autoload": {
+    "files": ["config.php"],
     "psr-4": {
       "Aladser\\": "\\"
     }

@@ -5,7 +5,7 @@ namespace Aladser;
 use Aladser\Core\Route;
 use Aladser\Core\ScriptLinuxProcess;
 
-require __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/vendor/autoload.php';
 date_default_timezone_set('Europe/Moscow');
 
 $os = explode(' ', php_uname())[0];
