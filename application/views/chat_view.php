@@ -62,7 +62,7 @@
                 </div>
             </div>
             <div class='option'>
-                <a href="/quit?logout=true" class='option-link'>
+                <a href="/quit" class='option-link'>
                     <div class='option-img-block'><img src="application/images/exit.png" class='img' title='Выход'></div>
                     <span class='option-name'>Выйти</span>
                 </a>
@@ -94,14 +94,14 @@
 <!-- CSRF страницы -->
 <input type="hidden" id="input-csrf" value=<?php echo $data['csrfToken']; ?>>
 
-<script type='text/javascript' src="http://messenger.local/application/js/ChatWebsocket.js"></script>
+<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/ChatWebsocket.js"></script>
 
-<script type='text/javascript' src="http://messenger.local/application/js/contex-menu/ContexMenu.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/contex-menu/MessageContexMenu.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/contex-menu/ContactContexMenu.js"></script>
+<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/contex-menu/ContexMenu.js"></script>
+<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/contex-menu/MessageContexMenu.js"></script>
+<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/contex-menu/ContactContexMenu.js"></script>
 
-<script type='text/javascript' src="http://messenger.local/application/js/chat/TemplateContainer.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/chat/MessageContainer.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/chat/ContactContainer.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/chat/GroupContainer.js"></script>
-<script type='text/javascript' src="http://messenger.local/application/js/chat/chat.js"></script>
+<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/TemplateContainer.js"></script>
+<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/MessageContainer.js"></script>
+<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/ContactContainer.js"></script>
+<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/GroupContainer.js"></script>
+<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/chat.js"></script>

@@ -6,6 +6,7 @@ function config($param)
 {
     // --- список глобальных параметров ---
     $paramList = [
+        'APP_NAME' => 'messenger.local',
         // подключение к БД
         'HOST_DB' => 'localhost',
         'NAME_DB' => 'messenger',
@@ -23,7 +24,6 @@ function config($param)
 
         // демон вебсокета сообщений
         'CHAT_WS_PORT' => 8888,
-        'SITE_ADDR' => '127.0.0.1',
         'WEBSOCKET_PROCESS_NAME' => 'chat-server',
 
         'WEBSOCKET_PROCESS_FILE' => __DIR__.'/chat-server.php',

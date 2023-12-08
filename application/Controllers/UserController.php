@@ -6,6 +6,8 @@ use Aladser\Core\Controller;
 use Aladser\Core\EMailSender;
 use Aladser\Models\UserEntity;
 
+use function Aladser\config;
+
 /** Контроллер пользователей */
 class UserController extends Controller
 {
@@ -20,7 +22,7 @@ class UserController extends Controller
     public function is_nickname_unique()
     {
         $isExisted = $this->users->exists('user_nickname', $_POST['nickname']);
-        echo json_encode(['unique' => !$isExisted ? 1 : 0]);
+        echo json_encode(['unique' => (int) !$isExisted]);
     }
 
     // авторизация пользователя
@@ -66,6 +68,7 @@ class UserController extends Controller
 
         $eMailSender = new EMailSender();
         $email = htmlspecialchars($_POST['email']);
+        $app_name = config('APP_NAME');
         if (!$this->users->exists('user_email', $email)) {
             $password = htmlspecialchars($_POST['password']);
             $isAdded = $this->users->add($email, $password);
@@ -75,7 +78,7 @@ class UserController extends Controller
                 $text = "
                 <body>
                     <p>Для подтверждения учетной записи в Месенджере перейдите по 
-                        <a href=\"http://messenger.local/verify-email?email='$email'&hash='$hash'\">ссылке</a>
+                        <a href=\"http://$app_name/verify-email?email='$email'&hash='$hash'\">ссылке</a>
                     </p>
                 </body>
                 ";
@@ -126,13 +129,13 @@ class UserController extends Controller
             // переименование файла
             if (rename($fromPath, $toPath)) {
                 $data['user_photo'] = $filename;
-                echo $this->users->setUserData($data) ? 1 : 0;
+                echo (int) $this->users->setUserData($data);
             } else {
                 echo 0;
             }
         } else {
             $data['user_photo'] = $filename;
-            echo $this->users->setUserData($data) ? 1 : 0;
+            echo (int) $this->users->setUserData($data);
         }
     }
 
