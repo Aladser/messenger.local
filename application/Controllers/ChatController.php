@@ -93,10 +93,13 @@ class ChatController extends Controller
             // групповые чаты
             $chatId = htmlspecialchars($_POST['discussionid']);
             $type = 'discussion';
+        } else {
+            return;
         }
 
         $messages = [
-            'current_chat' => $chatId, 'type' => $type,
+            'current_chat' => $chatId,
+            'type' => $type,
             'messages' => $this->messages->getMessages($chatId),
         ];
         echo json_encode($messages);

@@ -17,7 +17,7 @@ class ChatWebsocket
         this.webSocket.onmessage = e => this.onMessage(e);
         this.contacts = contacts;
         this.groups = groups;
-        this.messages;
+        this.messages = messages;
     }
 
     // получение ошибок вебсокета

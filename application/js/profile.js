@@ -67,7 +67,7 @@ function writeNickname(input, btn)
 
                     data.unique = data.unique == 1;
                     // никнейм уникален
-                    if (data) {
+                    if (data.unique) {
                         btn.classList.remove('d-none');
                         inputNickname.classList.remove('input-nickname-error');
                         prgError.classList.add('d-none');

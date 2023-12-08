@@ -26,7 +26,7 @@ class Config
 
     public static function getWebSocketProcessFile(): string
     {
-        return dirname(__DIR__).'/chat-server.php';
+        return __DIR__.'/chat-server.php';
     }
 
     public static function getWebsocketProcessLogFile(): string
