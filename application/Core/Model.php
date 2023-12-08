@@ -2,7 +2,7 @@
 
 namespace Aladser\Core;
 
-use Aladser\Config;
+use function Aladser\config;
 
 class Model
 {
@@ -10,6 +10,6 @@ class Model
 
     public function __construct()
     {
-        $this->dbQuery = new DBQuery(Config::HOST_DB, Config::NAME_DB, Config::USER_DB, Config::PASS_DB);
+        $this->dbQuery = new DBQuery(config('HOST_DB'), config('NAME_DB'), config('USER_DB'), config('PASS_DB'));
     }
 }

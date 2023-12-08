@@ -15,6 +15,6 @@ $server = IoServer::factory(
             new ChatWebsocketServer()
         )
     ),
-    Config::CHAT_WS_PORT
+    config('CHAT_WS_PORT')
 );
 $server->run();

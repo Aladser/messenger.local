@@ -2,8 +2,9 @@
 
 namespace Aladser\Core;
 
-use Aladser\Config;
 use PHPMailer\PHPMailer\PHPMailer;
+
+use function Aladser\config;
 
 class EMailSender
 {
@@ -21,17 +22,17 @@ class EMailSender
             $GLOBALS['data']['debug'][] = $str;
         };
         // SMTP сервера почты
-        $this->phpMailer->Host = Config::SMTP_SRV;
+        $this->phpMailer->Host = config('SMTP_SRV');
         // логин на почте
-        $this->phpMailer->Username = Config::EMAIL_USERNAME;
+        $this->phpMailer->Username = config('EMAIL_USERNAME');
         // пароль на почте
-        $this->phpMailer->Password = Config::EMAIL_PASSWORD;
+        $this->phpMailer->Password = config('EMAIL_PASSWORD');
         // тип шифрования
-        $this->phpMailer->SMTPSecure = Config::SMTP_SECURE;
+        $this->phpMailer->SMTPSecure = config('SMTP_SECURE');
         // порт
-        $this->phpMailer->Port = Config::SMTP_PORT;
+        $this->phpMailer->Port = config('SMTP_PORT');
         // адрес почты и имя отправителя
-        $this->phpMailer->setFrom(Config::EMAIL_SENDER, Config::EMAIL_SENDER_NAME);
+        $this->phpMailer->setFrom(config('EMAIL_SENDER'), config('EMAIL_SENDER_NAME'));
     }
 
     public function send($title, $text, $emailRecipient)

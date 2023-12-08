@@ -11,10 +11,10 @@ date_default_timezone_set('Europe/Moscow');
 $os = explode(' ', php_uname())[0];
 if ($os !== 'Windows') {
     $websocket = new ScriptLinuxProcess(
-        Config::WEBSOCKET_PROCESSNAME,
-        Config::getWebSocketProcessFile(),
-        Config::getWebsocketProcessLogFile(),
-        Config::getPidsListFile()
+        config('WEBSOCKET_PROCESS_NAME'),
+        config('WEBSOCKET_PROCESS_FILE'),
+        config('WEBSOCKET_PROCESS_LOGFILE'),
+        config('PIDLIST_FILE')
     );
     if (!$websocket->isActive()) {
         // чистка логов
