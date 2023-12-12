@@ -10,7 +10,13 @@ class MainController extends Controller
     // индексная страница
     public function index(): void
     {
-        $this->view->generate('Меcсенджер', 'template_view.php', 'main_view.php', 'main.css');
+        $this->view->generate(
+            'Меcсенджер',
+            'template_view.php',
+            'main_view.php',
+            null,
+            'main.css'
+        );
     }
 
     // выход из системы пользователем

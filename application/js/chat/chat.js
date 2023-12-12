@@ -1,3 +1,6 @@
+/** вебсокет */
+const websocketAddr = document.querySelector("meta[name='websocket']");
+
 /** элемент CSRF-токена */
 const inputCsrf = document.querySelector('#input-csrf');
 /** поле поиска пользователя */
@@ -47,7 +50,7 @@ const contacts = new ContactContainer(document.querySelector('#contacts'), frame
 
 const groups = new GroupContainer(document.querySelector('#group-chats'), frameError, inputCsrf);
 
-const ws = new WebSocket('ws://messenger.local:8888');
+const ws = new WebSocket(websocketAddr.content);
 const chatWebsocket = new ChatWebsocket(ws, contacts, groups);
 
 const messages = new MessageContainer(

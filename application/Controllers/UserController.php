@@ -143,14 +143,30 @@ class UserController extends Controller
     public function login(): void
     {
         $data = ['csrfToken' => MainController::createCSRFToken()];
-        $this->view->generate('Месенджер - войдите в систему', 'template_view.php', 'users/login_view.php', '', 'login.js', $data);
+        $this->view->generate(
+            'Месенджер - войдите в систему',
+            'template_view.php',
+            'users/login_view.php',
+            null,
+            '',
+            'login.js',
+            $data
+        );
     }
 
     // страница регистрации
     public function register(): void
     {
         $data = ['csrfToken' => MainController::createCSRFToken()];
-        $this->view->generate('Месенджер - регистрация', 'template_view.php', 'users/register_view.php', 'reg.css', 'reg.js', $data);
+        $this->view->generate(
+            'Месенджер - регистрация',
+            'template_view.php',
+            'users/register_view.php',
+            null,
+            'reg.css',
+            'reg.js',
+            $data
+        );
     }
 
     // страница пользователя
@@ -165,7 +181,15 @@ class UserController extends Controller
         // CSRF
         $data['csrfToken'] = MainController::createCSRFToken();
 
-        $this->view->generate('Профиль', 'template_view.php', 'users/profile_view.php', 'profile.css', 'profile.js', $data);
+        $this->view->generate(
+            'Профиль',
+            'template_view.php',
+            'users/profile_view.php',
+            null,
+            'profile.css',
+            'profile.js',
+            $data
+        );
     }
 
     // подтверждение почты после регистрации
@@ -181,7 +205,15 @@ class UserController extends Controller
             $data = 'Ссылка недействительная или некорректная';
         }
 
-        $this->view->generate('Месенджер - подтверждение почты', 'template_view.php', 'verify-email_view.php', '', '', $data);
+        $this->view->generate(
+            'Месенджер - подтверждение почты',
+            'template_view.php',
+            'verify-email_view.php',
+            null,
+            '',
+            '',
+            $data
+        );
     }
 
     /** получить почту пользователя из сессии или куки */

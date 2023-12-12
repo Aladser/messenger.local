@@ -10,6 +10,7 @@ class View
         $page_name,
         $template_view,
         $content_view,
+        $head = null,
         $content_css = null,
         $content_js = null,
         $data = null

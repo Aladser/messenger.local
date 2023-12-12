@@ -24,7 +24,7 @@ function config($param)
 
         // демон вебсокета сообщений
         'WEBSOCKET_PORT' => 8888,
-        'WEBSOCKET_ADDR' => 'ws://localhost:8888',
+        'WEBSOCKET_ADDR' => 'ws://messenger.local:8888',
         'WEBSOCKET_PROCESS_NAME' => 'chat-server',
 
         'WEBSOCKET_PROCESS_FILE' => __DIR__.'/chat-server.php',

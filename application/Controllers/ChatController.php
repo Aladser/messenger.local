@@ -6,6 +6,8 @@ use Aladser\Core\Controller;
 use Aladser\Models\MessageEntity;
 use Aladser\Models\UserEntity;
 
+use function Aladser\config;
+
 /** контроллер чата */
 class ChatController extends Controller
 {
@@ -24,6 +26,9 @@ class ChatController extends Controller
         $userEmail = UserController::getEmailFromClient();
         $publicUsername = $this->users->getPublicUsernameFromEmail($userEmail);
         $userId = $this->users->getUserId($userEmail);
+        // head
+        $websocket = config('WEBSOCKET_ADDR');
+        $head = "<meta name='websocket' content=$websocket>";
 
         // удаление временных файлов профиля
         $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
@@ -35,7 +40,15 @@ class ChatController extends Controller
         $data['publicUsername'] = $publicUsername;
         $data['userhostId'] = $userId;
         $data['csrfToken'] = MainController::createCSRFToken();
-        $this->view->generate('Месенджер', 'template_view.php', 'chat_view.php', 'chat.css', '', $data);
+        $this->view->generate(
+            'Месенджер',
+            'template_view.php',
+            'chat_view.php',
+            $head,
+            'chat.css',
+            '',
+            $data
+        );
     }
 
     public function createGroup()
