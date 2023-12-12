@@ -31,7 +31,11 @@ class MainController extends Controller
     // 404 страница
     public function error404(): void
     {
-        $this->view->generate('Ошибка 404', 'template_view.php', 'page404_view.php');
+        $this->view->generate(
+            'Ошибка 404',
+            'template_view.php',
+            'page404_view.php'
+        );
     }
 
     // загрузка файлов - обработка сервером

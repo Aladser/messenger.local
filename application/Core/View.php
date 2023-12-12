@@ -12,7 +12,7 @@ class View
         $content_view,
         $head = null,
         $content_css = null,
-        $content_js = null,
+        $js_script_list = null,
         $data = null
     ): void {
         $app_name = config('APP_NAME');

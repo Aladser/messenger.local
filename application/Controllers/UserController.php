@@ -149,7 +149,7 @@ class UserController extends Controller
             'users/login_view.php',
             null,
             '',
-            'login.js',
+            ['login.js'],
             $data
         );
     }
@@ -164,7 +164,7 @@ class UserController extends Controller
             'users/register_view.php',
             null,
             'reg.css',
-            'reg.js',
+            ['reg.js'],
             $data
         );
     }
@@ -187,7 +187,7 @@ class UserController extends Controller
             'users/profile_view.php',
             null,
             'profile.css',
-            'profile.js',
+            ['profile.js'],
             $data
         );
     }
