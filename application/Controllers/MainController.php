@@ -10,7 +10,7 @@ class MainController extends Controller
     // индексная страница
     public function index(): void
     {
-        $this->view->generate('template_view.php', 'main_view.php', 'main.css', '', 'Меcсенджер');
+        $this->view->generate('Меcсенджер', 'template_view.php', 'main_view.php', 'main.css');
     }
 
     // выход из системы пользователем
@@ -25,7 +25,7 @@ class MainController extends Controller
     // 404 страница
     public function error404(): void
     {
-        $this->view->generate('template_view.php', 'page404_view.php', '', '', 'Ошибка 404');
+        $this->view->generate('Ошибка 404', 'template_view.php', 'page404_view.php');
     }
 
     // загрузка файлов - обработка сервером

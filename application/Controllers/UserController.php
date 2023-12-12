@@ -143,14 +143,14 @@ class UserController extends Controller
     public function login(): void
     {
         $data = ['csrfToken' => MainController::createCSRFToken()];
-        $this->view->generate('template_view.php', 'users/login_view.php', '', 'login.js', 'Месенджер: войдите в систему', $data);
+        $this->view->generate('Месенджер - войдите в систему', 'template_view.php', 'users/login_view.php', '', 'login.js', $data);
     }
 
     // страница регистрации
     public function register(): void
     {
         $data = ['csrfToken' => MainController::createCSRFToken()];
-        $this->view->generate('template_view.php', 'users/register_view.php', 'reg.css', 'reg.js', 'Месенджер: регистрация', $data);
+        $this->view->generate('Месенджер - регистрация', 'template_view.php', 'users/register_view.php', 'reg.css', 'reg.js', $data);
     }
 
     // страница пользователя
@@ -165,7 +165,7 @@ class UserController extends Controller
         // CSRF
         $data['csrfToken'] = MainController::createCSRFToken();
 
-        $this->view->generate('template_view.php', 'users/profile_view.php', 'profile.css', 'profile.js', 'Профиль', $data);
+        $this->view->generate('Профиль', 'template_view.php', 'users/profile_view.php', 'profile.css', 'profile.js', $data);
     }
 
     // подтверждение почты после регистрации
@@ -181,7 +181,7 @@ class UserController extends Controller
             $data = 'Ссылка недействительная или некорректная';
         }
 
-        $this->view->generate('template_view.php', 'verify-email_view.php', '', '', 'Подтверждение почты', $data);
+        $this->view->generate('Месенджер - подтверждение почты', 'template_view.php', 'verify-email_view.php', '', '', $data);
     }
 
     /** получить почту пользователя из сессии или куки */

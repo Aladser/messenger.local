@@ -35,7 +35,7 @@ class ChatController extends Controller
         $data['publicUsername'] = $publicUsername;
         $data['userhostId'] = $userId;
         $data['csrfToken'] = MainController::createCSRFToken();
-        $this->view->generate('template_view.php', 'chat_view.php', 'chat.css', '', 'Чат', $data);
+        $this->view->generate('Месенджер', 'template_view.php', 'chat_view.php', 'chat.css', '', $data);
     }
 
     public function createGroup()
