@@ -18,12 +18,13 @@ if ($os !== 'Windows') {
         config('PIDLIST_FILE')
     );
     if (!$websocket->isActive()) {
+        $rootDir = dirname(__DIR__, 1);
         // чистка логов
-        $rootDir = dirname('.');
         exec("echo > $rootDir/logs/access.log");
         exec("echo > $rootDir/logs/error.log");
         exec("echo > $rootDir/logs/pids.log");
         exec("echo > $rootDir/logs/websocket.log");
+
         // запуск вебсокета
         $websocket->run();
     }

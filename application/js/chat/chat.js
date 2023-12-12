@@ -1,19 +1,18 @@
-/** вебсокет */
+/** адрес вебсокета */
 const websocketAddr = document.querySelector("meta[name='websocket']");
-
-/** элемент CSRF-токена */
+/** CSRF-токен */
 const inputCsrf = document.querySelector('#input-csrf');
+
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
-
 /** окно ошибок*/
-const frameError = document.querySelector('#frame-error');
+const errorFrame = document.querySelector('#frame-error');
 /** элемент имени клиента-пользователя*/
-const clientNameBlock = document.querySelector('#clientuser');
+const clientNamePrg = document.querySelector('#clientuser');
 /** почта пользователя-хоста */
-const clientUsername = clientNameBlock.innerHTML.trim();
+const clientUsername = clientNamePrg.innerHTML.trim();
 /** публичное имя пользователя-хоста */
-const publicClientUsername = clientNameBlock.getAttribute('data-clientuser-publicname');
+const publicClientUsername = clientNamePrg.getAttribute('data-clientuser-publicname');
 /** контейнер сообщений */
 const chat = document.querySelector("#messages");
 
@@ -46,16 +45,16 @@ let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
 
-const contacts = new ContactContainer(document.querySelector('#contacts'), frameError, inputCsrf);
+const contacts = new ContactContainer(document.querySelector('#contacts'), errorFrame, inputCsrf);
 
-const groups = new GroupContainer(document.querySelector('#group-chats'), frameError, inputCsrf);
+const groups = new GroupContainer(document.querySelector('#group-chats'), errorFrame, inputCsrf);
 
 const ws = new WebSocket(websocketAddr.content);
 const chatWebsocket = new ChatWebsocket(ws, contacts, groups);
 
 const messages = new MessageContainer(
     document.querySelector("#messages"),
-    frameError,
+    errorFrame,
     inputCsrf,
     chatWebsocket,
     document.querySelector('.messages-container__title')
@@ -263,8 +262,8 @@ function parseJSONData(data)
         data = JSON.parse(data);
         return data;
     } catch (err) {
-        frameError.classList.add('frame-error--active');
-        frameError.innerHTML = data;
+        errorFrame.classList.add('frame-error--active');
+        errorFrame.innerHTML = data;
         return  undefined;
     }
 }
