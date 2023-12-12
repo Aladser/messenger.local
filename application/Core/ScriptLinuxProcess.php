@@ -29,9 +29,11 @@ class ScriptLinuxProcess
     /** проверить наличие процесса */
     public function isActive(): bool
     {
-        exec("ps aux | grep {$this->processName} > $this->pidsParseFile"); // новая таблица pidов
+        // новая таблица pidов
+        exec("ps aux | grep {$this->processName} > $this->pidsParseFile");
 
-        return count(file($this->pidsParseFile)) > 2; // 2 строки будут всегда
+        // 2 строки будут всегда
+        return count(file($this->pidsParseFile)) > 2;
     }
 
     /** создает процесс */
