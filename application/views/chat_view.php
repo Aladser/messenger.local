@@ -1,4 +1,4 @@
-<div class='position-relative'>
+<container class='position-relative'>
     <div class='container chat-container d-flex p-0 bg-c4c4c4 font-roboto'>
         <div class='contacts pt-2 ps-2 pe-2'>
             <div class='position-relative mb-2'>
@@ -71,37 +71,25 @@
     </div>
 
     <!-- окно ошибки -->
-    <div class='frame-error position-absolute top-0 left-0 p-2 ms-2 mt- text-wrap text-break text-danger fw-bold' id='frame-error'></div>
-</div>
+    <p class='frame-error position-absolute top-0 left-0 p-2 ms-2 mt- text-wrap text-break text-danger fw-bold' id='frame-error'></p>
+</container>
 
-<!-- контектсное меню сообщения -->
-<div class='context-menu' id='msg-context-menu'>
+<!-- контекстное меню сообщения -->
+<article class='context-menu' id='msg-context-menu'>
     <ul class='list-group m-0'>
         <li class='list-group-item' id='edit-msg'>Редактировать</li>
         <li class='list-group-item' id='resend-msg'>Переслать</li>
         <li class='list-group-item' id='remove-msg'>Удалить</li>
     </ul>
-</div>
+</article>
 
 <!-- контекстное меню контакта -->
-<div class='context-menu' id='contact-context-menu'>
+<article class='context-menu' id='contact-context-menu'>
     <ul class='list-group m-0'>
         <li class='list-group-item' id='contact-notice-edit'>Отключить уведомления</li>
         <li class='list-group-item' id='contact-remove-contact'>Удалить группу</li>
     </ul>
-</div>
+</article>
 
 <!-- CSRF страницы -->
 <input type="hidden" id="input-csrf" value=<?php echo $data['csrfToken']; ?>>
-
-<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/ChatWebsocket.js"></script>
-
-<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/contex-menu/ContexMenu.js"></script>
-<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/contex-menu/MessageContexMenu.js"></script>
-<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/contex-menu/ContactContexMenu.js"></script>
-
-<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/TemplateContainer.js"></script>
-<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/MessageContainer.js"></script>
-<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/ContactContainer.js"></script>
-<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/GroupContainer.js"></script>
-<script type='text/javascript' src="http://<?php echo $app_name; ?>/application/js/chat/chat.js"></script>

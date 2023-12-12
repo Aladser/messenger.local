@@ -1,4 +1,4 @@
-<div class='container font-roboto mt-4 position-relative' id='container-profile'>
+<container class='container font-roboto mt-4 position-relative' id='container-profile'>
     <div class='profile-container'>
         <div class='profile-img-block'>
             <?php
@@ -46,9 +46,7 @@
     </div>
     <br>
     <p class='text-center text-danger fs-5 fw-bolder d-none' id='prg-error'></p>
-</div>
-
-<script type='text/javascript' src="http://messenger.local/application/js/validation.js"></script>
+</container>
 
 <!-- CSRF страницы -->
 <input type="hidden" id="input-csrf" value=<?php echo $data['csrfToken']; ?>>

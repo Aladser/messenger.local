@@ -1,4 +1,4 @@
-<div class='container text-center'>
+<container class='container text-center'>
     <h3 class='mt-4 mb-4'>Войти</h3>
 
     <form class='login-form' method="POST" action='' id='login-form'>
@@ -21,6 +21,4 @@
     </form>
 
     <p class='w-50 mx-auto fw-bolder text-dark-red d-none pt-2 mb-0' id='login-error'>Пользователь уже существует</p>
-</div>
-
-<script type='text/javascript' src="http://messenger.local/application/js/validation.js"></script>
+</container>

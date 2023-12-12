@@ -46,7 +46,17 @@ class ChatController extends Controller
             'chat_view.php',
             $head,
             'chat.css',
-            '',
+            [
+                'ChatWebsocket.js',
+                'contex-menu/ContexMenu.js',
+                'contex-menu/MessageContexMenu.js',
+                'contex-menu/ContactContexMenu.js',
+                'chat/TemplateContainer.js',
+                'chat/MessageContainer.js',
+                'chat/ContactContainer.js',
+                'chat/GroupContainer.js',
+                'chat/chat.js',
+            ],
             $data
         );
     }
