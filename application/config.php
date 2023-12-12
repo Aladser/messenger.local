@@ -23,7 +23,8 @@ function config($param)
         'EMAIL_SENDER_NAME' => 'Messenger Admin',
 
         // демон вебсокета сообщений
-        'CHAT_WS_PORT' => 8888,
+        'WEBSOCKET_PORT' => 8888,
+        'WEBSOCKET_ADDR' => 'ws://localhost:8888',
         'WEBSOCKET_PROCESS_NAME' => 'chat-server',
 
         'WEBSOCKET_PROCESS_FILE' => __DIR__.'/chat-server.php',
