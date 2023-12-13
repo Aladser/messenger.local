@@ -28,6 +28,7 @@ regForm.addEventListener('submit', function (e) {
             }
         } catch(err) {
             registerErrorPrg.innerHTML = data;
+            console.log(err);
         }
     });
 });
