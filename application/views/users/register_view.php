@@ -1,5 +1,4 @@
-<div class='container text-center'>
-    <h3 class='mt-4 mb-4'>Регистрация нового пользователя</h3>
+<div class='container text-center mt-4'>
     <form class='reg-form' method="POST" id='reg-form'>
         <input type="hidden" name="registration">
         <input type="hidden" name ='csrf' id="input-csrf" value=<?php echo $data['csrfToken']; ?>>

@@ -29,8 +29,8 @@ class UserController extends Controller
     public function auth(): void
     {
         // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
+        if ($_POST['csrf'] !== $_SESSION['CSRF']) {
+            echo 'Неверный CSRF';
 
             return;
         }
@@ -166,7 +166,7 @@ class UserController extends Controller
     {
         $data = ['csrfToken' => MainController::createCSRFToken()];
         $this->view->generate(
-            'Месенджер - регистрация',
+            'Месенджер - регистрация нового пользователя',
             'template_view.php',
             'users/register_view.php',
             null,
