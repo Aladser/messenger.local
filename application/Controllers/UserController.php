@@ -60,7 +60,7 @@ class UserController extends Controller
     public function store(): void
     {
         // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
+        if ($_POST['csrf'] !== $_SESSION['CSRF']) {
             echo 'Подмена URL-адреса';
 
             return;
@@ -163,8 +163,8 @@ class UserController extends Controller
             'template_view.php',
             'users/register_view.php',
             null,
-            'reg.css',
-            ['reg.js', 'validation.js'],
+            null,
+            ['register.js', 'validation.js'],
             $data
         );
     }

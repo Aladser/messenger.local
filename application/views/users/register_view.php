@@ -1,35 +1,13 @@
-<container class='container text-center'>
+<div class='container text-center'>
     <h3 class='mt-4 mb-4'>Регистрация нового пользователя</h3>
-
-    <form class='reg-form' method="POST" action='/application/models/reg_model.php' id='reg-form'>
+    <form class='reg-form' method="POST" id='reg-form'>
         <input type="hidden" name="registration">
-
-        <div class='position-relative w-25 mx-auto'>
-            <input type="email" class="w-100 mb-2 p-2" id="reg-form__email-input" name='email' placeholder="email">
-            <p class='input-clue' id='reg-form__emai-clue'>введите адрес электронной почты</p>
-        </div>
-
-        <div class='position-relative w-25 mx-auto'>
-            <input type="password" class="w-100 mb-2  p-2" id="reg-form__password1-input" name='password'
-                   placeholder="пароль (минимум 6 символов)">
-            <p class='input-clue' id='reg-form__password1-clue'>пароль должен обязательно содержать латинские заглавные
-                и прописные буквы, цифры. Только латинские буквы</p>
-        </div>
-
-        <div class='position-relative w-25 mb-2 mx-auto'>
-            <input type="password" class="w-100 mb-2 p-2" id="reg-form__password2-input" placeholder="подтвердите пароль">
-            <p class='input-clue' id='reg-form__password2-clue'>пароли не совпадают</p>
-        </div>
-
-        <div>
-            <input type="submit" class='btn btn-reference  mb-2 btn-bg-C4C4C4 text-white p-3' value="Регистрация" disabled
-                   id='reg-form__reg-btn'>
-            <a href="/" class='text-decoration-none'>
-                <div class='mx-auto btn-reference btn-bg-C4C4C4 text-white p-3'>Назад</div>
-            </a>
-        </div>
-
-        <p class='w-25 mx-auto fw-bolder text-dark-red d-none' id='reg-error'>Пользователь уже существует</p>
-        <input type="hidden" id="input-csrf" value=<?php echo $data['csrfToken']; ?>>
+        <input type="email" class="d-block btn-width mx-auto mb-2 p-2" id="reg-form__email-input" name='email' placeholder="email" required>
+        <input type="password" class="d-block btn-width mx-auto mb-2  p-2" id="reg-form__password1-input" name='password'placeholder="пароль" required>
+        <input type="password" class="d-block btn-width mx-auto mb-2 p-2" id="reg-form__password2-input" placeholder="подтвердите пароль" required>
+        <input type="submit" class='d-block btn-width btn mx-auto mb-2 btn-bg-C4C4C4 text-white p-3' value="Регистрация" id='reg-form__reg-btn'>
+        <a href="/" class='text-decoration-none'><p class='d-block btn-width mx-auto btn-bg-C4C4C4 text-white p-3'>Назад</p></a>
+        <p class='d-block btn-width mx-auto fw-bolder text-dark-red d-none' id='reg-error'>Пользователь уже существует</p>
+        <input type="hidden" name ='csrf' id="input-csrf" value=<?php echo $data['csrfToken']; ?>>
     </form>
-</container>
+</div>

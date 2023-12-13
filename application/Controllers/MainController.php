@@ -13,9 +13,7 @@ class MainController extends Controller
         $this->view->generate(
             'Меcсенджер',
             'template_view.php',
-            'main_view.php',
-            null,
-            'main.css'
+            'main_view.php'
         );
     }
 
