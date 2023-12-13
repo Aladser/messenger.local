@@ -39,7 +39,7 @@ class GroupContainer extends TemplateContainer{
         let urlParams = new URLSearchParams();
         urlParams.set('name', group.title);
         urlParams.set('type', group.className === 'group' ? 'group' : 'contact');
-        urlParams.set('CSRF', this.CSRFElement.value);
+        urlParams.set('CSRF', this.CSRFElement.content);
 
         fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
             try {
@@ -60,7 +60,7 @@ class GroupContainer extends TemplateContainer{
     showGroupRecipients(domElement, discussionid) {
         let urlParams = new URLSearchParams();
         urlParams.set('discussionid', discussionid);
-        urlParams.set('CSRF', this.CSRFElement.value);
+        urlParams.set('CSRF', this.CSRFElement.content);
         fetch('contact/get-group-contacts', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
             data = parseJSONData(data);
             if (data === undefined) {

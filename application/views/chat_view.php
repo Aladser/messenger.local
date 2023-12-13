@@ -24,7 +24,7 @@
             <div class='groups pt-2 text-center' id='group-chats'></div>
         </div>
 
-        <div class='messages-container border-start border-end border-dark d-flex flex-column pe-2'>
+        <section class='messages-container border-start border-end border-dark d-flex flex-column pe-2'>
             <p class='messages-container__title'>
                 <span id='chat-title'>Выберите чат</span>
                 <span class='chat-username' id='chat-username'></span>
@@ -37,7 +37,7 @@
                 <textarea class="messages-container__message-input input-group-prepend border-0 form-control" rows='2'placeholder='Сообщение' id='message-input' disabled></textarea>
                 <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn" disabled><img src="application/images/sendbtn.png"></button>
             </div>
-        </div>
+        </section>
 
         <div class='options-container pt-2'>
             <div class='option'>
@@ -90,6 +90,3 @@
         <li class='list-group-item' id='contact-remove-contact'>Удалить группу</li>
     </ul>
 </article>
-
-<!-- CSRF страницы -->
-<input type="hidden" id="input-csrf" value=<?php echo $data['csrfToken']; ?>>

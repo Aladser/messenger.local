@@ -43,7 +43,7 @@ class ContactContexMenu extends ContexMenu
         urlParams.set('chat_id', data.chat);
         urlParams.set('notice', data.notice);
         urlParams.set('username', this.clientUsername);
-        urlParams.set('CSRF', this.inputCsrf.value);
+        urlParams.set('CSRF', this.inputCsrf.content);
         // изменяет установленный флаг получения уведомлений
         fetch('/chat/edit-notice-show', {method: 'post', body: urlParams}).then(r => r.text()).then(notice => {
             notice = parseJSONData(notice);

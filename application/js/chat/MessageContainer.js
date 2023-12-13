@@ -7,7 +7,7 @@ class MessageContainer extends TemplateContainer{
     }
 
     show(urlParams, dbChatName, type, publicClientUsername) {
-        urlParams.set('CSRF', inputCsrf.value);
+        urlParams.set('CSRF', this.CSRFElement.content);
         fetch('chat/get-messages', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
             data = parseJSONData(data);
             if (data === undefined) {

@@ -1,7 +1,7 @@
 /** адрес вебсокета */
 const websocketAddr = document.querySelector("meta[name='websocket']");
 /** CSRF-токен */
-const inputCsrf = document.querySelector('#input-csrf');
+const inputCsrf = document.querySelector("meta[name='csrf']");
 
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
@@ -45,11 +45,21 @@ let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
 
-const contacts = new ContactContainer(document.querySelector('#contacts'), errorFrame, inputCsrf);
+const contacts = new ContactContainer(
+    document.querySelector('#contacts'), 
+    errorFrame, 
+    inputCsrf
+);
 
-const groups = new GroupContainer(document.querySelector('#group-chats'), errorFrame, inputCsrf);
+const groups = new GroupContainer(
+    document.querySelector('#group-chats'), 
+    errorFrame, 
+    inputCsrf
+);
 
+// вебсокет
 const ws = new WebSocket(websocketAddr.content);
+// вебсокета чата
 const chatWebsocket = new ChatWebsocket(ws, contacts, groups);
 
 const messages = new MessageContainer(
@@ -58,7 +68,7 @@ const messages = new MessageContainer(
     inputCsrf,
     chatWebsocket,
     document.querySelector('.messages-container__title')
-    );
+);
 
 //** контекстное меню сообщения */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
@@ -140,7 +150,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
         groups.removeGroupPatricipants();
         if (type === 'dialog') {
             urlParams.set('contact', urlArg);
-            urlParams.set('CSRF', inputCsrf.value);
+            urlParams.set('CSRF', inputCsrf.content);
             contacts.check(urlArg);
         } else if (type === 'discussion') {
             urlParams.set('discussionid', urlArg);

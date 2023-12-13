@@ -26,9 +26,12 @@ class ChatController extends Controller
         $userEmail = UserController::getEmailFromClient();
         $publicUsername = $this->users->getPublicUsernameFromEmail($userEmail);
         $userId = $this->users->getUserId($userEmail);
+
         // head
         $websocket = config('WEBSOCKET_ADDR');
+        $csrf = MainController::createCSRFToken();
         $head = "<meta name='websocket' content=$websocket>";
+        $head .= "<meta name='csrf' content=$csrf>";
 
         // удаление временных файлов профиля
         $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
@@ -39,7 +42,6 @@ class ChatController extends Controller
         $data['user-email'] = $userEmail;
         $data['publicUsername'] = $publicUsername;
         $data['userhostId'] = $userId;
-        $data['csrfToken'] = MainController::createCSRFToken();
         $this->view->generate(
             'Месенджер',
             'template_view.php',

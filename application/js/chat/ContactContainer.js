@@ -21,7 +21,7 @@ class ContactContainer extends TemplateContainer{
     check(id) {
         let urlParams = new URLSearchParams();
         urlParams.set('contact', id);
-        urlParams.set('CSRF', this.CSRFElement.value);
+        urlParams.set('CSRF', this.CSRFElement.content);
 
         fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(dbContact => {
             dbContact = parseJSONData(dbContact);
@@ -41,7 +41,7 @@ class ContactContainer extends TemplateContainer{
         this.isSearch = true;
         let urlParams = new URLSearchParams();
         urlParams.set('userphrase', userphrase);
-        urlParams.set('CSRF', this.CSRFElement.value);
+        urlParams.set('CSRF', this.CSRFElement.content);
         fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
             data = parseJSONData(data);
             if (data !== undefined) {
@@ -86,7 +86,7 @@ class ContactContainer extends TemplateContainer{
         let urlParams = new URLSearchParams();
         urlParams.set('name', contact.title);
         urlParams.set('type', contact.className === 'group' ? 'group' : 'contact');
-        urlParams.set('CSRF', this.CSRFElement.value);
+        urlParams.set('CSRF', this.CSRFElement.content);
         urlParams.set('clientName', clientUsername);
         
         fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
