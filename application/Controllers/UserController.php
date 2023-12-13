@@ -61,7 +61,14 @@ class UserController extends Controller
     {
         // проверка CSRF
         if ($_POST['csrf'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
+            echo 'Неверный CSRF';
+
+            return;
+        }
+
+        // проверка ввода паролей
+        if ($_POST['password'] !== $_POST['password_confirm']) {
+            echo 'Введенные пароли не совпадают';
 
             return;
         }
