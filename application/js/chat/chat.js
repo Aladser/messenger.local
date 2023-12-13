@@ -1,7 +1,7 @@
 /** адрес вебсокета */
 const websocketAddr = document.querySelector("meta[name='websocket']");
 /** CSRF-токен */
-const inputCsrf = document.querySelector("meta[name='csrf']");
+const csrfInput = document.querySelector("meta[name='csrf']");
 
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
@@ -48,13 +48,13 @@ let pressedKeys = [];
 const contacts = new ContactContainer(
     document.querySelector('#contacts'), 
     errorFrame, 
-    inputCsrf
+    csrfInput
 );
 
 const groups = new GroupContainer(
     document.querySelector('#group-chats'), 
     errorFrame, 
-    inputCsrf
+    csrfInput
 );
 
 // вебсокет
@@ -65,7 +65,7 @@ const chatWebsocket = new ChatWebsocket(ws, contacts, groups);
 const messages = new MessageContainer(
     document.querySelector("#messages"),
     errorFrame,
-    inputCsrf,
+    csrfInput,
     chatWebsocket,
     document.querySelector('.messages-container__title')
 );
@@ -73,7 +73,7 @@ const messages = new MessageContainer(
 //** контекстное меню сообщения */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 //** контекстное меню группы */
-const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, inputCsrf, contacts, groups);
+const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfInput, contacts, groups);
 
 window.addEventListener('DOMContentLoaded', () => {
     contacts.show();
@@ -150,7 +150,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
         groups.removeGroupPatricipants();
         if (type === 'dialog') {
             urlParams.set('contact', urlArg);
-            urlParams.set('CSRF', inputCsrf.content);
+            urlParams.set('CSRF', csrfInput.content);
             contacts.check(urlArg);
         } else if (type === 'discussion') {
             urlParams.set('discussionid', urlArg);
