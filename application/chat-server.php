@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser;
+namespace App;
 
-use Aladser\Core\ChatWebsocketServer;
+use App\Core\ChatWebsocketServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;

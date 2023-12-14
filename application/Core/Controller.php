@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\Core;
+namespace App\Core;
 
 abstract class Controller
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\Controllers;
+namespace App\Controllers;
 
-use Aladser\Core\Controller;
+use App\Core\Controller;
 
 /** контроллер главной страницы */
 class MainController extends Controller

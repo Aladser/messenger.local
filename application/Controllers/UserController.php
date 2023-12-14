@@ -1,12 +1,12 @@
 <?php
 
-namespace Aladser\Controllers;
+namespace App\Controllers;
 
-use Aladser\Core\Controller;
-use Aladser\Core\EMailSender;
-use Aladser\Models\UserEntity;
+use App\Core\Controller;
+use App\Core\EMailSender;
+use App\Models\UserEntity;
 
-use function Aladser\config;
+use function App\config;
 
 /** Контроллер пользователей */
 class UserController extends Controller

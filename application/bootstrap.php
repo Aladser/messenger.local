@@ -1,9 +1,9 @@
 <?php
 
-namespace Aladser;
+namespace App;
 
-use Aladser\Core\Route;
-use Aladser\Core\ScriptLinuxProcess;
+use App\Core\Route;
+use App\Core\ScriptLinuxProcess;
 
 require_once __DIR__.'/vendor/autoload.php';
 date_default_timezone_set('Europe/Moscow');

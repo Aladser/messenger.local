@@ -1,11 +1,11 @@
 <?php
 
-namespace Aladser\Controllers;
+namespace App\Controllers;
 
-use Aladser\Core\Controller;
-use Aladser\Models\ContactEntity;
-use Aladser\Models\MessageEntity;
-use Aladser\Models\UserEntity;
+use App\Core\Controller;
+use App\Models\ContactEntity;
+use App\Models\MessageEntity;
+use App\Models\UserEntity;
 
 /** контроллер контактов */
 class ContactController extends Controller

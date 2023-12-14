@@ -3,9 +3,9 @@
         <div class='profile-img-block'>
             <?php
             if (is_null($data['user_photo']) || $data['user_photo'] == 'ava_profile.png') {
-                $photo = 'http://messenger.local/application/images/ava_profile.png';
+                $photo = "http://$app_name/application/images/ava_profile.png";
             } else {
-                $photo = 'http://messenger.local/application/data/profile_photos//'.$data['user_photo'];
+                $photo = "http://$app_name/application/data/profile_photos//".$data['user_photo'];
             }
             ?>
             <img src="<?php echo $photo; ?>" id='profile-img' class="rounded-circle img" alt="Avatar"/>

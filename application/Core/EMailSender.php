@@ -1,10 +1,10 @@
 <?php
 
-namespace Aladser\Core;
+namespace App\Core;
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-use function Aladser\config;
+use function App\config;
 
 class EMailSender
 {

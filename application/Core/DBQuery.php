@@ -1,6 +1,6 @@
 <?php
 
-namespace Aladser\Core;
+namespace App\Core;
 
 /** Класс запросов в БД на основе PDO */
 class DBQuery

@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\Core;
+namespace App\Core;
 
-use function Aladser\config;
+use function App\config;
 
 class Model
 {

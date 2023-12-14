@@ -1,10 +1,10 @@
 <?php
 
-namespace Aladser\Core;
+namespace App\Core;
 
-use Aladser\Models\ConnectionEntity;
-use Aladser\Models\MessageEntity;
-use Aladser\Models\UserEntity;
+use App\Models\ConnectionEntity;
+use App\Models\MessageEntity;
+use App\Models\UserEntity;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Aladser\Controllers;
+namespace App\Controllers;
 
-use Aladser\Core\Controller;
-use Aladser\Models\MessageEntity;
-use Aladser\Models\UserEntity;
+use App\Core\Controller;
+use App\Models\MessageEntity;
+use App\Models\UserEntity;
 
-use function Aladser\config;
+use function App\config;
 
 /** контроллер чата */
 class ChatController extends Controller

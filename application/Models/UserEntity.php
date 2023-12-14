@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\Models;
+namespace App\Models;
 
-use Aladser\Core\Model;
+use App\Core\Model;
 
 /** класс БД таблицы пользователей */
 class UserEntity extends Model

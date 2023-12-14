@@ -1,8 +1,8 @@
 <?php
 
-namespace Aladser\Core;
+namespace App\Core;
 
-use Aladser\Controllers\MainController;
+use App\Controllers\MainController;
 
 class Route
 {
@@ -77,7 +77,7 @@ class Route
                 throw new \Exception();
             }
             require_once $controller_path;
-            $controller_name = '\\Aladser\\Controllers\\'.$controller_name;
+            $controller_name = '\\App\\Controllers\\'.$controller_name;
             $controller = new $controller_name();
             // вызов метода
             if (!method_exists($controller, $action)) {
