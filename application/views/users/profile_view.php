@@ -2,7 +2,7 @@
     <div class='profile-container'>
         <div class='profile-img-block'>
             <?php
-            if (is_null($data['user_photo']) || $data['user_photo'] == 'ava_profile.png') {
+            if (is_null($data['user_photo'])) {
                 $photo = "http://$app_name/application/images/ava_profile.png";
             } else {
                 $photo = "http://$app_name/application/data/profile_photos//".$data['user_photo'];
@@ -38,7 +38,7 @@
                 <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='edit-photo-btn'>Изменить фото</button>
             </form>
 
-            <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='btn-edit-nickname'>Установить nickname</button>
+            <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='btn-edit-nickname'>Установить имя</button>
             <a href="\dialogs" class='text-decoration-none'>
                 <div class='btn-bg-C4C4C4 text-white w-100 p-2 text-center'>Назад</div>
             </a>

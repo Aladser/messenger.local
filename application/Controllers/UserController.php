@@ -65,10 +65,15 @@ class UserController extends Controller
 
             return;
         }
-
         // проверка ввода паролей
         if ($_POST['password'] !== $_POST['password_confirm']) {
             echo 'Введенные пароли не совпадают';
+
+            return;
+        }
+        // проверка длины пароля
+        if (strlen($_POST['password']) < 3) {
+            echo 'Длина пароля не менее 3 символов';
 
             return;
         }
@@ -179,8 +184,8 @@ class UserController extends Controller
     // страница пользователя
     public function profile(): void
     {
-        // почта
         $email = self::getEmailFromClient();
+
         // пользователи
         $users = new UserEntity();
         // данные пользователя
