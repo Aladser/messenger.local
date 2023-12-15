@@ -152,16 +152,35 @@ saveBtn.addEventListener('click', () => {
     let filepathArr = document.querySelector('#profile-img').src.split('/');
     data.set('user_photo', filepathArr[filepathArr.length - 1]);
 
-    fetch('/update', {method: 'POST', body: data}).then(r => r.text()).then(data => {
-        data = parseJSONData(data);
-        if (data !== undefined) {
+    let process = (data) => {
+        data = JSON.parse(data);
+        switch(data.result) {
+            case 1:
+                saveBtn.classList.add('d-none');
+                break;
+            case 419:
+                window.open('/419', '_self');
+                break;
+            default:
+                prgError.textContent = data.description;
+        }
+        if (data.result == 1) {
             saveBtn.classList.add('d-none');             
         }
-    });
+    }
 
-if (inputNickname.value.trim() !== '') {
-    hideEmailInputBlock.classList.remove('d-none');
-}
+    // ---запрос на сервер---
+    ServerRequest.execute(
+        '/update',
+        process,
+        'post',
+        null,
+        data
+    );
+
+    if (inputNickname.value.trim() !== '') {
+        hideEmailInputBlock.classList.remove('d-none');
+    }
 });
 
 window.addEventListener('DOMContentLoaded', () => {

@@ -167,7 +167,7 @@ class UserController extends Controller
             'users/profile_view.php',
             null,
             'profile.css',
-            ['profile.js', 'validation.js'],
+            ['ServerRequest.js', 'profile.js', 'validation.js'],
             $data
         );
     }
@@ -177,7 +177,7 @@ class UserController extends Controller
     {
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            header('Location: page404');
+            echo json_encode(['result' => 419]);
 
             return;
         }
@@ -208,14 +208,15 @@ class UserController extends Controller
             // переименование файла
             if (rename($fromPath, $toPath)) {
                 $data['user_photo'] = $filename;
-                echo (int) $this->users->setUserData($data);
+                $rsltUpdated = ['result' => (int) $this->users->setUserData($data)];
             } else {
-                echo 0;
+                $rsltUpdated = ['result' => 0];
             }
         } else {
             $data['user_photo'] = $filename;
-            echo (int) $this->users->setUserData($data);
+            $rsltUpdated = ['result' => (int) $this->users->setUserData($data)];
         }
+        echo json_encode($rsltUpdated);
     }
 
     // подтверждение почты после регистрации
