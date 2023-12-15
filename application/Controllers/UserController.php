@@ -27,7 +27,7 @@ class UserController extends Controller
         } elseif (isset($_GET['wrong_user'])) {
             $data['error'] = 'Пользователь не существует';
         }
-        $data['csrfToken'] = MainController::createCSRFToken();
+        $data['csrf'] = MainController::createCSRFToken();
 
         $this->view->generate(
             'Месенджер - войдите в систему',
@@ -45,7 +45,7 @@ class UserController extends Controller
     {
         // проверка CSRF
         if ($_POST['csrf'] !== $_SESSION['CSRF']) {
-            header('Location: page404');
+            header('Location: /page404');
 
             return;
         }
