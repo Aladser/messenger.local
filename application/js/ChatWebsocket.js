@@ -9,9 +9,9 @@ class ChatWebsocket
     chatType = null;
     openChatId = -1;
 
-    constructor(webSocket, contacts, groups, messages)
+    constructor(websocketAddr, contacts, groups, messages)
     {
-        this.webSocket = webSocket;
+        this.webSocket = new WebSocket(websocketAddr);
         this.webSocket.onerror = this.onError;
         this.webSocket.onmessage = e => this.onMessage(e);
         this.contacts = contacts;
@@ -20,7 +20,9 @@ class ChatWebsocket
     }
 
     // получение ошибок вебсокета
-    onError = () => this.errorDomElement.innerHTML = 'Ошибка подключения к серверу';
+    onError() {
+        this.errorDomElement.innerHTML = 'Ошибка подключения к серверу';
+    }
 
     onMessage(e)
     {
@@ -69,7 +71,7 @@ class ChatWebsocket
                     // звуковое уведомление
                     // сделано специально множественное создание объектов звука
                     if (chat.notice == 1 && data.author !== this.publicClientUsername) {
-                        let notice = new Audio('http://'+APP_NAME+'/application//data/notice.wav');
+                        let notice = new Audio('http://messenger.local/application//data/notice.wav');
                         notice.autoplay = true;
                     }
                 }

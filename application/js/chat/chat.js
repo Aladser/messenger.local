@@ -1,5 +1,3 @@
-/** адрес вебсокета */
-const websocketAddr = document.querySelector("meta[name='websocket']");
 /** CSRF-токен */
 const csrfInput = document.querySelector("meta[name='csrf']");
 
@@ -57,10 +55,10 @@ const groups = new GroupContainer(
     csrfInput
 );
 
-// вебсокет
-const ws = new WebSocket(websocketAddr.content);
-// вебсокета чата
-const chatWebsocket = new ChatWebsocket(ws, contacts, groups);
+/** адрес вебсокета */
+const websocketAddr = document.querySelector("meta[name='websocket']");
+/** вебсокета чата */
+const chatWebsocket = new ChatWebsocket(websocketAddr.content, contacts, groups);
 
 const messages = new MessageContainer(
     document.querySelector("#messages"),
