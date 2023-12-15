@@ -27,7 +27,7 @@ class UserEntity extends Model
     }
 
     // поле строки таблицы
-    public function get($email, $field)
+    public function get($email, $field): mixed
     {
         $sql = "select $field from users where user_email = :email";
 
@@ -127,26 +127,6 @@ class UserEntity extends Model
         ';
 
         return $this->dbQuery->queryPrepared($sql, ['email' => $email, 'phrase' => $phrase], false);
-    }
-
-    // получить пользовательские данные
-    public function getUserData($email): array
-    {
-        $dbData = $this->dbQuery->queryPrepared(
-            '
-            select user_nickname, user_hide_email, user_photo 
-            from users 
-            where user_email = :email
-            ',
-            ['email' => $email],
-            false
-        );
-        $data['user-email'] = $email;
-        $data['user_nickname'] = $dbData[0]['user_nickname'];
-        $data['user_hide_email'] = $dbData[0]['user_hide_email'];
-        $data['user_photo'] = $dbData[0]['user_photo'];
-
-        return $data;
     }
 
     // изменить пользовательские данные в Бд

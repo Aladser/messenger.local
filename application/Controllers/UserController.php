@@ -155,16 +155,12 @@ class UserController extends Controller
     // страница пользователя
     public function profile(): void
     {
-        // авторизованный пользователь
         $email = self::getEmailFromClient();
-        // пользователи
-        $users = new UserEntity();
-        // данные пользователя
-        // user_nickname, user_hide_email, user_photo
-        $data = $users->getUserData($email);
-        // CSRF
         $data['csrf'] = MainController::createCSRFToken();
-
+        $data['user-email'] = $email;
+        $data['user_nickname'] = $this->users->get($email, 'user_nickname');
+        $data['user_hide_email'] = $this->users->get($email, 'user_hide_email');
+        $data['user_photo'] = $this->users->get($email, 'user_photo');
         $this->view->generate(
             'Профиль',
             'template_view.php',
@@ -179,9 +175,9 @@ class UserController extends Controller
     // обновить пользователя в БД
     public function update(): void
     {
-        // проверка на подмену адреса
+        // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'подделка URL-адреса';
+            header('Location: page404');
 
             return;
         }
