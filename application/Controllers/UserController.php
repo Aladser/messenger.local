@@ -19,10 +19,25 @@ class UserController extends Controller
         $this->users = new UserEntity();
     }
 
-    public function is_nickname_unique()
+    // станица авторизации
+    public function login(): void
     {
-        $isExisted = $this->users->exists('user_nickname', $_POST['nickname']);
-        echo json_encode(['unique' => (int) !$isExisted]);
+        if (isset($_GET['wrong_password'])) {
+            $data['error'] = 'Неверный пароль';
+        } elseif (isset($_GET['wrong_user'])) {
+            $data['error'] = 'Пользователь не существует';
+        }
+        $data['csrfToken'] = MainController::createCSRFToken();
+
+        $this->view->generate(
+            'Месенджер - войдите в систему',
+            'template_view.php',
+            'users/login_view.php',
+            null,
+            null,
+            null,
+            $data
+        );
     }
 
     // авторизация пользователя
@@ -30,11 +45,12 @@ class UserController extends Controller
     {
         // проверка CSRF
         if ($_POST['csrf'] !== $_SESSION['CSRF']) {
-            echo 'Неверный CSRF';
+            header('Location: page404');
 
             return;
         }
 
+        // декодирование данных
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
 
@@ -47,12 +63,12 @@ class UserController extends Controller
                 $_SESSION['email'] = $email;
                 setcookie('auth', 1, time() + 60 * 60 * 24, '/');
                 setcookie('email', $email, time() + 60 * 60 * 24, '/');
-                echo json_encode(['result' => 1]);
+                header('Location: /dialogs');
             } else {
-                echo 'Неправильный пароль';
+                header('Location: /login?wrong_password=true');
             }
         } else {
-            echo 'Пользователь не существует';
+            header('Location: /login?wrong_user=true');
         }
     }
 
@@ -151,21 +167,6 @@ class UserController extends Controller
         }
     }
 
-    // станица авторизации
-    public function login(): void
-    {
-        $data = ['csrfToken' => MainController::createCSRFToken()];
-        $this->view->generate(
-            'Месенджер - войдите в систему',
-            'template_view.php',
-            'users/login_view.php',
-            null,
-            '',
-            ['login.js', 'validation.js'],
-            $data
-        );
-    }
-
     // страница регистрации
     public function register(): void
     {
@@ -238,5 +239,11 @@ class UserController extends Controller
         } else {
             return null;
         }
+    }
+
+    public function is_nickname_unique()
+    {
+        $isExisted = $this->users->exists('user_nickname', $_POST['nickname']);
+        echo json_encode(['unique' => (int) !$isExisted]);
     }
 }
