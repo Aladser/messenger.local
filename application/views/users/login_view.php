@@ -1,7 +1,7 @@
 <div class='container text-center mt-4'>
     <form class='login-form mx-auto' method="POST" action='user/auth' id='login-form'>
         <input type="hidden" name="login">
-        <input type="hidden" name="csrf" value=<?php echo $data['csrfToken']; ?>>
+        <input type="hidden" name="csrf" value=<?php echo $data['csrf']; ?>>
 
         <label for="login-form__email-input" class='text-start btn-width p-1 fw-bolder'>Почта</label>
         <input type="email" class="d-block mx-auto btn-width mb-2 p-2" 

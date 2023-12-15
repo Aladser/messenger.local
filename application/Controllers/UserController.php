@@ -152,6 +152,30 @@ class UserController extends Controller
         echo json_encode($data);
     }
 
+    // страница пользователя
+    public function profile(): void
+    {
+        // авторизованный пользователь
+        $email = self::getEmailFromClient();
+        // пользователи
+        $users = new UserEntity();
+        // данные пользователя
+        // user_nickname, user_hide_email, user_photo
+        $data = $users->getUserData($email);
+        // CSRF
+        $data['csrf'] = MainController::createCSRFToken();
+
+        $this->view->generate(
+            'Профиль',
+            'template_view.php',
+            'users/profile_view.php',
+            null,
+            'profile.css',
+            ['profile.js', 'validation.js'],
+            $data
+        );
+    }
+
     // обновить пользователя в БД
     public function update(): void
     {
@@ -196,29 +220,6 @@ class UserController extends Controller
             $data['user_photo'] = $filename;
             echo (int) $this->users->setUserData($data);
         }
-    }
-
-    // страница пользователя
-    public function profile(): void
-    {
-        $email = self::getEmailFromClient();
-
-        // пользователи
-        $users = new UserEntity();
-        // данные пользователя
-        $data = $users->getUserData($email);
-        // CSRF
-        $data['csrfToken'] = MainController::createCSRFToken();
-
-        $this->view->generate(
-            'Профиль',
-            'template_view.php',
-            'users/profile_view.php',
-            null,
-            'profile.css',
-            ['profile.js', 'validation.js'],
-            $data
-        );
     }
 
     // подтверждение почты после регистрации

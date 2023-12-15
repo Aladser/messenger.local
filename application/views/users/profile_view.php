@@ -49,4 +49,4 @@
 </container>
 
 <!-- CSRF страницы -->
-<input type="hidden" id="input-csrf" value=<?php echo $data['csrfToken']; ?>>
+<input type="hidden" id="input-csrf" value=<?php echo $data['csrf']; ?>>

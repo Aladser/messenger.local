@@ -26,6 +26,14 @@ class UserEntity extends Model
         return password_verify($password, $passHash) == 1;
     }
 
+    // поле строки таблицы
+    public function get($email, $field)
+    {
+        $sql = "select $field from users where user_email = :email";
+
+        return $this->dbQuery->queryPrepared($sql, ['email' => $email])[$field];
+    }
+
     // добавить нового пользователя
     public function add($email, $password): bool
     {
