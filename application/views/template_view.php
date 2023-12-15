@@ -39,7 +39,7 @@
             <h3 class='text-center p-4 text-white bg-c4c4c4'>
                 <?php echo $page_name; ?><span id='userhost'> <?php echo $data['user-email']; ?></span>
             </h3>
-        <?php } elseif (isset($data['csrfToken'])) { ?>
+        <?php } elseif (isset($data['csrf'])) { ?>
             <h3 class='text-center p-4 text-white bg-c4c4c4'><?php echo $page_name; ?></h3>
         <?php } ?>
     <?php } else { ?>

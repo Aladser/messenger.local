@@ -72,24 +72,50 @@ class UserController extends Controller
         }
     }
 
+    // страница регистрации
+    public function register(): void
+    {
+        if (isset($_GET['difpassw'])) {
+            $data['error'] = 'Введенные пароли не совпадают';
+        } elseif (isset($_GET['shortpass'])) {
+            $data['error'] = 'Длина пароля не менее 3 символов';
+        } elseif (isset($_GET['user_exists'])) {
+            $data['error'] = 'Пользователь существует';
+        } elseif (isset($_GET['add_user_error'])) {
+            $data['error'] = 'Ошибка регистрации. Попробуйте позже';
+        }
+        $data['csrf'] = MainController::createCSRFToken();
+
+        $this->view->generate(
+            'Месенджер - регистрация нового пользователя',
+            'template_view.php',
+            'users/register_view.php',
+            null,
+            null,
+            null,
+            $data
+        );
+    }
+
     // добавить нового пользователя в БД
     public function store(): void
     {
         // проверка CSRF
         if ($_POST['csrf'] !== $_SESSION['CSRF']) {
-            echo 'Неверный CSRF';
+            header('Location: page404');
 
             return;
         }
         // проверка ввода паролей
         if ($_POST['password'] !== $_POST['password_confirm']) {
             echo 'Введенные пароли не совпадают';
+            header('Location: /register?difpassw=1');
 
             return;
         }
         // проверка длины пароля
         if (strlen($_POST['password']) < 3) {
-            echo 'Длина пароля не менее 3 символов';
+            header('Location: /register?shortpass=1');
 
             return;
         }
@@ -111,11 +137,16 @@ class UserController extends Controller
                 </body>
                 ";
                 $data['result'] = $eMailSender->send('Месенджер: подтвердите e-mail', $text, $email);
+                $_SESSION['auth'] = 1;
+                $_SESSION['email'] = $email;
+                setcookie('auth', 1, time() + 60 * 60 * 24, '/');
+                setcookie('email', $email, time() + 60 * 60 * 24, '/');
+                header('Location: /dialogs');
             } else {
-                $data['result'] = 'add_user_error';
+                header('Location: /register?add_user_error=1');
             }
         } else {
-            $data['result'] = 'user_exists';
+            header('Location: /register?user_exists=1');
         }
 
         echo json_encode($data);
@@ -165,21 +196,6 @@ class UserController extends Controller
             $data['user_photo'] = $filename;
             echo (int) $this->users->setUserData($data);
         }
-    }
-
-    // страница регистрации
-    public function register(): void
-    {
-        $data = ['csrfToken' => MainController::createCSRFToken()];
-        $this->view->generate(
-            'Месенджер - регистрация нового пользователя',
-            'template_view.php',
-            'users/register_view.php',
-            null,
-            null,
-            ['register.js', 'validation.js'],
-            $data
-        );
     }
 
     // страница пользователя
