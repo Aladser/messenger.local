@@ -45,7 +45,7 @@ class UserController extends Controller
     {
         // проверка CSRF
         if ($_POST['csrf'] !== $_SESSION['CSRF']) {
-            header('Location: /page404');
+            header('Location: /code419');
 
             return;
         }
@@ -102,7 +102,7 @@ class UserController extends Controller
     {
         // проверка CSRF
         if ($_POST['csrf'] !== $_SESSION['CSRF']) {
-            header('Location: page404');
+            header('Location: /code419');
 
             return;
         }
@@ -155,7 +155,7 @@ class UserController extends Controller
     // страница пользователя
     public function profile(): void
     {
-        $email = self::getEmailFromClient();
+        $email = self::getAuthUserEmail();
         $data['csrf'] = MainController::createCSRFToken();
         $data['user-email'] = $email;
         $data['user_nickname'] = $this->users->get($email, 'user_nickname');
@@ -177,12 +177,12 @@ class UserController extends Controller
     {
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo json_encode(['result' => 419]);
+            header('Location: /code419');
 
             return;
         }
 
-        $email = self::getEmailFromClient();
+        $email = self::getAuthUserEmail();
         $data['user_email'] = $email;
         $nickname = trim($_POST['user_nickname']);
         $data['user_nickname'] = $nickname == '' ? null : $nickname;
@@ -244,7 +244,7 @@ class UserController extends Controller
     }
 
     /** получить почту пользователя из сессии или куки */
-    public static function getEmailFromClient()
+    public static function getAuthUserEmail()
     {
         if (isset($_COOKIE['email'])) {
             return $_COOKIE['email'];

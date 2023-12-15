@@ -1,7 +1,7 @@
 class ChatWebsocket
 {
-    errorDomElement = document.querySelector("#message-system");
-    publicClientUsername = document.querySelector('#clientuser').getAttribute('data-clientuser-publicname');
+    errorPrg = document.querySelector("#message-system");
+    publicUsername = document.querySelector('#clientuser').getAttribute('data-clientuser-publicname');
     chat = document.querySelector("#messages");
     messageInput = document.querySelector("#message-input");
     selectedMessage = null;
@@ -11,9 +11,9 @@ class ChatWebsocket
 
     constructor(websocketAddr, contacts, groups, messages)
     {
-        this.webSocket = new WebSocket(websocketAddr);
-        this.webSocket.onerror = this.onError;
-        this.webSocket.onmessage = e => this.onMessage(e);
+        this.websocket = new WebSocket(websocketAddr);
+        this.websocket.onerror = this.onError;
+        this.websocket.onmessage = e => this.onMessage(e);
         this.contacts = contacts;
         this.groups = groups;
         this.messages = messages;
@@ -21,7 +21,7 @@ class ChatWebsocket
 
     // получение ошибок вебсокета
     onError() {
-        this.errorDomElement.innerHTML = 'Ошибка подключения к серверу';
+        this.errorPrg.innerHTML = 'Ошибка подключения к серверу';
     }
 
     onMessage(e)
@@ -30,7 +30,7 @@ class ChatWebsocket
         
         // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу
         if (data.onconnection) {
-            this.webSocket.send(JSON.stringify({
+            this.websocket.send(JSON.stringify({
                 'messageOnconnection': 1,
                 'author': clientUsername,
                 'wsId': data.onconnection
@@ -38,20 +38,20 @@ class ChatWebsocket
         } else if (data.messageOnconnection) {
             // сообщение пользователям о подключении клиента
             if (data.author) {
-                let username = data.author === this.publicClientUsername ? 'Вы' : data.author;
-                this.errorDomElement.innerHTML = `${username} в сети`;
+                let username = data.author === this.publicUsername ? 'Вы' : data.author;
+                this.errorPrg.innerHTML = `${username} в сети`;
             } else {
                 // ошибки подключения
-                this.errorDomElement.innerHTML = `${data.systeminfo}`;
+                this.errorPrg.innerHTML = `${data.systeminfo}`;
             }
         } else if (data.offconnection && data.user != null) {
             // сообщение пользователям об отключении
-            this.errorDomElement.innerHTML = `${data.user} не в сети`;
+            this.errorPrg.innerHTML = `${data.user} не в сети`;
         } else {
             // уведомления о новых сообщениях чатов
             
             // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
-            if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== this.publicClientUsername) {
+            if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== this.publicUsername) {
 
                 let foundedContactChat = this.contacts.list.find(el => el.chat == data.chat); // поиск чата среди списка чатов контактов
                 let foundedGroupChat = this.groups.list.find(el => el.chat == data.chat);     // поиск чата среди групповых чатов
@@ -70,7 +70,7 @@ class ChatWebsocket
     
                     // звуковое уведомление
                     // сделано специально множественное создание объектов звука
-                    if (chat.notice == 1 && data.author !== this.publicClientUsername) {
+                    if (chat.notice == 1 && data.author !== this.publicUsername) {
                         let notice = new Audio('http://messenger.local/application//data/notice.wav');
                         notice.autoplay = true;
                     }
@@ -89,7 +89,7 @@ class ChatWebsocket
                     messageDOMElem.remove();
                 } else {
                     // новое сообщение
-                    messages.add(this.chatType, data, this.publicClientUsername);
+                    messages.add(this.chatType, data, this.publicUsername);
                 }
             }
         }
@@ -102,7 +102,7 @@ class ChatWebsocket
     sendData(message, messageType)
     {
         // проверка сокета
-        if (this.webSocket.readyState !== 1) {
+        if (this.websocket.readyState !== 1) {
             alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
             throw 'sendData(msgType): вебсокет не готов к обмену сообщениями';
         }
@@ -112,7 +112,7 @@ class ChatWebsocket
             let data = {
                 'message': message,
                 'messageType': messageType,
-                'author': this.publicClientUsername,
+                'author': this.publicUsername,
                 'chat': this.openChatId,
                 'chatType': this.chatType
             };
@@ -125,7 +125,7 @@ class ChatWebsocket
                 data.chat = this.contacts.list.find(el => el.name === this.forwardedMessageRecipientName).chat; // чат, куда пересылается
                 delete data['chatType'];
             }
-            this.webSocket.send(JSON.stringify(data));
+            this.websocket.send(JSON.stringify(data));
         }
         this.messageInput.value = '';
     }

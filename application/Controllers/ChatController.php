@@ -19,14 +19,13 @@ class ChatController extends Controller
         parent::__construct();
         $this->messages = new MessageEntity();
         $this->users = new UserEntity();
+        $this->authUserEmail = UserController::getAuthUserEmail();
+        $this->authUserId = $this->users->getUserIdByEmail($this->authUserEmail);
     }
 
     public function index()
     {
-        $userEmail = UserController::getEmailFromClient();
-        $publicUsername = $this->users->getPublicUsernameFromEmail($userEmail);
-        $userId = $this->users->getUserId($userEmail);
-
+        $publicUsername = $this->users->getPublicUsernameFromEmail($this->authUserEmail);
         // head
         $websocket = config('WEBSOCKET_ADDR');
         $csrf = MainController::createCSRFToken();
@@ -35,13 +34,13 @@ class ChatController extends Controller
 
         // удаление временных файлов профиля
         $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
-        foreach (glob($tempDirPath.$userEmail.'*') as $file) {
+        foreach (glob($tempDirPath.$this->authUserEmail.'*') as $file) {
             unlink($file);
         }
 
-        $data['user-email'] = $userEmail;
+        $data['user-email'] = $this->authUserEmail;
         $data['publicUsername'] = $publicUsername;
-        $data['userhostId'] = $userId;
+        $data['userhostId'] = $this->authUserId;
         $this->view->generate(
             'Месенджер',
             'template_view.php',
@@ -65,9 +64,7 @@ class ChatController extends Controller
 
     public function createGroup()
     {
-        $userEmail = UserController::getEmailFromClient();
-        $userId = $this->users->getUserId($userEmail);
-        $groupId = $this->messages->createDiscussion($userId);
+        $groupId = $this->messages->createDiscussion($this->authUserId);
         echo json_encode($groupId);
     }
 
@@ -81,20 +78,16 @@ class ChatController extends Controller
         }
 
         $username = htmlspecialchars($_POST['username']);
-        $userId = $this->users->getUserId($username);
-
         $notice = htmlspecialchars($_POST['notice']);
         $notice = intval($notice);
-
         $chatid = htmlspecialchars($_POST['chat_id']);
-        echo json_encode(['responce' => $this->messages->setNoticeShow($chatid, $userId, $notice)]);
+
+        echo json_encode(['responce' => $this->messages->setNoticeShow($chatid, $this->authUserId, $notice)]);
     }
 
     public function getGroups()
     {
-        $username = UserController::getEmailFromClient();
-        $userId = $this->users->getUserId($username);
-        echo json_encode($this->messages->getDiscussions($userId));
+        echo json_encode($this->messages->getDiscussions($this->authUserId));
     }
 
     public function getMessages()
@@ -109,10 +102,8 @@ class ChatController extends Controller
         // диалоги
         if (isset($_POST['contact'])) {
             $contact = htmlspecialchars($_POST['contact']);
-            $userHostName = UserController::getEmailFromClient();
-            $userId = $this->users->getUserId($userHostName);
-            $contactId = $this->users->getUserId($contact);
-            $chatId = $this->messages->getDialogId($userId, $contactId);
+            $contactId = $this->users->getUserIdByEmail($contact);
+            $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
             $type = 'dialog';
         } elseif (isset($_POST['discussionid'])) {
             // групповые чаты

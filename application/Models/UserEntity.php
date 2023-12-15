@@ -98,7 +98,7 @@ class UserEntity extends Model
     }
 
     // получить ID пользователя
-    public function getUserId(string $publicUserName)
+    public function getUserIdByEmail(string $publicUserName)
     {
         $sql = '
             select user_id 

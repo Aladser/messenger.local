@@ -48,7 +48,7 @@ class MainController extends Controller
         }
 
         // почта пользователя
-        $email = UserController::getEmailFromClient();
+        $email = UserController::getAuthUserEmail();
         $ext = explode('.', $_FILES['image']['name'])[1];
 
         // поиск других загрузок изображений этого профиля и установка нового имени файла

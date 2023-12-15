@@ -26,7 +26,7 @@ class ContactController extends Controller
     {
         $discussionId = htmlspecialchars($_POST['discussionid']);
         $username = htmlspecialchars($_POST['username']);
-        $userId = $this->users->getUserId($username);
+        $userId = $this->users->getUserIdByEmail($username);
         $group = $this->contacts->addGroupContact($discussionId, $userId);
         echo json_encode($group);
     }
@@ -49,10 +49,10 @@ class ContactController extends Controller
 
     public function getContact()
     {
-        $userHostName = UserController::getEmailFromClient();
-        $userId = $this->users->getUserId($userHostName);
+        $userHostName = UserController::getAuthUserEmail();
+        $userId = $this->users->getUserIdByEmail($userHostName);
         $contact = htmlspecialchars($_POST['contact']);
-        $contactId = $this->users->getUserId($contact);
+        $contactId = $this->users->getUserIdByEmail($contact);
 
         // добавляется контакт, если не существует
         $isContact = $this->contacts->existsContact($contactId, $userId);
@@ -74,8 +74,8 @@ class ContactController extends Controller
 
     public function getContacts()
     {
-        $userEmail = UserController::getEmailFromClient();
-        $userId = $this->users->getUserId($userEmail);
+        $userEmail = UserController::getAuthUserEmail();
+        $userId = $this->users->getUserIdByEmail($userEmail);
         echo json_encode($this->contacts->getContacts($userId));
     }
 
@@ -88,7 +88,7 @@ class ContactController extends Controller
             return;
         }
         $userphrase = htmlspecialchars($_POST['userphrase']);
-        echo json_encode($this->users->getUsers($userphrase, UserController::getEmailFromClient()));
+        echo json_encode($this->users->getUsers($userphrase, UserController::getAuthUserEmail()));
     }
 
     public function removeContact()
@@ -106,9 +106,9 @@ class ContactController extends Controller
             $chatId = $this->messages->getDiscussionId($name);
         } else {
             $clientName = htmlspecialchars($_POST['clientName']);
-            $clientId = $this->users->getUserId($clientName);
+            $clientId = $this->users->getUserIdByEmail($clientName);
 
-            $contactId = $this->users->getUserId($name);
+            $contactId = $this->users->getUserIdByEmail($name);
             $chatId = $this->messages->getDialogId($clientId, $contactId);
             $this->contacts->removeContact($clientId, $contactId);
         }
