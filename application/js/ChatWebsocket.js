@@ -17,6 +17,7 @@ class ChatWebsocket
         this.contacts = contacts;
         this.groups = groups;
         this.messages = messages;
+        this.baseSiteName= window.location.origin;
     }
 
     // получение ошибок вебсокета
@@ -71,7 +72,7 @@ class ChatWebsocket
                     // звуковое уведомление
                     // сделано специально множественное создание объектов звука
                     if (chat.notice == 1 && data.author !== this.publicUsername) {
-                        let notice = new Audio('http://messenger.local/application//data/notice.wav');
+                        let notice = new Audio(this.baseSiteName + '/application//data/notice.wav');
                         notice.autoplay = true;
                     }
                 }

@@ -127,9 +127,9 @@ uploadForm.onsubmit = e => {
                     data = JSON.parse(data);
                     data.image = data.image.trim();
                     if (data.image !== '') {
-                        profileImageField.src = `http://messenger.local/application/data/temp/${data.image}?r=${randomNumber++}`;
+                        profileImageField.src = `${window.location.origin}/application/data/temp/${data.image}?r=${randomNumber++}`;
                     } else {
-                        profileImageField.src = 'http://messenger.local/application/images/ava_profile.png';
+                        profileImageField.src = `${window.location.origin}/application/images/ava_profile.png`;
                     }
                     // очистка элемента выбора файлов
                     selectFileInput.value = '';

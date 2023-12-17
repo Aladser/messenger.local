@@ -1,6 +1,6 @@
 /** Контейнер контактов */
 class ContactContainer extends TemplateContainer{
-    siteAddr = "http://messenger.local/application/";
+    siteAddr = this.baseSiteName + "/application/";
     isSearch = false;
 
     /** показать контакты пользователя браузера */

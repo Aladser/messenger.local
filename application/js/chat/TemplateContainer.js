@@ -5,6 +5,7 @@ class TemplateContainer {
         this.container = container;
         this.errorPrg = errorPrg;
         this.CSRFElement = CSRFElement;
+        this.baseSiteName= window.location.origin;
     }
 
     /** очистить контейнер */

@@ -167,7 +167,7 @@ class UserController extends Controller
             'users/profile_view.php',
             null,
             'profile.css',
-            ['ServerRequest.js', 'profile.js', 'validation.js'],
+            ['ServerRequest.js', 'profile.js'],
             $data
         );
     }
