@@ -8,7 +8,9 @@ class ContactContainer extends TemplateContainer{
         fetch('contact/get-contacts').then(resp => resp.text()).then(contacts => {
             contacts = parseJSONData(contacts);
             if (contacts !== undefined) {
+                // очистить контакты
                 this.clear();
+                // новое заполнение контактов
                 contacts.forEach(contact => {
                     this.addContactToList({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
                     this.add(contact);
@@ -53,32 +55,28 @@ class ContactContainer extends TemplateContainer{
 
     /** создать DOM-элемент контакта в списке контактов */
     add(contact) {
-        // контейнер контакта
-        let contactBlock = document.createElement('div');    // блок контакта
-        let contactImgBlock = document.createElement('div'); // блок изображения профиля
-        let img = document.createElement('img'); // фото профиля
-        let name = document.createElement('span'); // имя контакта
+        // изображение профиля
+        let imgSrc;
+        if (contact.photo === 'ava_profile.png' || contact.photo == null) {
+            imgSrc = `${this.siteAddr}/images/ava.png`;
+        } else {
+            imgSrc = `${this.siteAddr}/data/profile_photos/${contact.photo}`;
+        }
+        
+        let contactBlock = 
+        `<article class="contact position-relative mb-2" title="${contact.name}" data-notice="1">
+            <div class="profile-img">
+                <img class="contact__img img pe-2" src="${imgSrc}">
+            </div>
+            <span class="contact__name">${contact.name}</span>
+        </article>`;
 
-        contactBlock.className = 'contact position-relative mb-2';
-        contactBlock.title = contact.name;
-        contactImgBlock.className = 'profile-img';
-        img.className = 'contact__img img pe-2';
-        name.className = 'contact__name';
-
-        img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.siteAddr}/images/ava.png` : `${this.siteAddr}/data/profile_photos/${contact.photo}`;
-        name.innerHTML = contact.name;
-        contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock, contact.name, 'dialog'));
-        contactBlock.setAttribute('data-notice', contact.notice);
-
-        contactImgBlock.append(img);
-        contactBlock.append(contactImgBlock);
-        contactBlock.append(name);
         // добавление значка без уведомлений, если они отключены
         if (contact.notice == 0) {
             contactBlock.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
         }
 
-        this.container.append(contactBlock);
+        this.container.innerHTML += contactBlock;
     }
 
     /** удалить контакт из списка контактов */
