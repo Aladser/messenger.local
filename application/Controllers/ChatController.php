@@ -48,6 +48,7 @@ class ChatController extends Controller
             $head,
             'chat.css',
             [
+                'ServerRequest.js',
                 'ChatWebsocket.js',
                 'contex-menu/ContexMenu.js',
                 'contex-menu/MessageContexMenu.js',

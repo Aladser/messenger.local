@@ -79,7 +79,7 @@ class ContactController extends Controller
         echo json_encode($this->contacts->getContacts($userId));
     }
 
-    public function findContacts()
+    public function find()
     {
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {

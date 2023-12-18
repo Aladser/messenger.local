@@ -11,7 +11,7 @@ class ContactContainer extends TemplateContainer{
                 this.clear();
                 contacts.forEach(contact => {
                     this.addContactToList({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
-                    this.add(contact);
+                    this.create(contact);
                 });
             }
         });
@@ -42,17 +42,17 @@ class ContactContainer extends TemplateContainer{
         let urlParams = new URLSearchParams();
         urlParams.set('userphrase', userphrase);
         urlParams.set('CSRF', this.CSRFElement.content);
-        fetch('contact/find-contacts', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
+        fetch('contact/find', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
             data = parseJSONData(data);
             if (data !== undefined) {
                 this.clear();
-                data.forEach(contact => this.add(contact));
+                data.forEach(contact => this.create(contact));
             }
         });
     }
 
-    /** создать DOM-элемент контакта в списке контактов */
-    add(contact) {
+    /** создать DOM-элемент контакта  */
+    create(contact) {
         // контейнер контакта
         let contactBlock = document.createElement('div');    // блок контакта
         let contactImgBlock = document.createElement('div'); // блок изображения профиля
