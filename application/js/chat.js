@@ -43,14 +43,14 @@ let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
 
-// контейнер контактов
+// --- контейнер контактов ---
 const contacts = new ContactContainer(
     document.querySelector('#contacts'), 
     errorFrame, 
     csrfInput
 );
 
-// контенейер групп
+// --- контейнер групп --- 
 const groups = new GroupContainer(
     document.querySelector('#group-chats'), 
     errorFrame, 
@@ -61,7 +61,7 @@ const groups = new GroupContainer(
 const websocketAddr = document.querySelector("meta[name='websocket']");
 const chatWebsocket = new ChatWebsocket(websocketAddr.content, contacts, groups);
 
-// контейнер сообщений
+// --- контейнер сообщений ---
 const messages = new MessageContainer(
     document.querySelector("#messages"),
     errorFrame,
