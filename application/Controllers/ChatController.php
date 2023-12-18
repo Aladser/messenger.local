@@ -52,11 +52,11 @@ class ChatController extends Controller
                 'contex-menu/ContexMenu.js',
                 'contex-menu/MessageContexMenu.js',
                 'contex-menu/ContactContexMenu.js',
-                'chat/TemplateContainer.js',
-                'chat/MessageContainer.js',
-                'chat/ContactContainer.js',
-                'chat/GroupContainer.js',
-                'chat/chat.js',
+                'Containers/TemplateContainer.js',
+                'Containers/MessageContainer.js',
+                'Containers/ContactContainer.js',
+                'Containers/GroupContainer.js',
+                'chat.js',
             ],
             $data
         );

@@ -65,7 +65,7 @@ class ContactContainer extends TemplateContainer{
         img.className = 'contact__img img pe-2';
         name.className = 'contact__name';
 
-        img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.siteAddr}images/ava.png` : `${this.siteAddr}data/profile_photos/${contact.photo}`;
+        img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.siteAddr}/images/ava.png` : `${this.siteAddr}/data/profile_photos/${contact.photo}`;
         name.innerHTML = contact.name;
         contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock, contact.name, 'dialog'));
         contactBlock.setAttribute('data-notice', contact.notice);
