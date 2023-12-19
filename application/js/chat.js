@@ -49,6 +49,10 @@ const contacts = new ContactContainer(
     errorFrame, 
     csrfInput
 );
+contacts.get().forEach(contact => {
+    let name = contact.querySelector('.contact__name').textContent;
+    contact.addEventListener('click', setContactOrGroupClick(contact, name, 'dialog'));
+});
 
 // --- контейнер групп --- 
 const groups = new GroupContainer(
@@ -126,11 +130,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
  * @param {*} domElement DOM-элемент контакта или чата
- * @param {*} urlArg что ищется: контакт или групповой чат
+ * @param {*} name что ищется: контакт или групповой чат
  * @param {*} type тип диалога
  * @returns
  */
-function setContactOrGroupClick(domElement, urlArg, type)
+function setContactOrGroupClick(domElement, name, type)
 {
     return function () {
         // если пересылается сообщение, показать, кому пересылается
@@ -149,13 +153,13 @@ function setContactOrGroupClick(domElement, urlArg, type)
         let groupChatName;
         groups.removeGroupPatricipants();
         if (type === 'dialog') {
-            urlParams.set('contact', urlArg);
+            urlParams.set('contact', name);
             urlParams.set('CSRF', csrfInput.content);
-            contacts.check(urlArg);
+            //contacts.check(name);
         } else if (type === 'discussion') {
-            urlParams.set('discussionid', urlArg);
-            groups.showGroupRecipients(domElement, urlArg) // показать участников группового чата
-            let groupChat = groups.list.find(el => el.chat == urlArg);
+            urlParams.set('discussionid', name);
+            groups.showGroupRecipients(domElement, name) // показать участников группового чата
+            let groupChat = groups.list.find(el => el.chat == name);
             if (groupChat !== undefined) {
                 groupChatName = groupChat.name;
             }
@@ -170,7 +174,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
             contacts.show();
         }
         
-        messages.show(urlParams, type === 'dialog' ? urlArg : groupChatName, type, publicClientUsername);
+        messages.show(urlParams, type === 'dialog' ? name : groupChatName, type, publicClientUsername);
         messageInput.disabled = false;
         sendMsgBtn.disabled = false;
     };
