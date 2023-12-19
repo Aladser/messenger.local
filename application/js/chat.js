@@ -1,6 +1,5 @@
 /** CSRF-токен */
 const csrfElement = document.querySelector("meta[name='csrf']");
-
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
 /** окно ошибок*/
@@ -13,7 +12,6 @@ const clientUsername = clientNamePrg.innerHTML.trim();
 const publicClientUsername = clientNamePrg.getAttribute('data-clientuser-publicname');
 /** контейнер сообщений */
 const chat = document.querySelector("#messages");
-
 /** элемент начальной подписи чата */
 const chatNameTitle = document.querySelector('#chat-title');
 /** С кем открыт чат */
@@ -28,7 +26,6 @@ const messageInput = document.querySelector("#message-input");
 const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
 /** кнопка отправить сообщение */
 const sendMsgBtn = document.querySelector("#send-msg-btn");
-
 /** блок кнопок пересылки сообщения  */
 const forwardBtnBlock = document.querySelector('#btn-resend-block');
 /** кнопка пересылки сообщения */
@@ -78,14 +75,17 @@ const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-con
 //** контекстное меню группы */
 const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfElement, contacts, groups);
 
+// ----- ЗАГРУЗКА СТРАНИЦЫ -----
 window.addEventListener('DOMContentLoaded', () => {
     groups.show();
 
     // перессылка сообщения
     forwardMessageButton.onclick = forwardMessage;
+    // сброс перессылки сообщения
     resetForwardtBtn.onclick = resetForwardMessage;
-
+    // поиск контакта
     findContactsInput.oninput = () => contacts.find(findContactsInput.value);
+    
     document.oncontextmenu = () => false;
     sendMsgBtn.onclick = sendMessage;
     chat.onscroll = hide;
@@ -128,8 +128,8 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
- * @param {*} domElement DOM-элемент контакта или чата
- * @param {*} name что ищется: контакт или групповой чат
+ * @param {*} domElement HTML-элемент контакта или чата
+ * @param {*} name имя контакта или группового чата
  * @param {*} type тип диалога
  * @returns
  */
@@ -145,8 +145,8 @@ function setClick(domElement, name, type)
             return;
         }
 
-        // если открывается диалог или обсуждение для открытия переписки
-        domElement.classList.remove('isnewmessage'); // если есть класс нового сообщения, удаляется
+        // удаляется уведомление о новом сообщении
+        domElement.classList.remove('isnewmessage');
 
         let urlParams = new URLSearchParams();
         let groupChatName;
@@ -157,7 +157,7 @@ function setClick(domElement, name, type)
             contacts.check(name);
         } else if (type === 'discussion') {
             urlParams.set('discussionid', name);
-            groups.showGroupRecipients(domElement, name) // показать участников группового чата
+            groups.showGroupRecipients(domElement, name);
             let groupChat = groups.list.find(el => el.chat == name);
             if (groupChat !== undefined) {
                 groupChatName = groupChat.name;
@@ -183,9 +183,10 @@ function setClick(domElement, name, type)
 function forwardMessage()
 {
     chatWebsocket.sendData(chatWebsocket.getSelectedMessageText(), 'FORWARD');
-
-    forwardBtnBlock.classList.remove('btn-resend-block_active');    // скрыть блок кнопок переотправки
-    forwardedMessageRecipientElement.classList.remove('contact-recipient'); // убрать выделение
+    // скрыть блок кнопок переотправки
+    forwardBtnBlock.classList.remove('btn-resend-block_active');
+     // убрать выделение
+    forwardedMessageRecipientElement.classList.remove('contact-recipient');
 
     messageContexMenu.option = false;
     forwardedMessageRecipientElement = null;
