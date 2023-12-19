@@ -84,7 +84,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // сброс перессылки сообщения
     resetForwardtBtn.onclick = resetForwardMessage;
     // поиск контакта
-    findContactsInput.oninput = () => contacts.find(findContactsInput.value);
+    findContactsInput.oninput = () => contacts.findByUserphrase(findContactsInput.value);
     
     document.oncontextmenu = () => false;
     sendMsgBtn.onclick = sendMessage;
@@ -154,7 +154,7 @@ function setClick(domElement, name, type)
         if (type === 'dialog') {
             urlParams.set('contact', name);
             urlParams.set('CSRF', csrfElement.content);
-            contacts.check(name);
+            contacts.findByName(name);
         } else if (type === 'discussion') {
             urlParams.set('discussionid', name);
             groups.showGroupRecipients(domElement, name);

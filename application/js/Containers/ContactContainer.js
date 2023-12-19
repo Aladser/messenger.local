@@ -42,9 +42,9 @@ class ContactContainer extends TemplateContainer{
     }
 
     /** поиск контакта и добавление, если отсутствует */
-    check(id) {
+    findByName(username) {
         let urlParams = new URLSearchParams();
-        urlParams.set('contact', id);
+        urlParams.set('contact', username);
         urlParams.set('CSRF', this.CSRFElement.content);
 
         fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(dbContact => {
@@ -62,7 +62,7 @@ class ContactContainer extends TemplateContainer{
     }
 
     /** поиск пользователя-контакта */
-    find(userphrase) {
+    findByUserphrase(userphrase) {
         this.isSearch = true;
         let urlParams = new URLSearchParams();
         urlParams.set('userphrase', userphrase);
