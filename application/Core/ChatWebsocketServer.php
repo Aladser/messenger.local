@@ -61,6 +61,7 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onMessage(ConnectionInterface $from, $msg)
     {
+        echo "$msg\n";
         $data = json_decode($msg);
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
@@ -93,7 +94,6 @@ class ChatWebsocketServer implements MessageComponentInterface
         }
 
         $msg = json_encode($data);
-        echo "$msg\n";
         foreach ($this->clients as $client) {
             $client->send($msg);
         }

@@ -32,7 +32,7 @@ const sendMsgBtn = document.querySelector("#send-msg-btn");
 /** блок кнопок пересылки сообщения  */
 const forwardBtnBlock = document.querySelector('#btn-resend-block');
 /** кнопка пересылки сообщения */
-const forwardBtn = document.querySelector('#btn-resend');
+const forwardMessageButton = document.querySelector('#btn-resend');
 /** кнопка отмены пересылки сообщения */
 const resetForwardtBtn = document.querySelector('#btn-resend-reset');
 /** DOM-элемент получателя пересланного письма*/
@@ -79,10 +79,10 @@ const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-con
 const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfElement, contacts, groups);
 
 window.addEventListener('DOMContentLoaded', () => {
-    //contacts.show();
     groups.show();
 
-    forwardBtn.onclick = forwardMessage;
+    // перессылка сообщения
+    forwardMessageButton.onclick = forwardMessage;
     resetForwardtBtn.onclick = resetForwardMessage;
 
     findContactsInput.oninput = () => contacts.find(findContactsInput.value);
@@ -140,7 +140,7 @@ function setClick(domElement, name, type)
         if (messageContexMenu.option == 'FORWARD') {
             forwardedMessageRecipientElement = messages.showForwardedMessageRecipient(domElement);
             if (forwardedMessageRecipientElement) {
-                forwardBtn.disabled = false;
+                forwardMessageButton.disabled = false;
             }
             return;
         }
@@ -202,7 +202,7 @@ function resetForwardMessage()
     if (contactRecipient) {
         contactRecipient.classList.remove('contact-recipient');
     }
-    forwardBtn.disabled = true;
+    forwardMessageButton.disabled = true;
 }
 
 /** отправить сообщение на сервер*/
