@@ -53,6 +53,7 @@ contacts.get().forEach(contact => {
     let name = contact.querySelector('.contact__name').textContent;
     contact.addEventListener('click', setContactOrGroupClick(contact, name, 'dialog'));
 });
+console.log(contacts.list);
 
 // --- контейнер групп --- 
 const groups = new GroupContainer(
