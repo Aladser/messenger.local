@@ -108,7 +108,7 @@ class ContactContainer extends TemplateContainer{
         urlParams.set('CSRF', this.CSRFElement.content);
         urlParams.set('clientName', clientUsername);
         
-        fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
+        fetch('/contact/remove', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
             try {
                 data = JSON.parse(data);
                 if (parseInt(data.response) > 0) {

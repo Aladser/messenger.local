@@ -91,7 +91,7 @@ class ContactController extends Controller
         echo json_encode($this->users->getUsers($userphrase, UserController::getAuthUserEmail()));
     }
 
-    public function removeContact()
+    public function remove()
     {
         // проверка CSRF
         if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
