@@ -13,6 +13,8 @@ class ContactController extends Controller
     private ContactEntity $contacts;
     private MessageEntity $messages;
     private UserEntity $users;
+    private string $authUserEmail;
+    private int $authUserId;
 
     public function __construct()
     {
@@ -20,6 +22,8 @@ class ContactController extends Controller
         $this->users = new UserEntity();
         $this->contacts = new ContactEntity();
         $this->messages = new MessageEntity();
+        $this->authUserEmail = UserController::getAuthUserEmail();
+        $this->authUserId = $this->users->getUserIdByEmail($this->authUserEmail);
     }
 
     public function createGroupContact()
@@ -49,20 +53,18 @@ class ContactController extends Controller
 
     public function getContact()
     {
-        $userHostName = UserController::getAuthUserEmail();
-        $userId = $this->users->getUserIdByEmail($userHostName);
         $contact = htmlspecialchars($_POST['contact']);
         $contactId = $this->users->getUserIdByEmail($contact);
 
         // добавляется контакт, если не существует
-        $isContact = $this->contacts->existsContact($contactId, $userId);
+        $isContact = $this->contacts->existsContact($contactId, $this->authUserId);
         if (!$isContact) {
-            $this->contacts->addContact($contactId, $userId);
-            $chatId = $this->messages->getDialogId($userId, $contactId);
+            $this->contacts->addContact($contactId, $this->authUserId);
+            $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
             $contactName = $this->users->getPublicUsername($contactId);
             $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 0];
         } else {
-            $contact = $this->contacts->getContact($userId, $contactId);
+            $contact = $this->contacts->getContact($this->authUserId, $contactId);
             $userData = [
                 'username' => $contact[0]['username'],
                 'chat_id' => $contact[0]['chat_id'],
@@ -74,9 +76,7 @@ class ContactController extends Controller
 
     public function getContacts()
     {
-        $userEmail = UserController::getAuthUserEmail();
-        $userId = $this->users->getUserIdByEmail($userEmail);
-        echo json_encode($this->contacts->getUserContacts($userId));
+        echo json_encode($this->contacts->getUserContacts($this->authUserId));
     }
 
     public function find()
@@ -88,7 +88,7 @@ class ContactController extends Controller
             return;
         }
         $userphrase = htmlspecialchars($_POST['userphrase']);
-        echo json_encode($this->users->getUsers($userphrase, UserController::getAuthUserEmail()));
+        echo json_encode($this->users->getUsers($userphrase, $this->authUserEmail));
     }
 
     public function remove()

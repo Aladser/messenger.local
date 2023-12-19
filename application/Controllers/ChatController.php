@@ -15,6 +15,8 @@ class ChatController extends Controller
     private UserEntity $users;
     private MessageEntity $messages;
     private ContactEntity $contacts;
+    private string $authUserEmail;
+    private int $authUserId;
 
     public function __construct()
     {

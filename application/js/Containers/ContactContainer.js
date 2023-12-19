@@ -22,8 +22,8 @@ class ContactContainer extends TemplateContainer{
 
     /** показать контакты пользователя браузера */
     show() {
-        fetch('contact/get-contacts').then(resp => resp.text()).then(contacts => {
-            contacts = parseJSONData(contacts);
+        let process = (contacts) => {
+            contacts = JSON.parse(contacts);
             if (contacts !== undefined) {
                 this.clear();
                 contacts.forEach(contact => {
@@ -32,7 +32,13 @@ class ContactContainer extends TemplateContainer{
                     this.create(contact);
                 });
             }
-        });
+        };
+
+        ServerRequest.execute(
+            'contact/get-contacts',
+            process,
+            "get"
+        );
     }
 
     /** поиск контакта и добавление, если отсутствует */
