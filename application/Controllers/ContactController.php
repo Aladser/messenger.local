@@ -76,7 +76,7 @@ class ContactController extends Controller
     {
         $userEmail = UserController::getAuthUserEmail();
         $userId = $this->users->getUserIdByEmail($userEmail);
-        echo json_encode($this->contacts->getContacts($userId));
+        echo json_encode($this->contacts->getUserContacts($userId));
     }
 
     public function find()
