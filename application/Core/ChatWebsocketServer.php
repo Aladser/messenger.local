@@ -78,18 +78,22 @@ class ChatWebsocketServer implements MessageComponentInterface
             // отправляется сообщение
 
             $data->message = htmlspecialchars($data->message); // экранирование символов
-            if ($data->messageType == 'NEW') {
-                $data->time = date('Y-m-d H:i:s');
-                $data->message = $this->messages->addMessage($data);
-            } elseif ($data->messageType == 'EDIT') {
-                $data = $this->messages->editMessage($data->message, $data->msgId);
-            } elseif ($data->messageType == 'REMOVE') {
-                $data = $this->messages->removeMessage($data->msgId);
-            } elseif ($data->messageType == 'FORWARD') {
-                $data->time = date('Y-m-d H:i:s');
-                $data->msgId = intval($data->msgId);
-                $data->authorId = intval($this->users->getUserIdByEmail($data->author));
-                $data->message = $this->messages->addForwardedMessage($data);
+            switch ($data->messageType) {
+                case 'NEW':
+                    $data->time = date('Y-m-d H:i:s');
+                    $data->message = $this->messages->addMessage($data);
+                    break;
+                case 'EDIT':
+                    $data = $this->messages->editMessage($data->message, $data->msgId);
+                    break;
+                case 'REMOVE':
+                    $data = $this->messages->removeMessage($data->msgId);
+                    break;
+                case 'FORWARD':
+                    $data->time = date('Y-m-d H:i:s');
+                    $data->msgId = intval($data->msgId);
+                    $data->authorId = intval($this->users->getUserIdByEmail($data->author));
+                    $data->message = $this->messages->addForwardedMessage($data);
             }
         }
 
