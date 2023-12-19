@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Models\ContactEntity;
 use App\Models\MessageEntity;
 use App\Models\UserEntity;
 
@@ -13,12 +14,14 @@ class ChatController extends Controller
 {
     private UserEntity $users;
     private MessageEntity $messages;
+    private ContactEntity $contacts;
 
     public function __construct()
     {
         parent::__construct();
         $this->messages = new MessageEntity();
         $this->users = new UserEntity();
+        $this->contacts = new ContactEntity();
         $this->authUserEmail = UserController::getAuthUserEmail();
         $this->authUserId = $this->users->getUserIdByEmail($this->authUserEmail);
     }
@@ -41,6 +44,18 @@ class ChatController extends Controller
         $data['user-email'] = $this->authUserEmail;
         $data['publicUsername'] = $publicUsername;
         $data['userhostId'] = $this->authUserId;
+
+        // контакты пользователя
+        $contacts = $this->contacts->getUserContacts($this->authUserId);
+        for ($i = 0; $i < count($contacts); ++$i) {
+            if ($contacts[$i]['photo'] === 'ava_profile.png' || empty($contacts[$i]['photo'])) {
+                $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/application/images/ava.png';
+            } else {
+                $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/application/data/profile_photos/'.$contacts[$i]['photo'];
+            }
+        }
+        $data['contacts'] = $contacts;
+
         $this->view->generate(
             'Месенджер',
             'template_view.php',

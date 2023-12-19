@@ -76,7 +76,7 @@ const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-con
 const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfInput, contacts, groups);
 
 window.addEventListener('DOMContentLoaded', () => {
-    contacts.show();
+    //contacts.show();
     groups.show();
 
     forwardBtn.onclick = forwardMessage;

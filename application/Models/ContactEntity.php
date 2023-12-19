@@ -65,7 +65,7 @@ class ContactEntity extends Model
     }
 
     // получить контакты пользователя
-    public function getContacts($userId)
+    public function getUserContacts($userId)
     {
         $sql = '
             select chat_id as chat, user_id as user, user_photo as photo,

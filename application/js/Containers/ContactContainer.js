@@ -3,6 +3,11 @@ class ContactContainer extends TemplateContainer{
     siteAddr = this.baseSiteName + "/application/";
     isSearch = false;
 
+    /** получить контакты */
+    get() {
+        return this.container.querySelectorAll('.contact');
+    }
+
     /** показать контакты пользователя браузера */
     show() {
         fetch('contact/get-contacts').then(resp => resp.text()).then(contacts => {
