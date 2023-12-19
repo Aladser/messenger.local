@@ -1,5 +1,5 @@
 /** CSRF-токен */
-const csrfInput = document.querySelector("meta[name='csrf']");
+const csrfElement = document.querySelector("meta[name='csrf']");
 
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
@@ -47,7 +47,7 @@ let pressedKeys = [];
 const contacts = new ContactContainer(
     document.querySelector('#contacts'), 
     errorFrame, 
-    csrfInput
+    csrfElement
 );
 contacts.get().forEach(contact => {
     contact.addEventListener('click', setClick(contact, contact.title, 'dialog'));
@@ -57,7 +57,7 @@ contacts.get().forEach(contact => {
 const groups = new GroupContainer(
     document.querySelector('#group-chats'), 
     errorFrame, 
-    csrfInput
+    csrfElement
 );
 
 // --- вебсокет ---
@@ -68,7 +68,7 @@ const chatWebsocket = new ChatWebsocket(websocketAddr.content, contacts, groups)
 const messages = new MessageContainer(
     document.querySelector("#messages"),
     errorFrame,
-    csrfInput,
+    csrfElement,
     chatWebsocket,
     document.querySelector('.messages-container__title')
 );
@@ -76,7 +76,7 @@ const messages = new MessageContainer(
 //** контекстное меню сообщения */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 //** контекстное меню группы */
-const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfInput, contacts, groups);
+const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfElement, contacts, groups);
 
 window.addEventListener('DOMContentLoaded', () => {
     //contacts.show();
@@ -153,8 +153,8 @@ function setClick(domElement, name, type)
         groups.removeGroupPatricipants();
         if (type === 'dialog') {
             urlParams.set('contact', name);
-            urlParams.set('CSRF', csrfInput.content);
-            //contacts.check(name);
+            urlParams.set('CSRF', csrfElement.content);
+            contacts.check(name);
         } else if (type === 'discussion') {
             urlParams.set('discussionid', name);
             groups.showGroupRecipients(domElement, name) // показать участников группового чата
