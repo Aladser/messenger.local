@@ -10,9 +10,10 @@
             </div>
             <div class='h-50 border-bottom border-dark overflow-auto'>
                 <!-- контакты -->
-                <div id='contacts'>
+                <section id='contacts'>
                     <?php foreach ($data['contacts'] as $contact) { ?>
-                        <div class="contact position-relative mb-2" title="<?php echo $contact['name']; ?>" data-notice="<?php echo $contact['notice']; ?>">
+                        <article class="contact position-relative mb-2" title="<?php echo $contact['name']; ?>" 
+                        data-notice="<?php echo $contact['notice']; ?>" id="<?php echo 'chat-'.$contact['chat']; ?>">
                             <div class="profile-img">
                                 <img class="contact__img img pe-2" src="<?php echo $contact['photo']; ?>">
                             </div>
@@ -20,9 +21,9 @@
                             <?php if ($contact['notice'] == 0) { ?>
                                 <div class="notice-soundless">🔇</div>
                             <?php } ?>
-                        </div>
+                        </article>
                     <?php } ?>
-                </div>
+                </section>
                 
                 <div class='btn-resend-block' id='btn-resend-block'>
                     <button class='btn-resend' id='btn-resend' disabled>

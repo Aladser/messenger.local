@@ -43,15 +43,14 @@ let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
 
-// --- контейнер контактов ---
+/** ----- контейнер контактов ----- */
 const contacts = new ContactContainer(
     document.querySelector('#contacts'), 
     errorFrame, 
     csrfInput
 );
 contacts.get().forEach(contact => {
-    let name = contact.querySelector('.contact__name').textContent;
-    contact.addEventListener('click', setContactOrGroupClick(contact, name, 'dialog'));
+    contact.addEventListener('click', setClick(contact, contact.title, 'dialog'));
 });
 
 // --- контейнер групп --- 
@@ -134,7 +133,7 @@ window.addEventListener('DOMContentLoaded', () => {
  * @param {*} type тип диалога
  * @returns
  */
-function setContactOrGroupClick(domElement, name, type)
+function setClick(domElement, name, type)
 {
     return function () {
         // если пересылается сообщение, показать, кому пересылается

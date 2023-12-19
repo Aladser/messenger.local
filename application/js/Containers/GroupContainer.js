@@ -21,7 +21,7 @@ class GroupContainer extends TemplateContainer{
         groupsItem.className = 'group';
         groupsItem.title = group.name;
         groupsItem.innerHTML = group.name;
-        groupsItem.addEventListener('click', setContactOrGroupClick(groupsItem, group.chat, 'discussion'));
+        groupsItem.addEventListener('click', setClick(groupsItem, group.chat, 'discussion'));
         groupsItem.setAttribute('data-notice', group.notice);
         if (group.notice == 0) {
             groupsItem.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
