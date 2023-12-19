@@ -7,6 +7,7 @@ function config($param)
     // --- список глобальных параметров ---
     $paramList = [
         'APP_NAME' => 'messenger.local',
+        'SITE_ADDRESS_ORIGIN' => 'http://messenger.local',
         // подключение к БД
         'HOST_DB' => 'localhost',
         'NAME_DB' => 'messenger',
