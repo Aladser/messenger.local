@@ -1,5 +1,5 @@
 /** CSRF-токен */
-const csrfInput = document.querySelector("meta[name='csrf']");
+const csrfElement = document.querySelector("meta[name='csrf']");
 
 /** поле поиска пользователя */
 const findContactsInput = document.querySelector('#find-contacts-input');
@@ -32,7 +32,7 @@ const sendMsgBtn = document.querySelector("#send-msg-btn");
 /** блок кнопок пересылки сообщения  */
 const forwardBtnBlock = document.querySelector('#btn-resend-block');
 /** кнопка пересылки сообщения */
-const forwardBtn = document.querySelector('#btn-resend');
+const forwardMessageButton = document.querySelector('#btn-resend');
 /** кнопка отмены пересылки сообщения */
 const resetForwardtBtn = document.querySelector('#btn-resend-reset');
 /** DOM-элемент получателя пересланного письма*/
@@ -43,18 +43,21 @@ let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
 
-// --- контейнер контактов ---
+/** ----- контейнер контактов ----- */
 const contacts = new ContactContainer(
     document.querySelector('#contacts'), 
     errorFrame, 
-    csrfInput
+    csrfElement
 );
+contacts.get().forEach(contact => {
+    contact.addEventListener('click', setClick(contact, contact.title, 'dialog'));
+});
 
 // --- контейнер групп --- 
 const groups = new GroupContainer(
     document.querySelector('#group-chats'), 
     errorFrame, 
-    csrfInput
+    csrfElement
 );
 
 // --- вебсокет ---
@@ -65,7 +68,7 @@ const chatWebsocket = new ChatWebsocket(websocketAddr.content, contacts, groups)
 const messages = new MessageContainer(
     document.querySelector("#messages"),
     errorFrame,
-    csrfInput,
+    csrfElement,
     chatWebsocket,
     document.querySelector('.messages-container__title')
 );
@@ -73,13 +76,13 @@ const messages = new MessageContainer(
 //** контекстное меню сообщения */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 //** контекстное меню группы */
-const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfInput, contacts, groups);
+const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfElement, contacts, groups);
 
 window.addEventListener('DOMContentLoaded', () => {
-    contacts.show();
     groups.show();
 
-    forwardBtn.onclick = forwardMessage;
+    // перессылка сообщения
+    forwardMessageButton.onclick = forwardMessage;
     resetForwardtBtn.onclick = resetForwardMessage;
 
     findContactsInput.oninput = () => contacts.find(findContactsInput.value);
@@ -126,18 +129,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
  * @param {*} domElement DOM-элемент контакта или чата
- * @param {*} urlArg что ищется: контакт или групповой чат
+ * @param {*} name что ищется: контакт или групповой чат
  * @param {*} type тип диалога
  * @returns
  */
-function setContactOrGroupClick(domElement, urlArg, type)
+function setClick(domElement, name, type)
 {
     return function () {
         // если пересылается сообщение, показать, кому пересылается
         if (messageContexMenu.option == 'FORWARD') {
             forwardedMessageRecipientElement = messages.showForwardedMessageRecipient(domElement);
             if (forwardedMessageRecipientElement) {
-                forwardBtn.disabled = false;
+                forwardMessageButton.disabled = false;
             }
             return;
         }
@@ -149,13 +152,13 @@ function setContactOrGroupClick(domElement, urlArg, type)
         let groupChatName;
         groups.removeGroupPatricipants();
         if (type === 'dialog') {
-            urlParams.set('contact', urlArg);
-            urlParams.set('CSRF', csrfInput.content);
-            contacts.check(urlArg);
+            urlParams.set('contact', name);
+            urlParams.set('CSRF', csrfElement.content);
+            contacts.check(name);
         } else if (type === 'discussion') {
-            urlParams.set('discussionid', urlArg);
-            groups.showGroupRecipients(domElement, urlArg) // показать участников группового чата
-            let groupChat = groups.list.find(el => el.chat == urlArg);
+            urlParams.set('discussionid', name);
+            groups.showGroupRecipients(domElement, name) // показать участников группового чата
+            let groupChat = groups.list.find(el => el.chat == name);
             if (groupChat !== undefined) {
                 groupChatName = groupChat.name;
             }
@@ -170,7 +173,7 @@ function setContactOrGroupClick(domElement, urlArg, type)
             contacts.show();
         }
         
-        messages.show(urlParams, type === 'dialog' ? urlArg : groupChatName, type, publicClientUsername);
+        messages.show(urlParams, type === 'dialog' ? name : groupChatName, type, publicClientUsername);
         messageInput.disabled = false;
         sendMsgBtn.disabled = false;
     };
@@ -199,7 +202,7 @@ function resetForwardMessage()
     if (contactRecipient) {
         contactRecipient.classList.remove('contact-recipient');
     }
-    forwardBtn.disabled = true;
+    forwardMessageButton.disabled = true;
 }
 
 /** отправить сообщение на сервер*/

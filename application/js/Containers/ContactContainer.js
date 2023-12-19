@@ -3,6 +3,23 @@ class ContactContainer extends TemplateContainer{
     siteAddr = this.baseSiteName + "/application/";
     isSearch = false;
 
+    constructor(container, errorPrg, CSRFElement) {
+        super(container, errorPrg, CSRFElement);
+        this.get().forEach(contact => {
+            let element = {
+                'name': contact.title, 
+                'chat': contact.id.substring(contact.id.lastIndexOf('-')+1), 
+                'notice': contact.getAttribute('data-notice')
+            };
+            this.list.push(element);
+        });
+    }
+
+    /** получить контакты */
+    get() {
+        return this.container.querySelectorAll('.contact');
+    }
+
     /** показать контакты пользователя браузера */
     show() {
         fetch('contact/get-contacts').then(resp => resp.text()).then(contacts => {
@@ -10,7 +27,8 @@ class ContactContainer extends TemplateContainer{
             if (contacts !== undefined) {
                 this.clear();
                 contacts.forEach(contact => {
-                    this.addContactToList({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
+                    let element = {'name': contact.name, 'chat': contact.chat, 'notice': contact.notice};
+                    this.list.push(element);
                     this.create(contact);
                 });
             }
@@ -31,7 +49,8 @@ class ContactContainer extends TemplateContainer{
 
             let contact = this.list.find(elem => elem.chat == dbContact.chat_id);
             if (contact === undefined) {
-                this.addContactToList(dbContact);
+                let element = {'name': dbContact.name, 'chat': dbContact.chat, 'notice': dbContact.notice};
+                this.list.push(element);
             }
         });
     }
@@ -67,7 +86,7 @@ class ContactContainer extends TemplateContainer{
 
         img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.siteAddr}/images/ava.png` : `${this.siteAddr}/data/profile_photos/${contact.photo}`;
         name.innerHTML = contact.name;
-        contactBlock.addEventListener('click', setContactOrGroupClick(contactBlock, contact.name, 'dialog'));
+        contactBlock.addEventListener('click', setClick(contactBlock, contact.name, 'dialog'));
         contactBlock.setAttribute('data-notice', contact.notice);
 
         contactImgBlock.append(img);
@@ -99,10 +118,5 @@ class ContactContainer extends TemplateContainer{
                 this.errorDomElement.innerHTML = data;
             }
         });
-    }
-
-    /** добавить в фронт-список контактов */
-    addContactToList(contact) {
-        this.list.push({'name': contact.name, 'chat': contact.chat, 'notice': contact.notice});
     }
 }
