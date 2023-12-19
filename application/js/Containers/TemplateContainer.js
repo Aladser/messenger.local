@@ -9,7 +9,7 @@ class TemplateContainer {
     }
 
     /** очистить контейнер */
-    clear() {
+    removeElements() {
         this.container.innerHTML = '';
     }
 }

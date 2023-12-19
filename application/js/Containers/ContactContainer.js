@@ -25,7 +25,7 @@ class ContactContainer extends TemplateContainer{
         let process = (contacts) => {
             contacts = JSON.parse(contacts);
             if (contacts !== undefined) {
-                this.clear();
+                this.removeElements();
                 contacts.forEach(contact => {
                     let element = {'name': contact.name, 'chat': contact.chat, 'notice': contact.notice};
                     this.list.push(element);
@@ -41,39 +41,55 @@ class ContactContainer extends TemplateContainer{
         );
     }
 
+    /** поиск пользователей по фразе
+     * 
+     * @param {*} userphrase часть имени пользователя
+     */
+    findUsers(userphrase) {
+        this.isSearch = true;
+
+        let urlParams = new URLSearchParams();
+        urlParams.set('userphrase', userphrase);
+        urlParams.set('CSRF', this.CSRFElement.content);
+
+        // показ найденных пользователей
+        let process = data => {
+            data = JSON.parse(data);
+            this.removeElements();
+            data.forEach(contact => this.create(contact));
+        }
+
+        ServerRequest.execute(
+            'contact/find',
+            process,
+            "post",
+            null,
+            urlParams
+        );
+    }
+
     /** поиск контакта и добавление, если отсутствует */
-    findByName(username) {
+    find(username) {
         let urlParams = new URLSearchParams();
         urlParams.set('contact', username);
         urlParams.set('CSRF', this.CSRFElement.content);
 
-        fetch('/contact/get-contact', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(dbContact => {
-            dbContact = parseJSONData(dbContact);
-            if (dbContact === undefined) {
-                return;
-            }
-
+        let process = (dbContact) => {
+            dbContact = JSON.parse(dbContact);
             let contact = this.list.find(elem => elem.chat == dbContact.chat_id);
             if (contact === undefined) {
                 let element = {'name': dbContact.name, 'chat': dbContact.chat, 'notice': dbContact.notice};
                 this.list.push(element);
             }
-        });
-    }
+        }
 
-    /** поиск пользователя-контакта */
-    findByUserphrase(userphrase) {
-        this.isSearch = true;
-        let urlParams = new URLSearchParams();
-        urlParams.set('userphrase', userphrase);
-        urlParams.set('CSRF', this.CSRFElement.content);
-        fetch('contact/find', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
-            data = parseJSONData(data);
-            if (data !== undefined) {
-                this.clear();
-                data.forEach(contact => this.create(contact));
-            }
-        });
+        ServerRequest.execute(
+            '/contact/get-contact',
+            process,
+            "post",
+            null,
+            urlParams
+        );
     }
 
     /** создать DOM-элемент контакта  */

@@ -13,7 +13,7 @@ class MessageContainer extends TemplateContainer{
             if (data === undefined) {
                 return;
             } else if (data) {
-                this.clear();
+                this.removeElements();
     
                 this.chatWebsocket.chatType = data.type;
                 this.chatWebsocket.openChatId = data.current_chat;
