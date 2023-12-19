@@ -56,13 +56,13 @@ class ChatWebsocketServer implements MessageComponentInterface
     }
 
     /** получить/отправить соообщения.
-     * @param ConnectionInterface $from соединение
-     * @param mixed               $msg  сообщение
+     * @param ConnectionInterface $from    соединение
+     * @param mixed               $message сообщение
      */
-    public function onMessage(ConnectionInterface $from, $msg)
+    public function onMessage(ConnectionInterface $from, $message)
     {
-        echo "$msg\n";
-        $data = json_decode($msg);
+        echo "$message\n";
+        $data = json_decode($message);
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
 
@@ -80,7 +80,7 @@ class ChatWebsocketServer implements MessageComponentInterface
             $data->message = htmlspecialchars($data->message); // экранирование символов
             if ($data->messageType == 'NEW') {
                 $data->time = date('Y-m-d H:i:s');
-                $data->msg = $this->messages->addMessage($data);
+                $data->message = $this->messages->addMessage($data);
             } elseif ($data->messageType == 'EDIT') {
                 $data = $this->messages->editMessage($data->message, $data->msgId);
             } elseif ($data->messageType == 'REMOVE') {
@@ -88,14 +88,14 @@ class ChatWebsocketServer implements MessageComponentInterface
             } elseif ($data->messageType == 'FORWARD') {
                 $data->time = date('Y-m-d H:i:s');
                 $data->msgId = intval($data->msgId);
-                $data->authorId = intval($this->usersTable->getUserId($data->author));
-                $data->msg = $this->messages->addForwardedMessage($data);
+                $data->authorId = intval($this->users->getUserIdByEmail($data->author));
+                $data->message = $this->messages->addForwardedMessage($data);
             }
         }
 
-        $msg = json_encode($data);
+        $message = json_encode($data);
         foreach ($this->clients as $client) {
-            $client->send($msg);
+            $client->send($message);
         }
     }
 
