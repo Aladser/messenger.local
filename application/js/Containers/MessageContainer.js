@@ -60,11 +60,14 @@ class MessageContainer extends TemplateContainer{
         msgBlock.setAttribute('data-author', data.author);
         msgBlock.setAttribute('data-forward', data.forward);
 
+        // надпись о пересланном сообщении
         if (data.forward == 1 || data.messageType === 'FORWARD') {
             msgTable.innerHTML += `<tr><td class='msg__forward'>Переслано</td></tr>`;
-        } // надпись о пересланном сообщении
-        msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`; // текст сообщения
-        msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;   // время сообщения
+        }
+        // текст сообщения
+        msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`;
+        // время сообщения
+        msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;
         if (chatType === 'discussion') {
             // показ автора сообщения в групповом чате
             msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.author}</td></tr>`;

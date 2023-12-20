@@ -58,8 +58,8 @@ const groups = new GroupContainer(
 );
 
 // --- вебсокет ---
-const websocketAddr = document.querySelector("meta[name='websocket']");
-const chatWebsocket = new ChatWebsocket(websocketAddr.content, contacts, groups);
+const websocketAddr = document.querySelector("meta[name='websocket']").content;
+const chatWebsocket = new ChatWebsocket(websocketAddr, contacts, groups);
 
 // --- контейнер сообщений ---
 const messages = new MessageContainer(

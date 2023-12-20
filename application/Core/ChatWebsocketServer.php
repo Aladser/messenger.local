@@ -81,7 +81,8 @@ class ChatWebsocketServer implements MessageComponentInterface
             switch ($data->messageType) {
                 case 'NEW':
                     $data->time = date('Y-m-d H:i:s');
-                    $data->message = $this->messages->addMessage($data);
+                    $data->msg = $this->messages->addMessage($data);
+                    $data->forward = 0;
                     break;
                 case 'EDIT':
                     $data = $this->messages->editMessage($data->message, $data->msgId);

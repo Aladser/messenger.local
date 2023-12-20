@@ -29,7 +29,8 @@ class ChatWebsocket
     {
         let data = JSON.parse(e.data);
         
-        // сообщение от сервера о подключении пользователя. Передача имени пользователя и ID подключения текущего пользователя серверу
+        // сообщение от сервера о подключении пользователя. 
+        // Передача имени пользователя и ID подключения текущего пользователя серверу
         if (data.onconnection) {
             this.websocket.send(JSON.stringify({
                 'messageOnconnection': 1,
@@ -50,7 +51,6 @@ class ChatWebsocket
             this.errorPrg.innerHTML = `${data.user} не в сети`;
         } else {
             // уведомления о новых сообщениях чатов
-            
             // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
             if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== this.publicUsername) {
 
