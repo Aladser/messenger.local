@@ -58,7 +58,7 @@ class MessageContainer extends TemplateContainer{
         msgTable.className = data.author !== clientUsername ? 'msg__table msg__table-contact' : 'msg__table';
         msgBlock.setAttribute('data-msg', data.msg);
         msgBlock.setAttribute('data-author', data.author);
-        msgBlock.setAttribute('data-forward', data.forward);
+        msgBlock.setAttribute('data-forward', data.forward ? data.forward : 0);
 
         // надпись о пересланном сообщении
         if (data.forward == 1 || data.messageType === 'FORWARD') {
