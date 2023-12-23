@@ -49,6 +49,7 @@ class ChatController extends Controller
 
         // контакты пользователя
         $contacts = $this->contacts->getUserContacts($this->authUserId);
+        // указание путей до аватарок
         for ($i = 0; $i < count($contacts); ++$i) {
             if ($contacts[$i]['photo'] === 'ava_profile.png' || empty($contacts[$i]['photo'])) {
                 $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/application/images/ava.png';
@@ -57,6 +58,15 @@ class ChatController extends Controller
             }
         }
         $data['contacts'] = $contacts;
+
+        // группы пользователя
+        $groups = $this->messages->getDiscussions($this->authUserId);
+        for ($i = 0; $i < count($groups); ++$i) {
+            $discussionId = $groups[$i]['chat'];
+            $creatorId = $this->messages->getDiscussionCreatorId($discussionId);
+            $groups[$i]['members'] = $this->contacts->getGroupContacts($discussionId);
+        }
+        $data['groups'] = $groups;
 
         $this->view->generate(
             'Месенджер',
@@ -101,11 +111,6 @@ class ChatController extends Controller
         $chatid = htmlspecialchars($_POST['chat_id']);
 
         echo json_encode(['responce' => $this->messages->setNoticeShow($chatid, $this->authUserId, $notice)]);
-    }
-
-    public function getGroups()
-    {
-        echo json_encode($this->messages->getDiscussions($this->authUserId));
     }
 
     public function getMessages()

@@ -2,24 +2,23 @@
 class ContactContainer extends TemplateContainer{
     siteAddr = this.baseSiteName + "/application/";
     isSearch = false;
-    /** массив имен контактов пользователя */
-    contactNameList = [];
+    /** массив имен */
+    nameList = [];
 
     constructor(container, errorPrg, CSRFElement) {
         super(container, errorPrg, CSRFElement);
-        this.getContacts().forEach(contact => {
+        this.get().forEach(contact => {
             let element = {
                 'name': contact.title, 
                 'chat': contact.id.substring(contact.id.lastIndexOf('-')+1), 
                 'notice': contact.getAttribute('data-notice')
             };
             this.list.push(element);
-            this.contactNameList.push(contact.title);
+            this.nameList.push(contact.title);
         });
     }
 
-    /** получить контакты */
-    getContacts() {
+    get() {
         return this.container.querySelectorAll('.contact');
     }
 

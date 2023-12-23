@@ -46,8 +46,8 @@ const contacts = new ContactContainer(
     errorFrame, 
     csrfElement
 );
-contacts.getContacts().forEach(contact => {
-    contact.addEventListener('click', setClick(contact, contact.title, 'dialog'));
+contacts.get().forEach(contact => {
+    contact.addEventListener('click', setClick(contact, 'dialog'));
 });
 
 // --- контейнер групп --- 
@@ -56,6 +56,9 @@ const groups = new GroupContainer(
     errorFrame, 
     csrfElement
 );
+groups.get().forEach(group => {
+    group.addEventListener('click', setClick(group, 'discussion'));
+});
 
 // --- вебсокет ---
 const websocketAddr = document.querySelector("meta[name='websocket']").content;
@@ -77,8 +80,6 @@ const contactContexMenu = new ContactContexMenu(document.querySelector('#contact
 
 // ----- ЗАГРУЗКА СТРАНИЦЫ -----
 window.addEventListener('DOMContentLoaded', () => {
-    groups.show();
-
     // перессылка сообщения
     forwardMessageButton.onclick = forwardMessage;
     // сброс перессылки сообщения
@@ -86,8 +87,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // ----- Поиск пользователей -----
     findContactsInput.oninput = async () => {
         await contacts.findUsers(findContactsInput.value);
-        contacts.getContacts().forEach(contact => {
-            contact.addEventListener('click', setClick(contact, contact.title, 'dialog'));
+        contacts.get().forEach(contact => {
+            contact.addEventListener('click', setClick(contact, 'dialog'));
         });
     }
     
@@ -138,9 +139,10 @@ window.addEventListener('DOMContentLoaded', () => {
  * @param {*} type тип диалога
  * @returns
  */
-function setClick(domElement, name, type)
+function setClick(domElement, type)
 {
     return function () {
+        let name = domElement.title;
         // если пересылается сообщение, показать, кому пересылается
         if (messageContexMenu.option == 'FORWARD') {
             forwardedMessageRecipientElement = messages.showForwardedMessageRecipient(domElement);
@@ -154,19 +156,13 @@ function setClick(domElement, name, type)
         domElement.classList.remove('isnewmessage');
 
         let urlParams = new URLSearchParams();
-        let groupChatName;
-        groups.removeGroupPatricipants();
         if (type === 'dialog') {
             urlParams.set('contact', name);
             urlParams.set('CSRF', csrfElement.content);
             contacts.find(name);
         } else if (type === 'discussion') {
-            urlParams.set('discussionid', name);
-            groups.showGroupRecipients(domElement, name);
-            let groupChat = groups.list.find(el => el.chat == name);
-            if (groupChat !== undefined) {
-                groupChatName = groupChat.name;
-            }
+            let id = domElement.id;
+            urlParams.set('discussionid', id.substring(id.indexOf('-')+1));
         } else {
             return;
         }
@@ -178,7 +174,8 @@ function setClick(domElement, name, type)
             contacts.show();
         }
         
-        messages.show(urlParams, type === 'dialog' ? name : groupChatName, type, publicClientUsername);
+
+        messages.show(urlParams, name, type, publicClientUsername);
         messageInput.disabled = false;
         sendMsgBtn.disabled = false;
     };
