@@ -2,21 +2,24 @@
 class ContactContainer extends TemplateContainer{
     siteAddr = this.baseSiteName + "/application/";
     isSearch = false;
+    /** массив имен контактов пользователя */
+    contactNameList = [];
 
     constructor(container, errorPrg, CSRFElement) {
         super(container, errorPrg, CSRFElement);
-        this.get().forEach(contact => {
+        this.getContacts().forEach(contact => {
             let element = {
                 'name': contact.title, 
                 'chat': contact.id.substring(contact.id.lastIndexOf('-')+1), 
                 'notice': contact.getAttribute('data-notice')
             };
             this.list.push(element);
+            this.contactNameList.push(contact.title);
         });
     }
 
     /** получить контакты */
-    get() {
+    getContacts() {
         return this.container.querySelectorAll('.contact');
     }
 
@@ -45,7 +48,7 @@ class ContactContainer extends TemplateContainer{
      * 
      * @param {*} userphrase часть имени пользователя
      */
-    findUsers(userphrase) {
+    async findUsers(userphrase) {
         this.isSearch = true;
 
         let urlParams = new URLSearchParams();
@@ -59,7 +62,7 @@ class ContactContainer extends TemplateContainer{
             data.forEach(contact => this.create(contact));
         }
 
-        ServerRequest.execute(
+        await ServerRequest.execute(
             'contact/find',
             process,
             "post",
@@ -108,7 +111,6 @@ class ContactContainer extends TemplateContainer{
 
         img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.siteAddr}/images/ava.png` : `${this.siteAddr}/data/profile_photos/${contact.photo}`;
         name.innerHTML = contact.name;
-        contactBlock.addEventListener('click', setClick(contactBlock, contact.name, 'dialog'));
         contactBlock.setAttribute('data-notice', contact.notice);
 
         contactImgBlock.append(img);

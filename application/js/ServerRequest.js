@@ -26,8 +26,7 @@ class ServerRequest {
         switch (response.status) {
             case 200:
                 let data = await response.text();
-                processFunc(data);
-                break;
+                return processFunc(data);
             case 419:
                 window.open("/wrong-uri", "_self");
                 break;

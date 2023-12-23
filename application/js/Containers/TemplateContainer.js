@@ -1,4 +1,5 @@
 class TemplateContainer {
+    /** массив элементов */
     list = [];
 
     constructor(container, errorPrg, CSRFElement) {

@@ -46,7 +46,7 @@ const contacts = new ContactContainer(
     errorFrame, 
     csrfElement
 );
-contacts.get().forEach(contact => {
+contacts.getContacts().forEach(contact => {
     contact.addEventListener('click', setClick(contact, contact.title, 'dialog'));
 });
 
@@ -83,8 +83,13 @@ window.addEventListener('DOMContentLoaded', () => {
     forwardMessageButton.onclick = forwardMessage;
     // сброс перессылки сообщения
     resetForwardtBtn.onclick = resetForwardMessage;
-    // поиск контакта
-    findContactsInput.oninput = () => contacts.findUsers(findContactsInput.value);
+    // ----- Поиск пользователей -----
+    findContactsInput.oninput = async () => {
+        await contacts.findUsers(findContactsInput.value);
+        contacts.getContacts().forEach(contact => {
+            contact.addEventListener('click', setClick(contact, contact.title, 'dialog'));
+        });
+    }
     
     document.oncontextmenu = () => false;
     sendMsgBtn.onclick = sendMessage;
