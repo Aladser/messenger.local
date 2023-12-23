@@ -85,18 +85,24 @@ window.addEventListener('DOMContentLoaded', () => {
     // сброс перессылки сообщения
     resetForwardtBtn.onclick = resetForwardMessage;
     // ----- Поиск пользователей -----
-    findContactsInput.oninput = async () => {
+    findContactsInput.oninput = async function() {
         await contacts.findUsers(findContactsInput.value);
         contacts.get().forEach(contact => {
             contact.addEventListener('click', function(){
-                findContactsInput.value = '';
-                setClick(this, 'dialog')();
+                this.value = '';
                 // показ контактов пользователя
                 contacts.restore();
                 // новое навешивание слушателей событий
                 contacts.get().forEach(contact => {
                     contact.addEventListener('click', setClick(contact, 'dialog'));
                 });
+                // добавление пользователя в контакты, если отсутствует
+                let userName = this.title;
+                if (contacts.nameList.includes(userName)) {
+                    setClick(this, 'dialog')();
+                } else {
+                    console.log(this.title);
+                }
             });
         });
     }

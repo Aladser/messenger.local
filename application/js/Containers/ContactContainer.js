@@ -1,8 +1,9 @@
 /** Контейнер контактов */
 class ContactContainer extends TemplateContainer{
+    #backupContainer;
     siteAddr = this.baseSiteName + "/application/";
     isSearch = false;
-    #backupContainer;
+    nameList = [];
 
     constructor(container, errorPrg, CSRFElement) {
         super(container, errorPrg, CSRFElement);
@@ -13,6 +14,7 @@ class ContactContainer extends TemplateContainer{
                 'notice': contact.getAttribute('data-notice')
             };
             this.list.push(element);
+            this.nameList.push(contact.title);
         });
         this.backup();
     }
