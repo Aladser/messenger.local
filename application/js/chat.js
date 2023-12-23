@@ -82,30 +82,10 @@ const contactContexMenu = new ContactContexMenu(document.querySelector('#contact
 window.addEventListener('DOMContentLoaded', () => {
     // пересылка сообщения
     forwardMessageButton.onclick = forwardMessage;
-    // сброс перессылки сообщения
+    // сброс пересылки сообщения
     resetForwardtBtn.onclick = resetForwardMessage;
     // ----- Поиск пользователей -----
-    findContactsInput.oninput = async function() {
-        await contacts.findUsers(findContactsInput.value);
-        contacts.get().forEach(contact => {
-            contact.addEventListener('click', function(){
-                this.value = '';
-                // показ контактов пользователя
-                contacts.restore();
-                // новое навешивание слушателей событий
-                contacts.get().forEach(contact => {
-                    contact.addEventListener('click', setClick(contact, 'dialog'));
-                });
-                // добавление пользователя в контакты, если отсутствует
-                let userName = this.title;
-                if (contacts.nameList.includes(userName)) {
-                    setClick(this, 'dialog')();
-                } else {
-                    console.log(this.title);
-                }
-            });
-        });
-    }
+    findContactsInput.oninput = findContacts;
     
     document.oncontextmenu = () => false;
     sendMsgBtn.onclick = sendMessage;
@@ -186,6 +166,29 @@ function setClick(domElement, type)
         messageInput.disabled = false;
         sendMsgBtn.disabled = false;
     };
+}
+
+/** ----- Поиск пользователей ----- */
+async function findContacts() {
+    await contacts.findUsers(findContactsInput.value);
+    contacts.get().forEach(contact => {
+        contact.addEventListener('click', function(){
+            this.value = '';
+            // показ контактов пользователя
+            contacts.restore();
+            // новое навешивание слушателей событий
+            contacts.get().forEach(contact => {
+                contact.addEventListener('click', setClick(contact, 'dialog'));
+            });
+            // добавление пользователя в контакты, если отсутствует
+            let userName = this.title;
+            if (contacts.nameList.includes(userName)) {
+                setClick(this, 'dialog')();
+            } else {
+                console.log(this.title);
+            }
+        });
+    });
 }
 
 /** Переотправить сообщение */
