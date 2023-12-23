@@ -2,8 +2,7 @@
 class ContactContainer extends TemplateContainer{
     siteAddr = this.baseSiteName + "/application/";
     isSearch = false;
-    /** массив имен */
-    nameList = [];
+    #backupContainer;
 
     constructor(container, errorPrg, CSRFElement) {
         super(container, errorPrg, CSRFElement);
@@ -14,15 +13,14 @@ class ContactContainer extends TemplateContainer{
                 'notice': contact.getAttribute('data-notice')
             };
             this.list.push(element);
-            this.nameList.push(contact.title);
         });
+        this.backup();
     }
 
     get() {
         return this.container.querySelectorAll('.contact');
     }
 
-    /** показать контакты пользователя браузера */
     show() {
         let process = (contacts) => {
             contacts = JSON.parse(contacts);
@@ -94,7 +92,7 @@ class ContactContainer extends TemplateContainer{
         );
     }
 
-    /** создать DOM-элемент контакта  */
+    /** создать HTML-код контакта  */
     create(contact) {
         // контейнер контакта
         let contactBlock = document.createElement('div');    // блок контакта
@@ -123,7 +121,6 @@ class ContactContainer extends TemplateContainer{
         this.container.append(contactBlock);
     }
 
-    /** удалить контакт из списка контактов */
     remove(contact, clientUsername) {
         let urlParams = new URLSearchParams();
         urlParams.set('name', contact.title);
@@ -142,4 +139,7 @@ class ContactContainer extends TemplateContainer{
             }
         });
     }
+
+    backup = () => this.#backupContainer = this.container.innerHTML;
+    restore = () => this.container.innerHTML = this.#backupContainer;
 }

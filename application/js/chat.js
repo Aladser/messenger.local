@@ -80,7 +80,7 @@ const contactContexMenu = new ContactContexMenu(document.querySelector('#contact
 
 // ----- ЗАГРУЗКА СТРАНИЦЫ -----
 window.addEventListener('DOMContentLoaded', () => {
-    // перессылка сообщения
+    // пересылка сообщения
     forwardMessageButton.onclick = forwardMessage;
     // сброс перессылки сообщения
     resetForwardtBtn.onclick = resetForwardMessage;
@@ -88,7 +88,16 @@ window.addEventListener('DOMContentLoaded', () => {
     findContactsInput.oninput = async () => {
         await contacts.findUsers(findContactsInput.value);
         contacts.get().forEach(contact => {
-            contact.addEventListener('click', setClick(contact, 'dialog'));
+            contact.addEventListener('click', function(){
+                findContactsInput.value = '';
+                setClick(this, 'dialog')();
+                // показ контактов пользователя
+                contacts.restore();
+                // новое навешивание слушателей событий
+                contacts.get().forEach(contact => {
+                    contact.addEventListener('click', setClick(contact, 'dialog'));
+                });
+            });
         });
     }
     
@@ -166,14 +175,6 @@ function setClick(domElement, type)
         } else {
             return;
         }
-
-        // если поиск контакта
-        if (contacts.isSearch) {
-            contacts.isSearch = false;
-            findContactsInput.value = '';
-            contacts.show();
-        }
-        
 
         messages.show(urlParams, name, type, publicClientUsername);
         messageInput.disabled = false;
