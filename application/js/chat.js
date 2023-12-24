@@ -237,6 +237,8 @@ function sendMessage()
 
 // нажатия правой кнопкой мыши на странице
 window.oncontextmenu = event => {
+    console.log('клик:');
+    console.log(event.target);
     if (['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forward'].includes(event.target.className)) {
         // клик на элементе сообщения
         let messageDOM = null;
@@ -267,6 +269,8 @@ window.oncontextmenu = event => {
         } else {
             contactContexMenu.selectedContact = event.target;
         }
+        console.log('цель:');
+        console.log(contactContexMenu.selectedContact);
 
         let isNotice = contactContexMenu.selectedContact.getAttribute('data-notice');
         // показ кнопки - включение/выключение уведомлений
