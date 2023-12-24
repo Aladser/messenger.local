@@ -258,7 +258,7 @@ window.oncontextmenu = event => {
         if (chatWebsocket.isForwardedSelectedMessage()) {
             messageContexMenu.editBtn.style.display = 'none';
         }
-    } else if (['contact__name', 'contact__img img pe-2', 'contact position-relative mb-2', 'group', 'notice-soundless'].includes(event.target.className)) {
+    } else if (['contact__name', 'contact__img img pe-2', 'contact position-relative mb-2', 'group text-white', 'group__contact', 'notice-soundless'].includes(event.target.className)) {
         // клик на элементе контакта
         if (event.target.className === 'contact__img img pe-2') {
             contactContexMenu.selectedContact = event.target.parentNode.parentNode;
