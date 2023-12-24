@@ -95,32 +95,69 @@ class ContactContainer extends TemplateContainer{
     }
 
     /** создать HTML-код контакта  */
+    /*
+        <article class="contact position-relative mb-2" title="Barashka" data-notice="1" id="chat-107">
+            <div class="profile-img">
+                <img class="contact__img img pe-2" src="http://messenger.local/application/data/profile_photos/senddlyamobille@gmail.com.1.jpg">
+            </div>
+            <span class="contact__name">Barashka</span>
+        </article>
+    */
     create(contact) {
         // контейнер контакта
-        let contactBlock = document.createElement('div');    // блок контакта
+        let contactHTMLElement = document.createElement('article');    // блок контакта
         let contactImgBlock = document.createElement('div'); // блок изображения профиля
         let img = document.createElement('img'); // фото профиля
         let name = document.createElement('span'); // имя контакта
 
-        contactBlock.className = 'contact position-relative mb-2';
-        contactBlock.title = contact.name;
+        contactHTMLElement.className = 'contact position-relative mb-2';
+        contactHTMLElement.id = 'chat-' + contact.id;
+        contactHTMLElement.title = contact.name;
         contactImgBlock.className = 'profile-img';
         img.className = 'contact__img img pe-2';
         name.className = 'contact__name';
 
         img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.siteAddr}/images/ava.png` : `${this.siteAddr}/data/profile_photos/${contact.photo}`;
         name.innerHTML = contact.name;
-        contactBlock.setAttribute('data-notice', contact.notice);
+        contactHTMLElement.setAttribute('data-notice', contact.notice);
 
         contactImgBlock.append(img);
-        contactBlock.append(contactImgBlock);
-        contactBlock.append(name);
+        contactHTMLElement.append(contactImgBlock);
+        contactHTMLElement.append(name);
         // добавление значка без уведомлений, если они отключены
         if (contact.notice == 0) {
-            contactBlock.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
+            contactHTMLElement.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
         }
 
-        this.container.append(contactBlock);
+        this.container.append(contactHTMLElement);
+        return contactHTMLElement;
+    }
+
+    async add(username) {
+        let requestData = new URLSearchParams();
+        requestData.set('username', username);
+        requestData.set('CSRF', this.CSRFElement.content);
+
+        let process = (data) => {
+            data = JSON.parse(data);
+            data.photo = null;
+            let contact = {
+                'name': data.username,
+                'photo': null,
+                'notice': 1,
+                'id': data.chat_id
+
+            };
+            return contact;
+        }
+
+        return await ServerRequest.execute(
+            '/contact/add',
+            process,
+            "post",
+            null,
+            requestData
+        );
     }
 
     remove(contact, clientUsername) {

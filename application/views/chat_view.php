@@ -12,8 +12,8 @@
                 <!-- контакты -->
                 <section id='contacts'>
                     <?php foreach ($data['contacts'] as $contact) { ?>
-                        <article class="contact position-relative mb-2" title="<?php echo $contact['name']; ?>" 
-                        data-notice="<?php echo $contact['notice']; ?>" id="<?php echo 'chat-'.$contact['chat']; ?>">
+                        <article class="contact position-relative mb-2" id="<?php echo 'chat-'.$contact['chat']; ?>" 
+                        title="<?php echo $contact['name']; ?>" data-notice="<?php echo $contact['notice']; ?>">
                             <div class="profile-img">
                                 <img class="contact__img img pe-2" src="<?php echo $contact['photo']; ?>">
                             </div>

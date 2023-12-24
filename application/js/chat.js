@@ -138,6 +138,9 @@ function setClick(domElement, type)
 {
     return function () {
         let name = domElement.title;
+        // удаляется уведомление о новом сообщении
+        domElement.classList.remove('isnewmessage');
+
         // если пересылается сообщение, показать, кому пересылается
         if (messageContexMenu.option == 'FORWARD') {
             forwardedMessageRecipientElement = messages.showForwardedMessageRecipient(domElement);
@@ -146,9 +149,6 @@ function setClick(domElement, type)
             }
             return;
         }
-
-        // удаляется уведомление о новом сообщении
-        domElement.classList.remove('isnewmessage');
 
         let urlParams = new URLSearchParams();
         if (type === 'dialog') {
@@ -172,8 +172,8 @@ function setClick(domElement, type)
 async function findContacts() {
     await contacts.findUsers(findContactsInput.value);
     contacts.get().forEach(contact => {
-        contact.addEventListener('click', function(){
-            this.value = '';
+        contact.addEventListener('click', async function(){
+            findContactsInput.value = '';
             // показ контактов пользователя
             contacts.restore();
             // новое навешивание слушателей событий
@@ -182,11 +182,13 @@ async function findContacts() {
             });
             // добавление пользователя в контакты, если отсутствует
             let userName = this.title;
-            if (contacts.nameList.includes(userName)) {
-                setClick(this, 'dialog')();
-            } else {
-                console.log(this.title);
+            if (!contacts.nameList.includes(userName)) {
+                let newContact = await contacts.add(userName);
+                let newContactHTMLElement = contacts.create(newContact);
+                setClick(newContactHTMLElement, 'dialog');
             }
+
+            setClick(this, 'dialog')();
         });
     });
 }

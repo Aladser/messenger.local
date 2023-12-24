@@ -62,7 +62,7 @@ class ContactController extends Controller
             $this->contacts->addContact($contactId, $this->authUserId);
             $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
             $contactName = $this->users->getPublicUsername($contactId);
-            $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 0];
+            $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 1];
         } else {
             $contact = $this->contacts->getContact($this->authUserId, $contactId);
             $userData = [
@@ -89,6 +89,25 @@ class ContactController extends Controller
         }
         $userphrase = htmlspecialchars($_POST['userphrase']);
         echo json_encode($this->users->getUsers($userphrase, $this->authUserEmail));
+    }
+
+    public function add()
+    {
+        // проверка CSRF
+        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
+            echo 'Подмена URL-адреса';
+
+            return;
+        }
+
+        $contact = htmlspecialchars($_POST['username']);
+        $contactId = $this->users->getUserIdByEmail($contact);
+
+        $this->contacts->addContact($contactId, $this->authUserId);
+        $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
+        $contactName = $this->users->getPublicUsername($contactId);
+        $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 1];
+        echo json_encode($userData);
     }
 
     public function remove()
