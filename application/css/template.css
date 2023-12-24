@@ -33,6 +33,9 @@ a {
 .bg-theme-softer {
     background-color: #66c7ff;
 }
+.bg-theme-darker {
+    background-color: #0066a2;
+}
 .btn-bg-theme {
     background-color: #03a2ff;
 }

@@ -1,5 +1,5 @@
 <container class='position-relative'>
-    <div class='container chat-container d-flex p-0 bg-theme-softer font-roboto'>
+    <div class='container chat-container d-flex p-0 bg-theme font-roboto'>
         <div class='contacts pt-2 ps-2 pe-2'>
             <div class='position-relative mb-2'>
                 <input type="text" class='find-contacts-input w-100 form-control' placeholder='поиск контакта'

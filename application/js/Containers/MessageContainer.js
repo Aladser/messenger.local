@@ -55,7 +55,7 @@ class MessageContainer extends TemplateContainer{
         let msgTable = document.createElement('table');
 
         msgBlock.className = data.author !== clientUsername ? 'msg d-flex justify-content-end' : 'msg';
-        msgTable.className = data.author !== clientUsername ? 'msg__table msg__table-contact' : 'msg__table';
+        msgTable.className = data.author !== clientUsername ? 'msg__table msg__table-contact text-white' : 'msg__table';
         msgBlock.setAttribute('data-msg', data.msg);
         msgBlock.setAttribute('data-author', data.author);
         msgBlock.setAttribute('data-forward', data.forward ? data.forward : 0);
@@ -67,7 +67,9 @@ class MessageContainer extends TemplateContainer{
         // текст сообщения
         msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`;
         // время сообщения
-        msgTable.innerHTML += `<tr><td class="msg__time">${localTime}</td></tr>`;
+        
+        let timeClassname = data.author !== clientUsername ? "msg__time text-theme-gray" : "msg__time";
+        msgTable.innerHTML += `<tr><td class="${timeClassname}">${localTime}</td></tr>`;
         if (chatType === 'discussion') {
             // показ автора сообщения в групповом чате
             msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.author}</td></tr>`;

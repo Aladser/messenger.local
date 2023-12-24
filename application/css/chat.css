@@ -182,7 +182,7 @@
 }
 
 .msg__table-contact {
-    background-color: #03a2ff;
+    background-color: #1588e1;
 }
 
 .msg__text {
@@ -196,7 +196,9 @@
     padding-bottom: 0.4rem;
     padding-left: 0.4rem;
     padding-right: 3rem;
-    color: black;
+}
+.text-theme-gray {
+    color: #ddd;
 }
 
 .msg__author {
