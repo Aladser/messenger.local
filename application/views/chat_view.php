@@ -12,7 +12,7 @@
                 <!-- контакты -->
                 <section id='contacts'>
                     <?php foreach ($data['contacts'] as $contact) { ?>
-                        <article class="contact position-relative mb-2" id="<?php echo 'chat-'.$contact['chat']; ?>" 
+                        <article class="contact position-relative mb-2 text-white" id="<?php echo 'chat-'.$contact['chat']; ?>" 
                         title="<?php echo $contact['name']; ?>" data-notice="<?php echo $contact['notice']; ?>">
                             <div class="profile-img">
                                 <img class="contact__img img pe-2" src="<?php echo $contact['photo']; ?>">
@@ -39,7 +39,7 @@
             <!--группы -->
             <div class='groups pt-2 text-center' id='group-chats'>
                 <?php foreach ($data['groups'] as $group) { ?>
-                    <div class="group" id="<?php echo 'group-'.$group['chat']; ?>" title="<?php echo $group['name']; ?>" data-notice="<?php echo $group['notice']; ?>">
+                    <div class="group text-white" id="<?php echo 'group-'.$group['chat']; ?>" title="<?php echo $group['name']; ?>" data-notice="<?php echo $group['notice']; ?>">
                         <?php echo $group['name']; ?>
                         <div class='group__contacts'>
                         <?php foreach ($group['members'] as $members) {?>
@@ -51,9 +51,10 @@
             </div>
         </div>
 
+        <!-- сообщения -->
         <section class='messages-container border-start border-end border-dark d-flex flex-column pe-2'>
             <p class='messages-container__title'>
-                <span id='chat-title'>Выберите чат</span>
+                <span id='chat-title' class='text-white'>Выберите чат</span>
                 <span class='chat-username' id='chat-username'></span>
             </p>
 

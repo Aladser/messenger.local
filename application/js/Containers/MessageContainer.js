@@ -20,7 +20,11 @@ class MessageContainer extends TemplateContainer{
     
                 let chatHeader = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
                 let chatName = dbChatName;
-                this.title.innerHTML = `<p class='messages-container__title'><span id='chat-title'>${chatHeader}</span><span class='chat-username' id='chat-username'>${chatName}</span></p>`;
+                this.title.innerHTML = `
+                    <p class='messages-container__title'>
+                        <span id='chat-title' class='text-white'>${chatHeader}</span>
+                        <span class='chat-username text-white' id='chat-username'>${chatName}</span>
+                    </p>`;
     
                 // сообщения
                 data.messages.forEach(elem => {

@@ -110,7 +110,7 @@ class ContactContainer extends TemplateContainer{
         let img = document.createElement('img'); // фото профиля
         let name = document.createElement('span'); // имя контакта
 
-        contactHTMLElement.className = 'contact position-relative mb-2';
+        contactHTMLElement.className = 'contact position-relative mb-2 text-white';
         contactHTMLElement.id = 'chat-' + contact.id;
         contactHTMLElement.title = contact.name;
         contactImgBlock.className = 'profile-img';

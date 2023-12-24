@@ -1,353 +1,348 @@
 .chat-username {
-    font-weight: bolder;
+  font-weight: bolder;
 }
 
 .notice-soundless {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: white;
-    font-size: 110%;
-    height: 100%;
-    width: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  font-size: 110%;
+  height: 100%;
+  width: auto;
 }
 
 .isnewmessage {
-    background-color: #888;
+  background-color: #888;
 }
 
-
 .chat-container {
-    height: 85vh;
+  height: 85vh;
 }
 
 .options-container {
-    width: 12%;
-    padding-left: 1.5rem;
-    padding-right: 1rem;
+  width: 12%;
+  padding-left: 1.5rem;
+  padding-right: 1rem;
 }
 
-
 .contacts {
-    width: 21%;
+  width: 21%;
 }
 
 .messages {
-    height: 86%;
-    padding-right: 0.5rem;
-    overflow: auto;
-    position: relative;
+  height: 86%;
+  padding-right: 0.5rem;
+  overflow: auto;
+  position: relative;
 }
 
 /* контекстные меню*/
 .context-menu {
-    background-color: #C4C4C4;
-    -moz-box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.5);
-    -webkit-box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.5);
-    box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-    font-family: 'Roboto', sans-serif;
-    display: none;
+  background-color: #c4c4c4;
+  -moz-box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  font-family: "Roboto", sans-serif;
+  display: none;
 
-    position: absolute;
-    left: 0;
-    top: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .context-menu li {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .context-menu li:hover {
-    background-color: #C4C4C4;
+  background-color: #c4c4c4;
 }
 
 /* контакты */
 .contact {
-    border-radius: 3px;
-    cursor: pointer;
-    overflow: hidden;
-    text-overflow: clip;
-    white-space: nowrap;
+  border-radius: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
 }
 
 .contact-recipient {
-    background-color: #03a2ff;
-    color: white;
+  background-color: #03a2ff;
+  color: white;
 }
 
 .contact:hover {
-    font-weight: bolder;
-    background-color: #03a2ff;
+  font-weight: bolder;
+  background-color: #03a2ff;
 }
 
 .contact-addgroup {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: white;
-    border-radius: 10px;
-    opacity: 0.7;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 10px;
+  opacity: 0.7;
 }
 
 .add-contact-btn:hover {
-    cursor: pointer;
-    font-weight: bolder;
+  cursor: pointer;
+  font-weight: bolder;
 }
-
 
 /** кнопки пересылки сообщений */
 .btn-resend-block {
-    display: none;
+  display: none;
 }
 
 .btn-resend-block_active {
-    justify-content: space-around;
-    display: flex;
+  justify-content: space-around;
+  display: flex;
 }
 
 .btn-resend {
-    border: 1px solid black;
-    width: 7rem;
-    padding: 0.25rem 0;
-    background-color: #C4C4C4;
+  border: 1px solid black;
+  width: 7rem;
+  padding: 0.25rem 0;
+  background-color: #c4c4c4;
 }
 
 .btn-resend:hover {
-    background-color: #B4B4B4;
+  background-color: #b4b4b4;
 }
-
 
 /* групповые чаты */
 .groups {
-    overflow-y: auto;
-    height: 43.5%;
+  overflow-y: auto;
+  height: 43.5%;
 }
 
 .group {
-    margin: 0;
-    padding: 0.4rem 0.4rem 0.2rem;
-    cursor: pointer;
-    position: relative;
+  margin: 0;
+  padding: 0.4rem 0.4rem 0.2rem;
+  cursor: pointer;
+  position: relative;
 
-    overflow: hidden;
-    text-overflow: clip;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
 }
 
 .group:hover {
-    font-weight: bolder;
-    background-color: #03a2ff;
+  font-weight: bolder;
+  background-color: #03a2ff;
 }
 
 .group__contact {
-    margin: 0;
-    padding: 0;
-    font-size: 80%;
+  margin: 0;
+  padding: 0;
+  font-size: 80%;
 }
-
 
 /* сообщения */
 .messages-container {
-    width: 67%;
-    padding-left: 1rem;
+  width: 67%;
+  padding-left: 1rem;
 }
 
 .messages-container__title {
-    margin-bottom: 0;
-    padding: 0.3rem 0 0.3rem 0;
+  margin-bottom: 0;
+  padding: 0.3rem 0 0.3rem 0;
 }
 
 .messages-container__system {
-    font-size: 90%;
-    opacity: 0.75;
-    text-align: center;
-    margin-bottom: 0;
-    padding: 0.25rem 0 0.25rem 0;
+  font-size: 90%;
+  opacity: 0.75;
+  text-align: center;
+  margin-bottom: 0;
+  padding: 0.25rem 0 0.25rem 0;
 }
 
 .messages-container__message-input {
-    resize: none;
+  resize: none;
 }
 
 .messages-container__message-input:disabled {
-    background-color: #66c7ff;
+  background-color: #66c7ff;
 }
 
 .msg__table {
-    margin-bottom: 0.3rem;
-    background-color: white;
-    cursor: pointer;
-    position: relative;
+  margin-bottom: 0.3rem;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
 }
 
 .msg__table-contact {
-    background-color: #1588e1;
+  background-color: #1588e1;
 }
 
 .msg__text {
-    padding-top: 0.4rem;
-    padding-left: 0.4rem;
-    padding-right: 3rem;
-    word-break: break-word;
+  padding-top: 0.4rem;
+  padding-left: 0.4rem;
+  padding-right: 3rem;
+  word-break: break-word;
 }
 
 .msg__time {
-    padding-bottom: 0.4rem;
-    padding-left: 0.4rem;
-    padding-right: 3rem;
+  padding-bottom: 0.4rem;
+  padding-left: 0.4rem;
+  padding-right: 3rem;
 }
 .text-theme-gray {
-    color: #ddd;
+  color: #ddd;
 }
 
 .msg__author {
-    padding-bottom: 0.4rem;
-    padding-right: 0.4rem;
-    padding-left: 3rem;
-    float: right;
-    font-size: 80%;
+  padding-bottom: 0.4rem;
+  padding-right: 0.4rem;
+  padding-left: 3rem;
+  float: right;
+  font-size: 80%;
 }
 
 .msg__forward {
-    font-size: 90%;
-    text-align: end;
-    opacity: 0.8;
-    padding-top: 0.2rem;
-    padding-right: 0.4rem;
+  font-size: 90%;
+  text-align: end;
+  opacity: 0.8;
+  padding-top: 0.2rem;
+  padding-right: 0.4rem;
 }
-
 
 /* опции меню справа */
 .option-link {
-    text-decoration: none;
-    color: black;
-    cursor: pointer;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
 }
 
 .option-link:hover {
-    color: black;
-    font-weight: bolder;
+  color: white;
+  font-weight: bolder;
 }
 
 .option {
-    font-family: 'Roboto', serif;
-    font-style: normal;
-    font-weight: 400;
+  font-family: "Roboto", serif;
+  font-style: normal;
+  font-weight: 400;
 }
-
 
 /* изображения */
 .profile-img {
-    width: 2rem;
-    height: 1.6rem;
-    display: inline-block;
+  width: 2rem;
+  height: 1.6rem;
+  display: inline-block;
 }
 
 .option-img-block {
-    width: 80%;
-    height: auto;
-    margin: auto auto 0.5rem;
-    display: none;
+  width: 80%;
+  height: auto;
+  margin: auto auto 0.5rem;
+  display: none;
 }
 
 .btn-resend__img-block {
-    width: 30%;
-    height: auto;
-    margin: auto auto 0.5rem;
-    display: none;
+  width: 30%;
+  height: auto;
+  margin: auto auto 0.5rem;
+  display: none;
 }
 
 .send-btn-img {
-    height: 100%;
-    width: auto;
-    border: none;
-    background-size: cover;
+  height: 100%;
+  width: auto;
+  border: none;
+  background-size: cover;
 }
 
-.frame-error{
-    width: 30rem;
-    background-color: white;
-    box-shadow: 2px 2px 5px black;
-    display: none;
+.frame-error {
+  width: 30rem;
+  background-color: white;
+  box-shadow: 2px 2px 5px black;
+  display: none;
 }
-.frame-error--active {display: block;}
+.frame-error--active {
+  display: block;
+}
 
 @media (max-width: 1200px) {
-    .options-container {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-    }
+  .options-container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
 }
 
 @media (max-width: 1000px) {
-    .options-container {
-        padding-left: 0.25rem;
-        padding-right: 0.25rem;
-        font-size: 80%;
-    }
+  .options-container {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    font-size: 80%;
+  }
 
-    .contacts-container {
-        font-size: 80%;
-    }
+  .contacts-container {
+    font-size: 80%;
+  }
 
-    .chats {
-        font-size: 80%;
-    }
+  .chats {
+    font-size: 80%;
+  }
 
-    .find-contacts-input {
-        font-size: 80%;
-    }
+  .find-contacts-input {
+    font-size: 80%;
+  }
 
-    .contact__name {
-        font-size: 80%;
-    }
+  .contact__name {
+    font-size: 80%;
+  }
 
-    .btn-resend {
-        font-size: 80%;
-    }
+  .btn-resend {
+    font-size: 80%;
+  }
 
-    .group {
-        font-size: 80%;
-    }
+  .group {
+    font-size: 80%;
+  }
 }
 
 @media (max-width: 775px) {
-    .options-container {
-        font-size: 70%;
-    }
+  .options-container {
+    font-size: 70%;
+  }
 
-    .send-msg {
-        width: 95%;
-    }
+  .send-msg {
+    width: 95%;
+  }
 
-    .option-img-block {
-        display: inline-block;
-    }
+  .option-img-block {
+    display: inline-block;
+  }
 
-    .option-name {
-        display: none;
-    }
+  .option-name {
+    display: none;
+  }
 
-    .btn-resend {
-        border: none;
-    }
+  .btn-resend {
+    border: none;
+  }
 
-    .btn-resend__img-block {
-        display: inline-block;
-    }
+  .btn-resend__img-block {
+    display: inline-block;
+  }
 
-    .btn-resend__name {
-        display: none;
-    }
+  .btn-resend__name {
+    display: none;
+  }
 }
 
 @media (max-width: 550px) {
-    .options-container {
-        font-size: 60%;
-    }
+  .options-container {
+    font-size: 60%;
+  }
 
-    .send-msg {
-        width: 94.8%;
-    }
+  .send-msg {
+    width: 94.8%;
+  }
 }

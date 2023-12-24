@@ -38,7 +38,7 @@ class GroupContainer extends TemplateContainer{
 
     add(group, place = 'END') {
         let groupsItem = document.createElement('div');
-        groupsItem.className = 'group';
+        groupsItem.className = 'group text-white';
         groupsItem.title = group.name;
         groupsItem.innerHTML = group.name;
         groupsItem.addEventListener('click', setClick(groupsItem, group.chat, 'discussion'));
