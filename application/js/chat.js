@@ -168,9 +168,10 @@ function setClick(domElement, type)
     };
 }
 
-/** ----- Поиск пользователей ----- */
+/** ----- ПОИСК ПОЛЬЗОВАТЕЛЕЙ ----- */
 async function findContacts() {
     await contacts.findUsers(findContactsInput.value);
+    // слушатели событий для найденных пользователей
     contacts.get().forEach(contact => {
         contact.addEventListener('click', async function(){
             findContactsInput.value = '';
@@ -183,9 +184,9 @@ async function findContacts() {
             // добавление пользователя в контакты, если отсутствует
             let userName = this.title;
             if (!contacts.nameList.includes(userName)) {
-                let newContact = await contacts.add(userName);
-                let newContactHTMLElement = contacts.create(newContact);
-                setClick(newContactHTMLElement, 'dialog');
+                let newContactDBData = await contacts.add(userName);
+                let newContactHTMLElement = contacts.create(newContactDBData);
+                newContactHTMLElement.addEventListener('click', setClick(this, 'dialog'));
             }
 
             setClick(this, 'dialog')();
