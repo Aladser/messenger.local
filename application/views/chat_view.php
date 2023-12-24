@@ -8,7 +8,7 @@
                         id='reset-find-contacts-btn' title='сбросить фильтр'>&#9747;
                 </button>
             </div>
-            <div class='h-50 border-bottom border-dark overflow-auto'>
+            <div class='h-50 border-bottom border-light overflow-auto'>
                 <!-- контакты -->
                 <section id='contacts'>
                     <?php foreach ($data['contacts'] as $contact) { ?>
@@ -52,7 +52,7 @@
         </div>
 
         <!-- сообщения -->
-        <section class='messages-container border-start border-end border-dark d-flex flex-column pe-2'>
+        <section class='messages-container border-start border-end border-light d-flex flex-column pe-2'>
             <p class='messages-container__title'>
                 <span id='chat-title' class='text-white'>Выберите чат</span>
                 <span class='chat-username' id='chat-username'></span>
