@@ -1,5 +1,5 @@
 <container class='position-relative'>
-    <div class='container chat-container d-flex p-0 bg-c4c4c4 font-roboto'>
+    <div class='container chat-container d-flex p-0 bg-theme-softer font-roboto'>
         <div class='contacts pt-2 ps-2 pe-2'>
             <div class='position-relative mb-2'>
                 <input type="text" class='find-contacts-input w-100 form-control' placeholder='поиск контакта'
@@ -61,8 +61,8 @@
 
             <p class="messages-container__system" id="message-system">Проверка подключения</p>
             <div class='input-group d-flex justify-content-between pb-2'>
-                <textarea class="messages-container__message-input input-group-prepend border-0 form-control" rows='2'placeholder='Сообщение' id='message-input' disabled></textarea>
-                <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn" disabled><img src="application/images/sendbtn.png"></button>
+                <textarea class="messages-container__message-input input-group-prepend border-0 form-control border border-black" rows='2'placeholder='Сообщение' id='message-input'></textarea>
+                <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn"><img src="application/images/sendbtn.png"></button>
             </div>
         </section>
 

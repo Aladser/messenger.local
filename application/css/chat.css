@@ -72,13 +72,13 @@
 }
 
 .contact-recipient {
-    background-color: #bbb;
+    background-color: #03a2ff;
     color: white;
 }
 
 .contact:hover {
     font-weight: bolder;
-    background-color: #bbb;
+    background-color: #03a2ff;
 }
 
 .contact-addgroup {
@@ -137,7 +137,7 @@
 
 .group:hover {
     font-weight: bolder;
-    background-color: #bbb;
+    background-color: #03a2ff;
 }
 
 .group__contact {
@@ -171,7 +171,7 @@
 }
 
 .messages-container__message-input:disabled {
-    background-color: #eee;
+    background-color: #66c7ff;
 }
 
 .msg__table {
@@ -182,7 +182,7 @@
 }
 
 .msg__table-contact {
-    background-color: #ddd;
+    background-color: #03a2ff;
 }
 
 .msg__text {
@@ -196,7 +196,7 @@
     padding-bottom: 0.4rem;
     padding-left: 0.4rem;
     padding-right: 3rem;
-    color: #666666;
+    color: black;
 }
 
 .msg__author {

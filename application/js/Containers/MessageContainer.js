@@ -1,4 +1,4 @@
-/** Контейнер контактов */
+/** Контейнер сообщений */
 class MessageContainer extends TemplateContainer{
     constructor(container, errorPrg, CSRFElement, chatWebsocket, msgContainerTitle) {
         super(container, errorPrg, CSRFElement);

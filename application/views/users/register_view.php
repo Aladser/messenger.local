@@ -19,10 +19,10 @@
             placeholder='подтвердите пароль' 
             required>
         
-        <input type="submit" class='d-block btn-width btn mx-auto mb-2 btn-bg-C4C4C4 text-white p-3' 
+        <input type="submit" class='d-block btn-width btn mx-auto mb-2 btn-bg-theme text-white p-3 rounded' 
             value="Регистрация" id='reg-form__reg-btn'>
         <a href="/" class='text-decoration-none'>
-            <p class='d-block btn-width mx-auto btn-bg-C4C4C4 text-white p-3'>Назад</p>
+            <p class='d-block btn-width mx-auto btn-bg-theme text-white p-3 rounded'>Назад</p>
         </a>
         
         <?php if (isset($data['error'])) { ?>

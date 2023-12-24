@@ -224,6 +224,9 @@ function resetForwardMessage()
 /** отправить сообщение на сервер*/
 function sendMessage()
 {
+    if(messageInput.value == '') {
+        return;
+    }
     if (messageContexMenu.option === 'EDIT') {
         chatWebsocket.sendData(messageInput.value, 'EDIT');
         messageContexMenu.option = false;

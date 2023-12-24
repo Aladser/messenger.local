@@ -14,9 +14,9 @@
             placeholder='Пароль' 
             required>
         
-        <input type="submit" class='d-block mx-auto btn-width btn mb-2 btn-bg-C4C4C4 text-white p-3' 
+        <input type="submit" class='d-block mx-auto btn-width btn mb-2 btn-bg-theme text-white p-3 rounded' 
             value="Войти" id='login-form__login-btn'>
-        <a href="/"><p class='d-block btn-width mx-auto btn-bg-C4C4C4 text-white p-3'>Назад</p></a>
+        <a href="/"><p class='d-block btn-width mx-auto btn-bg-theme text-white p-3 rounded'>Назад</p></a>
     </form>
     <?php if (isset($data['error'])) { ?>
         <p class='w-50 mx-auto fw-bolder text-dark-red pt-2 mb-0' id='login-error'><?php echo $data['error']; ?></p>

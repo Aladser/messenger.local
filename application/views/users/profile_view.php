@@ -28,19 +28,19 @@
                        id="hide-email-input" <?php echo $data['user_hide_email'] == 1 ? 'checked' : ''; ?> >
                 <label class="form-check-label" for="hide-email-input">&nbsp; скрыть почту</label>
             </div>
-            <button class='btn btn-bg-C4C4C4 text-white w-100 d-none' id='save-profile-settings-btn'>Сохранить</button>
+            <button class='btn btn-bg-theme text-white w-100 d-none' id='save-profile-settings-btn'>Сохранить</button>
         </div>
 
         <div class='options mb-2'>
             <form enctype="multipart/form-data" method='post' id='upload-file-form'>
                 <input type="file" id="select-file-input" accept="image/*" name='image' class='d-none'>
                 <input type="submit" id='upload-file-btn' class='d-none'>
-                <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='edit-photo-btn'>Изменить фото</button>
+                <button class='btn btn-bg-theme text-white w-100 mb-2' id='edit-photo-btn'>Изменить фото</button>
             </form>
 
-            <button class='btn btn-bg-C4C4C4 text-white w-100 mb-2' id='btn-edit-nickname'>Установить имя</button>
+            <button class='btn btn-bg-theme text-white w-100 mb-2' id='btn-edit-nickname'>Установить имя</button>
             <a href="\dialogs" class='text-decoration-none'>
-                <div class='btn-bg-C4C4C4 text-white w-100 p-2 text-center'>Назад</div>
+                <div class='btn-bg-theme text-white w-100 p-2 text-center rounded'>Назад</div>
             </a>
         </div>
     </div>
