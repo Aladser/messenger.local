@@ -46,7 +46,7 @@ class GroupContainer extends TemplateContainer{
             // поиск контактов, которых нет в открытой группе
             for (let i = 0; i < contactsDomList.length; i++) {
                 if (!this.currentGroupParticipants.includes(contactsDomList[i].title)) {
-                    contactsDomList[i].innerHTML += "<span class='btn-add-to-group px-1 position-absolute end-0'>+</span>";
+                    contactsDomList[i].innerHTML += "<span class='btn-add-to-group px-1 position-absolute end-0' title='добавить в группу'>+</span>";
                 }
             }
             // события для кнопок добавления
