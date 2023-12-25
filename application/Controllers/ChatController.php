@@ -98,13 +98,6 @@ class ChatController extends Controller
 
     public function editNoticeShow()
     {
-        // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
-
-            return;
-        }
-
         $username = htmlspecialchars($_POST['username']);
         $notice = htmlspecialchars($_POST['notice']);
         $notice = intval($notice);
@@ -115,13 +108,6 @@ class ChatController extends Controller
 
     public function getMessages()
     {
-        // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
-
-            return;
-        }
-
         // диалоги
         if (isset($_POST['contact'])) {
             $contact = htmlspecialchars($_POST['contact']);

@@ -37,12 +37,6 @@ class ContactController extends Controller
 
     public function getGroupContacts()
     {
-        // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
-
-            return;
-        }
         $discussionId = htmlspecialchars($_POST['discussionid']);
         $creatorId = $this->messages->getDiscussionCreatorId($discussionId);
         echo json_encode([
@@ -81,25 +75,12 @@ class ContactController extends Controller
 
     public function find()
     {
-        // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
-
-            return;
-        }
         $userphrase = htmlspecialchars($_POST['userphrase']);
         echo json_encode($this->users->getUsers($userphrase, $this->authUserEmail));
     }
 
     public function add()
     {
-        // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
-
-            return;
-        }
-
         $contact = htmlspecialchars($_POST['username']);
         $contactId = $this->users->getUserIdByEmail($contact);
 
@@ -112,13 +93,6 @@ class ContactController extends Controller
 
     public function remove()
     {
-        // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            echo 'Подмена URL-адреса';
-
-            return;
-        }
-
         $type = htmlspecialchars($_POST['type']);
         $name = htmlspecialchars($_POST['name']);
         if ($type === 'group') {

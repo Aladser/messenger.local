@@ -28,7 +28,10 @@ class ServerRequest {
                 let data = await response.text();
                 return processFunc(data);
             case 419:
-                window.open("/wrong-uri", "_self");
+                window.open("/419", "_self");
+                break;
+            case 500:
+                window.open("/500", "_self");
                 break;
             default:
                 if (errorPrg) {

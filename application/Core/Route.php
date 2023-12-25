@@ -23,6 +23,15 @@ class Route
     {
         session_start();
 
+        // проверка CSRF
+        if (isset($_POST['CSRF'])) {
+            // проверка CSRF
+            if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
+                header('Location: /419', true, 419);
+                exit;
+            }
+        }
+
         // ---URL---
         // вырезается "/"
         $url = mb_substr($_SERVER['REQUEST_URI'], 1);

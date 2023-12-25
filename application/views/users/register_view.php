@@ -1,7 +1,7 @@
 <div class='container text-center mt-4'>
     <form class='reg-form' method="POST" action='user/store' id='reg-form'>
+        <input type="hidden" name ='CSRF' id="input-csrf" value=<?php echo $data['csrf']; ?>>
         <input type="hidden" name="registration">
-        <input type="hidden" name ='csrf' id="input-csrf" value=<?php echo $data['csrf']; ?>>
 
         <label for="login-form__email-input" class='text-start btn-width p-1 fw-bolder'>Почта</label>
         <input type="email" class="d-block btn-width mx-auto mb-2 p-2 border-color-theme" 

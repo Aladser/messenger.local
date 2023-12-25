@@ -43,13 +43,6 @@ class UserController extends Controller
     // авторизация пользователя
     public function auth(): void
     {
-        // проверка CSRF
-        if ($_POST['csrf'] !== $_SESSION['CSRF']) {
-            header('Location: /code419');
-
-            return;
-        }
-
         // декодирование данных
         $email = htmlspecialchars($_POST['email']);
         $password = htmlspecialchars($_POST['password']);
@@ -100,12 +93,6 @@ class UserController extends Controller
     // добавить нового пользователя в БД
     public function store(): void
     {
-        // проверка CSRF
-        if ($_POST['csrf'] !== $_SESSION['CSRF']) {
-            header('Location: /code419');
-
-            return;
-        }
         // проверка ввода паролей
         if ($_POST['password'] !== $_POST['password_confirm']) {
             echo 'Введенные пароли не совпадают';
@@ -175,13 +162,6 @@ class UserController extends Controller
     // обновить пользователя в БД
     public function update(): void
     {
-        // проверка CSRF
-        if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-            header('Location: /code419');
-
-            return;
-        }
-
         $email = self::getAuthUserEmail();
         $data['user_email'] = $email;
         $nickname = trim($_POST['user_nickname']);
