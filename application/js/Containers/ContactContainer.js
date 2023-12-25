@@ -95,14 +95,6 @@ class ContactContainer extends TemplateContainer{
     }
 
     /** создать HTML-код контакта  */
-    /*
-        <article class="contact position-relative mb-2" title="Barashka" data-notice="1" id="chat-107">
-            <div class="profile-img">
-                <img class="contact__img img pe-2" src="http://messenger.local/application/data/profile_photos/senddlyamobille@gmail.com.1.jpg">
-            </div>
-            <span class="contact__name">Barashka</span>
-        </article>
-    */
     create(contact) {
         // контейнер контакта
         let contactHTMLElement = document.createElement('article');    // блок контакта
@@ -148,6 +140,7 @@ class ContactContainer extends TemplateContainer{
                 'id': data.chat_id
 
             };
+            this.nameList.push(data.username);
             return contact;
         }
 

@@ -21,34 +21,27 @@ class GroupContainer extends TemplateContainer{
     }
 
     /** переключить видимость членов группы */
-    click(group) {
+    click(group, contactList) {
+        // скрыть членов другой открытой группы
         if(this.groupOpened) {
             if (this.groupOpened.id != group.id) {
                 this.groupOpened.querySelector('.group__contacts').classList.add('d-none');
                 this.groupOpened = false;
             }
         }
-        
+        // dom-элемент списка участников группы
         let paricipantList = group.querySelector('.group__contacts');
+        
         if (paricipantList.classList.contains('d-none')) {
             paricipantList.classList.remove('d-none');
+            paricipantList.querySelectorAll('.group__contact').forEach(contact => {
+                this.currentGroupParticipants.push(contact.textContent);
+            });
             this.groupOpened = group;
         } else {
             paricipantList.classList.add('d-none');
+            this.currentGroupParticipants = [];
         }
-    }
-
-    show() {
-        fetch('chat/get-groups').then(r => r.text()).then(data => {
-        data = parseJSONData(data);
-            if (data !== undefined) {
-                this.list = [];
-                data.forEach(group => {
-                    this.addGroupToList({'name': group.name, 'chat': group.chat, 'notice': group.notice});
-                    this.add(group);
-                });
-            }
-        });
     }
 
     add(group, place = 'END') {
