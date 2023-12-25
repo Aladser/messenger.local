@@ -67,18 +67,18 @@ contacts.get().forEach(contact => {
 });
 
 // --- контейнер групп --- 
-const groups = new GroupContainer(
+const groupContainer = new GroupContainer(
     document.querySelector('#group-chats'), 
     errorFrame, 
     csrfElement
 );
-groups.get().forEach(group => {
+groupContainer.get().forEach(group => {
     group.addEventListener('click', setClick(group, 'discussion'));
 });
 
 // --- вебсокет ---
 const websocketAddr = document.querySelector("meta[name='websocket']").content;
-const chatWebsocket = new ChatWebsocket(websocketAddr, contacts, groups);
+const chatWebsocket = new ChatWebsocket(websocketAddr, contacts, groupContainer);
 
 // --- контейнер сообщений ---
 const messages = new MessageContainer(
@@ -92,7 +92,7 @@ const messages = new MessageContainer(
 //** контекстное меню сообщения */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 //** контекстное меню группы */
-const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfElement, contacts, groups);
+const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfElement, contacts, groupContainer);
 
 // ----- ЗАГРУЗКА СТРАНИЦЫ -----
 window.addEventListener('DOMContentLoaded', () => {
@@ -115,8 +115,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // создание группового чата
     createGroupOption.onclick = () => fetch('chat/create-group').then(resp => resp.json()).then(data => {
-        groups.addGroupToList({'name': data.name, 'chat':data.chat, 'notice': 1});
-        groups.add(data, 'START');
+        groupContainer.addGroupToList({'name': data.name, 'chat':data.chat, 'notice': 1});
+        groupContainer.add(data, 'START');
     });
 
     // нажатие клавиши в поле ввода сообщения
@@ -173,7 +173,7 @@ function setClick(domElement, type)
         } else if (type === 'discussion') {
             let id = domElement.id;
             urlParams.set('discussionid', id.substring(id.indexOf('-')+1));
-            groups.click(domElement, contacts.nameList);
+            groupContainer.click(domElement, contacts);
         } else {
             return;
         }
