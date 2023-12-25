@@ -37,18 +37,21 @@
                 </div>
             </div>
             <!--группы -->
-            <div class='groups pt-2 text-center' id='group-chats'>
+            <section class='groups pt-2 text-center' id='group-chats'>
                 <?php foreach ($data['groups'] as $group) { ?>
-                    <div class="group text-white" id="<?php echo 'group-'.$group['chat']; ?>" title="<?php echo $group['name']; ?>" data-notice="<?php echo $group['notice']; ?>">
+                    <article class="group text-white" id="<?php echo 'group-'.$group['chat']; ?>" title="<?php echo $group['name']; ?>" data-notice="<?php echo $group['notice']; ?>">
                         <?php echo $group['name']; ?>
                         <div class='group__contacts'>
                         <?php foreach ($group['members'] as $members) {?>
                             <p class='group__contact'><?php echo $members['publicname']; ?></p>
                         <?php } ?>
                         </div>
-                    </div>
+                        <?php if ($group['notice'] == 0) { ?>
+                            <div class="notice-soundless">🔇</div>
+                        <?php } ?>
+                    </article>
                 <?php } ?>
-            </div>
+            </section>
         </div>
 
         <!-- сообщения -->

@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 .hidden {display: none;}
-.text-dark-red {color: rgba(158, 0, 0, 0.768);}
 .font-roboto {font-family: 'Roboto', sans-serif;}
 .m-0 {margin: 0;}
 .h-page404{height: 40rem;}

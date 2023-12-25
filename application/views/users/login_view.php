@@ -19,6 +19,6 @@
         <a href="/"><p class='d-block btn-width mx-auto btn-bg-theme text-white p-3 rounded'>Назад</p></a>
     </form>
     <?php if (isset($data['error'])) { ?>
-        <p class='w-50 mx-auto fw-bolder text-dark-red pt-2 mb-0' id='login-error'><?php echo $data['error']; ?></p>
+        <p class='w-50 mx-auto fw-bolder text-danger pt-2 mb-0' id='login-error'><?php echo $data['error']; ?></p>
     <?php } ?>
 </div>

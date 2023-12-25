@@ -27,7 +27,7 @@ class ContactContexMenu extends ContexMenu
         // создание пакета с id чата, значением статуса показа уведомлений
         let data = {};
 
-        if (this.selectedContact.className === 'group') {
+        if (this.selectedContact.classList.contains('group')) {
             // поиск выбранного группового чата
             data.chat = this.groups.list.find(el => el.name === this.selectedContact.title).chat;
         } else {
@@ -59,7 +59,7 @@ class ContactContexMenu extends ContexMenu
             if (this.selectedContact.classList.contains('contact')) {
                 // если контакт, то изменяем значение в массиве контактов
                 elem = this.contacts.list.find(el => el.name === this.selectedContact.title);
-            } else if (this.selectedContact.className === 'group') {
+            } else if (this.selectedContact.classList.contains('group')) {
                 // если групповой чат, то изменяем значение в массиве групповых чатов
                 elem = this.groups.list.find(el => el.name === this.selectedContact.title);
             }

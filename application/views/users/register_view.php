@@ -26,7 +26,7 @@
         </a>
         
         <?php if (isset($data['error'])) { ?>
-            <p class='w-50 mx-auto fw-bolder text-dark-red pt-2 mb-0' id='login-error'><?php echo $data['error']; ?></p>
+            <p class='w-50 mx-auto fw-bolder text-danger pt-2 mb-0' id='login-error'><?php echo $data['error']; ?></p>
         <?php } ?>
     </form>
 </div>

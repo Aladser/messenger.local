@@ -55,7 +55,7 @@ class MessageContainer extends TemplateContainer{
             brIndex = data.message.indexOf('\n');
         }
 
-        let msgBlock = document.createElement('div');
+        let msgBlock = document.createElement('article');
         let msgTable = document.createElement('table');
 
         msgBlock.className = data.author !== clientUsername ? 'msg d-flex justify-content-end' : 'msg';

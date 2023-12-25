@@ -237,19 +237,9 @@ function sendMessage()
 
 // нажатия правой кнопкой мыши на странице
 window.oncontextmenu = event => {
-    console.log('клик:');
-    console.log(event.target);
     if (['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forward'].includes(event.target.className)) {
         // клик на элементе сообщения
-        let messageDOM = null;
-        if (['msg__text', 'msg__time', 'msg__author'].includes(event.target.className)) {
-            messageDOM = event.target.parentNode.parentNode.parentNode.parentNode;
-        } else if (event.target.className === 'msg__forward') {
-            messageDOM = event.target.parentNode.parentNode.parentNode.parentNode;
-        } else {
-            messageDOM = event.target.parentNode.parentNode.parentNode;
-        }
-        chatWebsocket.selectedMessage = messageDOM;
+        chatWebsocket.selectedMessage = event.target.closest('article');
 
         messageContexMenu.show(event);
         let msgUserhost = chatWebsocket.getSelectedMessageAuthor();
@@ -262,16 +252,7 @@ window.oncontextmenu = event => {
         }
     } else if (['contact__name', 'contact__img img pe-2', 'contact position-relative mb-2', 'group text-white', 'group__contact', 'notice-soundless'].includes(event.target.className)) {
         // клик на элементе контакта
-        if (event.target.className === 'contact__img img pe-2') {
-            contactContexMenu.selectedContact = event.target.parentNode.parentNode;
-        } else if (event.target.className === 'contact__name' || event.target.className === 'notice-soundless') {
-            contactContexMenu.selectedContact = event.target.parentNode;
-        } else {
-            contactContexMenu.selectedContact = event.target;
-        }
-        console.log('цель:');
-        console.log(contactContexMenu.selectedContact);
-
+        contactContexMenu.selectedContact = event.target.closest('article');
         let isNotice = contactContexMenu.selectedContact.getAttribute('data-notice');
         // показ кнопки - включение/выключение уведомлений
         contactContexMenu.editNoticeShowBtn.innerHTML = isNotice == 1 ? 'Отключить уведомления' : 'Включить уведомления';
