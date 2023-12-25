@@ -47,6 +47,3 @@
     <br>
     <p class='text-center text-danger fs-5 fw-bolder d-none' id='prg-error'></p>
 </container>
-
-<!-- CSRF страницы -->
-<input type="hidden" id="input-csrf" value=<?php echo $data['csrf']; ?>>

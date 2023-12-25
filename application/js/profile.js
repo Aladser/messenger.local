@@ -1,5 +1,5 @@
 /** инпут CSRF-токена */
-const inputCsrf = document.querySelector('#input-csrf');
+const inputCsrf = document.querySelector("meta[name='csrf']");
 
 const uploadForm = document.querySelector('#upload-file-form');
 /** скрытый элемент выбора файлов */
@@ -45,7 +45,7 @@ function writeNickname(input, btn)
         if (input.value !== startValue) {
             let data = new URLSearchParams();
             data.set('nickname', input.value);
-            data.set('CSRF', inputCsrf.value);
+            data.set('CSRF', inputCsrf.content);
 
             // проверить никнейм на пустое поле или кириллицу
             if (input.value === '' || input.value.search(/[А-яЁё]/) !== -1) {
@@ -119,7 +119,7 @@ uploadForm.onsubmit = e => {
     let file = e.target.image.files[0];
     if (file !== undefined) {
         let formData = new FormData(e.target);
-        formData.set('CSRF', inputCsrf.value);
+        formData.set('CSRF', inputCsrf.content);
         fetch('/upload-file', {method: 'POST', body: formData})
             .then(response => response.text())
             .then(data => {
@@ -148,7 +148,7 @@ saveBtn.addEventListener('click', () => {
     let data = new URLSearchParams();
     data.set('user_nickname', inputNickname.value);
     data.set('user_hide_email', hideEmailInput.checked ? '1' : '0');
-    data.set('CSRF', inputCsrf.value);
+    data.set('CSRF', inputCsrf.content);
     let filepathArr = document.querySelector('#profile-img').src.split('/');
     data.set('user_photo', filepathArr[filepathArr.length - 1]);
 

@@ -148,11 +148,13 @@ class UserController extends Controller
         $data['user_nickname'] = $this->users->get($email, 'user_nickname');
         $data['user_hide_email'] = $this->users->get($email, 'user_hide_email');
         $data['user_photo'] = $this->users->get($email, 'user_photo');
+        $csrf = MainController::createCSRFToken();
+        $head = "<meta name='csrf' content=$csrf>";
         $this->view->generate(
             'Профиль',
             'template_view.php',
             'users/profile_view.php',
-            null,
+            $head,
             'profile.css',
             ['ServerRequest.js', 'profile.js'],
             $data
