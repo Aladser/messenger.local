@@ -4,18 +4,20 @@ class ContactContexMenu extends ContexMenu
     contactContexOption;
     selectedContact;
 
-    
-    constructor(contexMenuDOM, chatWS, clientUsername, inputCsrf, contacts, groups) {
-        super(contexMenuDOM);
+    constructor(contexMenuHTMLElement, chatWS, clientUsername, csrfInput, contacts, groups) {
+        super(contexMenuHTMLElement);
         this.contacts = contacts;
         this.chatWS = chatWS;
         this.clientUsername = clientUsername;
-        this.inputCsrf = inputCsrf;
+        this.csrfInput = csrfInput;
         this.groups = groups;
-        
-        this.editNoticeShowBtn = contexMenuDOM.childNodes[1].childNodes[1]; 
+
+        let menuItems = contexMenuHTMLElement.querySelectorAll('.list-group-item');
+        // кнопка - изменить уведомления
+        this.editNoticeShowBtn = menuItems[0];
         this.editNoticeShowBtn.onclick = () => this.editNoticeShow();
-        this.removeContactBtn = contexMenuDOM.childNodes[1].childNodes[3]; 
+        // кнопка - удалить
+        this.removeContactBtn = menuItems[1];
         this.removeContactBtn.onclick = () => this.removeContact();
     }
 
@@ -43,7 +45,7 @@ class ContactContexMenu extends ContexMenu
         urlParams.set('chat_id', data.chat);
         urlParams.set('notice', data.notice);
         urlParams.set('username', this.clientUsername);
-        urlParams.set('CSRF', this.inputCsrf.content);
+        urlParams.set('CSRF', this.csrfInput.content);
         // изменяет установленный флаг получения уведомлений
         fetch('/chat/edit-notice-show', {method: 'post', body: urlParams}).then(r => r.text()).then(notice => {
             notice = parseJSONData(notice);

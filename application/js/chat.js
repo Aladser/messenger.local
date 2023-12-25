@@ -235,13 +235,34 @@ function sendMessage()
     }
 }
 
+/** css классы элементов контакта */
+let contactClassnameList = [
+    'contact__name', 
+    'contact__img', 
+    'contact', 
+    'group', 
+    'group__contact'
+];
+/** css классы элементов сообщения */
+let messageClassnameList = [
+    'msg__text',
+    'msg__time',
+    'msg__author', 
+    'msg__forward'
+];
+
 // нажатия правой кнопкой мыши на странице
 window.oncontextmenu = event => {
-    if (['msg__text', 'msg__time', 'msg__tr-author', 'msg__author', 'msg__forward'].includes(event.target.className)) {
+    let classNameArray = [... event.target.classList];
+    // найденные классы контакта
+    let foundContactClassnameList = contactClassnameList.filter(className => classNameArray.includes(className));
+    // найденные контакты сообщения
+    let foundMessageClassnameList = messageClassnameList.filter(className => classNameArray.includes(className));
+
+    if (foundMessageClassnameList.length != 0) {
         // клик на элементе сообщения
         chatWebsocket.selectedMessage = event.target.closest('article');
-
-        messageContexMenu.show(event);
+        // аутентифицированный пользователь
         let msgUserhost = chatWebsocket.getSelectedMessageAuthor();
         // отображение кнопки - изменить сообщение
         messageContexMenu.editBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
@@ -250,7 +271,9 @@ window.oncontextmenu = event => {
         if (chatWebsocket.isForwardedSelectedMessage()) {
             messageContexMenu.editBtn.style.display = 'none';
         }
-    } else if (['contact__name', 'contact__img img pe-2', 'contact position-relative mb-2', 'group text-white', 'group__contact', 'notice-soundless'].includes(event.target.className)) {
+
+        messageContexMenu.show(event);
+    } else if (foundContactClassnameList.length != 0 || classNameArray.includes('notice-soundless')) {
         // клик на элементе контакта
         contactContexMenu.selectedContact = event.target.closest('article');
         let isNotice = contactContexMenu.selectedContact.getAttribute('data-notice');

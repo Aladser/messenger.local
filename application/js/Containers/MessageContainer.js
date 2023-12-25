@@ -71,7 +71,6 @@ class MessageContainer extends TemplateContainer{
         // текст сообщения
         msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`;
         // время сообщения
-        
         let timeClassname = data.author !== clientUsername ? "msg__time text-theme-gray" : "msg__time";
         msgTable.innerHTML += `<tr><td class="${timeClassname}">${localTime}</td></tr>`;
         if (chatType === 'discussion') {

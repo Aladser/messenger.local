@@ -1,23 +1,23 @@
 class ContexMenu 
 {
-    constructor(contextMenuDOM)
+    constructor(contexMenuHTMLElement)
     {
-        this.contextMenuDOM = contextMenuDOM;
+        this.contexMenuHTMLElement = contexMenuHTMLElement;
     }
 
     /** показать контекстное меню */
     show(event)
     {
-        this.contextMenuDOM.style.left = event.pageX + 'px';
-        this.contextMenuDOM.style.top = event.pageY + 'px';
-        this.contextMenuDOM.style.display = 'block';
+        this.contexMenuHTMLElement.style.left = event.pageX + 'px';
+        this.contexMenuHTMLElement.style.top = event.pageY + 'px';
+        this.contexMenuHTMLElement.style.display = 'block';
     }
 
     /** скрыть контекстное меню*/
     hide()
     {
-        this.contextMenuDOM.style.left = '0px';
-        this.contextMenuDOM.style.top = '1000px';
-        this.contextMenuDOM.style.display = 'none';
+        this.contexMenuHTMLElement.style.left = '0px';
+        this.contexMenuHTMLElement.style.top = '1000px';
+        this.contexMenuHTMLElement.style.display = 'none';
     }
 }
