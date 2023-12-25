@@ -173,6 +173,7 @@ function setClick(domElement, type)
         } else if (type === 'discussion') {
             let id = domElement.id;
             urlParams.set('discussionid', id.substring(id.indexOf('-')+1));
+            groups.click(domElement);
         } else {
             return;
         }

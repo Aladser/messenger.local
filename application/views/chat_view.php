@@ -41,7 +41,7 @@
                 <?php foreach ($data['groups'] as $group) { ?>
                     <article class="group text-white" id="<?php echo 'group-'.$group['chat']; ?>" title="<?php echo $group['name']; ?>" data-notice="<?php echo $group['notice']; ?>">
                         <?php echo $group['name']; ?>
-                        <div class='group__contacts'>
+                        <div class='group__contacts d-none'>
                         <?php foreach ($group['members'] as $members) {?>
                             <p class='group__contact'><?php echo $members['publicname']; ?></p>
                         <?php } ?>

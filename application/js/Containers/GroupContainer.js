@@ -1,11 +1,7 @@
-/*
-<div class="group" title="Групповой чат 31108" data-notice="1">Групповой чат 31108</div>
- */
-
 /** Контейнер контактов */
 class GroupContainer extends TemplateContainer{
     /** список участников выбранной группы */
-    currentGroupContacts = [];
+    currentGroupParticipants = [];
 
     constructor(container, errorPrg, CSRFElement) {
         super(container, errorPrg, CSRFElement);
@@ -17,10 +13,29 @@ class GroupContainer extends TemplateContainer{
             };
             this.list.push(element);
         });
+        this.groupOpened = false;
     }
 
     get() {
         return this.container.querySelectorAll('.group');
+    }
+
+    /** переключить видимость членов группы */
+    click(group) {
+        if(this.groupOpened) {
+            if (this.groupOpened.id != group.id) {
+                this.groupOpened.querySelector('.group__contacts').classList.add('d-none');
+                this.groupOpened = false;
+            }
+        }
+        
+        let paricipantList = group.querySelector('.group__contacts');
+        if (paricipantList.classList.contains('d-none')) {
+            paricipantList.classList.remove('d-none');
+            this.groupOpened = group;
+        } else {
+            paricipantList.classList.add('d-none');
+        }
     }
 
     show() {
