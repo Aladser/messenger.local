@@ -27,13 +27,9 @@ class GroupContainer extends TemplateContainer{
         // скрыть членов другой открытой группы
         if(this.groupOpened) {
             if (this.groupOpened.id != group.id) {
-                this.groupOpened.querySelector('.group__contacts').classList.add('d-none');
+                this.switchGroupUsersVisibility(this.groupOpened);
+                this.removeAddUserToGroupButtons();
                 this.groupOpened = false;
-                // удаление кнопок добавления
-                let btnArray = document.querySelectorAll('.btn-add-to-group'); 
-                for (let i=0; i<btnArray.length; i++) {
-                    btnArray[i].remove();
-                }
             }
         }
         // dom-элемент списка участников группы
@@ -56,7 +52,7 @@ class GroupContainer extends TemplateContainer{
             // события для кнопок добавления
             contactContainer.container.querySelectorAll('.btn-add-to-group').forEach(btn => {
                 let userName = btn.closest('.contact').title;
-                let groupName = this.groupOpened.title;
+                let groupName = this.groupOpened.id;
                 btn.onclick = this.setAddUserToGroup(userName, groupName);
             });
         } else {
@@ -64,11 +60,7 @@ class GroupContainer extends TemplateContainer{
             this.groupOpened = false;
             paricipantList.classList.add('d-none');
             this.currentGroupParticipants = [];
-            // удаление кнопок добавления
-            let btnArray = document.querySelectorAll('.btn-add-to-group'); 
-            for (let i=0; i<btnArray.length; i++) {
-                btnArray[i].remove();
-            }
+            this.removeAddUserToGroupButtons();
         }
     }
 
@@ -90,11 +82,41 @@ class GroupContainer extends TemplateContainer{
         }
     }
 
-    /** установить функцию добавления пользователя в группу */
-    setAddUserToGroup(userName, groupName) {
+    /** возвращает функцию добавления пользователя в группу
+     * 
+     * @param {*} userName имя контакта
+     * @param {*} groupName название группы
+     * @param {*} removeButtonsFunction функция Удалить кнопки добавления пользователей в группу
+     * @returns 
+     */
+    setAddUserToGroup(username, groupName) {
+        let removeAddUserToGroupButtons = this.removeAddUserToGroupButtons;
+        let switchGroupUsersVisibility = this.switchGroupUsersVisibility;
+
+        let csrf = this.CSRFElement.content;
+        let groupOpened = this.groupOpened;
         return function () {
-            console.log(userName);
-            console.log(groupName);
+            removeAddUserToGroupButtons();
+            switchGroupUsersVisibility(groupOpened);
+
+            let discussionId = groupName.substring(groupName.indexOf('-')+1);
+            let requestData = new URLSearchParams();
+            requestData.set('username', username);
+            requestData.set('discussionid', discussionId);
+            requestData.set('CSRF', csrf);
+
+
+            let process = (data) => {
+                console.log(data);
+            }
+
+            ServerRequest.execute(
+                '/contact/create-group-contact',
+                process,
+                "post",
+                null,
+                requestData
+            );
         }
     }
 
@@ -115,6 +137,24 @@ class GroupContainer extends TemplateContainer{
                 this.errorPrg.innerHTML = data;
             }
         });
+    }
+
+    /** удалить кнопки добавления пользователей в группу */
+    removeAddUserToGroupButtons() {
+        // удаление кнопок добавления
+        let btnArray = document.querySelectorAll('.btn-add-to-group'); 
+        for (let i=0; i<btnArray.length; i++) {
+            btnArray[i].remove();
+        }
+    }
+
+    /** переключить видимость пользователей группы */
+    switchGroupUsersVisibility(group = this.groupOpened) {
+        if (group.classList.contains('d-none')) {
+            group.querySelector('.group__contacts').classList.remove('d-none');
+        } else {
+            group.querySelector('.group__contacts').classList.add('d-none');
+        }
     }
 
     /** добавить в фронт-список групп */

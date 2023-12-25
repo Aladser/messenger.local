@@ -152,7 +152,12 @@ window.addEventListener('DOMContentLoaded', () => {
  */
 function setClick(domElement, type)
 {
-    return function () {
+    return function (event) {
+        // прекращение всплытия кнопки добавления пользователя в группу
+        if (event.target.classList.contains('btn-add-to-group')) {
+            return;
+        }
+        
         let name = domElement.title;
         // удаляется уведомление о новом сообщении
         domElement.classList.remove('isnewmessage');
