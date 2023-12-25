@@ -57,10 +57,11 @@ class GroupContainer extends TemplateContainer{
     remove(group) {
         let urlParams = new URLSearchParams();
         urlParams.set('name', group.title);
-        urlParams.set('type', group.className === 'group' ? 'group' : 'contact');
+        urlParams.set('type', 'group');
         urlParams.set('CSRF', this.CSRFElement.content);
 
-        fetch('/contact/remove-contact', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+        fetch('/contact/remove', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+            console.log(data);
             try {
                 data = JSON.parse(data);
                 if (parseInt(data.response) > 0) {

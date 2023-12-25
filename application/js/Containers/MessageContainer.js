@@ -4,35 +4,41 @@ class MessageContainer extends TemplateContainer{
         super(container, errorPrg, CSRFElement);
         this.chatWebsocket = chatWebsocket;
         this.title = msgContainerTitle;
+        this.chatOpened = false;
     }
 
     show(urlParams, dbChatName, type, publicClientUsername) {
         urlParams.set('CSRF', this.CSRFElement.content);
-        fetch('chat/get-messages', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-            data = parseJSONData(data);
-            if (data === undefined) {
-                return;
-            } else if (data) {
-                this.removeElements();
+
+        let process = (data) => {
+            data = JSON.parse(data);
+            this.removeElements();
     
-                this.chatWebsocket.chatType = data.type;
-                this.chatWebsocket.openChatId = data.current_chat;
-    
-                let chatHeader = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
-                let chatName = dbChatName;
-                this.title.innerHTML = `
-                    <p class='messages-container__title'>
-                        <span id='chat-title' class='text-white'>${chatHeader}</span>
-                        <span class='chat-username text-white' id='chat-username'>${chatName}</span>
-                    </p>`;
-    
-                // сообщения
-                data.messages.forEach(elem => {
-                    this.add(type, elem, publicClientUsername);
-                });
-                this.container.scrollTo(0, this.container.scrollHeight); // прокрутка сообщений в конец
-            }
-        });
+            this.chatWebsocket.chatType = data.type;
+            this.chatWebsocket.openChatId = data.current_chat;
+
+            let chatHeader = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
+            let chatName = dbChatName;
+            this.title.innerHTML = `
+                <p class='messages-container__title'>
+                    <span id='chat-title' class='text-white'>${chatHeader}</span>
+                    <span class='chat-username text-white' id='chat-username'>${chatName}</span>
+                </p>`;
+
+            // сообщения
+            data.messages.forEach(elem => {
+                this.add(type, elem, publicClientUsername);
+            });
+            this.container.scrollTo(0, this.container.scrollHeight); // прокрутка сообщений в конец
+        };
+
+        ServerRequest.execute(
+            'chat/get-messages',
+            process,
+            "post",
+            null,
+            urlParams
+        );
     };
 
     add(chatType, data, clientUsername) {

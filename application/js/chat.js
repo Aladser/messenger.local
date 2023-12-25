@@ -40,6 +40,22 @@ let groupContacts = [];
 /** массив нажатых клавиш */
 let pressedKeys = [];
 
+/** css классы элементов контакта */
+let contactClassnameList = [
+    'contact__name', 
+    'contact__img', 
+    'contact', 
+    'group', 
+    'group__contact'
+];
+/** css классы элементов сообщения */
+let messageClassnameList = [
+    'msg__text',
+    'msg__time',
+    'msg__author', 
+    'msg__forward'
+];
+
 /** ----- контейнер контактов ----- */
 const contacts = new ContactContainer(
     document.querySelector('#contacts'), 
@@ -89,7 +105,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
     document.oncontextmenu = () => false;
     sendMsgBtn.onclick = sendMessage;
-    chat.onscroll = hide;
+    chat.onscroll = hideContexMenu;
 
     resetFindContactsBtn.onclick = () => {
         contacts.isSearch = false;
@@ -154,7 +170,6 @@ function setClick(domElement, type)
         if (type === 'dialog') {
             urlParams.set('contact', name);
             urlParams.set('CSRF', csrfElement.content);
-            contacts.find(name);
         } else if (type === 'discussion') {
             let id = domElement.id;
             urlParams.set('discussionid', id.substring(id.indexOf('-')+1));
@@ -235,24 +250,8 @@ function sendMessage()
     }
 }
 
-/** css классы элементов контакта */
-let contactClassnameList = [
-    'contact__name', 
-    'contact__img', 
-    'contact', 
-    'group', 
-    'group__contact'
-];
-/** css классы элементов сообщения */
-let messageClassnameList = [
-    'msg__text',
-    'msg__time',
-    'msg__author', 
-    'msg__forward'
-];
-
-// нажатия правой кнопкой мыши на странице
-window.oncontextmenu = event => {
+// ----- НАЖАТЬ ПРАВОЙ КНОПКОЙ МЫШИ НА СТРАНИЦЕ -----
+window.oncontextmenu = function(event) {
     let classNameArray = [... event.target.classList];
     // найденные классы контакта
     let foundContactClassnameList = contactClassnameList.filter(className => classNameArray.includes(className));
@@ -260,21 +259,21 @@ window.oncontextmenu = event => {
     let foundMessageClassnameList = messageClassnameList.filter(className => classNameArray.includes(className));
 
     if (foundMessageClassnameList.length != 0) {
-        // клик на элементе сообщения
+        // поиск элемента, по которому кликнули
         chatWebsocket.selectedMessage = event.target.closest('article');
         // аутентифицированный пользователь
-        let msgUserhost = chatWebsocket.getSelectedMessageAuthor();
+        let authUsername = chatWebsocket.getSelectedMessageAuthor();
         // отображение кнопки - изменить сообщение
-        messageContexMenu.editBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block';
+        messageContexMenu.editBtn.style.display = authUsername !== publicClientUsername ? 'none' : 'block';
         // отображение кнопки - удалить сообщение
-        messageContexMenu.removeBtn.style.display = msgUserhost !== publicClientUsername ? 'none' : 'block'; 
+        messageContexMenu.removeBtn.style.display = authUsername !== publicClientUsername ? 'none' : 'block'; 
         if (chatWebsocket.isForwardedSelectedMessage()) {
             messageContexMenu.editBtn.style.display = 'none';
         }
 
         messageContexMenu.show(event);
     } else if (foundContactClassnameList.length != 0 || classNameArray.includes('notice-soundless')) {
-        // клик на элементе контакта
+        // поиск элемента, по которому кликнули
         contactContexMenu.selectedContact = event.target.closest('article');
         let isNotice = contactContexMenu.selectedContact.getAttribute('data-notice');
         // показ кнопки - включение/выключение уведомлений
@@ -284,32 +283,19 @@ window.oncontextmenu = event => {
 
         contactContexMenu.show(event);
     } else {
-        hide();
+        hideContexMenu();
     }
 };
 
-// нажатия левой кнопкой мыши на странице
+// нажать левой кнопкой мыши на странице
 window.onclick = event => {
     if (event.target.className !== 'list-group-item') {
-        hide();
+        hideContexMenu();
     }
 };
 
-/** парсинг JSON-данных */
-function parseJSONData(data)
-{
-    try {
-        data = JSON.parse(data);
-        return data;
-    } catch (err) {
-        errorFrame.classList.add('frame-error--active');
-        errorFrame.innerHTML = data;
-        return  undefined;
-    }
-}
-
 /** скрыть контекстные меню */
-function hide()
+function hideContexMenu()
 {
     contactContexMenu.hide();
     messageContexMenu.hide();

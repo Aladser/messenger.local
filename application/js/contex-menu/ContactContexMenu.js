@@ -1,16 +1,25 @@
-/** контексное меню контакта*/
+/** Контексное меню контакта */
 class ContactContexMenu extends ContexMenu
 {
     contactContexOption;
     selectedContact;
 
-    constructor(contexMenuHTMLElement, chatWS, clientUsername, csrfInput, contacts, groups) {
+    /** Контексное меню контакта
+     * 
+     * @param {*} contexMenuHTMLElement DOM-элемент контекстного меню
+     * @param {*} chatWS вебсокет
+     * @param {*} clientUsername уимя аутентифицированного пользователя
+     * @param {*} csrfInput CSRF
+     * @param {*} contactContainer ContactContainer
+     * @param {*} groupContainer GroupContainer
+     */
+    constructor(contexMenuHTMLElement, chatWS, clientUsername, csrfInput, contactContainer, groupContainer) {
         super(contexMenuHTMLElement);
-        this.contacts = contacts;
         this.chatWS = chatWS;
         this.clientUsername = clientUsername;
         this.csrfInput = csrfInput;
-        this.groups = groups;
+        this.contactContainer = contactContainer;
+        this.groupContainer = groupContainer;
 
         let menuItems = contexMenuHTMLElement.querySelectorAll('.list-group-item');
         // кнопка - изменить уведомления
@@ -31,11 +40,11 @@ class ContactContexMenu extends ContexMenu
 
         if (this.selectedContact.classList.contains('group')) {
             // поиск выбранного группового чата
-            data.chat = this.groups.list.find(el => el.name === this.selectedContact.title).chat;
+            data.chat = this.groupContainer.list.find(el => el.name === this.selectedContact.title).chat;
         } else {
             //  поиск выбранного контакта
             let name = this.selectedContact.querySelector('.contact__name').innerHTML;
-            data.chat = this.contacts.list.find(el => el.name === name).chat;
+            data.chat = this.contactContainer.list.find(el => el.name === name).chat;
         }
         data.notice = this.selectedContact.getAttribute('data-notice') == 1 ? 0 : 1; //инвертирование значения. Это значение будет записано в БД
         this.hide();
@@ -46,24 +55,24 @@ class ContactContexMenu extends ContexMenu
         urlParams.set('notice', data.notice);
         urlParams.set('username', this.clientUsername);
         urlParams.set('CSRF', this.csrfInput.content);
-        // изменяет установленный флаг получения уведомлений
-        fetch('/chat/edit-notice-show', {method: 'post', body: urlParams}).then(r => r.text()).then(notice => {
-            notice = parseJSONData(notice);
+
+        let process = (notice) => {
+            notice = JSON.parse(notice);
+
             if (notice === undefined) {
                 return;
             } else {
                 notice = notice.responce;
             }
-
-            notice = parseInt(notice);
-            this.selectedContact.setAttribute('data-notice', notice);  // меняем атрибут
+            this.selectedContact.setAttribute('data-notice', notice);
+            
             let elem;
             if (this.selectedContact.classList.contains('contact')) {
                 // если контакт, то изменяем значение в массиве контактов
-                elem = this.contacts.list.find(el => el.name === this.selectedContact.title);
+                elem = this.contactContainer.list.find(el => el.name === this.selectedContact.title);
             } else if (this.selectedContact.classList.contains('group')) {
                 // если групповой чат, то изменяем значение в массиве групповых чатов
-                elem = this.groups.list.find(el => el.name === this.selectedContact.title);
+                elem = this.groupContainer.list.find(el => el.name === this.selectedContact.title);
             }
             elem.notice = notice;
 
@@ -73,15 +82,25 @@ class ContactContexMenu extends ContexMenu
             } else {
                 this.selectedContact.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
             }
-        });
+        };
+
+        ServerRequest.execute(
+            '/chat/edit-notice-show',
+            process,
+            "post",
+            null,
+            urlParams
+        );
     }
 
     /** удалить контакт/групповой чат */
     removeContact() {
         if (this.selectedContact.classList.contains('contact')) {
-            this.contacts.remove(this.selectedContact, this.clientUsername);
+            this.contactContainer.remove(this.selectedContact, this.clientUsername);
+        } else if (this.selectedContact.classList.contains('group')){
+            this.groupContainer.remove(this.selectedContact);
         } else {
-            this.groups.remove(this.selectedContact);
+            return 'неверный аргумент ContactContexMenu.removeContact()';
         }
         this.hide();
     }
