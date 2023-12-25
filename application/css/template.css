@@ -1,44 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+.bg-theme {background-color: #03a2ff;}
+.bg-theme-softer {background-color: #66c7ff;}
+.bg-theme-darker {background-color: #0066a2;}
+.btn-bg-theme {background-color: #03a2ff;}
+.btn-bg-theme:hover {opacity: 0.5;}
+.text-theme { color: #03a2ff;}
+
+/* стандартная ширина кнопок */
+.btn-width {width: 30rem;}
+/* ширина контейнера авторизации */
+.auth-container-width {width: 900px;}
+
 .hidden {display: none;}
 .font-roboto {font-family: 'Roboto', sans-serif;}
 .m-0 {margin: 0;}
 .h-page404{height: 40rem;}
+a {text-decoration: none;}
 
 .img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-a {
-    text-decoration: none;
-}
-
-/* стандартная ширина кнопок */
-.btn-width {width: 30rem;}
-
-.auth-container-width {
-    width: 900px;
-}
-
-.bg-theme {
-    background-color: #03a2ff;
-}
-.bg-theme-softer {
-    background-color: #66c7ff;
-}
-.bg-theme-darker {
-    background-color: #0066a2;
-}
-.btn-bg-theme {
-    background-color: #03a2ff;
-}
-.btn-bg-theme:hover {
-    opacity: 0.5;
-}
-.text-theme {
-    color: #03a2ff;
 }
 
 @media (max-width: 900px) {
