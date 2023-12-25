@@ -24,11 +24,19 @@ class Route
         session_start();
 
         // проверка CSRF
-        if (isset($_POST['CSRF'])) {
-            // проверка CSRF
-            if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-                header('Location: /419', true, 419);
-                exit;
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (isset($_POST['CSRF'])) {
+                // проверка CSRF
+                if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
+                    header('Location: /419', true, 419);
+
+                    return;
+                }
+            } else {
+                $controller = new MainController();
+                $controller->error('NO CSRF token');
+
+                return;
             }
         }
 
@@ -95,7 +103,7 @@ class Route
             $controller->$action();
         } catch (\Exception $err) {
             $controller = new MainController();
-            $controller->error404();
+            $controller->error('Страница не найдена');
         }
     }
 
