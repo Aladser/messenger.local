@@ -28,14 +28,11 @@ class ContactController extends Controller
 
     public function createGroupContact()
     {
-        echo json_encode($_POST);
-
-        return;
         $discussionId = htmlspecialchars($_POST['discussionid']);
         $username = htmlspecialchars($_POST['username']);
         $userId = $this->users->getUserIdByEmail($username);
         $group = $this->contacts->addGroupContact($discussionId, $userId);
-        echo json_encode($group);
+        echo json_encode(['result' => json_encode($group), 'group' => 'group-'.$discussionId, 'user' => $username]);
     }
 
     public function getGroupContacts()

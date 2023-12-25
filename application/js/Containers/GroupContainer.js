@@ -90,24 +90,25 @@ class GroupContainer extends TemplateContainer{
      * @returns 
      */
     setAddUserToGroup(username, groupName) {
-        let removeAddUserToGroupButtons = this.removeAddUserToGroupButtons;
-        let switchGroupUsersVisibility = this.switchGroupUsersVisibility;
-
         let csrf = this.CSRFElement.content;
-        let groupOpened = this.groupOpened;
         return function () {
-            removeAddUserToGroupButtons();
-            switchGroupUsersVisibility(groupOpened);
-
             let discussionId = groupName.substring(groupName.indexOf('-')+1);
             let requestData = new URLSearchParams();
             requestData.set('username', username);
             requestData.set('discussionid', discussionId);
             requestData.set('CSRF', csrf);
 
-
             let process = (data) => {
-                console.log(data);
+                data = JSON.parse(data);
+                if (data.result == 1) {
+                    let group = document.querySelector('#'+data.group);
+                    // добавление в список участников группы
+                    group.querySelector('.group__contacts').innerHTML += `<p class="group__contact">${data.user}</p>`;
+                    // удаление кнопки добавления в группу у пользователя
+                    document.querySelector(`article[title="${data.user}"]`).querySelector('.btn-add-to-group').remove();
+                } else {
+                    this.errorPrg.innerHTML = data;
+                }
             }
 
             ServerRequest.execute(
@@ -127,7 +128,6 @@ class GroupContainer extends TemplateContainer{
         urlParams.set('CSRF', this.CSRFElement.content);
 
         fetch('/contact/remove', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-            console.log(data);
             try {
                 data = JSON.parse(data);
                 if (parseInt(data.response) > 0) {
