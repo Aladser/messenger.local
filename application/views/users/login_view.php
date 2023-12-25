@@ -4,12 +4,12 @@
         <input type="hidden" name="csrf" value=<?php echo $data['csrf']; ?>>
 
         <label for="login-form__email-input" class='text-start btn-width p-1 fw-bolder'>Почта</label>
-        <input type="email" class="d-block mx-auto btn-width mb-2 p-2" 
+        <input type="email" class="d-block mx-auto btn-width mb-2 p-2 border-color-theme" 
             id="login-form__email-input" name='email' placeholder='Почта' 
             required>
 
         <label for="login-form__password-input" class='text-start btn-width p-1 fw-bolder'>Пароль</label>
-        <input type="password" class="d-block mx-auto btn-width mb-3 p-2" 
+        <input type="password" class="d-block mx-auto btn-width mb-3 p-2 border-color-theme" 
             id="login-form__password-input" name='password' 
             placeholder='Пароль' 
             required>

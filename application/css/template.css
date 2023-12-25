@@ -6,6 +6,9 @@
 .btn-bg-theme {background-color: #03a2ff;}
 .btn-bg-theme:hover {opacity: 0.5;}
 .text-theme { color: #03a2ff;}
+.border-color-theme {border: 1px solid #0066a2;}
+.border-color-theme::placeholder {color: #0066a2;}
+.border-color-theme:focus {outline: 1px solid #0066a2;}
 
 /* стандартная ширина кнопок */
 .btn-width {width: 30rem;}

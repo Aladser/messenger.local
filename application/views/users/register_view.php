@@ -4,17 +4,17 @@
         <input type="hidden" name ='csrf' id="input-csrf" value=<?php echo $data['csrf']; ?>>
 
         <label for="login-form__email-input" class='text-start btn-width p-1 fw-bolder'>Почта</label>
-        <input type="email" class="d-block btn-width mx-auto mb-2 p-2" 
+        <input type="email" class="d-block btn-width mx-auto mb-2 p-2 border-color-theme" 
             id="reg-form__email-input" name='email' 
             placeholder='адрес электронной почты' 
             required>
 
         <label for="login-form__email-input" class='text-start btn-width p-1 fw-bolder'>Пароль</label>
-        <input type="password" class="d-block btn-width mx-auto mb-2  p-2" 
+        <input type="password" class="d-block btn-width mx-auto mb-2 p-2 border-color-theme" 
             id="reg-form__password1-input" name='password' 
             placeholder="пароль: минимум 8 символов (буквы и цифры)" 
             required>
-        <input type="password" class="d-block btn-width mx-auto mb-2 p-2" 
+        <input type="password" class="d-block btn-width mx-auto mb-2 p-2 border-color-theme" 
             id="reg-form__password2-input" name='password_confirm' 
             placeholder='подтвердите пароль' 
             required>

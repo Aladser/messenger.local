@@ -64,12 +64,14 @@
             <div class='messages' id='messages'></div>
 
             <p class="messages-container__system text-white fw-bolder" id="message-system">Проверка подключения</p>
+            <!-- форма отправки сообщения -->
             <div class='input-group d-flex justify-content-between pb-2'>
-                <textarea class="messages-container__message-input input-group-prepend border-0 form-control border border-black" rows='2'placeholder='Сообщение' id='message-input'></textarea>
+                <textarea class="messages-container__message-input input-group-prepend border-0 form-control border border-black" rows='2' placeholder='Сообщение' id='message-input'></textarea>
                 <button type="submit" class='send-btn-img' title='Отправить' id="send-msg-btn"><img src="application/images/sendbtn.png"></button>
             </div>
         </section>
 
+        <!-- опции -->
         <div class='options-container pt-2'>
             <div class='option'>
                 <a href="/profile" class='option-link'>
