@@ -26,13 +26,17 @@ class MainController extends Controller
         header('Location: /');
     }
 
-    // 404 страница
-    public function error404(): void
+    // страница ошибок
+    public function error($errorDescription): void
     {
         $this->view->generate(
-            'Ошибка 404',
+            'Ошибка',
             'template_view.php',
-            'page404_view.php'
+            'page_error_view.php',
+            null,
+            null,
+            null,
+            ['error' => $errorDescription]
         );
     }
 
