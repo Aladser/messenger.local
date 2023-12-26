@@ -69,7 +69,7 @@ class ChatController extends Controller
         $data['groups'] = $groups;
 
         $this->view->generate(
-            'Меcсенджер '.$data['user-email'],
+            'Меcсенджер ',
             'template_view.php',
             'chat_view.php',
             $head,

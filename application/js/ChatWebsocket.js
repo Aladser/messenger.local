@@ -1,7 +1,7 @@
 class ChatWebsocket
 {
     errorPrg = document.querySelector("#message-system");
-    publicUsername = document.querySelector('#clientuser').getAttribute('data-clientuser-publicname');
+    publicUsername = document.querySelector('#auth-user').getAttribute('data-clientuser-publicname');
     chat = document.querySelector("#messages");
     messageInput = document.querySelector("#message-input");
     selectedMessage = null;
