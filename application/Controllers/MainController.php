@@ -27,12 +27,12 @@ class MainController extends Controller
     }
 
     // 404 страница
-    public function error($errorName): void
+    public function error404(): void
     {
         $this->view->generate(
-            $errorName,
+            'Ошибка 404',
             'template_view.php',
-            'page_error_view.php'
+            'page404_view.php'
         );
     }
 
