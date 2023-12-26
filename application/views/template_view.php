@@ -26,28 +26,11 @@
 </head>
 
 <body>
-<header>
-    <?php if (!is_null($data)) { ?>
-        <?php if (isset($data['publicUsername'])) { ?>
-            <h3 class='text-center p-4 text-white bg-theme'>
-                <?php echo $page_name; ?>
-                <span id='clientuser' data-clientuser-publicname=<?php echo $data['publicUsername']; ?>>
-                    <?php echo $data['user-email']; ?>
-                </span>
-            </h3>
-        <?php } elseif (isset($data['user-email'])) { ?>
-            <h3 class='text-center p-4 text-white bg-theme'>
-                <?php echo $page_name; ?><span id='userhost'> <?php echo $data['user-email']; ?></span>
-            </h3>
-        <?php } elseif (isset($data['csrf'])) { ?>
-            <h3 class='text-center p-4 text-white bg-theme'><?php echo $page_name; ?></h3>
-        <?php } ?>
-    <?php } else { ?>
-        <h3 class='text-center p-4 text-white bg-theme'><?php echo $page_name; ?></h3>
-    <?php } ?>
-</header>
-
-<?php require_once $content_view; ?>
-
+    <header>
+        <h3 class='text-center p-4 text-white bg-theme'>
+            <?php echo $page_name; ?>
+        </h3>
+    </header>
+    <?php require_once $content_view; ?>
 </body>
 </html>

@@ -30,9 +30,13 @@ class MainController extends Controller
     public function error($errorName): void
     {
         $this->view->generate(
-            $errorName,
+            'Ошибка',
             'template_view.php',
-            'page_error_view.php'
+            'page_error_view.php',
+            null,
+            null,
+            null,
+            ['error' => $errorName]
         );
     }
 
