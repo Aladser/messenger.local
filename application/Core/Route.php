@@ -28,9 +28,7 @@ class Route
             if (isset($_POST['CSRF'])) {
                 // проверка CSRF
                 if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-                    http_response_code(419);
-                    $controller = new MainController();
-                    $controller->error('Access is denied');
+                    header('Location: /419', true, 419);
 
                     return;
                 }
