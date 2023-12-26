@@ -29,9 +29,6 @@
     <header>
         <h3 class='text-center p-4 text-white bg-theme'>
             <?php echo $page_name; ?>
-            <?php if (isset($data['user-email'])) {?>
-                <span id='auth-user'><?php echo $data['user-email']; ?></span>
-            <?php } ?>
         </h3>
     </header>
     <?php require_once $content_view; ?>

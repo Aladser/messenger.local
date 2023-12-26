@@ -5,7 +5,7 @@ const findContactsInput = document.querySelector('#find-contacts-input');
 /** окно ошибок*/
 const errorFrame = document.querySelector('#frame-error');
 /** элемент имени клиента-пользователя*/
-const clientNamePrg = document.querySelector('#auth-user');
+const clientNamePrg = document.querySelector('#clientuser');
 /** почта пользователя-хоста */
 const clientUsername = clientNamePrg.innerHTML.trim();
 /** публичное имя пользователя-хоста */
