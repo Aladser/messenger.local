@@ -7,6 +7,23 @@ use App\Core\Model;
 /** Класс БД таблицы соединений вебсокета */
 class ConnectionEntity extends Model
 {
+    public function getUserId()
+    {
+    }
+
+    // получить публичное имя пользователя соединения
+    public function getConnectionPublicUsername(int $connId)
+    {
+        $sql = '
+                select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
+                from users where user_id = (select connection_userid from connections 
+                where connection_ws_id = :connId)
+            ';
+        $query = $this->dbQuery->queryPrepared($sql, ['connId' => $connId]);
+
+        return $query['username'] ?? '';
+    }
+
     // сохранить подключение в БД
     public function addConnection(array $data): array
     {
@@ -43,19 +60,6 @@ class ConnectionEntity extends Model
         } else {
             return ['systeminfo' => "USER $user_email NO EXISTS"]; // пользователь в БД не существует
         }
-    }
-
-    // получить публичное имя пользователя соединения
-    public function getConnectionPublicUsername(int $connId)
-    {
-        $sql = '
-            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
-            from users where user_id = (select connection_userid from connections 
-            where connection_ws_id = :connId)
-        ';
-        $query = $this->dbQuery->queryPrepared($sql, ['connId' => $connId]);
-
-        return $query['username'] ?? '';
     }
 
     // удалить закрытое соединение из БД

@@ -83,6 +83,12 @@ class ChatWebsocketServer implements MessageComponentInterface
                     $data->time = date('Y-m-d H:i:s');
                     $data->msg = $this->messages->add($data);
                     $data->forward = 0;
+
+                    // отправка сообщения получателю
+                    if ($data->chatType === 'dialog') {
+                        $senderId = $this->users->getIdByName($data->author);
+                        $recipientId = $this->messages->getRecipientId($data->chat, $senderId);
+                    }
                     break;
                 case 'EDIT':
                     $data = $this->messages->editMessage($data->message, $data->msgId);

@@ -60,6 +60,16 @@ class MessageEntity extends Model
         )[0]['chat_id'];
     }
 
+    public function getRecipientId($chatId, $senderId)
+    {
+        $sql = 'select chat_participant_userid as recipient from chat_participant 
+            where chat_participant_chatid = :chatId and chat_participant_userid != :senderId';
+        $args = ['chatId' => $chatId, 'senderId' => $senderId];
+        $recipientId = $this->dbQuery->queryPrepared($sql, $args)['recipient'];
+
+        return $recipientId;
+    }
+
     /** удалить чат */
     public function removeChat($dialogId)
     {
