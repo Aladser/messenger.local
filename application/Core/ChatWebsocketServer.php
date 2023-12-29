@@ -30,7 +30,9 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
-        $this->clients->attach($conn); // добавление клиента
+        // добавление клиента
+        $this->clients->attach($conn);
+
         $message = json_encode(['onconnection' => $conn->resourceId]);
         echo "$message\n";
         foreach ($this->clients as $client) {
@@ -43,7 +45,9 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
+        // удаление соединения
         $this->clients->detach($conn);
+
         // публичное имя клиента
         $publicUsername = $this->connections->getConnectionPublicUsername($conn->resourceId);
         // удаление соединения из БД
