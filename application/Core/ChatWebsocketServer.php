@@ -93,7 +93,7 @@ class ChatWebsocketServer implements MessageComponentInterface
                 case 'FORWARD':
                     $data->time = date('Y-m-d H:i:s');
                     $data->msgId = intval($data->msgId);
-                    $data->authorId = intval($this->users->getUserIdByEmail($data->author));
+                    $data->authorId = intval($this->users->getIdByName($data->author));
                     $data->message = $this->messages->addForwardedMessage($data);
             }
         }

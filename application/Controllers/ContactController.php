@@ -23,14 +23,14 @@ class ContactController extends Controller
         $this->contacts = new ContactEntity();
         $this->messages = new MessageEntity();
         $this->authUserEmail = UserController::getAuthUserEmail();
-        $this->authUserId = $this->users->getUserIdByEmail($this->authUserEmail);
+        $this->authUserId = $this->users->getIdByName($this->authUserEmail);
     }
 
     public function createGroupContact()
     {
         $discussionId = htmlspecialchars($_POST['discussionid']);
         $username = htmlspecialchars($_POST['username']);
-        $userId = $this->users->getUserIdByEmail($username);
+        $userId = $this->users->getIdByName($username);
         $group = $this->contacts->addGroupContact($discussionId, $userId);
         echo json_encode(['result' => json_encode($group), 'group' => 'group-'.$discussionId, 'user' => $username]);
     }
@@ -48,7 +48,7 @@ class ContactController extends Controller
     public function getContact()
     {
         $contact = htmlspecialchars($_POST['contact']);
-        $contactId = $this->users->getUserIdByEmail($contact);
+        $contactId = $this->users->getIdByName($contact);
 
         // добавляется контакт, если не существует
         $isContact = $this->contacts->existsContact($contactId, $this->authUserId);
@@ -82,7 +82,7 @@ class ContactController extends Controller
     public function add()
     {
         $contact = htmlspecialchars($_POST['username']);
-        $contactId = $this->users->getUserIdByEmail($contact);
+        $contactId = $this->users->getIdByName($contact);
 
         $this->contacts->addContact($contactId, $this->authUserId);
         $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
@@ -99,9 +99,9 @@ class ContactController extends Controller
             $chatId = $this->messages->getDiscussionId($name);
         } else {
             $clientName = htmlspecialchars($_POST['clientName']);
-            $clientId = $this->users->getUserIdByEmail($clientName);
+            $clientId = $this->users->getIdByName($clientName);
 
-            $contactId = $this->users->getUserIdByEmail($name);
+            $contactId = $this->users->getIdByName($name);
             $chatId = $this->messages->getDialogId($clientId, $contactId);
             $this->contacts->removeContact($clientId, $contactId);
         }

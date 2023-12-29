@@ -25,7 +25,7 @@ class ChatController extends Controller
         $this->users = new UserEntity();
         $this->contacts = new ContactEntity();
         $this->authUserEmail = UserController::getAuthUserEmail();
-        $this->authUserId = $this->users->getUserIdByEmail($this->authUserEmail);
+        $this->authUserId = $this->users->getIdByName($this->authUserEmail);
     }
 
     public function index()
@@ -111,7 +111,7 @@ class ChatController extends Controller
         // диалоги
         if (isset($_POST['contact'])) {
             $contact = htmlspecialchars($_POST['contact']);
-            $contactId = $this->users->getUserIdByEmail($contact);
+            $contactId = $this->users->getIdByName($contact);
             $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
             $type = 'dialog';
         } elseif (isset($_POST['discussionid'])) {

@@ -34,6 +34,17 @@ class UserEntity extends Model
         return $this->dbQuery->queryPrepared($sql, ['email' => $email])[$field];
     }
 
+    // получить ID пользователя
+    public function getIdByName(string $publicUsername)
+    {
+        $sql = '
+                select user_id from users 
+                where user_email = :publicUsername or user_nickname=:publicUsername';
+        $args = ['publicUsername' => $publicUsername];
+
+        return $this->dbQuery->queryPrepared($sql, $args)['user_id'];
+    }
+
     // добавить нового пользователя
     public function add($email, $password): bool
     {
@@ -95,18 +106,6 @@ class UserEntity extends Model
         ';
 
         return $this->dbQuery->queryPrepared($sql, ['userEmail' => $userEmail])['username'];
-    }
-
-    // получить ID пользователя
-    public function getUserIdByEmail(string $publicUserName)
-    {
-        $sql = '
-            select user_id 
-            from users 
-            where user_email = :publicUserName or user_nickname=:publicUserName
-        ';
-
-        return $this->dbQuery->queryPrepared($sql, ['publicUserName' => $publicUserName])['user_id'];
     }
 
     // список пользователей по шаблону почты или никнейма
