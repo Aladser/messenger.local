@@ -11,8 +11,6 @@ use Ratchet\MessageComponentInterface;
 /** Чат - серверная часть */
 class ChatWebsocketServer implements MessageComponentInterface
 {
-    // хранение всех подключенных пользователей
-    private \SplObjectStorage $clients;
     // массив подключенных пользователей
     private array $clientsArray;
     // подключения
@@ -24,12 +22,11 @@ class ChatWebsocketServer implements MessageComponentInterface
 
     public function __construct()
     {
-        $this->clients = new \SplObjectStorage();
         $this->clientsArray = [];
 
-        $this->connections = new ConnectionEntity();
         $this->messages = new MessageEntity();
         $this->users = new UserEntity();
+        $this->connections = new ConnectionEntity();
         $this->connections->removeConnections(); // удаление старых соединений
     }
 
@@ -39,12 +36,11 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function onOpen(ConnectionInterface $conn)
     {
         // добавление клиента
-        $this->clients->attach($conn);
         $this->clientsArray[$conn->resourceId] = $conn;
 
         $message = json_encode(['onconnection' => $conn->resourceId]);
         echo "$message\n";
-        foreach ($this->clients as $client) {
+        foreach ($this->clientsArray as $client) {
             $client->send($message); // рассылка остальным клиентам
         }
     }
@@ -55,7 +51,6 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn)
     {
         // удаление соединения
-        $this->clients->detach($conn);
         unset($this->clientsArray[$conn->resourceId]);
 
         // публичное имя клиента
@@ -64,7 +59,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $this->connections->removeConnection($conn->resourceId);
         echo "Connection $publicUsername completed\n";
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
-        foreach ($this->clients as $client) {
+        foreach ($this->clientsArray as $client) {
             $client->send($message);
         }
     }
@@ -125,8 +120,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         }
     }
 
-    /**
-     * ошибка подключения.
+    /** ошибка подключения.
      *
      * @param ConnectionInterface $conn соединение
      * @param \Exception          $e    ошибка
