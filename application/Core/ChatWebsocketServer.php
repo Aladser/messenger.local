@@ -12,22 +12,21 @@ use Ratchet\MessageComponentInterface;
 class ChatWebsocketServer implements MessageComponentInterface
 {
     // массив подключенных пользователей
-    private array $clientsArray;
+    private array $connections;
     // подключения
-    private ConnectionEntity $connections;
+    private ConnectionEntity $connectionEntity;
     // сообщения
-    private MessageEntity $messages;
+    private MessageEntity $messageEntity;
     // пользователи
-    private UserEntity $users;
+    private UserEntity $userEntity;
 
     public function __construct()
     {
-        $this->clientsArray = [];
-
-        $this->messages = new MessageEntity();
-        $this->users = new UserEntity();
-        $this->connections = new ConnectionEntity();
-        $this->connections->removeConnections(); // удаление старых соединений
+        $this->connections = [];
+        $this->messageEntity = new MessageEntity();
+        $this->userEntity = new UserEntity();
+        $this->connectionEntity = new ConnectionEntity();
+        $this->connectionEntity->removeConnections(); // удаление старых соединений
     }
 
     /** открыть соединение.
@@ -36,11 +35,11 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function onOpen(ConnectionInterface $conn)
     {
         // добавление клиента
-        $this->clientsArray[$conn->resourceId] = $conn;
+        $this->connections[$conn->resourceId] = $conn;
 
         $message = json_encode(['onconnection' => $conn->resourceId]);
         echo "$message\n";
-        foreach ($this->clientsArray as $client) {
+        foreach ($this->connections as $client) {
             $client->send($message); // рассылка остальным клиентам
         }
     }
@@ -51,15 +50,15 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn)
     {
         // удаление соединения
-        unset($this->clientsArray[$conn->resourceId]);
+        unset($this->connections[$conn->resourceId]);
 
         // публичное имя клиента
-        $publicUsername = $this->connections->getConnectionPublicUsername($conn->resourceId);
+        $publicUsername = $this->connectionEntity->getConnectionPublicUsername($conn->resourceId);
         // удаление соединения из БД
-        $this->connections->removeConnection($conn->resourceId);
+        $this->connectionEntity->removeConnection($conn->resourceId);
         echo "Connection $publicUsername completed\n";
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
-        foreach ($this->clientsArray as $client) {
+        foreach ($this->connections as $client) {
             $client->send($message);
         }
     }
@@ -76,7 +75,7 @@ class ChatWebsocketServer implements MessageComponentInterface
             // после соединения пользователь отправляет пакет messageOnconnection.
 
             // добавление соединения в БД
-            $connection = $this->connections->addConnection(['author' => $data->author, 'wsId' => $data->wsId]);
+            $connection = $this->connectionEntity->addConnection(['author' => $data->author, 'wsId' => $data->wsId]);
             // имя пользователя или ошибка добавления
             if ($connection['publicUsername']) {
                 $data->author = $connection['publicUsername'];
@@ -90,32 +89,32 @@ class ChatWebsocketServer implements MessageComponentInterface
             switch ($data->messageType) {
                 case 'NEW':
                     $data->time = date('Y-m-d H:i:s');
-                    $data->msg = $this->messages->add($data);
+                    $data->msg = $this->messageEntity->add($data);
                     $data->forward = 0;
 
                     // отправка сообщения получателю
                     if ($data->chatType === 'dialog') {
-                        $senderId = $this->users->getIdByName($data->author);
-                        $recipientId = $this->messages->getRecipientId($data->chat, $senderId);
-                        $connId = $this->connections->getUserConnId($recipientId);
+                        $senderId = $this->userEntity->getIdByName($data->author);
+                        $recipientId = $this->messageEntity->getRecipientId($data->chat, $senderId);
+                        $connId = $this->connectionEntity->getUserConnId($recipientId);
                     }
                     break;
                 case 'EDIT':
-                    $data = $this->messages->editMessage($data->message, $data->msgId);
+                    $data = $this->messageEntity->editMessage($data->message, $data->msgId);
                     break;
                 case 'REMOVE':
-                    $data = $this->messages->removeMessage($data->msgId);
+                    $data = $this->messageEntity->removeMessage($data->msgId);
                     break;
                 case 'FORWARD':
                     $data->time = date('Y-m-d H:i:s');
                     $data->msgId = intval($data->msgId);
-                    $data->authorId = intval($this->users->getIdByName($data->author));
-                    $data->message = $this->messages->addForwardedMessage($data);
+                    $data->authorId = intval($this->userEntity->getIdByName($data->author));
+                    $data->message = $this->messageEntity->addForwardedMessage($data);
             }
         }
 
         $message = json_encode($data);
-        foreach ($this->clientsArray as $client) {
+        foreach ($this->connections as $client) {
             $client->send($message);
         }
     }
