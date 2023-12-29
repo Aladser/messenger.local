@@ -35,14 +35,15 @@ class UserEntity extends Model
     }
 
     // получить ID пользователя
-    public function getIdByName(string $publicUsername)
+    public function getIdByName(string $publicUsername): int
     {
         $sql = '
                 select user_id from users 
                 where user_email = :publicUsername or user_nickname=:publicUsername';
         $args = ['publicUsername' => $publicUsername];
+        $id = $this->dbQuery->queryPrepared($sql, $args)['user_id'];
 
-        return $this->dbQuery->queryPrepared($sql, $args)['user_id'];
+        return $id;
     }
 
     // добавить нового пользователя
