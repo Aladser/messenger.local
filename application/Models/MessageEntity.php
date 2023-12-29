@@ -101,7 +101,7 @@ class MessageEntity extends Model
     }
 
     // добавить сообщение
-    public function addMessage($msg)
+    public function add($msg)
     {
         $out = '@chatid';
         $func = "add_message($msg->chat, '$msg->message', '$msg->author', '$msg->time', $out)";
