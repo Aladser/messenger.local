@@ -7,8 +7,14 @@ use App\Core\Model;
 /** Класс БД таблицы соединений вебсокета */
 class ConnectionEntity extends Model
 {
-    public function getUserId()
+    public function getUserConnId($userId)
     {
+        $sql = 'select connection_ws_id as conn_id from connections where connection_userid = :user_id';
+        $args = ['user_id' => $userId];
+        $quertyResult = $this->dbQuery->queryPrepared($sql, $args);
+        $wsId = $quertyResult['conn_id'];
+
+        return !empty($wsId) ? $wsId : false;
     }
 
     // получить публичное имя пользователя соединения

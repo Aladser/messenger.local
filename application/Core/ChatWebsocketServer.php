@@ -102,6 +102,7 @@ class ChatWebsocketServer implements MessageComponentInterface
                     if ($data->chatType === 'dialog') {
                         $senderId = $this->users->getIdByName($data->author);
                         $recipientId = $this->messages->getRecipientId($data->chat, $senderId);
+                        $connId = $this->connections->getUserConnId($recipientId);
                     }
                     break;
                 case 'EDIT':
