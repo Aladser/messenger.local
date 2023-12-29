@@ -1,3 +1,4 @@
 logs/*
 application/data/profile_photos/*
 application/data/temp/*
+application/vendor/*
