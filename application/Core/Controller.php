@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-abstract class Controller
+class Controller
 {
     public View $view;
 

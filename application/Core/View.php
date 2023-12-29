@@ -17,10 +17,6 @@ class View
     ): void {
         $app_name = config('APP_NAME');
 
-        require_once dirname(__DIR__, 1)
-            .DIRECTORY_SEPARATOR
-            .'views'
-            .DIRECTORY_SEPARATOR
-            .$template_view;
+        require_once dirname(__DIR__, 2).'/public/views/'.$template_view;
     }
 }

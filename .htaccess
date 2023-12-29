@@ -1,4 +1,9 @@
+# запрет доступа к папкам без index
+Options -Indexes
+# публичная папка
+DirectoryIndex public/index.php
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
+RewriteRule ^(.*)$ public/index.php [QSA,L]

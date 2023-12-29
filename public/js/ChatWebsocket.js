@@ -72,7 +72,7 @@ class ChatWebsocket
                     // звуковое уведомление
                     // сделано специально множественное создание объектов звука
                     if (chat.notice == 1 && data.author !== this.publicUsername) {
-                        let notice = new Audio(this.baseSiteName + '/application//data/notice.wav');
+                        let notice = new Audio(this.baseSiteName + '/public/notice.wav');
                         notice.autoplay = true;
                     }
                 }
