@@ -38,7 +38,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $this->connections[$conn->resourceId] = $conn;
 
         $message = json_encode(['onconnection' => $conn->resourceId]);
-        // echo "$message\n";
+
         foreach ($this->connections as $client) {
             $client->send($message); // рассылка остальным клиентам
         }
@@ -56,8 +56,8 @@ class ChatWebsocketServer implements MessageComponentInterface
         $publicUsername = $this->connectionEntity->getConnectionPublicUsername($conn->resourceId);
         // удаление соединения из БД
         $this->connectionEntity->removeConnection($conn->resourceId);
-        // echo "Connection $publicUsername completed\n";
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
+
         foreach ($this->connections as $client) {
             $client->send($message);
         }
