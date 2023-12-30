@@ -34,6 +34,7 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
+        echo json_encode($conn)."\n";
         // добавление клиента
         $this->connections[$conn->resourceId] = $conn;
 
@@ -49,6 +50,7 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
+        echo json_encode($conn)."\n";
         // удаление соединения
         unset($this->connections[$conn->resourceId]);
 
@@ -76,7 +78,9 @@ class ChatWebsocketServer implements MessageComponentInterface
             // после соединения пользователь отправляет пакет messageOnconnection.
 
             // добавление соединения в БД
-            $connection = $this->connectionEntity->addConnection(['author' => $data->author, 'wsId' => $data->wsId]);
+            if (!$this->connectionEntity->exists($data->wsId)) {
+                $connection = $this->connectionEntity->add(['author' => $data->author, 'wsId' => $data->wsId]);
+            }
             // имя пользователя или ошибка добавления
             if ($connection['publicUsername']) {
                 $data->author = $connection['publicUsername'];

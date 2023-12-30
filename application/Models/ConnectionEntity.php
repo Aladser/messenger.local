@@ -7,6 +7,16 @@ use App\Core\Model;
 /** Класс БД таблицы соединений вебсокета */
 class ConnectionEntity extends Model
 {
+    // проверить наличие соединения
+    public function exists($wsId)
+    {
+        $sql = 'select count(*) as count from connections where connection_ws_id = :wsId';
+        $args = ['wsId' => $wsId];
+        $isExisted = $this->dbQuery->queryPrepared($sql, $args)['count'];
+
+        return $isExisted > 0;
+    }
+
     public function getUserConnId($userId)
     {
         $sql = 'select connection_ws_id as conn_id from connections where connection_userid = :user_id';
@@ -31,7 +41,7 @@ class ConnectionEntity extends Model
     }
 
     // сохранить подключение в БД
-    public function addConnection(array $data): array
+    public function add(array $data): array
     {
         $connection_ws_id = intval($data['wsId']);
         $user_email = trim($data['author']);
