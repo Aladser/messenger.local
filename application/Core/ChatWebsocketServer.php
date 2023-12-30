@@ -34,7 +34,7 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
-        echo json_encode($conn)."\n";
+        echo 'Подключение '.json_encode($conn->resourceId)."\n";
         // добавление клиента
         $this->connections[$conn->resourceId] = $conn;
 
@@ -50,7 +50,7 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
-        echo json_encode($conn)."\n";
+        echo 'Отключение '.json_encode($conn->resourceId)."\n";
         // удаление соединения
         unset($this->connections[$conn->resourceId]);
 
