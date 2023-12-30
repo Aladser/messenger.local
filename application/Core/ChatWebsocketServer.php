@@ -38,7 +38,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $this->connections[$conn->resourceId] = $conn;
 
         $message = json_encode(['onconnection' => $conn->resourceId]);
-        echo "$message\n";
+        // echo "$message\n";
         foreach ($this->connections as $client) {
             $client->send($message); // рассылка остальным клиентам
         }
@@ -56,7 +56,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $publicUsername = $this->connectionEntity->getConnectionPublicUsername($conn->resourceId);
         // удаление соединения из БД
         $this->connectionEntity->removeConnection($conn->resourceId);
-        echo "Connection $publicUsername completed\n";
+        // echo "Connection $publicUsername completed\n";
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
         foreach ($this->connections as $client) {
             $client->send($message);
@@ -69,7 +69,7 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onMessage(ConnectionInterface $from, $message)
     {
-        echo "$message\n";
+        // echo "$message\n";
         $data = json_decode($message);
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
@@ -84,21 +84,25 @@ class ChatWebsocketServer implements MessageComponentInterface
             }
         } elseif ($data->message) {
             // отправляется сообщение
-
-            $data->message = htmlspecialchars($data->message); // экранирование символов
+            $data->message = htmlspecialchars($data->message);
             switch ($data->messageType) {
                 case 'NEW':
+                    // формирование сообщения
                     $data->time = date('Y-m-d H:i:s');
                     $data->msg = $this->messageEntity->add($data);
                     $data->forward = 0;
-
-                    // отправка сообщения получателю
-                    if ($data->chatType === 'dialog') {
-                        $senderId = $this->userEntity->getIdByName($data->author);
-                        $recipientId = $this->messageEntity->getRecipientId($data->chat, $senderId);
-                        $connId = $this->connectionEntity->getUserConnId($recipientId);
+                    $message = json_encode($data);
+                    // id участников чата
+                    $participantsIds = $this->messageEntity->getChatParticipantIds($data->chat);
+                    // рассылка сообщения участникам чата
+                    foreach ($participantsIds as $participantId) {
+                        $connId = $this->connectionEntity->getUserConnId($participantId);
+                        if ($connId) {
+                            $this->connections[$connId]->send($message);
+                        }
                     }
-                    break;
+
+                    return;
                 case 'EDIT':
                     $data = $this->messageEntity->editMessage($data->message, $data->msgId);
                     break;

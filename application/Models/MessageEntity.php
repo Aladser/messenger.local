@@ -60,14 +60,19 @@ class MessageEntity extends Model
         )[0]['chat_id'];
     }
 
-    public function getRecipientId($chatId, $senderId)
+    // id получателей сообщения
+    public function getChatParticipantIds($chatId)
     {
         $sql = 'select chat_participant_userid as recipient from chat_participant 
-            where chat_participant_chatid = :chatId and chat_participant_userid != :senderId';
-        $args = ['chatId' => $chatId, 'senderId' => $senderId];
-        $recipientId = $this->dbQuery->queryPrepared($sql, $args)['recipient'];
+            where chat_participant_chatid = :chatId';
+        $args = ['chatId' => $chatId];
+        $queryResultData = $this->dbQuery->queryPrepared($sql, $args, false);
+        $recipientIdArray = [];
+        foreach ($queryResultData as $element) {
+            array_push($recipientIdArray, $element['recipient']);
+        }
 
-        return $recipientId;
+        return $recipientIdArray;
     }
 
     /** удалить чат */

@@ -28,6 +28,8 @@ class ChatWebsocket
     onMessage(e)
     {
         let data = JSON.parse(e.data);
+        console.clear();
+        console.log(data);
         
         // сообщение от сервера о подключении пользователя. 
         // Передача имени пользователя и ID подключения текущего пользователя серверу
