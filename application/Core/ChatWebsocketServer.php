@@ -71,6 +71,7 @@ class ChatWebsocketServer implements MessageComponentInterface
     {
         echo "$message\n";
         $data = json_decode($message);
+
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
 
@@ -82,28 +83,24 @@ class ChatWebsocketServer implements MessageComponentInterface
             } else {
                 $data->author = ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo];
             }
+            // рассылка сообщения всем
+            $message = json_encode($data);
+            foreach ($this->connections as $client) {
+                $client->send($message);
+            }
         } elseif ($data->message) {
             // отправляется сообщение
 
-            $data->message = htmlspecialchars($data->message);
+            // id участников чата
+            $participantsIds = $this->messageEntity->getChatParticipantIds($data->chat);
+            // формирование данных сообщения
             switch ($data->messageType) {
                 case 'NEW':
                     // формирование сообщения
                     $data->time = date('Y-m-d H:i:s');
                     $data->msg = $this->messageEntity->add($data);
                     $data->forward = 0;
-                    $message = json_encode($data);
-                    // id участников чата
-                    $participantsIds = $this->messageEntity->getChatParticipantIds($data->chat);
-                    // рассылка сообщения участникам чата
-                    foreach ($participantsIds as $participantId) {
-                        $connId = $this->connectionEntity->getUserConnId($participantId);
-                        if ($connId) {
-                            $this->connections[$connId]->send($message);
-                        }
-                    }
-
-                    return;
+                    break;
                 case 'EDIT':
                     $data = $this->messageEntity->editMessage($data->message, $data->msgId);
                     break;
@@ -116,11 +113,14 @@ class ChatWebsocketServer implements MessageComponentInterface
                     $data->authorId = intval($this->userEntity->getIdByName($data->author));
                     $data->message = $this->messageEntity->addForwardedMessage($data);
             }
-        }
-
-        $message = json_encode($data);
-        foreach ($this->connections as $client) {
-            $client->send($message);
+            // рассылка сообщения участникам чата
+            $message = json_encode($data);
+            foreach ($participantsIds as $participantId) {
+                $connId = $this->connectionEntity->getUserConnId($participantId);
+                if ($connId) {
+                    $this->connections[$connId]->send($message);
+                }
+            }
         }
     }
 
