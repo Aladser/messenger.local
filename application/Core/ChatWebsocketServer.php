@@ -26,7 +26,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $this->messageEntity = new MessageEntity();
         $this->userEntity = new UserEntity();
         $this->connectionEntity = new ConnectionEntity();
-        $this->connectionEntity->removeConnections(); // удаление старых соединений
+        $this->connectionEntity->removeConnections();
     }
 
     /** открыть соединение.
@@ -35,14 +35,9 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function onOpen(ConnectionInterface $conn)
     {
         echo 'Подключение '.json_encode($conn->resourceId)."\n";
-        // добавление клиента
         $this->connections[$conn->resourceId] = $conn;
-
         $message = json_encode(['onconnection' => $conn->resourceId]);
-
-        foreach ($this->connections as $client) {
-            $client->send($message); // рассылка остальным клиентам
-        }
+        $conn->send($message);
     }
 
     /** закрыть соединение.
