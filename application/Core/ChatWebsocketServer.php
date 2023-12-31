@@ -76,12 +76,14 @@ class ChatWebsocketServer implements MessageComponentInterface
             if (!$this->connectionEntity->exists($data->wsId)) {
                 $connection = $this->connectionEntity->add(['author' => $data->author, 'wsId' => $data->wsId]);
             }
+
             // имя пользователя или ошибка добавления
             if ($connection['publicUsername']) {
                 $data->author = $connection['publicUsername'];
             } else {
                 $data->author = ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo];
             }
+
             // рассылка сообщения всем
             $message = json_encode($data);
             foreach ($this->connections as $client) {
