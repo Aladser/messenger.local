@@ -62,11 +62,10 @@ class UserEntity extends Model
     public function add($email, $password): bool
     {
         $password = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "insert into users(user_email, user_password) values('$email', '$password')";
+        $fields = ['user_email' => $email, 'user_password' => $password];
+        $userId = $this->dbQuery->insert('users', $fields);
 
-        $this->dbQuery->insert('users', ['user_email' => $email, 'user_password' => $password]);
-
-        return $this->dbQuery->exec($sql) > 0;
+        return $userId;
     }
 
     // добавить хэш пользователю

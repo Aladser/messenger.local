@@ -112,7 +112,7 @@ class UserController extends Controller
         $app_name = config('APP_NAME');
         if (!$this->users->exists('user_email', $email)) {
             $password = htmlspecialchars($_POST['password']);
-            $isAdded = $this->users->add($email, $password);
+            $isAdded = $this->users->add($email, $password) > 0;
             if ($isAdded) {
                 $hash = md5($email.time());
                 $this->users->addUserHash($email, $hash);

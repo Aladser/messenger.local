@@ -103,7 +103,7 @@ class DBQuery
     public function insert(string $tableName, array $valuesArray): int
     {
         // поля
-        $fields = implode(', ', array_keys($valuesArray));
+        $fieldNames = implode(', ', array_keys($valuesArray));
         // значения полей
         $fieldValues = '';
         foreach (array_keys($valuesArray) as $value) {
@@ -111,7 +111,7 @@ class DBQuery
         }
         $fieldValues = mb_substr($fieldValues, 0, strlen($fieldValues) - 2);
         // запрос
-        $sql = "insert into $tableName($fields) values($fieldValues)";
+        $sql = "insert into $tableName($fieldNames) values($fieldValues)";
 
         $this->connect();
         $stmt = $this->dbConnection->prepare($sql);
