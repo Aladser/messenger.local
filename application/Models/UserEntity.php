@@ -8,7 +8,7 @@ use App\Core\Model;
 class UserEntity extends Model
 {
     // Проверка существования значения
-    public function exists($field, $value)
+    public function exists(string $field, mixed $value)
     {
         $sql = "select count(*) as count from users where $field = :value";
         $args = ['value' => $value];
@@ -17,7 +17,7 @@ class UserEntity extends Model
     }
 
     // Поле строки таблицы
-    public function get($email, $field): mixed
+    public function get(string $email, string $field): mixed
     {
         $sql = "select $field from users where user_email = :email";
         $args = ['email' => $email];
@@ -26,7 +26,7 @@ class UserEntity extends Model
     }
 
     // Получить ID пользователя
-    public function getIdByName(string $publicUsername): int
+    public function getIdByName(string $publicUsername)
     {
         $sql = 'select user_id from users 
                 where user_email = :publicUsername or user_nickname=:publicUsername';
@@ -49,7 +49,7 @@ class UserEntity extends Model
     }
 
     // Проверка авторизации
-    public function verify($email, $password): bool
+    public function verify(string $email, string $password): bool
     {
         $sql = 'select user_password from users where user_email=:email';
         $args = ['email' => $email];
@@ -58,7 +58,7 @@ class UserEntity extends Model
         return password_verify($password, $passHash) == 1;
     }
 
-    // добавить нового пользователя
+    // Добавить нового пользователя
     public function add($email, $password): bool
     {
         $password = password_hash($password, PASSWORD_DEFAULT);
@@ -68,28 +68,41 @@ class UserEntity extends Model
         return $userId;
     }
 
-    // добавить хэш пользователю
-    public function addUserHash($email, $hash)
+    // Добавить хэш пользователю
+    public function addUserHash($email, $hash): bool
     {
-        $sql = "update users set user_hash='$hash' where user_email='$email'";
+        $fieldArray = ['user_hash' => $hash];
+        $condition = [
+            'condition_field_name' => 'user_email',
+            'condition_sign' => '=',
+            'condition_field_value' => $email,
+        ];
+        $isUpdated = $this->dbQuery->update('users', $fieldArray, $condition);
 
-        return $this->dbQuery->exec($sql);
+        return $isUpdated;
     }
 
-    // проверить хэш пользователя
-    public function checkUserHash($email, $hash): bool
-    {
-        $sql = 'select count(*) as count from users where user_email = :email and user_hash = :hash';
-
-        return $this->dbQuery->queryPrepared($sql, ['email' => $email, 'hash' => $hash])['count'] === 1;
-    }
-
-    /** подтвердить почту */
+    /** Подтвердить почту */
     public function confirmEmail($email)
     {
-        $sql = "update users set user_email_confirmed = 1, user_hash = null where user_email='$email'";
+        $fieldArray = ['user_email_confirmed' => 1, 'user_hash' => null];
+        $condition = [
+            'condition_field_name' => 'user_email',
+            'condition_sign' => '=',
+            'condition_field_value' => $email,
+        ];
+        $isUpdated = $this->dbQuery->update('users', $fieldArray, $condition);
 
-        return $this->dbQuery->exec($sql);
+        return $isUpdated;
+    }
+
+    // Проверить хэш пользователя
+    public function isUserHash($email, $hash): bool
+    {
+        $sql = 'select count(*) as count from users where user_email = :email and user_hash = :hash';
+        $args = ['email' => $email, 'hash' => $hash];
+
+        return $this->dbQuery->queryPrepared($sql, $args)['count'] === 1;
     }
 
     // список пользователей по шаблону почты или никнейма

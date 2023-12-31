@@ -99,14 +99,18 @@ class DBQuery
         return $procRst->fetch(\PDO::FETCH_ASSOC)['info'];
     }
 
-    /** insert операции */
-    public function insert(string $tableName, array $valuesArray): int
+    /** INSERT.
+     *
+     * @param string $tableName  название таблицы
+     * @param array  $fieldArray записываемые значения
+     */
+    public function insert(string $tableName, array $fieldArray): int
     {
         // поля
-        $fieldNames = implode(', ', array_keys($valuesArray));
+        $fieldNames = implode(', ', array_keys($fieldArray));
         // значения полей
         $fieldValues = '';
-        foreach (array_keys($valuesArray) as $value) {
+        foreach (array_keys($fieldArray) as $value) {
             $fieldValues .= ':'.$value.', ';
         }
         $fieldValues = mb_substr($fieldValues, 0, strlen($fieldValues) - 2);
@@ -115,16 +119,38 @@ class DBQuery
 
         $this->connect();
         $stmt = $this->dbConnection->prepare($sql);
-        $stmt->execute($valuesArray);
+        $stmt->execute($fieldArray);
         $id = $this->dbConnection->lastInsertId();
         $this->disconnect();
 
         return $id;
     }
 
-    /** update операции */
-    public function update(string $sql, array $args): bool
+    /** UPDATE.
+     *
+     * @param string $tableName  имя таблицы
+     * @param array  $fieldArray обновляемые значения
+     * @param array  $condition  массив условия [поле, знак условия, значение поля]
+     */
+    public function update(string $tableName, array $fieldArray, array $condition): bool
     {
+        // sql
+        $sql = "update $tableName set ";
+        $condition_field_name = $condition['condition_field_name'];
+        $condition_sign = $condition['condition_sign'];
+        $condition_field_value = $condition['condition_field_value'];
+
+        foreach (array_keys($fieldArray) as $fieldName) {
+            $sql .= "$fieldName = :$fieldName, ";
+        }
+        $sql = mb_substr($sql, 0, strlen($sql) - 2);
+
+        $sql .= " where $condition_field_name $condition_sign :$condition_field_name";
+
+        // args
+        $args = $fieldArray;
+        $args[$condition_field_name] = $condition_field_value;
+
         $this->connect();
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($args);

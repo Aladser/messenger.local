@@ -207,7 +207,7 @@ class UserController extends Controller
         $email = htmlspecialchars(str_replace('\'', '', $_GET['email']));
         $hash = htmlspecialchars(str_replace('\'', '', $_GET['hash']));
 
-        if ($this->users->checkUserHash($email, $hash)) {
+        if ($this->users->isUserHash($email, $hash)) {
             $this->users->confirmEmail($email);
             $data = 'Электронная почта подтверждена';
         } else {
