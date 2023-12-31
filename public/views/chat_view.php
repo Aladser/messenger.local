@@ -25,12 +25,13 @@
                     <?php } ?>
                 </section>
                 
+                <!-- блок пересылки сообщений -->
                 <div class='btn-resend-block' id='btn-resend-block'>
-                    <button class='btn-resend' id='btn-resend' disabled>
+                    <button class='btn-resend border border-light text-light' id='btn-resend' disabled>
                         <div class='btn-resend__img-block'><img src="application/images/resend.png" class='img' title='Переслать'></div>
                         <span class='btn-resend__name'>Переслать</span>
                     </button>
-                    <button class='btn-resend' id='btn-resend-reset'>
+                    <button class='btn-resend border border-light text-light' id='btn-resend-reset'>
                         <div class='btn-resend__img-block'><img src="application/images/cancel.png" class='img' title='Отменить'></div>
                         <span class='btn-resend__name'>Отменить</span>
                     </button>

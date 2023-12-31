@@ -108,11 +108,11 @@
   border: 1px solid black;
   width: 7rem;
   padding: 0.25rem 0;
-  background-color: #c4c4c4;
+  background-color: #03a2ff;
 }
 
 .btn-resend:hover {
-  background-color: #b4b4b4;
+  background-color: #58c2ff;
 }
 
 /* групповые чаты */
