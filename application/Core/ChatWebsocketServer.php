@@ -2,7 +2,6 @@
 
 namespace App\Core;
 
-use App\Models\ConnectionEntity;
 use App\Models\MessageEntity;
 use App\Models\UserEntity;
 use Ratchet\ConnectionInterface;
@@ -11,10 +10,10 @@ use Ratchet\MessageComponentInterface;
 /** Чат - серверная часть */
 class ChatWebsocketServer implements MessageComponentInterface
 {
-    // массив подключенных пользователей
+    // массив подключений
     private array $connections;
-    // подключения
-    private ConnectionEntity $connectionEntity;
+    // [id пользователя => websocketId]
+    private array $connectionUsers;
     // сообщения
     private MessageEntity $messageEntity;
     // пользователи
@@ -23,10 +22,10 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function __construct()
     {
         $this->connections = [];
+        $this->connectionUsers = [];
+
         $this->messageEntity = new MessageEntity();
         $this->userEntity = new UserEntity();
-        $this->connectionEntity = new ConnectionEntity();
-        $this->connectionEntity->removeConnections();
     }
 
     /** открыть соединение.
@@ -49,10 +48,11 @@ class ChatWebsocketServer implements MessageComponentInterface
         // удаление соединения
         unset($this->connections[$conn->resourceId]);
 
-        // публичное имя клиента
-        $publicUsername = $this->connectionEntity->getConnectionPublicUsername($conn->resourceId);
-        // удаление соединения из БД
-        $this->connectionEntity->removeConnection($conn->resourceId);
+        // удаление записи из массива [Пользователь => WebsocketId]
+        $userId = array_search($conn->resourceId, $this->connectionUsers);
+        unset($this->connectionUsers[$userId]);
+
+        $publicUsername = $this->userEntity->getPublicUsername($userId);
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
 
         foreach ($this->connections as $client) {
@@ -72,16 +72,13 @@ class ChatWebsocketServer implements MessageComponentInterface
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
 
-            // добавление соединения в БД
-            if (!$this->connectionEntity->exists($data->wsId)) {
-                $connection = $this->connectionEntity->add(['author' => $data->author, 'wsId' => $data->wsId]);
+            // ***** добавление соединения
+            $userId = $this->userEntity->getIdByName($data->author);
+            $data->author = $this->userEntity->getPublicUsername($userId);
+            if (!array_key_exists($userId, $this->connectionUsers)) {
+                $this->connectionUsers[$userId] = $data->wsId;
             }
-            // имя пользователя или ошибка добавления
-            if ($connection['publicUsername']) {
-                $data->author = $connection['publicUsername'];
-            } else {
-                $data->author = ['messageOnconnection' => 1, 'systeminfo' => $data->systeminfo];
-            }
+
             // рассылка сообщения всем
             $message = json_encode($data);
             foreach ($this->connections as $client) {
@@ -115,8 +112,8 @@ class ChatWebsocketServer implements MessageComponentInterface
             // рассылка сообщения участникам чата
             $message = json_encode($data);
             foreach ($participantsIds as $participantId) {
-                $connId = $this->connectionEntity->getUserConnId($participantId);
-                if ($connId) {
+                if (array_key_exists($participantId, $this->connectionUsers)) {
+                    $connId = $this->connectionUsers[$participantId];
                     $this->connections[$connId]->send($message);
                 }
             }
