@@ -104,6 +104,9 @@ class Route
             $controller->$action();
         } catch (\Exception $err) {
             $controller = new MainController();
+            echo $controller_name.' '.$action;
+            echo '<br>';
+            echo $err->getMessage();
             $controller->error('Страница не найдена');
         }
     }

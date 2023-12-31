@@ -98,4 +98,34 @@ class DBQuery
 
         return $procRst->fetch(\PDO::FETCH_ASSOC)['info'];
     }
+
+    /** insert операции */
+    public function insert(string $sql, array $args): int
+    {
+        $this->connect();
+        $stmt = $this->dbConnection->prepare($sql);
+        $stmt->execute($args);
+        $id = $this->dbConnection->lastInsertId();
+        $this->disconnect();
+
+        return $id;
+    }
+
+    /** update операции */
+    public function update(string $sql, array $args): bool
+    {
+        $this->connect();
+        $stmt = $this->dbConnection->prepare($sql);
+        $stmt->execute($args);
+        $rowCount = $stmt->rowCount();
+        $this->disconnect();
+
+        return $rowCount > 0;
+    }
+
+    /** delete операции */
+    public function delete(string $sql, array $args): bool
+    {
+        return $this->update($sql, $args);
+    }
 }

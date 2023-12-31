@@ -7,7 +7,7 @@ use App\Core\Model;
 /** класс БД таблицы пользователей */
 class UserEntity extends Model
 {
-    // проверка существования значения
+    // Проверка существования значения
     public function exists($field, $value)
     {
         $sql = "select count(*) as count from users where $field = :value";
@@ -16,7 +16,16 @@ class UserEntity extends Model
         return $this->dbQuery->queryPrepared($sql, $args)['count'] > 0;
     }
 
-    // получить ID пользователя
+    // Поле строки таблицы
+    public function get($email, $field): mixed
+    {
+        $sql = "select $field from users where user_email = :email";
+        $args = ['email' => $email];
+
+        return $this->dbQuery->queryPrepared($sql, $args)[$field];
+    }
+
+    // Получить ID пользователя
     public function getIdByName(string $publicUsername): int
     {
         $sql = 'select user_id from users 
@@ -27,7 +36,7 @@ class UserEntity extends Model
         return $id;
     }
 
-    // получить публичное имя пользователя
+    // Получить публичное имя пользователя
     public function getPublicUsername(int $userId)
     {
         $sql = '
@@ -39,7 +48,7 @@ class UserEntity extends Model
         return $username;
     }
 
-    // проверка авторизации
+    // Проверка авторизации
     public function verify($email, $password): bool
     {
         $sql = 'select user_password from users where user_email=:email';
@@ -47,15 +56,6 @@ class UserEntity extends Model
         $passHash = $this->dbQuery->queryPrepared($sql, $args)['user_password'];
 
         return password_verify($password, $passHash) == 1;
-    }
-
-    // поле строки таблицы
-    public function get($email, $field): mixed
-    {
-        $sql = "select $field from users where user_email = :email";
-        $args = ['email' => $email];
-
-        return $this->dbQuery->queryPrepared($sql, $args)[$field];
     }
 
     // добавить нового пользователя
@@ -70,7 +70,7 @@ class UserEntity extends Model
     // добавить хэш пользователю
     public function addUserHash($email, $hash)
     {
-        $sql = "UPDATE users SET user_hash='$hash' WHERE user_email='$email'";
+        $sql = "update users set user_hash='$hash' where user_email='$email'";
 
         return $this->dbQuery->exec($sql);
     }
