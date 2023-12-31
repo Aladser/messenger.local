@@ -100,11 +100,23 @@ class DBQuery
     }
 
     /** insert операции */
-    public function insert(string $sql, array $args): int
+    // $sql = 'insert into articles(author_id, title, summary, content) values(:author, :title, :summary, :content)';
+    public function insert(string $tableName, string $valuesArray): int
     {
+        // поля
+        $fields = implode(', ', array_keys($valuesArray));
+        // значения полей
+        $valuesString = '';
+        foreach ($fields as $value) {
+            $valuesString .= ':'.$value.', ';
+        }
+        $valuesString = mb_substr($valuesString, 0, count($valuesString) - 2);
+        // запрос
+        $sql = "insert into $tableName($fields) values($valuesString)";
+
         $this->connect();
         $stmt = $this->dbConnection->prepare($sql);
-        $stmt->execute($args);
+        $stmt->execute($valuesArray);
         $id = $this->dbConnection->lastInsertId();
         $this->disconnect();
 
