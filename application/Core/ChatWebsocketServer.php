@@ -58,8 +58,13 @@ class ChatWebsocketServer implements MessageComponentInterface
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
         echo "Отключение $publicUsername\n";
 
-        foreach ($this->connections as $client) {
-            $client->send($message);
+        // рассылка контактам пользователя и себе о подключении
+        $contactList = $this->contactEntity->getUserContacts($userId);
+        foreach ($contactList as $contact) {
+            if (array_key_exists($contact['user'], $this->connectionUsers)) {
+                $connId = $this->connectionUsers[$contact['user']];
+                $this->connections[$connId]->send($message);
+            }
         }
     }
 
