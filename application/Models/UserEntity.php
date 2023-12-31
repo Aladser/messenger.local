@@ -30,16 +30,13 @@ class UserEntity extends Model
     // получить публичное имя пользователя
     public function getPublicUsername(int $userId)
     {
-        $sql = 'select user_email, user_nickname, user_hide_email from users where user_id = :userId';
+        $sql = '
+            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
+            from users where user_id = :userId';
         $args = ['userId' => $userId];
-        $userData = $this->dbQuery->queryPrepared($sql, $args);
-        if ($userData['user_hide_email'] == 1) {
-            $publicUsername = $userData['user_nickname'];
-        } else {
-            $publicUsername = $userData['user_email'];
-        }
+        $username = $this->dbQuery->queryPrepared($sql, $args)['username'];
 
-        return $publicUsername;
+        return $username;
     }
 
     // проверка авторизации
@@ -92,19 +89,6 @@ class UserEntity extends Model
         $sql = "update users set user_email_confirmed = 1, user_hash = null where user_email='$email'";
 
         return $this->dbQuery->exec($sql);
-    }
-
-    // получить публичное имя пользователя из почты
-    public function getPublicUsernameFromEmail(string $userEmail)
-    {
-        $sql = '
-            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
-            from users 
-            where user_email = :userEmail
-        ';
-        $args = ['userEmail' => $userEmail];
-
-        return $this->dbQuery->queryPrepared($sql, $args)['username'];
     }
 
     // список пользователей по шаблону почты или никнейма

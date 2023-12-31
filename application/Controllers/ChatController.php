@@ -30,7 +30,8 @@ class ChatController extends Controller
 
     public function index()
     {
-        $publicUsername = $this->users->getPublicUsernameFromEmail($this->authUserEmail);
+        $userId = $this->users->getIdByName($this->authUserEmail);
+        $publicUsername = $this->users->getPublicUsername($userId);
         // head
         $websocket = config('WEBSOCKET_ADDR');
         $csrf = MainController::createCSRFToken();
