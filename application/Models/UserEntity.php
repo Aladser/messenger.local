@@ -7,30 +7,6 @@ use App\Core\Model;
 /** класс БД таблицы пользователей */
 class UserEntity extends Model
 {
-    // получить ID пользователя по имени пользователя
-    public function getIdByName(string $publicUsername): int
-    {
-        $sql = '
-                    select user_id from users 
-                    where user_email = :publicUsername or user_nickname=:publicUsername';
-        $args = ['publicUsername' => $publicUsername];
-        $id = $this->dbQuery->queryPrepared($sql, $args)['user_id'];
-
-        return $id;
-    }
-
-    // получить публичное имя пользователя по ID
-    public function getPublicUsername(int $userId)
-    {
-        $sql = "
-                    select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
-                    from users 
-                    where user_id = $userId
-                ";
-
-        return $this->dbQuery->query($sql)['username'];
-    }
-
     // проверка существования значения
     public function exists($field, $value)
     {
@@ -56,6 +32,18 @@ class UserEntity extends Model
         $sql = "select $field from users where user_email = :email";
 
         return $this->dbQuery->queryPrepared($sql, ['email' => $email])[$field];
+    }
+
+    // получить ID пользователя
+    public function getIdByName(string $publicUsername): int
+    {
+        $sql = '
+                select user_id from users 
+                where user_email = :publicUsername or user_nickname=:publicUsername';
+        $args = ['publicUsername' => $publicUsername];
+        $id = $this->dbQuery->queryPrepared($sql, $args)['user_id'];
+
+        return $id;
     }
 
     // добавить нового пользователя
@@ -95,6 +83,18 @@ class UserEntity extends Model
         $sql = 'select count(*) as count from users where user_nickname=:nickname';
 
         return $this->dbQuery->queryPrepared($sql, ['nickname' => $nickname])['count'] == 0;
+    }
+
+    /** получить публичное имя пользователя из ID */
+    public function getPublicUsername(int $userId)
+    {
+        $sql = "
+            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
+            from users 
+            where user_id = $userId
+        ";
+
+        return $this->dbQuery->query($sql)['username'];
     }
 
     // получить публичное имя пользователя из почты
