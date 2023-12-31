@@ -56,7 +56,6 @@ class ChatWebsocketServer implements MessageComponentInterface
 
         $publicUsername = $this->userEntity->getPublicUsername($userId);
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
-        echo "Отключение $publicUsername\n";
 
         // рассылка контактам пользователя и себе о подключении
         $contactList = $this->contactEntity->getUserContacts($userId);
@@ -66,6 +65,8 @@ class ChatWebsocketServer implements MessageComponentInterface
                 $this->connections[$connId]->send($message);
             }
         }
+
+        echo "$publicUsername не в сети\n";
     }
 
     /** получить/отправить соообщения.
@@ -99,7 +100,7 @@ class ChatWebsocketServer implements MessageComponentInterface
             }
             $from->send($message);
 
-            echo "Подключение $data->author\n";
+            echo "$data->author в сети\n";
         } elseif ($data->message) {
             // отправляется сообщение
 
