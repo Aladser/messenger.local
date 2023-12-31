@@ -11,17 +11,17 @@ class UserEntity extends Model
     public function exists($field, $value)
     {
         $sql = "select count(*) as count from users where $field = :value";
+        $args = ['value' => $value];
 
-        return $this->dbQuery->queryPrepared($sql, ['value' => $value])['count'] > 0;
+        return $this->dbQuery->queryPrepared($sql, $args)['count'] > 0;
     }
 
     // проверка авторизации
     public function verify($email, $password): bool
     {
-        $passHash = $this->dbQuery->queryPrepared(
-            'select user_password from users where user_email=:email',
-            ['email' => $email]
-        )['user_password'];
+        $sql = 'select user_password from users where user_email=:email';
+        $args = ['email' => $email];
+        $passHash = $this->dbQuery->queryPrepared($sql, $args)['user_password'];
 
         return password_verify($password, $passHash) == 1;
     }
@@ -30,15 +30,15 @@ class UserEntity extends Model
     public function get($email, $field): mixed
     {
         $sql = "select $field from users where user_email = :email";
+        $args = ['email' => $email];
 
-        return $this->dbQuery->queryPrepared($sql, ['email' => $email])[$field];
+        return $this->dbQuery->queryPrepared($sql, $args)[$field];
     }
 
     // получить ID пользователя
     public function getIdByName(string $publicUsername): int
     {
-        $sql = '
-                select user_id from users 
+        $sql = 'select user_id from users 
                 where user_email = :publicUsername or user_nickname=:publicUsername';
         $args = ['publicUsername' => $publicUsername];
         $id = $this->dbQuery->queryPrepared($sql, $args)['user_id'];
@@ -74,15 +74,18 @@ class UserEntity extends Model
     /** подтвердить почту */
     public function confirmEmail($email)
     {
-        return $this->dbQuery->exec("update users set user_email_confirmed = 1, user_hash = null where user_email='$email'");
+        $sql = "update users set user_email_confirmed = 1, user_hash = null where user_email='$email'";
+
+        return $this->dbQuery->exec($sql);
     }
 
     // проверить уникальность никнейма
     public function isUniqueNickname($nickname): bool
     {
         $sql = 'select count(*) as count from users where user_nickname=:nickname';
+        $args = ['nickname' => $nickname];
 
-        return $this->dbQuery->queryPrepared($sql, ['nickname' => $nickname])['count'] == 0;
+        return $this->dbQuery->queryPrepared($sql, $args)['count'] == 0;
     }
 
     /** получить публичное имя пользователя из ID */
@@ -105,8 +108,9 @@ class UserEntity extends Model
             from users 
             where user_email = :userEmail
         ';
+        $args = ['userEmail' => $userEmail];
 
-        return $this->dbQuery->queryPrepared($sql, ['userEmail' => $userEmail])['username'];
+        return $this->dbQuery->queryPrepared($sql, $args)['username'];
     }
 
     // список пользователей по шаблону почты или никнейма
@@ -125,8 +129,9 @@ class UserEntity extends Model
             from users 
             where user_hide_email  = 0 and user_email != :email and user_email like :phrase;
         ';
+        $args = ['email' => $email, 'phrase' => $phrase];
 
-        return $this->dbQuery->queryPrepared($sql, ['email' => $email, 'phrase' => $phrase], false);
+        return $this->dbQuery->queryPrepared($sql, $args, false);
     }
 
     // изменить пользовательские данные в Бд
@@ -159,10 +164,9 @@ class UserEntity extends Model
     // сравнение новых данных и в БД
     private function isEqualData($data, $field, $email): bool
     {
-        $dbData = $this->dbQuery->queryPrepared(
-            "select $field from users WHERE user_email=:email",
-            ['email' => $email]
-        )[$field];
+        $sql = "select $field from users WHERE user_email=:email";
+        $args = ['email' => $email];
+        $dbData = $this->dbQuery->queryPrepared($sql, $args)[$field];
 
         return $data === $dbData;
     }
