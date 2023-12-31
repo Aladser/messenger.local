@@ -30,14 +30,16 @@ class UserEntity extends Model
     // получить публичное имя пользователя
     public function getPublicUsername(int $userId)
     {
-        $sql = '
-            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
-            from users 
-            where user_id = :userId
-        ';
+        $sql = 'select user_email, user_nickname, user_hide_email from users where user_id = :userId';
         $args = ['userId' => $userId];
+        $userData = $this->dbQuery->queryPrepared($sql, $args);
+        if ($userData['user_hide_email'] == 1) {
+            $publicUsername = $userData['user_nickname'];
+        } else {
+            $publicUsername = $userData['user_email'];
+        }
 
-        return $this->dbQuery->queryPrepared($sql, $args)['username'];
+        return $publicUsername;
     }
 
     // проверка авторизации
