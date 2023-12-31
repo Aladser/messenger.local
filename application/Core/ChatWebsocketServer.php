@@ -33,7 +33,6 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
-        echo 'Подключение '.json_encode($conn->resourceId)."\n";
         $this->connections[$conn->resourceId] = $conn;
         $message = json_encode(['onconnection' => $conn->resourceId]);
         $conn->send($message);
@@ -44,7 +43,6 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
-        echo 'Отключение '.json_encode($conn->resourceId)."\n";
         // удаление соединения
         unset($this->connections[$conn->resourceId]);
 
@@ -54,6 +52,7 @@ class ChatWebsocketServer implements MessageComponentInterface
 
         $publicUsername = $this->userEntity->getPublicUsername($userId);
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
+        echo "Отключение $publicUsername\n";
 
         foreach ($this->connections as $client) {
             $client->send($message);
@@ -66,7 +65,6 @@ class ChatWebsocketServer implements MessageComponentInterface
      */
     public function onMessage(ConnectionInterface $from, $message)
     {
-        echo "$message\n";
         $data = json_decode($message);
 
         if (property_exists($data, 'messageOnconnection')) {
@@ -84,7 +82,10 @@ class ChatWebsocketServer implements MessageComponentInterface
             foreach ($this->connections as $client) {
                 $client->send($message);
             }
+
+            echo "Подключение $data->author\n";
         } elseif ($data->message) {
+            echo "$message\n";
             // отправляется сообщение
 
             // id участников чата
