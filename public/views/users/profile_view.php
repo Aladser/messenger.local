@@ -3,7 +3,7 @@
         <div class='profile-img-block'>
             <?php
             if (is_null($data['user_photo'])) {
-                $photo = "http://$app_name/application/images/ava_profile.png";
+                $photo = "http://$app_name/public/images/ava_profile.png";
             } else {
                 $photo = "http://$app_name/application/data/profile_photos//".$data['user_photo'];
             }

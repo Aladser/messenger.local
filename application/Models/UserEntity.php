@@ -113,13 +113,11 @@ class UserEntity extends Model
         $sql = '
             select user_id as user, user_nickname as name, user_photo as photo 
             from users 
-            where user_nickname  != \'\' and user_nickname is not null 
-            and user_email != :email and user_nickname  like :phrase
-            and user_email not in (select * from unhidden_emails where user_email  like :phrase)
+            where user_hide_email = 1 and user_email != :email and user_nickname like :phrase
             union 
             select user_id as user, user_email as name, user_photo as photo 
             from users 
-            where user_hide_email  = 0 and user_email != :email and user_email like :phrase;
+            where user_hide_email = 0 and user_email != :email and user_email like :phrase;
         ';
         $args = ['email' => $email, 'phrase' => $phrase];
 

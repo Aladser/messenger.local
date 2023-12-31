@@ -1,7 +1,7 @@
 /** Контейнер контактов */
 class ContactContainer extends TemplateContainer{
     #backupContainer;
-    siteAddr = this.baseSiteName + "/application/";
+    siteAddr = this.baseSiteName;
     isSearch = false;
     nameList = [];
 
@@ -109,7 +109,7 @@ class ContactContainer extends TemplateContainer{
         img.className = 'contact__img img pe-2';
         name.className = 'contact__name';
 
-        img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.siteAddr}/images/ava.png` : `${this.siteAddr}/data/profile_photos/${contact.photo}`;
+        img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.siteAddr}/public/images/ava.png` : `${this.siteAddr}/application/data/profile_photos/${contact.photo}`;
         name.innerHTML = contact.name;
         contactHTMLElement.setAttribute('data-notice', contact.notice);
 
