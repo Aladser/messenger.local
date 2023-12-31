@@ -64,6 +64,8 @@ class UserEntity extends Model
         $password = password_hash($password, PASSWORD_DEFAULT);
         $sql = "insert into users(user_email, user_password) values('$email', '$password')";
 
+        $this->dbQuery->insert('users', ['user_email' => $email, 'user_password' => $password]);
+
         return $this->dbQuery->exec($sql) > 0;
     }
 

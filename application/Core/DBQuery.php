@@ -101,19 +101,21 @@ class DBQuery
 
     /** insert операции */
     // $sql = 'insert into articles(author_id, title, summary, content) values(:author, :title, :summary, :content)';
-    public function insert(string $tableName, string $valuesArray): int
+    public function insert(string $tableName, array $valuesArray): int
     {
         // поля
         $fields = implode(', ', array_keys($valuesArray));
         // значения полей
-        $valuesString = '';
+        $fieldValues = '';
         foreach ($fields as $value) {
-            $valuesString .= ':'.$value.', ';
+            $fieldValues .= ':'.$value.', ';
         }
-        $valuesString = mb_substr($valuesString, 0, count($valuesString) - 2);
+        $fieldValues = mb_substr($fieldValues, 0, count($fieldValues) - 2);
         // запрос
-        $sql = "insert into $tableName($fields) values($valuesString)";
+        $sql = "insert into $tableName($fields) values($fieldValues)";
+        echo $sql;
 
+        /*
         $this->connect();
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($valuesArray);
@@ -121,6 +123,7 @@ class DBQuery
         $this->disconnect();
 
         return $id;
+        */
     }
 
     /** update операции */
