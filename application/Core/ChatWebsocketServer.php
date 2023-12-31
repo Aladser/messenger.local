@@ -90,7 +90,6 @@ class ChatWebsocketServer implements MessageComponentInterface
             echo "$data->author в сети\n";
         } elseif ($data->message) {
             // отправляется сообщение
-
             // id участников чата
             $participantsIds = $this->messageEntity->getChatParticipantIds($data->chat);
 
