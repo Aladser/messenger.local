@@ -58,7 +58,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
 
         // рассылка контактам пользователя и себе о подключении
-        $this->sendConnectionMessage($userId, $message);
+        $this->sendMessage($userId, $message);
 
         echo "$publicUsername не в сети\n";
     }
@@ -85,7 +85,7 @@ class ChatWebsocketServer implements MessageComponentInterface
             $message = json_encode($data);
 
             // рассылка контактам пользователя и себе о подключении
-            $this->sendConnectionMessage($userId, $message);
+            $this->sendMessage($userId, $message);
             $from->send($message);
 
             echo "$data->author в сети\n";
@@ -140,7 +140,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $conn->close();
     }
 
-    private function sendConnectionMessage($userId, $message)
+    private function sendMessage($userId, $message)
     {
         $contactList = $this->contactEntity->getUserContacts($userId);
         foreach ($contactList as $contact) {

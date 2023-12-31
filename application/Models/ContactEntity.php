@@ -64,8 +64,12 @@ class ContactEntity extends Model
         return $this->dbQuery->queryPrepared($sql, ['userId' => $userId, 'contactId' => $contactId], false);
     }
 
-    // получить контакты пользователя
-    public function getUserContacts($userId)
+    /** получить контакты пользователя.
+     *
+     * @param int  $userId id пользователя
+     * @param bool $onlyId только id?
+     */
+    public function getUserContacts(int $userId, bool $onlyId = false): array
     {
         $sql = '
             select chat_id as chat, user_id as user, user_photo as photo,
@@ -87,8 +91,19 @@ class ContactEntity extends Model
             )
             and user_id != :userId
         ';
+        $args = ['userId' => $userId];
 
-        return $this->dbQuery->queryPrepared($sql, ['userId' => $userId], false);
+        $contactList = $this->dbQuery->queryPrepared($sql, $args, false);
+        if ($onlyId) {
+            $contactIdList = [];
+            foreach ($contactList as $contact) {
+                $contactIdList[] = $contact['user'];
+            }
+
+            return $contactIdList;
+        } else {
+            return $contactList;
+        }
     }
 
     /**
