@@ -100,7 +100,6 @@ class DBQuery
     }
 
     /** insert операции */
-    // $sql = 'insert into articles(author_id, title, summary, content) values(:author, :title, :summary, :content)';
     public function insert(string $tableName, array $valuesArray): int
     {
         // поля
@@ -113,9 +112,7 @@ class DBQuery
         $fieldValues = mb_substr($fieldValues, 0, strlen($fieldValues) - 2);
         // запрос
         $sql = "insert into $tableName($fields) values($fieldValues)";
-        echo $sql;
 
-        /*
         $this->connect();
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($valuesArray);
@@ -123,7 +120,6 @@ class DBQuery
         $this->disconnect();
 
         return $id;
-        */
     }
 
     /** update операции */
