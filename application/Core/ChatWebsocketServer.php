@@ -58,13 +58,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
 
         // рассылка контактам пользователя и себе о подключении
-        $contactList = $this->contactEntity->getUserContacts($userId);
-        foreach ($contactList as $contact) {
-            if (array_key_exists($contact['user'], $this->connectionUsers)) {
-                $connId = $this->connectionUsers[$contact['user']];
-                $this->connections[$connId]->send($message);
-            }
-        }
+        $this->sendConnectionMessage($userId, $message);
 
         echo "$publicUsername не в сети\n";
     }
@@ -91,13 +85,7 @@ class ChatWebsocketServer implements MessageComponentInterface
             $message = json_encode($data);
 
             // рассылка контактам пользователя и себе о подключении
-            $contactList = $this->contactEntity->getUserContacts($userId);
-            foreach ($contactList as $contact) {
-                if (array_key_exists($contact['user'], $this->connectionUsers)) {
-                    $connId = $this->connectionUsers[$contact['user']];
-                    $this->connections[$connId]->send($message);
-                }
-            }
+            $this->sendConnectionMessage($userId, $message);
             $from->send($message);
 
             echo "$data->author в сети\n";
@@ -150,5 +138,16 @@ class ChatWebsocketServer implements MessageComponentInterface
     {
         echo "error: {$e->getMessage()}\n";
         $conn->close();
+    }
+
+    private function sendConnectionMessage($userId, $message)
+    {
+        $contactList = $this->contactEntity->getUserContacts($userId);
+        foreach ($contactList as $contact) {
+            if (array_key_exists($contact['user'], $this->connectionUsers)) {
+                $connId = $this->connectionUsers[$contact['user']];
+                $this->connections[$connId]->send($message);
+            }
+        }
     }
 }
