@@ -32,7 +32,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $this->contactEntity = new ContactEntity();
     }
 
-    /** открыть соединение.
+    /** Открыть соединение.
      * @param ConnectionInterface $conn соединение
      */
     public function onOpen(ConnectionInterface $conn)
@@ -42,7 +42,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $conn->send($message);
     }
 
-    /** закрыть соединение.
+    /** Закрыть соединение.
      * @param ConnectionInterface $conn соединение
      */
     public function onClose(ConnectionInterface $conn)
@@ -122,7 +122,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         }
     }
 
-    /** ошибка подключения.
+    /** Ошибка подключения.
      *
      * @param ConnectionInterface $conn соединение
      * @param \Exception          $e    ошибка
@@ -133,6 +133,11 @@ class ChatWebsocketServer implements MessageComponentInterface
         $conn->close();
     }
 
+    /** Отправить сообщение списку пользователей.
+     *
+     * @param array  $contactIdList список id получателей
+     * @param string $message       сообщение
+     */
     private function sendMessage(array $contactIdList, string $message): void
     {
         foreach ($contactIdList as $contactId) {
