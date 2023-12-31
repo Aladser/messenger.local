@@ -54,11 +54,11 @@ class ChatWebsocketServer implements MessageComponentInterface
         $userId = array_search($conn->resourceId, $this->connectionUsers);
         unset($this->connectionUsers[$userId]);
 
+        // рассылка контактам пользователя и себе о подключении
+        $contactIdList = $this->contactEntity->getUserContacts($userId, true);
         $publicUsername = $this->userEntity->getPublicUsername($userId);
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
-
-        // рассылка контактам пользователя и себе о подключении
-        $this->sendMessage($userId, $message);
+        $this->sendMessage($contactIdList, $message);
 
         echo "$publicUsername не в сети\n";
     }
@@ -81,11 +81,10 @@ class ChatWebsocketServer implements MessageComponentInterface
                 $this->connectionUsers[$userId] = $data->wsId;
             }
 
-            // кодирование сообщения
-            $message = json_encode($data);
-
             // рассылка контактам пользователя и себе о подключении
-            $this->sendMessage($userId, $message);
+            $contactIdList = $this->contactEntity->getUserContacts($userId, true);
+            $message = json_encode($data);
+            $this->sendMessage($contactIdList, $message);
             $from->send($message);
 
             echo "$data->author в сети\n";
@@ -140,12 +139,11 @@ class ChatWebsocketServer implements MessageComponentInterface
         $conn->close();
     }
 
-    private function sendMessage($userId, $message)
+    private function sendMessage(array $contactIdList, string $message): void
     {
-        $contactList = $this->contactEntity->getUserContacts($userId);
-        foreach ($contactList as $contact) {
-            if (array_key_exists($contact['user'], $this->connectionUsers)) {
-                $connId = $this->connectionUsers[$contact['user']];
+        foreach ($contactIdList as $contactId) {
+            if (array_key_exists($contactId, $this->connectionUsers)) {
+                $connId = $this->connectionUsers[$contactId];
                 $this->connections[$connId]->send($message);
             }
         }
