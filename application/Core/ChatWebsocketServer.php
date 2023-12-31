@@ -85,7 +85,6 @@ class ChatWebsocketServer implements MessageComponentInterface
 
             echo "Подключение $data->author\n";
         } elseif ($data->message) {
-            echo "$message\n";
             // отправляется сообщение
 
             // id участников чата
@@ -118,6 +117,7 @@ class ChatWebsocketServer implements MessageComponentInterface
                     $this->connections[$connId]->send($message);
                 }
             }
+            echo "$message\n";
         }
     }
 
