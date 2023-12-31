@@ -117,12 +117,7 @@ class ChatWebsocketServer implements MessageComponentInterface
 
             // рассылка сообщения участникам чата
             $message = json_encode($data);
-            foreach ($participantsIds as $participantId) {
-                if (array_key_exists($participantId, $this->connectionUsers)) {
-                    $connId = $this->connectionUsers[$participantId];
-                    $this->connections[$connId]->send($message);
-                }
-            }
+            $this->sendMessage($participantsIds, $message);
 
             echo "$message\n";
         }
