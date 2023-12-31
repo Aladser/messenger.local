@@ -107,10 +107,10 @@ class DBQuery
         $fields = implode(', ', array_keys($valuesArray));
         // значения полей
         $fieldValues = '';
-        foreach ($fields as $value) {
+        foreach (array_keys($valuesArray) as $value) {
             $fieldValues .= ':'.$value.', ';
         }
-        $fieldValues = mb_substr($fieldValues, 0, count($fieldValues) - 2);
+        $fieldValues = mb_substr($fieldValues, 0, strlen($fieldValues) - 2);
         // запрос
         $sql = "insert into $tableName($fields) values($fieldValues)";
         echo $sql;
