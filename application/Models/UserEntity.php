@@ -92,15 +92,6 @@ class UserEntity extends Model
         return $this->dbQuery->exec($sql);
     }
 
-    // проверить уникальность никнейма
-    public function isUniqueNickname($nickname): bool
-    {
-        $sql = 'select count(*) as count from users where user_nickname=:nickname';
-        $args = ['nickname' => $nickname];
-
-        return $this->dbQuery->queryPrepared($sql, $args)['count'] == 0;
-    }
-
     // получить публичное имя пользователя из почты
     public function getPublicUsernameFromEmail(string $userEmail)
     {
