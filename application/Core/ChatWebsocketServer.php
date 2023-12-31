@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Models\ContactEntity;
 use App\Models\MessageEntity;
 use App\Models\UserEntity;
 use Ratchet\ConnectionInterface;
@@ -18,6 +19,8 @@ class ChatWebsocketServer implements MessageComponentInterface
     private MessageEntity $messageEntity;
     // пользователи
     private UserEntity $userEntity;
+    // контакты
+    private ContactEntity $сontactEntity;
 
     public function __construct()
     {
@@ -26,6 +29,7 @@ class ChatWebsocketServer implements MessageComponentInterface
 
         $this->messageEntity = new MessageEntity();
         $this->userEntity = new UserEntity();
+        $this->contactEntity = new ContactEntity();
     }
 
     /** открыть соединение.
@@ -69,19 +73,26 @@ class ChatWebsocketServer implements MessageComponentInterface
 
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
-
-            // ***** добавление соединения
             $userId = $this->userEntity->getIdByName($data->author);
             $data->author = $this->userEntity->getPublicUsername($userId);
+
+            // добавление подключения пользователя в массив подключений
             if (!array_key_exists($userId, $this->connectionUsers)) {
                 $this->connectionUsers[$userId] = $data->wsId;
             }
 
-            // рассылка сообщения всем
+            // кодирование сообщения
             $message = json_encode($data);
-            foreach ($this->connections as $client) {
-                $client->send($message);
+
+            // рассылка контактам пользователя и себе о подключении
+            $contactList = $this->contactEntity->getUserContacts($userId);
+            foreach ($contactList as $contact) {
+                if (array_key_exists($contact['user'], $this->connectionUsers)) {
+                    $connId = $this->connectionUsers[$contact['user']];
+                    $this->connections[$connId]->send($message);
+                }
             }
+            $from->send($message);
 
             echo "Подключение $data->author\n";
         } elseif ($data->message) {
@@ -89,6 +100,7 @@ class ChatWebsocketServer implements MessageComponentInterface
 
             // id участников чата
             $participantsIds = $this->messageEntity->getChatParticipantIds($data->chat);
+
             // формирование данных сообщения
             switch ($data->messageType) {
                 case 'NEW':
@@ -109,6 +121,7 @@ class ChatWebsocketServer implements MessageComponentInterface
                     $data->authorId = intval($this->userEntity->getIdByName($data->author));
                     $data->message = $this->messageEntity->addForwardedMessage($data);
             }
+
             // рассылка сообщения участникам чата
             $message = json_encode($data);
             foreach ($participantsIds as $participantId) {
@@ -117,6 +130,7 @@ class ChatWebsocketServer implements MessageComponentInterface
                     $this->connections[$connId]->send($message);
                 }
             }
+
             echo "$message\n";
         }
     }
