@@ -154,8 +154,10 @@ function setClick(domElement, type)
 {
     return function (event) {
         // прекращение всплытия кнопки добавления пользователя в группу
-        if (event.target.classList.contains('btn-add-to-group')) {
-            return;
+        if (event) {
+            if (event.target.classList.contains('btn-add-to-group')) {
+                return;
+            }
         }
         
         let name = domElement.title;
@@ -194,10 +196,12 @@ async function findContacts() {
     await contacts.findUsers(findContactsInput.value);
     // слушатели событий для найденных пользователей
     contacts.get().forEach(contact => {
-        contact.addEventListener('click', async function(){
+        contact.addEventListener('click', async function(e){
             findContactsInput.value = '';
+
             // показ контактов пользователя
             contacts.restore();
+            
             // новое навешивание слушателей событий
             contacts.get().forEach(contact => {
                 contact.addEventListener('click', setClick(contact, 'dialog'));
