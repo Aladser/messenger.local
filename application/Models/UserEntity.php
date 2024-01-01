@@ -105,8 +105,11 @@ class UserEntity extends Model
         return $this->dbQuery->queryPrepared($sql, $args)['count'] === 1;
     }
 
-    // список пользователей по шаблону почты или никнейма
-    public function getUsers($phrase, $email)
+    /** Cписок пользователей по шаблону почты или никнейма.
+     *
+     * @param string $phrase фраза
+     */
+    public function getUsersByPhrase(string $phrase, string $notEmail): array
     {
         $phrase = "%$phrase%";
         // список пользователей, подходящие по шаблону
@@ -119,7 +122,7 @@ class UserEntity extends Model
             from users 
             where user_hide_email = 0 and user_email != :email and user_email like :phrase;
         ';
-        $args = ['email' => $email, 'phrase' => $phrase];
+        $args = ['email' => $notEmail, 'phrase' => $phrase];
 
         return $this->dbQuery->queryPrepared($sql, $args, false);
     }

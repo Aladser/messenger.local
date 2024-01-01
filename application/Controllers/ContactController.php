@@ -76,7 +76,7 @@ class ContactController extends Controller
     public function find()
     {
         $userphrase = htmlspecialchars($_POST['userphrase']);
-        echo json_encode($this->users->getUsers($userphrase, $this->authUserEmail));
+        echo json_encode($this->users->getUsersByPhrase($userphrase, $this->authUserEmail));
     }
 
     public function add()
