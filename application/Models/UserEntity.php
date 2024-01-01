@@ -51,9 +51,7 @@ class UserEntity extends Model
     // Проверка авторизации
     public function verify(string $email, string $password): bool
     {
-        $sql = 'select user_password from users where user_email=:email';
-        $args = ['email' => $email];
-        $passHash = $this->dbQuery->queryPrepared($sql, $args)['user_password'];
+        $passHash = $this->get($email, 'user_password');
 
         return password_verify($password, $passHash) == 1;
     }
@@ -127,40 +125,17 @@ class UserEntity extends Model
         return $this->dbQuery->queryPrepared($sql, $args, false);
     }
 
-    // изменить пользовательские данные в Бд
+    // обновить пользовательские данные
     public function setUserData($data): bool
     {
-        $rslt = false;
         $email = $data['user_email'];
+        $condition = [
+            'condition_field_name' => 'user_email',
+            'condition_sign' => '=',
+            'condition_field_value' => $email,
+        ];
+        $isUpdated = $this->dbQuery->update('users', $data, $condition);
 
-        // запись никнейма
-        $nickname = $data['user_nickname'];
-        $rslt |= $this->isEqualData($nickname, 'user_nickname', $email) ?
-            true :
-            $this->dbQuery->exec("update users set user_nickname = '$nickname' where user_email='$email'");
-
-        // запись скрытия почты
-        $hideEmail = $data['user_hide_email'];
-        $rslt |= $this->isEqualData($hideEmail, 'user_hide_email', $email) ?
-            true :
-            $this->dbQuery->exec("update users set user_hide_email = '$hideEmail' where user_email='$email'");
-
-        // запись фото
-        $photo = $data['user_photo'];
-        $rslt |= $this->isEqualData($photo, 'user_photo', $email) ?
-            true :
-            $this->dbQuery->exec("update users set user_photo = '$photo' where user_email='$email'");
-
-        return $rslt;
-    }
-
-    // сравнение новых данных и в БД
-    private function isEqualData($fieldValue, $field, $email): bool
-    {
-        $sql = "select $field from users where user_email = :email";
-        $args = ['email' => $email];
-        $fieldValueFromDB = $this->dbQuery->queryPrepared($sql, $args)[$field];
-
-        return $fieldValue === $fieldValueFromDB;
+        return $isUpdated;
     }
 }
