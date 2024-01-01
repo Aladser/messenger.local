@@ -155,12 +155,12 @@ class UserEntity extends Model
     }
 
     // сравнение новых данных и в БД
-    private function isEqualData($data, $field, $email): bool
+    private function isEqualData($fieldValue, $field, $email): bool
     {
-        $sql = "select $field from users WHERE user_email=:email";
+        $sql = "select $field from users where user_email = :email";
         $args = ['email' => $email];
-        $dbData = $this->dbQuery->queryPrepared($sql, $args)[$field];
+        $fieldValueFromDB = $this->dbQuery->queryPrepared($sql, $args)[$field];
 
-        return $data === $dbData;
+        return $fieldValue === $fieldValueFromDB;
     }
 }
