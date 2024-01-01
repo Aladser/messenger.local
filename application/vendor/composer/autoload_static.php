@@ -8,9 +8,9 @@ class ComposerStaticInit419d7316e67644647e6282764e82d45f
 {
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
         'cfe4039aa2a78ca88e07dadb7b1c6126' => __DIR__ . '/../..' . '/config.php',
@@ -27,6 +27,7 @@ class ComposerStaticInit419d7316e67644647e6282764e82d45f
         ),
         'R' => 
         array (
+            'RedBeanPHP\\' => 11,
             'React\\Stream\\' => 13,
             'React\\Socket\\' => 13,
             'React\\Promise\\' => 14,
@@ -75,6 +76,10 @@ class ComposerStaticInit419d7316e67644647e6282764e82d45f
         'Symfony\\Component\\HttpFoundation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
+        ),
+        'RedBeanPHP\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gabordemooij/redbean/RedBeanPHP',
         ),
         'React\\Stream\\' => 
         array (

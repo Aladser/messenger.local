@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81f48d292846d1ec400d46e1cbc140d7",
+    "content-hash": "c81da70cefe4359fb5ec68b1cffa369d",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -115,6 +115,52 @@
                 "source": "https://github.com/igorw/evenement/tree/v3.0.2"
             },
             "time": "2023-08-08T05:53:35+00:00"
+        },
+        {
+            "name": "gabordemooij/redbean",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gabordemooij/redbean.git",
+                "reference": "d33f8ce84c6e59776e727486100803477c74780d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/d33f8ce84c6e59776e727486100803477c74780d",
+                "reference": "d33f8ce84c6e59776e727486100803477c74780d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.4"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RedBeanPHP\\": "RedBeanPHP"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Gabor de Mooij",
+                    "email": "gabor@redbeanphp.com",
+                    "homepage": "https://redbeanphp.com"
+                }
+            ],
+            "description": "RedBeanPHP ORM",
+            "homepage": "https://redbeanphp.com/",
+            "keywords": [
+                "orm"
+            ],
+            "support": {
+                "issues": "https://github.com/gabordemooij/redbean/issues",
+                "source": "https://github.com/gabordemooij/redbean/tree/master"
+            },
+            "time": "2023-09-18T20:45:48+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -817,16 +863,16 @@
         },
         {
             "name": "react/socket",
-            "version": "v1.14.0",
+            "version": "v1.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/socket.git",
-                "reference": "21591111d3ea62e31f2254280ca0656bc2b1bda6"
+                "reference": "216d3aec0b87f04a40ca04f481e6af01bdd1d038"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/socket/zipball/21591111d3ea62e31f2254280ca0656bc2b1bda6",
-                "reference": "21591111d3ea62e31f2254280ca0656bc2b1bda6",
+                "url": "https://api.github.com/repos/reactphp/socket/zipball/216d3aec0b87f04a40ca04f481e6af01bdd1d038",
+                "reference": "216d3aec0b87f04a40ca04f481e6af01bdd1d038",
                 "shasum": ""
             },
             "require": {
@@ -838,7 +884,7 @@
                 "react/stream": "^1.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.5 || ^5.7 || ^4.8.35",
+                "phpunit/phpunit": "^9.6 || ^5.7 || ^4.8.36",
                 "react/async": "^4 || ^3 || ^2",
                 "react/promise-stream": "^1.4",
                 "react/promise-timer": "^1.10"
@@ -846,7 +892,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "React\\Socket\\": "src"
+                    "React\\Socket\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -885,7 +931,7 @@
             ],
             "support": {
                 "issues": "https://github.com/reactphp/socket/issues",
-                "source": "https://github.com/reactphp/socket/tree/v1.14.0"
+                "source": "https://github.com/reactphp/socket/tree/v1.15.0"
             },
             "funding": [
                 {
@@ -893,7 +939,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-08-25T13:48:09+00:00"
+            "time": "2023-12-15T11:02:10+00:00"
         },
         {
             "name": "react/stream",
@@ -1042,16 +1088,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v6.4.0",
+            "version": "v6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "44a6d39a9cc11e154547d882d5aac1e014440771"
+                "reference": "172d807f9ef3fc3fbed8377cc57c20d389269271"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/44a6d39a9cc11e154547d882d5aac1e014440771",
-                "reference": "44a6d39a9cc11e154547d882d5aac1e014440771",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/172d807f9ef3fc3fbed8377cc57c20d389269271",
+                "reference": "172d807f9ef3fc3fbed8377cc57c20d389269271",
                 "shasum": ""
             },
             "require": {
@@ -1099,7 +1145,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v6.4.0"
+                "source": "https://github.com/symfony/http-foundation/tree/v6.4.2"
             },
             "funding": [
                 {
@@ -1115,7 +1161,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-20T16:41:16+00:00"
+            "time": "2023-12-27T22:16:42+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1365,16 +1411,16 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v6.4.1",
+            "version": "v6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "0c95c164fdba18b12523b75e64199ca3503e6d40"
+                "reference": "98eab13a07fddc85766f1756129c69f207ffbc21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/0c95c164fdba18b12523b75e64199ca3503e6d40",
-                "reference": "0c95c164fdba18b12523b75e64199ca3503e6d40",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/98eab13a07fddc85766f1756129c69f207ffbc21",
+                "reference": "98eab13a07fddc85766f1756129c69f207ffbc21",
                 "shasum": ""
             },
             "require": {
@@ -1428,7 +1474,7 @@
                 "url"
             ],
             "support": {
-                "source": "https://github.com/symfony/routing/tree/v6.4.1"
+                "source": "https://github.com/symfony/routing/tree/v6.4.2"
             },
             "funding": [
                 {
@@ -1444,13 +1490,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-01T14:54:37+00:00"
+            "time": "2023-12-29T15:34:34+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "gabordemooij/redbean": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -1458,5 +1506,5 @@
         "ext-pdo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

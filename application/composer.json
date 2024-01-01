@@ -8,6 +8,7 @@
   "require": {
     "cboden/ratchet": "^0.4.4",
     "phpmailer/phpmailer": "^6.8",
+    "gabordemooij/redbean": "dev-master",
     "ext-json": "*",
     "ext-pdo": "*"
   }
