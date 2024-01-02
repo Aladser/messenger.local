@@ -27,7 +27,7 @@ class ContactEntity extends Model
         return $isRemoved;
     }
 
-    // проверка существования
+    // проверить существования контакта
     public function exists($contactId, $userId)
     {
         $sql = 'select count(*) as count from contacts 
@@ -40,9 +40,9 @@ class ContactEntity extends Model
     }
 
     // получить контакт пользователя
-    public function getContact($userId, $contactId)
+    public function get($userId, $contactId)
     {
-        $sql = '
+        $sql = "
             select chat_id, user_id, user_photo,
             getPublicUserName(user_email, user_nickname, user_hide_email) as username, 
             (
@@ -54,16 +54,18 @@ class ContactEntity extends Model
             from chat 
             join chat_participant on chat_participant_chatid = chat_id
             join users on chat_participant_userid = user_id
-            where chat_type = \'dialog\'
+            where chat_type = 'dialog'
             and chat_id in (
                 select chat_participant_chatid 
                 from chat_participant 
                 where chat_participant_userid = :userId
             )
             and user_id = :contactId
-        ';
+        ";
+        $args = ['userId' => $userId, 'contactId' => $contactId];
+        $contact = $this->dbQuery->queryPrepared($sql, $args, false);
 
-        return $this->dbQuery->queryPrepared($sql, ['userId' => $userId, 'contactId' => $contactId], false);
+        return $contact;
     }
 
     /** получить контакты пользователя.

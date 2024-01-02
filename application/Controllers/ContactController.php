@@ -58,7 +58,7 @@ class ContactController extends Controller
             $contactName = $this->users->getPublicUsername($contactId);
             $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 1];
         } else {
-            $contact = $this->contacts->getContact($this->authUserId, $contactId);
+            $contact = $this->contacts->get($this->authUserId, $contactId);
             $userData = [
                 'username' => $contact[0]['username'],
                 'chat_id' => $contact[0]['chat_id'],
