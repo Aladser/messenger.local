@@ -99,6 +99,7 @@ class GroupContainer extends TemplateContainer{
             requestData.set('CSRF', csrf);
 
             let process = (data) => {
+                console.log(data);
                 data = JSON.parse(data);
                 if (data.result == 1) {
                     let group = document.querySelector('#'+data.group);

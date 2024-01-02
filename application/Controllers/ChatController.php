@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\ContactEntity;
+use App\Models\GroupContactEntity;
 use App\Models\MessageEntity;
 use App\Models\UserEntity;
 
@@ -15,6 +16,7 @@ class ChatController extends Controller
     private UserEntity $users;
     private MessageEntity $messages;
     private ContactEntity $contacts;
+    private GroupContactEntity $groupContacts;
     private string $authUserEmail;
     private int $authUserId;
 
@@ -24,6 +26,7 @@ class ChatController extends Controller
         $this->messages = new MessageEntity();
         $this->users = new UserEntity();
         $this->contacts = new ContactEntity();
+        $this->groupContacts = new GroupContactEntity();
         $this->authUserEmail = UserController::getAuthUserEmail();
         $this->authUserId = $this->users->getIdByName($this->authUserEmail);
     }
@@ -65,7 +68,7 @@ class ChatController extends Controller
         for ($i = 0; $i < count($groups); ++$i) {
             $discussionId = $groups[$i]['chat'];
             $creatorId = $this->messages->getDiscussionCreatorId($discussionId);
-            $groups[$i]['members'] = $this->contacts->getGroupContacts($discussionId);
+            $groups[$i]['members'] = $this->groupContacts->get($discussionId);
         }
         $data['groups'] = $groups;
 

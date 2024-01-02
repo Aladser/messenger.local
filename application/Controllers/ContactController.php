@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\ContactEntity;
+use App\Models\GroupContactEntity;
 use App\Models\MessageEntity;
 use App\Models\UserEntity;
 
@@ -11,6 +12,7 @@ use App\Models\UserEntity;
 class ContactController extends Controller
 {
     private ContactEntity $contacts;
+    private GroupContactEntity $groupContacts;
     private MessageEntity $messages;
     private UserEntity $users;
     private string $authUserEmail;
@@ -21,28 +23,10 @@ class ContactController extends Controller
         parent::__construct();
         $this->users = new UserEntity();
         $this->contacts = new ContactEntity();
+        $this->groupContacts = new GroupContactEntity();
         $this->messages = new MessageEntity();
         $this->authUserEmail = UserController::getAuthUserEmail();
         $this->authUserId = $this->users->getIdByName($this->authUserEmail);
-    }
-
-    public function createGroupContact()
-    {
-        $discussionId = htmlspecialchars($_POST['discussionid']);
-        $username = htmlspecialchars($_POST['username']);
-        $userId = $this->users->getIdByName($username);
-        $group = $this->contacts->addGroupContact($discussionId, $userId);
-        echo json_encode(['result' => json_encode($group), 'group' => 'group-'.$discussionId, 'user' => $username]);
-    }
-
-    public function getGroupContacts()
-    {
-        $discussionId = htmlspecialchars($_POST['discussionid']);
-        $creatorId = $this->messages->getDiscussionCreatorId($discussionId);
-        echo json_encode([
-            'participants' => $this->contacts->getGroupContacts($discussionId),
-            'creatorName' => $this->users->getPublicUsername($creatorId),
-        ]);
     }
 
     public function getContact()
@@ -106,5 +90,35 @@ class ContactController extends Controller
             $this->contacts->remove($clientId, $contactId);
         }
         echo json_encode(['response' => $this->messages->removeChat($chatId)]);
+    }
+
+    public function createGroupContact()
+    {
+        $discussionId = htmlspecialchars($_POST['discussionid']);
+        $username = htmlspecialchars($_POST['username']);
+        $userId = $this->users->getIdByName($username);
+
+        $gcExisted = $this->groupContacts->exists($discussionId, $userId);
+        if (!$gcExisted) {
+            $group = $this->groupContacts->add($discussionId, $userId);
+        } else {
+            $group = 1;
+        }
+
+        echo json_encode([
+            'result' => $group,
+            'group' => 'group-'.$discussionId,
+            'user' => $username,
+        ]);
+    }
+
+    public function getGroupContacts()
+    {
+        $discussionId = htmlspecialchars($_POST['discussionid']);
+        $creatorId = $this->messages->getDiscussionCreatorId($discussionId);
+        echo json_encode([
+            'participants' => $this->contacts->getGroupContacts($discussionId),
+            'creatorName' => $this->users->getPublicUsername($creatorId),
+        ]);
     }
 }
