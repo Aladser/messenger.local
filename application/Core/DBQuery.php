@@ -122,7 +122,7 @@ class DBQuery
      * @param array  $fieldArray обновляемые значения
      * @param array  $condition  массив условия [поле, знак условия, значение поля]
      */
-    public function update(string $tableName, array $fieldArray, array $condition): bool
+    public function update(string $tableName, array $fieldArray, array $condition = null): bool
     {
         // sql
         $sql = "update $tableName set ";
@@ -135,7 +135,9 @@ class DBQuery
         }
         $sql = mb_substr($sql, 0, strlen($sql) - 2);
 
-        $sql .= " where $condition_field_name $condition_sign :$condition_field_name";
+        if (!empty($condition)) {
+            $sql .= " where $condition_field_name $condition_sign :$condition_field_name";
+        }
 
         // args
         $args = $fieldArray;

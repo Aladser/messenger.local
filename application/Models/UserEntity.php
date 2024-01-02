@@ -99,8 +99,9 @@ class UserEntity extends Model
     {
         $sql = 'select count(*) as count from users where user_email = :email and user_hash = :hash';
         $args = ['email' => $email, 'hash' => $hash];
+        $isHashCorrected = $this->dbQuery->queryPrepared($sql, $args)['count'] === 1;
 
-        return $this->dbQuery->queryPrepared($sql, $args)['count'] === 1;
+        return $isHashCorrected;
     }
 
     /** Cписок пользователей по шаблону почты или никнейма.
