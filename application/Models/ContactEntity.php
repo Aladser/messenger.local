@@ -4,10 +4,9 @@ namespace App\Models;
 
 use App\Core\Model;
 
-/** Контакт */
+/** Контакт пользователя */
 class ContactEntity extends Model
 {
-    // получить контакт пользователя
     public function get($userId, $contactId)
     {
         $sql = "
@@ -36,11 +35,6 @@ class ContactEntity extends Model
         return $contact;
     }
 
-    /** получить контакты пользователя.
-     *
-     * @param int  $userId id пользователя
-     * @param bool $onlyId только id?
-     */
     public function getUserContacts(int $userId, bool $onlyId = false): array
     {
         $sql = '
@@ -78,7 +72,6 @@ class ContactEntity extends Model
         }
     }
 
-    // добавить контакт
     public function add($contactId, $userId)
     {
         $fields = ['cnt_user_id' => $userId, 'cnt_contact_id' => $contactId];
@@ -87,7 +80,6 @@ class ContactEntity extends Model
         return $userId > 0;
     }
 
-    /** удалить контакт */
     public function remove($contactId, $userId)
     {
         $whereCondition = '(cnt_user_id=:userId and cnt_contact_id=:contactId) 
@@ -98,7 +90,6 @@ class ContactEntity extends Model
         return $isRemoved;
     }
 
-    // проверить существования контакта
     public function exists($contactId, $userId)
     {
         $sql = 'select count(*) as count from contacts 
