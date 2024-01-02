@@ -8,9 +8,12 @@ use App\Core\Model;
 class ContactEntity extends Model
 {
     // добавить контакт
-    public function addContact($contactId, $userId)
+    public function add($contactId, $userId)
     {
-        return $this->dbQuery->exec("insert into contacts(cnt_user_id, cnt_contact_id) values($userId, $contactId)");
+        $fields = ['cnt_user_id' => $userId, 'cnt_contact_id' => $contactId];
+        $userId = $this->dbQuery->insert('contacts', $fields);
+
+        return $userId > 0;
     }
 
     /** удалить контакт */

@@ -53,7 +53,7 @@ class ContactController extends Controller
         // добавляется контакт, если не существует
         $isContact = $this->contacts->existsContact($contactId, $this->authUserId);
         if (!$isContact) {
-            $this->contacts->addContact($contactId, $this->authUserId);
+            $this->contacts->add($contactId, $this->authUserId);
             $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
             $contactName = $this->users->getPublicUsername($contactId);
             $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 1];
@@ -84,7 +84,7 @@ class ContactController extends Controller
         $contact = htmlspecialchars($_POST['username']);
         $contactId = $this->users->getIdByName($contact);
 
-        $this->contacts->addContact($contactId, $this->authUserId);
+        $this->contacts->add($contactId, $this->authUserId);
         $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
         $contactName = $this->users->getPublicUsername($contactId);
         $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 1];
