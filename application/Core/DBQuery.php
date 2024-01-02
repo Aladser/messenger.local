@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use RedBeanPHP\R;
+
 /** Класс запросов в БД на основе PDO */
 class DBQuery
 {
@@ -17,10 +19,7 @@ class DBQuery
         $this->nameDB = $nameDB;
         $this->userDB = $userDB;
         $this->passwordDB = $passwordDB;
-    }
 
-    private function connect()
-    {
         try {
             $this->dbConnection = new \PDO(
                 "mysql:dbname=$this->nameDB; host=$this->host",
@@ -30,11 +29,12 @@ class DBQuery
         } catch (\PDOException $e) {
             exit($e->getMessage());
         }
-    }
-
-    private function disconnect()
-    {
-        $this->dbConnection = null;
+        /*
+        R::setup('mysql:host=localhost;dbname=redbeanphp', 'root', '', false);
+        if (!R::testConnection()) {
+            exit('No DB connection!');
+        }
+        */
     }
 
     /** выполняет подготовленный запрос
@@ -46,10 +46,8 @@ class DBQuery
      */
     public function queryPrepared(string $sql, array $args, bool $isOneValue = true)
     {
-        $this->connect();
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($args);
-        $this->disconnect();
 
         return $isOneValue ? $stmt->fetch(\PDO::FETCH_ASSOC) : $stmt->fetchAll();
     }
@@ -62,9 +60,7 @@ class DBQuery
      */
     public function query(string $sql, bool $isOneValue = true)
     {
-        $this->connect();
         $query = $this->dbConnection->query($sql);
-        $this->disconnect();
 
         return $isOneValue ? $query->fetch(\PDO::FETCH_ASSOC) : $query->fetchAll();
     }
@@ -76,9 +72,7 @@ class DBQuery
      */
     public function exec(string $sql)
     {
-        $this->connect();
         $numRows = $this->dbConnection->exec($sql);
-        $this->disconnect();
 
         return $numRows;
     }
@@ -89,12 +83,10 @@ class DBQuery
      */
     public function executeProcedure($sql, $out)
     {
-        $this->connect();
         $stmt = $this->dbConnection->prepare("call $sql");
         $stmt->execute();
         $stmt->closeCursor();
         $procRst = $this->dbConnection->query("select $out as info");
-        $this->disconnect();
 
         return $procRst->fetch(\PDO::FETCH_ASSOC)['info'];
     }
@@ -117,11 +109,9 @@ class DBQuery
         // запрос
         $sql = "insert into $tableName($fieldNames) values($fieldValues)";
 
-        $this->connect();
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($fieldArray);
         $id = $this->dbConnection->lastInsertId();
-        $this->disconnect();
 
         return $id;
     }
@@ -151,11 +141,9 @@ class DBQuery
         $args = $fieldArray;
         $args[$condition_field_name] = $condition_field_value;
 
-        $this->connect();
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($args);
         $rowCount = $stmt->rowCount();
-        $this->disconnect();
 
         return $rowCount > 0;
     }
