@@ -17,15 +17,14 @@ class ContactEntity extends Model
     }
 
     /** удалить контакт */
-    public function removeContact($contactId, $userId)
+    public function remove($contactId, $userId)
     {
-        $sql = "
-            delete from contacts 
-            where (cnt_user_id=$userId and cnt_contact_id=$contactId) 
-            or (cnt_contact_id=$userId and cnt_user_id=$contactId)
-        ";
+        $whereCondition = '(cnt_user_id=:userId and cnt_contact_id=:contactId) 
+        or (cnt_contact_id=:userId and cnt_user_id=:contactId)';
+        $args = ['userId' => $userId, 'contactId' => $contactId];
+        $isRemoved = $this->dbQuery->delete('contacts', $whereCondition, $args);
 
-        return $this->dbQuery->exec($sql);
+        return $isRemoved;
     }
 
     // проверка существования

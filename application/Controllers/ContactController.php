@@ -103,7 +103,7 @@ class ContactController extends Controller
 
             $contactId = $this->users->getIdByName($name);
             $chatId = $this->messages->getDialogId($clientId, $contactId);
-            $this->contacts->removeContact($clientId, $contactId);
+            $this->contacts->remove($clientId, $contactId);
         }
         echo json_encode(['response' => $this->messages->removeChat($chatId)]);
     }

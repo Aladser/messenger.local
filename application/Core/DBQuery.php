@@ -93,8 +93,8 @@ class DBQuery
 
     /** INSERT.
      *
-     * @param string $tableName  название таблицы
-     * @param array  $fieldArray записываемые значения
+     * @param string $tableName  имя таблицы
+     * @param array  $fieldArray внешние данные
      */
     public function insert(string $tableName, array $fieldArray): int
     {
@@ -119,7 +119,7 @@ class DBQuery
     /** UPDATE.
      *
      * @param string $tableName  имя таблицы
-     * @param array  $fieldArray обновляемые значения
+     * @param array  $fieldArray внешние данные
      * @param array  $condition  массив условия [поле, знак условия, значение поля]
      */
     public function update(string $tableName, array $fieldArray, array $condition = null): bool
@@ -150,9 +150,19 @@ class DBQuery
         return $rowCount > 0;
     }
 
-    /** delete операции */
-    public function delete(string $sql, array $args): bool
+    /** DELETE.
+     *
+     * @param string $tableName      имя таблицы
+     * @param string $whereCondition условие WHERE
+     * @param array  $args           внешние данные
+     */
+    public function delete(string $tableName, string $whereCondition, array $args): bool
     {
-        return $this->update($sql, $args);
+        $sql = "delete from $tableName where $whereCondition";
+        $stmt = $this->dbConnection->prepare($sql);
+        $stmt->execute($args);
+        $rowCount = $stmt->rowCount();
+
+        return $rowCount > 0;
     }
 }
