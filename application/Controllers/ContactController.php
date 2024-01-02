@@ -51,7 +51,7 @@ class ContactController extends Controller
         $contactId = $this->users->getIdByName($contact);
 
         // добавляется контакт, если не существует
-        $isContact = $this->contacts->existsContact($contactId, $this->authUserId);
+        $isContact = $this->contacts->exists($contactId, $this->authUserId);
         if (!$isContact) {
             $this->contacts->add($contactId, $this->authUserId);
             $chatId = $this->messages->getDialogId($this->authUserId, $contactId);

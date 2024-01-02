@@ -28,15 +28,15 @@ class ContactEntity extends Model
     }
 
     // проверка существования
-    public function existsContact($contactId, $userId)
+    public function exists($contactId, $userId)
     {
-        return $this->dbQuery->queryPrepared(
-            'select * 
-            from contacts 
-            where cnt_user_id = :userId and cnt_contact_id = :contactId 
-            or cnt_user_id = :contactId and cnt_contact_id = :userId',
-            ['userId' => $userId, 'contactId' => $contactId]
-        );
+        $sql = 'select count(*) as count from contacts 
+        where cnt_user_id = :userId and cnt_contact_id = :contactId 
+        or cnt_user_id = :contactId and cnt_contact_id = :userId';
+        $args = ['userId' => $userId, 'contactId' => $contactId];
+        $isExisted = $this->dbQuery->queryPrepared($sql, $args)['count'] > 0;
+
+        return $isExisted;
     }
 
     // получить контакт пользователя
