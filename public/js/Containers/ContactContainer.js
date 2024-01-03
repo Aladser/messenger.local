@@ -167,7 +167,7 @@ class ContactContainer extends TemplateContainer{
                     contact.remove();
                 }
             } catch (err) {
-                this.errorDomElement.innerHTML = data;
+                alert(data);
             }
         });
     }

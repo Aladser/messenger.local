@@ -76,13 +76,13 @@ class ChatEntity extends Model
     }
 
     /** удалить чат */
-    public function removeChat($dialogId)
+    public function remove($chatId)
     {
-        $result = $this->dbQuery->exec("delete from chat_participant where chat_participant_chatid  = $dialogId");
-        $result += $this->dbQuery->exec("delete from chat_message where chat_message_chatid  = $dialogId");
-        $result += $this->dbQuery->exec("delete from chat where chat_id = $dialogId");
+        $this->dbQuery->exec("delete from chat_participants where chat_id = $chatId");
+        $this->dbQuery->exec("delete from messages where chat_id = $chatId");
+        $isDeleted = $this->dbQuery->exec("delete from chats where chat_id = $chatId");
 
-        return $result;
+        return $isDeleted > 0;
     }
 
     // создать групповой чат
