@@ -130,12 +130,18 @@ class MessageEntity extends Model
     }
 
     // добавить пересылаемое сообщение
-    public function addForwardedMessage($msg)
+    public function addForwarded($message)
     {
-        $out = '@chatid';
-        $func = "add_forwarded_message($msg->authorId, $msg->msgId, $msg->chat, '$msg->time', $out)";
-
-        return $this->dbQuery->executeProcedure($func, $out);
+        // добавить копию сообщения в указанный чат
+        $messageId = $this->add($message);
+        // установить флаг "пересылка сообщения"
+        $fieldArray = ['chat_message_forward' => 1];
+        $condition = [
+            'condition_field_name' => 'chat_message_id',
+            'condition_sign' => '=',
+            'condition_field_value' => $messageId,
+        ];
+        $isUpdated = $this->dbQuery->update('chat_message', $fieldArray, $condition);
     }
 
     // изменить сообщение
