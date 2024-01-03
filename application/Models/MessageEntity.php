@@ -113,12 +113,11 @@ class MessageEntity extends Model
     public function add($message)
     {
         $userData = [
-            'chat_message_chatid' => $message->chat,
-            'chat_message_text' => $message->message,
-            'chat_message_creatorid' => $message->author_id,
-            'chat_message_time' => $message->time,
+            'chat_id' => $message->chat,
+            'content' => $message->message,
+            'creator_user_id' => $message->author_id,
         ];
-        $messageId = $this->dbQuery->insert('chat_message', $userData);
+        $messageId = $this->dbQuery->insert('messages', $userData);
 
         return $messageId;
     }
@@ -129,13 +128,13 @@ class MessageEntity extends Model
         // добавить копию сообщения в указанный чат
         $messageId = $this->add($message);
         // установить флаг "пересылка сообщения"
-        $fieldArray = ['chat_message_forward' => 1];
+        $fieldArray = ['forward' => 1];
         $condition = [
-            'condition_field_name' => 'chat_message_id',
+            'condition_field_name' => 'id',
             'condition_sign' => '=',
             'condition_field_value' => $messageId,
         ];
-        $isUpdated = $this->dbQuery->update('chat_message', $fieldArray, $condition);
+        $isUpdated = $this->dbQuery->update('messages', $fieldArray, $condition);
 
         return $isUpdated;
     }
@@ -144,16 +143,12 @@ class MessageEntity extends Model
     public function editMessage(string $msg, int $msgId)
     {
         // изменяем строку
-        $this->dbQuery->exec("update chat_message set chat_message_text = '$msg' where chat_message_id = $msgId");
+        $this->dbQuery->exec("update messages set content = '$msg' where id = $msgId");
         // возвращаем строку
-        $rslt = $this->dbQuery->queryPrepared('
-            select chat_message_id as msg, 
-                   chat_message_chatid as chat, 
-                   chat_message_text as message, 
-                   chat_message_time as time 
-            from chat_message 
-            where chat_message_id = :msgId
-        ', ['msgId' => $msgId]);
+        $sql = 'select id as msg, chat_id as chat, content as message, time 
+        from messages where id = :msgId';
+        $args = ['msgId' => $msgId];
+        $rslt = $this->dbQuery->queryPrepared($sql, $args);
         $rslt['messageType'] = 'EDIT';
 
         return $rslt;
@@ -162,37 +157,30 @@ class MessageEntity extends Model
     // удалить сообщение
     public function removeMessage(int $msgId)
     {
-        // получиим удаляемую строку
-        $rslt = $this->dbQuery->queryPrepared('
-            select chat_message_id as msg, chat_message_chatid as chat 
-            from chat_message 
-            where chat_message_id = :msgId
-        ', ['msgId' => $msgId]);
+        // получим удаляемую строку
+        $sql = 'select id as msg, chat_id as chat 
+        from messages where id = :msgId';
+        $args = ['msgId' => $msgId];
+        $rowDeleted = $this->dbQuery->queryPrepared($sql, $args);
+        $rowDeleted['messageType'] = 'REMOVE';
         // удаляем
-        $this->dbQuery->exec("delete from chat_message where chat_message_id = $msgId");
-        // возвращаем информацию удаляемой строки
-        $rslt['messageType'] = 'REMOVE';
+        $this->dbQuery->exec("delete from messages where id = $msgId");
 
-        return $rslt;
+        return $rowDeleted;
     }
 
     // установить показ уведомлений чатов
     public function setNoticeShow($chatid, $userid, $notice)
     {
-        $this->dbQuery->exec("
-            update chat_participant 
-            set chat_participant_isnotice = $notice 
-            where chat_participant_chatid = $chatid 
-              and chat_participant_userid = $userid
-        ");
+        $sql = "update chat_participants set notice = $notice 
+        where chat_id = $chatid and user_id = $userid";
+        $this->dbQuery->exec($sql);
 
-        $sql = '
-            select chat_participant_isnotice 
-            from chat_participant 
-            where chat_participant_chatid = :chatid 
-              and chat_participant_userid = :userid
-        ';
+        $sql = 'select notice from chat_participants 
+            wherechat_id = :chatid and user_id = :userid';
+        $args = ['chatid' => $chatid, 'userid' => $userid];
+        $notice = $this->dbQuery->queryPrepared($sql, $args)['chat_participant_isnotice'];
 
-        return $this->dbQuery->queryPrepared($sql, ['chatid' => $chatid, 'userid' => $userid])['chat_participant_isnotice'];
+        return $notice;
     }
 }
