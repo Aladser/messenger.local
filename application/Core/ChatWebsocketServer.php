@@ -70,7 +70,6 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $message)
     {
         $data = json_decode($message);
-        echo "$message\n";
 
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
@@ -91,13 +90,13 @@ class ChatWebsocketServer implements MessageComponentInterface
             echo "$data->author в сети\n";
         } elseif ($data->message) {
             // отправляется сообщение
+
             // id участников чата
             $participantsIds = $this->messageEntity->getChatParticipantIds($data->chat);
 
-            // формирование данных сообщения
+            // формирование сообщения
             switch ($data->messageType) {
                 case 'NEW':
-                    // формирование сообщения
                     // {"message":"1","messageType":"NEW","author":"Admin","chat":145,"chatType":"dialog"}
                     $data->time = date('Y-m-d H:i:s');
                     $data->author_id = $this->userEntity->getIdByName($data->author);
@@ -121,6 +120,7 @@ class ChatWebsocketServer implements MessageComponentInterface
 
             // рассылка сообщения участникам чата
             $message = json_encode($data);
+            echo "$message\n";
             $this->sendMessage($participantsIds, $message);
         }
     }

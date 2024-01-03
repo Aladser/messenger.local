@@ -115,7 +115,7 @@ class MessageEntity extends Model
         return $this->dbQuery->queryPrepared($sql, ['chatId' => $chatId])['chat_creatorid'];
     }
 
-    // добавить сообщение
+    // Добавить сообщение
     public function add($message)
     {
         $userData = [
@@ -129,7 +129,7 @@ class MessageEntity extends Model
         return $messageId;
     }
 
-    // добавить пересылаемое сообщение
+    // Добавить пересылаемое сообщение
     public function addForwarded($message)
     {
         // добавить копию сообщения в указанный чат
@@ -142,6 +142,8 @@ class MessageEntity extends Model
             'condition_field_value' => $messageId,
         ];
         $isUpdated = $this->dbQuery->update('chat_message', $fieldArray, $condition);
+
+        return $isUpdated;
     }
 
     // изменить сообщение
