@@ -19,7 +19,7 @@ class UserEntity extends Model
     // Поле строки таблицы
     public function get(string $email, string $field): mixed
     {
-        $sql = "select $field from users where user_email = :email";
+        $sql = "select $field from users where email = :email";
         $args = ['email' => $email];
 
         return $this->dbQuery->queryPrepared($sql, $args)[$field];
@@ -28,10 +28,10 @@ class UserEntity extends Model
     // Получить ID пользователя
     public function getIdByName(string $publicUsername)
     {
-        $sql = 'select user_id from users 
-                where user_email = :publicUsername or user_nickname=:publicUsername';
+        $sql = 'select id from users 
+                where email = :publicUsername or nickname=:publicUsername';
         $args = ['publicUsername' => $publicUsername];
-        $id = $this->dbQuery->queryPrepared($sql, $args)['user_id'];
+        $id = $this->dbQuery->queryPrepared($sql, $args)['id'];
 
         return $id;
     }
@@ -40,8 +40,8 @@ class UserEntity extends Model
     public function getPublicUsername(int $userId)
     {
         $sql = '
-            select getPublicUserName(user_email, user_nickname, user_hide_email) as username 
-            from users where user_id = :userId';
+            select getPublicUserName(email, nickname, hide_email) as username 
+            from users where id = :userId';
         $args = ['userId' => $userId];
         $username = $this->dbQuery->queryPrepared($sql, $args)['username'];
 
@@ -51,7 +51,7 @@ class UserEntity extends Model
     // Проверка авторизации
     public function verify(string $email, string $password): bool
     {
-        $passHash = $this->get($email, 'user_password');
+        $passHash = $this->get($email, 'password');
 
         return password_verify($password, $passHash) == 1;
     }
@@ -60,7 +60,7 @@ class UserEntity extends Model
     public function add($email, $password): bool
     {
         $password = password_hash($password, PASSWORD_DEFAULT);
-        $fields = ['user_email' => $email, 'user_password' => $password];
+        $fields = ['email' => $email, 'password' => $password];
         $userId = $this->dbQuery->insert('users', $fields);
 
         return $userId;
@@ -69,9 +69,9 @@ class UserEntity extends Model
     // Добавить хэш пользователю
     public function addUserHash($email, $hash): bool
     {
-        $fieldArray = ['user_hash' => $hash];
+        $fieldArray = ['hash' => $hash];
         $condition = [
-            'condition_field_name' => 'user_email',
+            'condition_field_name' => 'email',
             'condition_sign' => '=',
             'condition_field_value' => $email,
         ];
@@ -83,9 +83,9 @@ class UserEntity extends Model
     /** Подтвердить почту */
     public function confirmEmail($email)
     {
-        $fieldArray = ['user_email_confirmed' => 1, 'user_hash' => null];
+        $fieldArray = ['email_confirmed' => 1, 'hash' => null];
         $condition = [
-            'condition_field_name' => 'user_email',
+            'condition_field_name' => 'email',
             'condition_sign' => '=',
             'condition_field_value' => $email,
         ];
@@ -97,7 +97,7 @@ class UserEntity extends Model
     // Проверить хэш пользователя
     public function isUserHash($email, $hash): bool
     {
-        $sql = 'select count(*) as count from users where user_email = :email and user_hash = :hash';
+        $sql = 'select count(*) as count from users where email = :email and hash = :hash';
         $args = ['email' => $email, 'hash' => $hash];
         $isHashCorrected = $this->dbQuery->queryPrepared($sql, $args)['count'] === 1;
 
@@ -113,13 +113,13 @@ class UserEntity extends Model
         $phrase = "%$phrase%";
         // список пользователей, подходящие по шаблону
         $sql = '
-            select user_id as user, user_nickname as name, user_photo as photo 
+            select id as user, nickname as name, photo 
             from users 
-            where user_hide_email = 1 and user_email != :email and user_nickname like :phrase
+            where hide_email = 1 and email != :email and nickname like :phrase
             union 
-            select user_id as user, user_email as name, user_photo as photo 
+            select id as user, email as name, photo 
             from users 
-            where user_hide_email = 0 and user_email != :email and user_email like :phrase;
+            where hide_email = 0 and email != :email and email like :phrase;
         ';
         $args = ['email' => $notEmail, 'phrase' => $phrase];
 
@@ -129,9 +129,9 @@ class UserEntity extends Model
     // обновить пользовательские данные
     public function setUserData($data): bool
     {
-        $email = $data['user_email'];
+        $email = $data['email'];
         $condition = [
-            'condition_field_name' => 'user_email',
+            'condition_field_name' => 'email',
             'condition_sign' => '=',
             'condition_field_value' => $email,
         ];

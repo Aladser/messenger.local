@@ -38,24 +38,13 @@ class ContactEntity extends Model
     public function getUserContacts(int $userId, bool $onlyId = false): array
     {
         $sql = '
-            select chat_id as chat, user_id as user, user_photo as photo,
-            getPublicUserName(user_email, user_nickname, user_hide_email) as name, 
-            (
-                select chat_participant_isnotice 
-                from chat_participant 
-                where chat_participant_chatid = chat_id 
-                  and chat_participant_userid = :userId
-            ) as notice
-            from chat 
-            join chat_participant on chat_participant_chatid = chat_id
-            join users on chat_participant_userid = user_id
-            where chat_type = \'dialog\'
-            and chat_id in (
-                select chat_participant_chatid
-                from chat_participant
-                where chat_participant_userid = :userId
-            )
-            and user_id != :userId
+            select getPublicUserName(email, nickname, hide_email) as name, chat_id as chat, user_id, photo, notice 
+            from chats 
+            join chat_participants on chats.id = chat_participants.chat_id
+            join users on chat_participants.user_id = users.id
+            where user_id != :userId
+            and chat_id  IN 
+            (select chat_id from chat_participants where user_id = :userId);
         ';
         $args = ['userId' => $userId];
 
@@ -63,7 +52,7 @@ class ContactEntity extends Model
         if ($onlyId) {
             $contactIdList = [];
             foreach ($contactList as $contact) {
-                $contactIdList[] = $contact['user'];
+                $contactIdList[] = $contact['user_id'];
             }
 
             return $contactIdList;

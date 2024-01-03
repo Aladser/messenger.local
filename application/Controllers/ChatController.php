@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Models\ChatEntity;
 use App\Models\ContactEntity;
 use App\Models\GroupContactEntity;
 use App\Models\MessageEntity;
@@ -14,6 +15,7 @@ use function App\config;
 class ChatController extends Controller
 {
     private UserEntity $users;
+    private ChatEntity $chats;
     private MessageEntity $messages;
     private ContactEntity $contacts;
     private GroupContactEntity $groupContacts;
@@ -25,6 +27,7 @@ class ChatController extends Controller
         parent::__construct();
         $this->messages = new MessageEntity();
         $this->users = new UserEntity();
+        $this->chats = new ChatEntity();
         $this->contacts = new ContactEntity();
         $this->groupContacts = new GroupContactEntity();
         $this->authUserEmail = UserController::getAuthUserEmail();
@@ -56,7 +59,7 @@ class ChatController extends Controller
         // указание путей до аватарок
         for ($i = 0; $i < count($contacts); ++$i) {
             if ($contacts[$i]['photo'] === 'ava_profile.png' || empty($contacts[$i]['photo'])) {
-                $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/application/images/ava.png';
+                $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/public/images/ava.png';
             } else {
                 $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/application/data/profile_photos/'.$contacts[$i]['photo'];
             }
@@ -64,10 +67,11 @@ class ChatController extends Controller
         $data['contacts'] = $contacts;
 
         // группы пользователя
-        $groups = $this->messages->getDiscussions($this->authUserId);
+        $groups = $this->chats->getDiscussions($this->authUserId);
+
         for ($i = 0; $i < count($groups); ++$i) {
             $discussionId = $groups[$i]['chat'];
-            $creatorId = $this->messages->getDiscussionCreatorId($discussionId);
+            $creatorId = $this->chats->getDiscussionCreatorId($discussionId);
             $groups[$i]['members'] = $this->groupContacts->get($discussionId);
         }
         $data['groups'] = $groups;

@@ -48,7 +48,7 @@ class UserController extends Controller
         $password = htmlspecialchars($_POST['password']);
 
         // проверка аутентификации
-        if ($this->users->exists('user_email', $email)) {
+        if ($this->users->exists('email', $email)) {
             // проверка введенных данных
             $isValidLogin = $this->users->verify($email, $password);
             if ($isValidLogin) {
@@ -110,7 +110,7 @@ class UserController extends Controller
         $eMailSender = new EMailSender();
         $email = htmlspecialchars($_POST['email']);
         $app_name = config('APP_NAME');
-        if (!$this->users->exists('user_email', $email)) {
+        if (!$this->users->exists('email', $email)) {
             $password = htmlspecialchars($_POST['password']);
             $isAdded = $this->users->add($email, $password) > 0;
             if ($isAdded) {
