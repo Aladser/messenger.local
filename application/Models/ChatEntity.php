@@ -105,20 +105,16 @@ class ChatEntity extends Model
     // установить показ уведомлений чатов
     public function setNoticeShow($chatid, $userid, $notice)
     {
-        $this->dbQuery->exec("
-            update chat_participant 
-            set chat_participant_isnotice = $notice 
-            where chat_participant_chatid = $chatid 
-              and chat_participant_userid = $userid
-        ");
+        $sql = "update chat_participants set notice = $notice 
+        where chat_id = :chatid and user_id = :userid";
+        $args = ['chatid' => $chatid, 'userid' => $userid];
+        $this->dbQuery->queryPrepared($sql, $args);
 
-        $sql = '
-            select chat_participant_isnotice 
-            from chat_participant 
-            where chat_participant_chatid = :chatid 
-              and chat_participant_userid = :userid
-        ';
+        $sql = 'select notice from chat_participants 
+        where chat_id = :chatid and user_id = :userid';
+        $args = ['chatid' => $chatid, 'userid' => $userid];
+        $notice = $this->dbQuery->queryPrepared($sql, $args)['notice'];
 
-        return $this->dbQuery->queryPrepared($sql, ['chatid' => $chatid, 'userid' => $userid])['chat_participant_isnotice'];
+        return $notice;
     }
 }
