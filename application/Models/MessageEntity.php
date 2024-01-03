@@ -24,91 +24,6 @@ class MessageEntity extends Model
         return $this->dbQuery->queryPrepared($sql, ['chatId' => $chatId], false);
     }
 
-    // получить ID диалога
-    public function getDialogId($user1Id, $user2Id)
-    {
-        $sql = "
-            select chat_id from chat_participants 
-            join chats on chats.id = chat_participants.chat_id
-            where user_id = :user1Id and type='dialog'
-            intersect
-            select chat_id from chat_participants 
-            join chats on chats.id = chat_participants.chat_id
-            where user_id = :user2Id and type='dialog'
-        ";
-        $args = ['user1Id' => $user1Id, 'user2Id' => $user2Id];
-        $chatId = $this->dbQuery->queryPrepared($sql, $args)['chat_id'];
-
-        return $chatId;
-    }
-
-    /** получить ID группового чата*/
-    public function getDiscussionId(string $groupName)
-    {
-        return $this->dbQuery->queryPrepared(
-            'select id from chats where name = :groupName',
-            ['groupName' => $groupName],
-            false
-        )[0]['chat_id'];
-    }
-
-    // получить id получателей сообщения
-    public function getChatParticipantIds($chatId)
-    {
-        $sql = 'select user_id as recipient from chat_participants 
-            where chat_id = :chatId';
-        $args = ['chatId' => $chatId];
-        $queryResultData = $this->dbQuery->queryPrepared($sql, $args, false);
-        $recipientIdArray = [];
-        foreach ($queryResultData as $element) {
-            array_push($recipientIdArray, $element['recipient']);
-        }
-
-        return $recipientIdArray;
-    }
-
-    /** удалить чат */
-    public function removeChat($dialogId)
-    {
-        $result = $this->dbQuery->exec("delete from chat_participants where chat_id  = $dialogId");
-        $result += $this->dbQuery->exec("delete from messages where chat_id  = $dialogId");
-        $result += $this->dbQuery->exec("delete from chats where id = $dialogId");
-
-        return $result;
-    }
-
-    // создать групповой чат
-    public function createDiscussion(int $userHostId)
-    {
-        $groupId = $this->dbQuery->executeProcedure("create_discussion($userHostId, @info)", '@info');
-        $sql = 'select id as chat, name from chats where id = :groupId';
-
-        return $this->dbQuery->queryPrepared($sql, ['groupId' => $groupId]);
-    }
-
-    // возвращает групповые чаты пользователя
-    public function getDiscussions(int $userHostId)
-    {
-        $sql = "
-        select chats.id as chat, name, notice       
-        from chat_participants
-        join chats on chat_participants.chat_id = chats.id
-        where type = 'discussion' and user_id = :userHostId
-        ";
-
-        return $this->dbQuery->queryPrepared($sql, ['userHostId' => $userHostId], false);
-    }
-
-    // возвращает создателя группового чата
-    public function getDiscussionCreatorId($chatId)
-    {
-        $sql = 'select creator_id from chats where id = :chatId';
-        $args = ['chatId' => $chatId];
-        $chatId = $this->dbQuery->queryPrepared($sql, $args)['creator_id'];
-
-        return $chatId;
-    }
-
     // Добавить сообщение
     public function add($message)
     {
@@ -167,20 +82,5 @@ class MessageEntity extends Model
         $this->dbQuery->exec("delete from messages where id = $msgId");
 
         return $rowDeleted;
-    }
-
-    // установить показ уведомлений чатов
-    public function setNoticeShow($chatid, $userid, $notice)
-    {
-        $sql = "update chat_participants set notice = $notice 
-        where chat_id = $chatid and user_id = $userid";
-        $this->dbQuery->exec($sql);
-
-        $sql = 'select notice from chat_participants 
-            wherechat_id = :chatid and user_id = :userid';
-        $args = ['chatid' => $chatid, 'userid' => $userid];
-        $notice = $this->dbQuery->queryPrepared($sql, $args)['chat_participant_isnotice'];
-
-        return $notice;
     }
 }

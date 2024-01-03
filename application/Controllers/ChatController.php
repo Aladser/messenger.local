@@ -104,7 +104,7 @@ class ChatController extends Controller
         if (isset($_POST['contact'])) {
             $contact = htmlspecialchars($_POST['contact']);
             $contactId = $this->users->getIdByName($contact);
-            $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
+            $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
             $type = 'dialog';
         } elseif (isset($_POST['discussionid'])) {
             // групповые чаты

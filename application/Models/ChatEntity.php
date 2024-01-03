@@ -10,26 +10,19 @@ class ChatEntity extends Model
     // получить ID диалога
     public function getDialogId($user1Id, $user2Id)
     {
-        // поиск диалога пользователей
-        $sql = '
-            select chat_id from chat
-            join chat_participant on chat_id = chat_participant_chatid
-            where chat_participant_userid = :user1Id
-            and chat_type = \'dialog\'
-            and chat_id in (
-	            select chat_id from chat
-	            join chat_participant on chat_id = chat_participant_chatid
-	            where chat_participant_userid = :user2Id
-            );
-        ';
-        $query = $this->dbQuery->queryPrepared($sql, ['user1Id' => $user1Id, 'user2Id' => $user2Id]);
+        $sql = "
+            select chat_id from chat_participants 
+            join chats on chats.id = chat_participants.chat_id
+            where user_id = :user1Id and type='dialog'
+            intersect
+            select chat_id from chat_participants 
+            join chats on chats.id = chat_participants.chat_id
+            where user_id = :user2Id and type='dialog'
+        ";
+        $args = ['user1Id' => $user1Id, 'user2Id' => $user2Id];
+        $chatId = $this->dbQuery->queryPrepared($sql, $args)['chat_id'];
 
-        // создание диалога, если не существует
-        if (!$query) {
-            return $this->dbQuery->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
-        }
-
-        return intval($query['chat_id']);
+        return $chatId;
     }
 
     /** получить ID группового чата*/
@@ -59,8 +52,8 @@ class ChatEntity extends Model
     // id получателей сообщения
     public function getChatParticipantIds($chatId)
     {
-        $sql = 'select chat_participant_userid as recipient from chat_participant 
-            where chat_participant_chatid = :chatId';
+        $sql = 'select user_id as recipient from chat_participants 
+            where chat_id = :chatId';
         $args = ['chatId' => $chatId];
         $queryResultData = $this->dbQuery->queryPrepared($sql, $args, false);
         $recipientIdArray = [];

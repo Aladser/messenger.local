@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+use App\Models\ChatEntity;
 use App\Models\ContactEntity;
 use App\Models\MessageEntity;
 use App\Models\UserEntity;
@@ -21,6 +22,7 @@ class ChatWebsocketServer implements MessageComponentInterface
     private UserEntity $userEntity;
     // контакты
     private ContactEntity $сontactEntity;
+    private ChatEntity $chats;
 
     public function __construct()
     {
@@ -30,6 +32,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         $this->messageEntity = new MessageEntity();
         $this->userEntity = new UserEntity();
         $this->contactEntity = new ContactEntity();
+        $this->chats = new ChatEntity();
     }
 
     /** Открыть соединение.
@@ -92,12 +95,11 @@ class ChatWebsocketServer implements MessageComponentInterface
             // отправляется сообщение
 
             // id участников чата
-            $participantsIds = $this->messageEntity->getChatParticipantIds($data->chat);
+            $participantsIds = $this->chats->getChatParticipantIds($data->chat);
 
             // формирование сообщения
             switch ($data->messageType) {
                 case 'NEW':
-                    // {"message":"1","messageType":"NEW","author":"Admin","chat":145,"chatType":"dialog"}
                     $data->time = date('Y-m-d H:i:s');
                     $data->author_id = $this->userEntity->getIdByName($data->author);
                     $data->msg = $this->messageEntity->add($data);
@@ -111,7 +113,6 @@ class ChatWebsocketServer implements MessageComponentInterface
                     $data = $this->messageEntity->removeMessage($data->msgId);
                     break;
                 case 'FORWARD':
-                    // {"message":"мне кажется, что мы давно не живы","messageType":"FORWARD","author":"Barashka","chat":"107","msgId":383}
                     $data->time = date('Y-m-d H:i:s');
                     $data->author_id = $this->userEntity->getIdByName($data->author);
                     $data->message = $this->messageEntity->addForwarded($data);
