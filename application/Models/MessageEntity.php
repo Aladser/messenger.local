@@ -116,12 +116,17 @@ class MessageEntity extends Model
     }
 
     // добавить сообщение
-    public function add($msg)
+    public function add($message)
     {
-        $out = '@chatid';
-        $func = "add_message($msg->chat, '$msg->message', '$msg->author', '$msg->time', $out)";
+        $userData = [
+            'chat_message_chatid' => $message->chat,
+            'chat_message_text' => $message->message,
+            'chat_message_creatorid' => $message->author_id,
+            'chat_message_time' => $message->time,
+        ];
+        $messageId = $this->dbQuery->insert('chat_message', $userData);
 
-        return $this->dbQuery->executeProcedure($func, $out);
+        return $messageId;
     }
 
     // добавить пересылаемое сообщение

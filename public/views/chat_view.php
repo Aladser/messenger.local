@@ -76,28 +76,28 @@
         <div class='options-container pt-2'>
             <div class='option'>
                 <a href="/profile" class='option-link'>
-                    <div class='option-img-block'><img src="application/images/profile.png" class='img' title='Профиль'>
+                    <div class='option-img-block'><img src="public/images/profile.png" class='img' title='Профиль'>
                     </div>
                     <span class='option-name'>Профиль</span>
                 </a>
             </div>
             <div class='option'>
                 <div class='option-link'>
-                    <div class='option-img-block'><img src="application/images/settings.png" class='img' title='Настройки'>
+                    <div class='option-img-block'><img src="public/images/settings.png" class='img' title='Настройки'>
                     </div>
                     <span class='option-name'>Настройки</span>
                 </div>
             </div>
             <div class='option'>
                 <div class='option-link' id='create-group-option'>
-                    <div class='option-img-block'><img src="application/images/group.png" class='img'
+                    <div class='option-img-block'><img src="public/images/group.png" class='img'
                                                     title='Создать группу'></div>
                     <span class='option-name'>Создать группу</span>
                 </div>
             </div>
             <div class='option'>
                 <a href="/quit" class='option-link'>
-                    <div class='option-img-block'><img src="application/images/exit.png" class='img' title='Выход'></div>
+                    <div class='option-img-block'><img src="public/images/exit.png" class='img' title='Выход'></div>
                     <span class='option-name'>Выйти</span>
                 </a>
             </div>

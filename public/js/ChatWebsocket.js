@@ -50,6 +50,8 @@ class ChatWebsocket
             // сообщение пользователям об отключении
             this.errorPrg.innerHTML = `${data.user} не в сети`;
         } else {
+            console.clear();
+            console.log(data);
             // уведомления о новых сообщениях чатов
             // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
             if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== this.publicUsername) {
