@@ -30,7 +30,7 @@ CREATE TABLE `chat` (
   PRIMARY KEY (`chat_id`),
   KEY `check_creatorid` (`chat_creatorid`),
   CONSTRAINT `check_creatorid` FOREIGN KEY (`chat_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=167 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `chat` (
 
 LOCK TABLES `chat` WRITE;
 /*!40000 ALTER TABLE `chat` DISABLE KEYS */;
-INSERT INTO `chat` VALUES (84,'dialog',NULL,10),(85,'dialog',NULL,10),(88,'dialog',NULL,10),(92,'dialog',NULL,10),(93,'dialog',NULL,24),(107,'dialog',NULL,24),(108,'discussion','Групповой чат 31108',31),(112,'dialog',NULL,31),(126,'discussion','Групповой чат 31126',31),(141,'dialog',NULL,24),(145,'dialog',NULL,24),(148,'dialog',NULL,10),(149,'dialog',NULL,24),(150,'discussion','Групповой чат 10150',10),(151,'discussion','Групповой чат 24151',24);
+INSERT INTO `chat` VALUES (84,'dialog',NULL,10),(85,'dialog',NULL,10),(88,'dialog',NULL,10),(92,'dialog',NULL,10),(93,'dialog',NULL,24),(107,'dialog',NULL,24),(112,'dialog',NULL,31),(141,'dialog',NULL,24),(145,'dialog',NULL,24),(149,'dialog',NULL,24),(160,'dialog',NULL,38),(163,'dialog',NULL,38),(166,'dialog',NULL,10);
 /*!40000 ALTER TABLE `chat` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -82,7 +82,7 @@ CREATE TABLE `chat_message` (
   KEY `check_message_creator` (`chat_message_creatorid`),
   CONSTRAINT `check_message_chatid` FOREIGN KEY (`chat_message_chatid`) REFERENCES `chat` (`chat_id`) ON DELETE CASCADE,
   CONSTRAINT `check_message_creator` FOREIGN KEY (`chat_message_creatorid`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=682 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=782 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +91,7 @@ CREATE TABLE `chat_message` (
 
 LOCK TABLES `chat_message` WRITE;
 /*!40000 ALTER TABLE `chat_message` DISABLE KEYS */;
-INSERT INTO `chat_message` VALUES (324,84,'На растрескавшейся земле',10,'2023-12-04 13:42:55',0),(326,84,'Город в дорожной петлей',10,'2023-12-04 13:43:15',0),(383,112,'мне кажется, что мы давно не живы',31,'2023-12-23 11:28:31',0),(384,108,'тест',31,'2023-12-23 21:49:57',0),(405,149,'белый снег',33,'2023-12-29 19:49:06',0),(513,148,'1',32,'2023-12-30 00:05:28',0),(598,88,'песен еще не написано?',24,'2023-12-30 05:44:56',0),(599,88,'сколько?',10,'2023-12-30 05:45:05',0),(600,88,'скажи, кукушка',24,'2023-12-30 05:45:12',0),(608,88,'мне кажется, что мы давно не живы',10,'2023-12-30 06:10:32',1),(611,107,'песен еще не написано?',24,'2023-12-30 07:35:42',1),(614,145,'1',24,'2023-12-30 07:36:08',0),(676,150,'два',24,'2023-12-31 01:11:55',0),(677,151,'три',24,'2023-12-31 01:11:59',0),(678,107,'четыре',24,'2023-12-31 01:12:04',0),(679,112,'пять',10,'2023-12-31 01:12:31',0),(680,88,'четыре',24,'2023-12-31 01:13:14',1),(681,88,'пять',10,'2023-12-31 01:19:21',1);
+INSERT INTO `chat_message` VALUES (324,84,'На растрескавшейся земле',10,'2023-12-04 13:42:55',0),(326,84,'Город в дорожной петлей',10,'2023-12-04 13:43:15',0),(383,112,'мне кажется, что мы давно не живы',31,'2023-12-23 11:28:31',0),(598,88,'песен еще не написано?',24,'2023-12-30 05:44:56',0),(599,88,'сколько?',10,'2023-12-30 05:45:05',0),(600,88,'скажи, кукушка',24,'2023-12-30 05:45:12',0),(608,88,'мне кажется, что мы давно не живы',10,'2023-12-30 06:10:32',1),(679,112,'пять',10,'2023-12-31 01:12:31',0),(691,107,'админ барашке',24,'2023-12-31 03:21:35',0),(692,88,'барашке',24,'2023-12-31 03:21:45',1),(701,88,'с праздником',24,'2023-12-31 03:58:26',0),(702,88,'спасибо. тебя тоже',10,'2023-12-31 03:58:34',0),(753,107,'цвет настроения',31,'2024-01-02 21:57:56',0),(754,107,'синий',31,'2024-01-02 21:58:12',0),(760,145,'1',24,'2024-01-02 23:30:40',0),(765,163,'222',32,'2024-01-02 23:53:40',0),(770,163,'раз',38,'2024-01-03 00:03:35',0),(771,107,'мне кажется, что мы давно не живы',31,'2024-01-03 00:33:08',1);
 /*!40000 ALTER TABLE `chat_message` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -141,7 +141,7 @@ CREATE TABLE `chat_participant` (
 
 LOCK TABLES `chat_participant` WRITE;
 /*!40000 ALTER TABLE `chat_participant` DISABLE KEYS */;
-INSERT INTO `chat_participant` VALUES (84,10,1),(85,10,1),(88,10,1),(88,24,1),(92,10,1),(93,24,1),(107,24,1),(107,31,1),(108,31,1),(112,10,1),(112,31,1),(126,31,1),(141,24,1),(145,24,0),(145,32,1),(148,10,1),(148,32,1),(149,24,1),(149,33,1),(150,10,1),(150,24,1),(151,24,1),(151,32,1);
+INSERT INTO `chat_participant` VALUES (84,10,1),(85,10,1),(88,10,1),(88,24,1),(92,10,1),(93,24,1),(107,24,1),(107,31,1),(112,10,1),(112,31,1),(141,24,1),(145,24,1),(145,32,1),(149,24,1),(160,24,1),(160,38,1),(163,32,1),(163,38,1),(166,10,1),(166,32,1);
 /*!40000 ALTER TABLE `chat_participant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -161,7 +161,7 @@ CREATE TABLE `contacts` (
   KEY `contacts_fk_contactid` (`cnt_contact_id`),
   CONSTRAINT `contacts_fk_contactid` FOREIGN KEY (`cnt_contact_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
   CONSTRAINT `contacts_fk_userid` FOREIGN KEY (`cnt_user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -170,7 +170,7 @@ CREATE TABLE `contacts` (
 
 LOCK TABLES `contacts` WRITE;
 /*!40000 ALTER TABLE `contacts` DISABLE KEYS */;
-INSERT INTO `contacts` VALUES (55,10,24),(69,24,31),(72,31,10),(102,24,32),(103,10,32),(104,24,33);
+INSERT INTO `contacts` VALUES (55,10,24),(69,24,31),(72,31,10),(102,24,32),(113,38,24),(115,38,32),(116,10,32);
 /*!40000 ALTER TABLE `contacts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,7 +205,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_email` (`user_email`),
   UNIQUE KEY `user_nickname` (`user_nickname`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -214,7 +214,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (10,'aladser@gmail.com','Aladser','$2y$10$Hh1BOVuvGZqj5dsnk9bO9ebWzOcIgLPLAQ7ckanQfNUbMB4LENnvy',NULL,1,1,'aladser@gmail.com.1.png'),(24,'aladser@mail.ru','Admin','$2y$10$ZYtRBbLJ0l.i5J15KHGefuEWCPjh/m5XbNUPbsThp3tBBT9fHmlFG',NULL,1,1,'aladser@mail.ru.1.png'),(31,'senddlyamobille@gmail.com','Barashka','$2y$10$gt//WiMm6fHWt7sfeINhuOhCwhYIt.9AWHxsPTzw7.xfqEjLswwPK','944ecaee2415732e4d8c08e5ba87b8ab',0,1,'senddlyamobille@gmail.com.1.jpg'),(32,'lauxtec@gmail.com','Lauxtec','$2y$10$MNhfn4QS.FZcRGEU8wOyvOpItmU22Kf9xzFlTbfti9sY.5.9ZFLCO','4b2b536558125978eadb54a13d590720',0,1,'lauxtec@gmail.com.1.jpg'),(33,'aladser@yandex.ru',NULL,'$2y$10$jcBjHctOmpwy7KeMp1eB1.tnoakEh8KIwbmmTOCdEdXPGeXhJ7tsm','0565f0511e53e820e91ee142bfc4fa1c',0,0,'aladser@yandex.ru.1.jpg');
+INSERT INTO `users` VALUES (10,'aladser@gmail.com','Aladser','$2y$10$Hh1BOVuvGZqj5dsnk9bO9ebWzOcIgLPLAQ7ckanQfNUbMB4LENnvy',NULL,1,1,'aladser@gmail.com.1.png'),(24,'aladser@mail.ru','Admin','$2y$10$ZYtRBbLJ0l.i5J15KHGefuEWCPjh/m5XbNUPbsThp3tBBT9fHmlFG','a4838203911256e139ca3fe4f0324bcf',1,1,'aladser@mail.ru.1.png'),(31,'senddlyamobille@gmail.com','Barashka','$2y$10$gt//WiMm6fHWt7sfeINhuOhCwhYIt.9AWHxsPTzw7.xfqEjLswwPK','944ecaee2415732e4d8c08e5ba87b8ab',0,1,'senddlyamobille@gmail.com.1.jpg'),(32,'lauxtec@gmail.com','Lauxtec','$2y$10$MNhfn4QS.FZcRGEU8wOyvOpItmU22Kf9xzFlTbfti9sY.5.9ZFLCO','4b2b536558125978eadb54a13d590720',0,1,'lauxtec@gmail.com.2.jpg'),(38,'aladser@yandex.ru','Yandex','$2y$10$Q2.unralb2KAdXE8e0CUEOQyepBaiPRCaPLUE2ZGkE8AySMcoUGNy',NULL,1,1,'aladser@yandex.ru.1.jpg');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -245,4 +245,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-31 10:23:50
+-- Dump completed on 2024-01-03 10:19:39
