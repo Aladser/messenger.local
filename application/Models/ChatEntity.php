@@ -7,6 +7,17 @@ use App\Core\Model;
 /** класс БД таблицы сообщений чатов */
 class ChatEntity extends Model
 {
+    public function add($type, $creatorId)
+    {
+        $chatData = [
+            'type' => $type,
+            'creator_id' => $creatorId,
+        ];
+        $chatId = $this->dbQuery->insert('chats', $chatData);
+
+        return $chatId;
+    }
+
     // получить ID диалога
     public function getDialogId($user1Id, $user2Id)
     {

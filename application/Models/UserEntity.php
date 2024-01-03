@@ -122,8 +122,9 @@ class UserEntity extends Model
             where hide_email = 0 and email != :email and email like :phrase;
         ';
         $args = ['email' => $notEmail, 'phrase' => $phrase];
+        $userList = $this->dbQuery->queryPrepared($sql, $args, false);
 
-        return $this->dbQuery->queryPrepared($sql, $args, false);
+        return $userList;
     }
 
     // обновить пользовательские данные

@@ -61,12 +61,12 @@ class ContactEntity extends Model
         }
     }
 
-    public function add($contactId, $userId)
+    public function add($chatId, $userId)
     {
-        $fields = ['cnt_user_id' => $userId, 'cnt_contact_id' => $contactId];
-        $userId = $this->dbQuery->insert('contacts', $fields);
+        $participantData = ['chat_id' => $chatId, 'user_id' => $userId];
+        $isAdded = $this->dbQuery->insert('chat_participants', $participantData) > 0;
 
-        return $userId > 0;
+        return $isAdded;
     }
 
     public function remove($contactId, $userId)

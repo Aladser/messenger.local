@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Models\ChatEntity;
 use App\Models\ContactEntity;
 use App\Models\GroupContactEntity;
 use App\Models\MessageEntity;
@@ -15,6 +16,8 @@ class ContactController extends Controller
     private GroupContactEntity $groupContacts;
     private MessageEntity $messages;
     private UserEntity $users;
+    private ChatEntity $chats;
+
     private string $authUserEmail;
     private int $authUserId;
 
@@ -27,6 +30,7 @@ class ContactController extends Controller
         $this->messages = new MessageEntity();
         $this->authUserEmail = UserController::getAuthUserEmail();
         $this->authUserId = $this->users->getIdByName($this->authUserEmail);
+        $this->chats = new ChatEntity();
     }
 
     public function getContact()
@@ -65,12 +69,15 @@ class ContactController extends Controller
 
     public function add()
     {
-        $contact = htmlspecialchars($_POST['username']);
-        $contactId = $this->users->getIdByName($contact);
+        // id контакта
+        $contactName = htmlspecialchars($_POST['username']);
+        $contactId = $this->users->getIdByName($contactName);
+        // создаем чат
+        $chatId = $this->chats->add('dialog', $this->authUserId);
+        // создаем участников чата
+        $this->contacts->add($chatId, $this->authUserId);
+        $this->contacts->add($chatId, $contactId);
 
-        $this->contacts->add($contactId, $this->authUserId);
-        $chatId = $this->messages->getDialogId($this->authUserId, $contactId);
-        $contactName = $this->users->getPublicUsername($contactId);
         $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 1];
         echo json_encode($userData);
     }
