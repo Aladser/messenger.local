@@ -98,22 +98,6 @@ class ChatController extends Controller
         );
     }
 
-    public function createGroup()
-    {
-        $groupId = $this->messages->createDiscussion($this->authUserId);
-        echo json_encode($groupId);
-    }
-
-    public function editNoticeShow()
-    {
-        $username = htmlspecialchars($_POST['username']);
-        $notice = htmlspecialchars($_POST['notice']);
-        $notice = intval($notice);
-        $chatid = htmlspecialchars($_POST['chat_id']);
-
-        echo json_encode(['responce' => $this->messages->setNoticeShow($chatid, $this->authUserId, $notice)]);
-    }
-
     public function getMessages()
     {
         // диалоги
@@ -136,5 +120,21 @@ class ChatController extends Controller
             'messages' => $this->messages->getMessages($chatId),
         ];
         echo json_encode($messages);
+    }
+
+    public function createGroup()
+    {
+        $groupId = $this->messages->createDiscussion($this->authUserId);
+        echo json_encode($groupId);
+    }
+
+    public function editNoticeShow()
+    {
+        $username = htmlspecialchars($_POST['username']);
+        $notice = htmlspecialchars($_POST['notice']);
+        $notice = intval($notice);
+        $chatid = htmlspecialchars($_POST['chat_id']);
+
+        echo json_encode(['responce' => $this->messages->setNoticeShow($chatid, $this->authUserId, $notice)]);
     }
 }

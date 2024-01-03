@@ -7,18 +7,17 @@ use App\Core\Model;
 /** класс БД таблицы сообщений чатов */
 class MessageEntity extends Model
 {
-    // возвращает сообшения диалога
+    // возвращает сообщения диалога
     public function getMessages(int $chatId)
     {
         $sql = '
-            select chat_message_id as msg, 
-            chat_message_chatid as chat, 
-            getPublicUserName(user_email, user_nickname, user_hide_email) as author, 
-            chat_message_text as message, 
-            chat_message_time as time,
-            chat_message_forward as forward
-            from chat_message join users on user_id = chat_message_creatorid
-            where chat_message_chatid = :chatId
+            select messages.id as msg, 
+            chat_id as chat, 
+            getPublicUserName(email, nickname, hide_email) as author, 
+            content as message, 
+            time, forward
+            from messages join users on users.id = creator_user_id
+            where chat_id = :chatId
             order by time
         ';
 
@@ -28,43 +27,36 @@ class MessageEntity extends Model
     // получить ID диалога
     public function getDialogId($user1Id, $user2Id)
     {
-        // поиск диалога пользователей
-        $sql = '
-            select chat_id from chat
-            join chat_participant on chat_id = chat_participant_chatid
-            where chat_participant_userid = :user1Id
-            and chat_type = \'dialog\'
-            and chat_id in (
-	            select chat_id from chat
-	            join chat_participant on chat_id = chat_participant_chatid
-	            where chat_participant_userid = :user2Id
-            );
-        ';
-        $query = $this->dbQuery->queryPrepared($sql, ['user1Id' => $user1Id, 'user2Id' => $user2Id]);
+        $sql = "
+            select chat_id from chat_participants 
+            join chats on chats.id = chat_participants.chat_id
+            where user_id = :user1Id and type='dialog'
+            intersect
+            select chat_id from chat_participants 
+            join chats on chats.id = chat_participants.chat_id
+            where user_id = :user2Id and type='dialog'
+        ";
+        $args = ['user1Id' => $user1Id, 'user2Id' => $user2Id];
+        $chatId = $this->dbQuery->queryPrepared($sql, $args)['chat_id'];
 
-        // создание диалога, если не существует
-        if (!$query) {
-            return $this->dbQuery->executeProcedure("create_dialog($user1Id, $user2Id, @info)", '@info');
-        }
-
-        return intval($query['chat_id']);
+        return $chatId;
     }
 
     /** получить ID группового чата*/
     public function getDiscussionId(string $groupName)
     {
         return $this->dbQuery->queryPrepared(
-            'select chat_id from chat where chat_name = :groupName',
+            'select id from chats where name = :groupName',
             ['groupName' => $groupName],
             false
         )[0]['chat_id'];
     }
 
-    // id получателей сообщения
+    // получить id получателей сообщения
     public function getChatParticipantIds($chatId)
     {
-        $sql = 'select chat_participant_userid as recipient from chat_participant 
-            where chat_participant_chatid = :chatId';
+        $sql = 'select user_id as recipient from chat_participants 
+            where chat_id = :chatId';
         $args = ['chatId' => $chatId];
         $queryResultData = $this->dbQuery->queryPrepared($sql, $args, false);
         $recipientIdArray = [];
@@ -78,9 +70,9 @@ class MessageEntity extends Model
     /** удалить чат */
     public function removeChat($dialogId)
     {
-        $result = $this->dbQuery->exec("delete from chat_participant where chat_participant_chatid  = $dialogId");
-        $result += $this->dbQuery->exec("delete from chat_message where chat_message_chatid  = $dialogId");
-        $result += $this->dbQuery->exec("delete from chat where chat_id = $dialogId");
+        $result = $this->dbQuery->exec("delete from chat_participants where chat_id  = $dialogId");
+        $result += $this->dbQuery->exec("delete from messages where chat_id  = $dialogId");
+        $result += $this->dbQuery->exec("delete from chats where id = $dialogId");
 
         return $result;
     }
@@ -89,7 +81,7 @@ class MessageEntity extends Model
     public function createDiscussion(int $userHostId)
     {
         $groupId = $this->dbQuery->executeProcedure("create_discussion($userHostId, @info)", '@info');
-        $sql = 'select chat_id as chat, chat_name as name from chat where chat_id = :groupId';
+        $sql = 'select id as chat, name from chats where id = :groupId';
 
         return $this->dbQuery->queryPrepared($sql, ['groupId' => $groupId]);
     }
@@ -97,12 +89,12 @@ class MessageEntity extends Model
     // возвращает групповые чаты пользователя
     public function getDiscussions(int $userHostId)
     {
-        $sql = '
-        select chat_id as chat, chat_name as name, chat_participant_isnotice as notice       
-        from chat_participant
-        join chat on chat_participant.chat_participant_chatid = chat.chat_id
-        where chat_type = \'discussion\' and chat_participant_userid = :userHostId
-        ';
+        $sql = "
+        select chats.id as chat, name, notice       
+        from chat_participants
+        join chats on chat_participants.chat_id = chats.id
+        where type = 'discussion' and user_id = :userHostId
+        ";
 
         return $this->dbQuery->queryPrepared($sql, ['userHostId' => $userHostId], false);
     }
@@ -110,9 +102,11 @@ class MessageEntity extends Model
     // возвращает создателя группового чата
     public function getDiscussionCreatorId($chatId)
     {
-        $sql = 'select chat_creatorid from chat where chat_id = :chatId';
+        $sql = 'select creator_id from chats where id = :chatId';
+        $args = ['chatId' => $chatId];
+        $chatId = $this->dbQuery->queryPrepared($sql, $args)['creator_id'];
 
-        return $this->dbQuery->queryPrepared($sql, ['chatId' => $chatId])['chat_creatorid'];
+        return $chatId;
     }
 
     // Добавить сообщение

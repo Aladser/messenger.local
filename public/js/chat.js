@@ -174,17 +174,21 @@ function setClick(domElement, type)
         }
 
         let urlParams = new URLSearchParams();
-        if (type === 'dialog') {
-            urlParams.set('contact', name);
-            urlParams.set('CSRF', csrfElement.content);
-        } else if (type === 'discussion') {
-            let id = domElement.id;
-            urlParams.set('discussionid', id.substring(id.indexOf('-')+1));
-            groupContainer.click(domElement, contacts);
-        } else {
-            return;
+        switch(type) {
+            case 'dialog':
+                urlParams.set('contact', name);
+                urlParams.set('CSRF', csrfElement.content);
+                break;
+            case 'discussion':
+                let id = domElement.id;
+                urlParams.set('discussionid', id.substring(id.indexOf('-')+1));
+                groupContainer.click(domElement, contacts);
+                break;
+            default:
+                return;
         }
 
+        // показ сообщений
         messages.show(urlParams, name, type, publicClientUsername);
         messageInput.disabled = false;
         sendMsgBtn.disabled = false;
