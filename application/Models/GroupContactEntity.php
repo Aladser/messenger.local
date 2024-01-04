@@ -23,15 +23,15 @@ class GroupContactEntity extends Model
 
     public function add($chatId, $userId)
     {
-        $sql = "insert into chat_participants(chat_participant_chatid, chat_participant_userid)
-        values ($chatId, $userId)";
+        $userData = ['chat_id' => $chatId, 'user_id' => $userId];
+        $isAdded = $this->dbQuery->insert('chat_participants', $userData) > 0;
 
-        return $this->dbQuery->exec($sql);
+        return $isAdded;
     }
 
     public function exists($chatId, $userId)
     {
-        $sql = 'select count(*) as count from chat_participants where chat_participant_chatid = :chatId and chat_participant_userid = :userId';
+        $sql = 'select count(*) as count from chat_participants where chat_id = :chatId and user_id = :userId';
         $args = ['chatId' => $chatId, 'userId' => $userId];
         $isExisted = $this->dbQuery->queryPrepared($sql, $args)['count'] > 0;
 

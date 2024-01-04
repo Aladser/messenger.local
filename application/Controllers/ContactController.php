@@ -110,13 +110,13 @@ class ContactController extends Controller
 
         $gcExisted = $this->groupContacts->exists($discussionId, $userId);
         if (!$gcExisted) {
-            $group = $this->groupContacts->add($discussionId, $userId);
+            $isAdded = (int) $this->groupContacts->add($discussionId, $userId);
         } else {
-            $group = 1;
+            $isAdded = 1;
         }
 
         echo json_encode([
-            'result' => $group,
+            'result' => $isAdded,
             'group' => 'group-'.$discussionId,
             'user' => $username,
         ]);
