@@ -56,7 +56,6 @@ class ContactContainer extends TemplateContainer{
 
         // показ найденных пользователей
         let process = data => {
-            console.log(data);
             data = JSON.parse(data);
             this.removeElements();
             data.forEach(contact => this.create(contact));
@@ -73,42 +72,19 @@ class ContactContainer extends TemplateContainer{
 
     /** создать HTML-код контакта  */
     create(contact) {
-        // контейнер контакта
-        let contactHTMLElement = document.createElement('article');    // блок контакта
         let contactContent = `
-            <article class="contact position-relative mb-2 text-white" id="chat-10" title="Aladser" data-notice="1">
-                <div class="profile-img">
-                    <img class="contact__img img pe-2" src="http://messenger.local/public/images/ava.png">
-                </div>
-                <span class="contact__name">Aladser</span>
-            </article>
-            `;
-
-        let contactImgBlock = document.createElement('div'); // блок изображения профиля
-        let img = document.createElement('img'); // фото профиля
-        let name = document.createElement('span'); // имя контакта
-
-        contactHTMLElement.className = 'contact position-relative mb-2 text-white';
-        contactHTMLElement.id = 'chat-' + contact.id;
-        contactHTMLElement.title = contact.name;
-        contactImgBlock.className = 'profile-img';
-        img.className = 'contact__img img pe-2';
-        name.className = 'contact__name';
-
-        img.src = (contact.photo === 'ava_profile.png' || contact.photo == null) ? `${this.siteAddr}/public/images/ava.png` : `${this.siteAddr}/application/data/profile_photos/${contact.photo}`;
-        name.innerHTML = contact.name;
-        contactHTMLElement.setAttribute('data-notice', contact.notice);
-
-        contactImgBlock.append(img);
-        contactHTMLElement.append(contactImgBlock);
-        contactHTMLElement.append(name);
-        // добавление значка без уведомлений, если они отключены
-        if (contact.notice == 0) {
-            contactHTMLElement.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
+            <article class="contact position-relative mb-2 text-white" title="${contact.username}" data-notice="1">
+            <div class="profile-img">
+                <img class="contact__img img pe-2" src="${contact.photo}">
+            </div>
+            <span class="contact__name">${contact.username}</span>
+        `;
+        // значок отключенных уведомлений
+        if (contact.notice === 0) {
+            contactContent += "<div class='notice-soundless'>&#128263;</div>";
         }
-
-        this.container.append(contactHTMLElement);
-        return contactHTMLElement;
+        contactContent += '</article>';
+        this.container.innerHTML += contactContent;
     }
 
     async add(username) {
@@ -155,11 +131,6 @@ class ContactContainer extends TemplateContainer{
                 alert(data);
             }
         });
-    }
-
-    async exists(contactDOMElement) {
-        console.clear();
-        console.log(contactDOMElement);
     }
     
     /** поиск контакта и добавление, если отсутствует */

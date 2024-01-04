@@ -16,11 +16,11 @@ class UserEntity extends Model
         $phrase = "%$phrase%";
         // список пользователей, подходящие по шаблону
         $sql = '
-            select id as user_id, nickname as username, photo 
+            select nickname as username, photo 
             from users 
             where hide_email = 1 and email != :email and nickname like :phrase
             union 
-            select id as user_id, email as username, photo 
+            select email as username, photo 
             from users 
             where hide_email = 0 and email != :email and email like :phrase;
         ';
@@ -31,7 +31,6 @@ class UserEntity extends Model
         $cleanedUserList = [];
         foreach ($userList as $user) {
             $cleanedUserList[] = [
-                'user_id' => $user['user_id'],
                 'username' => $user['username'],
                 'photo' => $user['photo'],
             ];

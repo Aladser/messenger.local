@@ -65,6 +65,14 @@ class ContactController extends Controller
     {
         $userphrase = htmlspecialchars($_POST['userphrase']);
         $users = $this->users->getUsersByPhrase($userphrase, $this->authUserEmail);
+        // формирование путей ававтарки
+        for ($i = 0; $i < count($users); ++$i) {
+            if (empty($users[$i]['photo']) || $users[$i]['photo'] === 'ava_profile.png') {
+                $users[$i]['photo'] = '/public/images/ava.png';
+            } else {
+                $users[$i]['photo'] = '/application/data/profile_photos/'.$users[$i]['photo'];
+            }
+        }
         echo json_encode($users);
     }
 

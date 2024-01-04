@@ -175,7 +175,6 @@ function setClick(domElement, type)
             case 'dialog':
                 urlParams.set('contact', name);
                 urlParams.set('CSRF', csrfElement.content);
-                contactContainer.exists(domElement);
                 break;
             case 'discussion':
                 let id = domElement.id;
