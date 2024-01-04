@@ -64,22 +64,54 @@ class GroupContainer extends TemplateContainer{
         }
     }
 
-    add(group, place = 'END') {
-        let groupsItem = document.createElement('div');
-        groupsItem.className = 'group text-white';
-        groupsItem.title = group.name;
-        groupsItem.innerHTML = group.name;
-        groupsItem.addEventListener('click', setClick(groupsItem, group.chat, 'discussion'));
-        groupsItem.setAttribute('data-notice', group.notice);
-        if (group.notice == 0) {
-            groupsItem.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
-        }
+    add() {
+        let process = (data) => {
+            try {
+                let group = JSON.parse(data);
+                this.createDOM(group, 'START');
+                this.addGroupToList({'name': group.name, 'chat':group.chat, 'notice': 1});
+                return 'group-' + group.id;
+            } catch (err) {
+                console.log(err);
+                return null;
+            }
+        };
 
-        if (place === 'START') {
-            this.container.prepend(groupsItem);
-        } else {
-            this.container.append(groupsItem);
-        }
+        ServerRequest.execute(
+            'chat/create-group',
+            process,
+            'get'
+        );
+    }
+
+    // создать DOM-элемент группы
+    createDOM(group) {
+        let groupDOMElement = `
+            <article class="group text-white" id="group-${group.id}" title="${group.name}" data-notice="1">
+                ${group.name}                      
+                <div class="group__contacts d-none">
+                    <p class="group__contact">${group.author}</p>
+                </div>
+            </article>`;
+        this.container.innerHTML += groupDOMElement;
+    }
+
+    remove(group) {
+        let urlParams = new URLSearchParams();
+        urlParams.set('group_name', group.title);
+        urlParams.set('type', 'group');
+        urlParams.set('CSRF', this.CSRFElement.content);
+
+        fetch('/contact/remove', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+            try {
+                data = JSON.parse(data);
+                if (parseInt(data.result) > 0) {
+                    group.remove();
+                }
+            } catch (err) {
+                this.errorPrg.innerHTML = data;
+            }
+        });
     }
 
     /** возвращает функцию добавления пользователя в группу
@@ -122,24 +154,6 @@ class GroupContainer extends TemplateContainer{
         }
     }
 
-    remove(group) {
-        let urlParams = new URLSearchParams();
-        urlParams.set('name', group.title);
-        urlParams.set('type', 'group');
-        urlParams.set('CSRF', this.CSRFElement.content);
-
-        fetch('/contact/remove', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
-            try {
-                data = JSON.parse(data);
-                if (parseInt(data.response) > 0) {
-                    group.remove();
-                }
-            } catch (err) {
-                this.errorPrg.innerHTML = data;
-            }
-        });
-    }
-
     /** удалить кнопки добавления пользователей в группу */
     removeAddUserToGroupButtons() {
         // удаление кнопок добавления
@@ -159,5 +173,7 @@ class GroupContainer extends TemplateContainer{
     }
 
     /** добавить в фронт-список групп */
-    addGroupToList = group => this.list.push({'name': group.name, 'chat': group.chat, 'notice': group.notice});
+    addGroupToList(group) {
+        this.list.push({'name': group.name, 'chat': group.chat, 'notice': group.notice})
+    };
 }

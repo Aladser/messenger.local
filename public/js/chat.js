@@ -100,6 +100,9 @@ window.addEventListener('DOMContentLoaded', () => {
     forwardMessageButton.onclick = forwardMessage;
     // сброс пересылки сообщения
     resetForwardtBtn.onclick = resetForwardMessage;
+    // создание группового чата
+    createGroupOption.onclick = () => groupContainer.add();
+    
     // ----- Поиск пользователей -----
     findContactsInput.oninput = findContacts;
     
@@ -112,12 +115,6 @@ window.addEventListener('DOMContentLoaded', () => {
         findContactsInput.value = '';
         contacts.show();
     }
-
-    // создание группового чата
-    createGroupOption.onclick = () => fetch('chat/create-group').then(resp => resp.json()).then(data => {
-        groupContainer.addGroupToList({'name': data.name, 'chat':data.chat, 'notice': 1});
-        groupContainer.add(data, 'START');
-    });
 
     // нажатие клавиши в поле ввода сообщения
     messageInput.onkeydown = event => {

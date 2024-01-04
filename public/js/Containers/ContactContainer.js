@@ -153,18 +153,17 @@ class ContactContainer extends TemplateContainer{
         );
     }
 
-    remove(contact, clientUsername) {
+    remove(contactDOMElement) {
         let urlParams = new URLSearchParams();
-        urlParams.set('name', contact.title);
-        urlParams.set('type', contact.className === 'group' ? 'group' : 'contact');
+        urlParams.set('contact_name', contactDOMElement.title);
+        urlParams.set('type', contactDOMElement.className === 'group' ? 'group' : 'contact');
         urlParams.set('CSRF', this.CSRFElement.content);
-        urlParams.set('clientName', clientUsername);
         
         fetch('/contact/remove', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
             try {
                 data = JSON.parse(data);
-                if (parseInt(data.response) > 0) {
-                    contact.remove();
+                if (parseInt(data.result) > 0) {
+                    contactDOMElement.remove();
                 }
             } catch (err) {
                 alert(data);

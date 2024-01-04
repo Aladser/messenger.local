@@ -7,12 +7,29 @@ use App\Core\Model;
 /** класс БД таблицы сообщений чатов */
 class ChatEntity extends Model
 {
-    public function add($type, $creatorId)
+    /**
+     * @param [type] $type
+     * @param [type] $creatorId
+     *
+     * @return void
+     */
+    public function add(string $type, int $creatorId)
     {
+        if ($type != 'dialog' && $type != 'discussion') {
+            throw new \Exception('Неверный тип чата');
+        }
+
         $chatData = [
             'type' => $type,
             'creator_id' => $creatorId,
         ];
+
+        if ($type === 'discussion') {
+            $sql = "select count(*) as count from chats where type = 'discussion'";
+            $count = $this->dbQuery->query($sql)['count'];
+            $chatData['name'] = 'Группа '.($count + 1);
+        }
+
         $chatId = $this->dbQuery->insert('chats', $chatData);
 
         return $chatId;
@@ -39,11 +56,21 @@ class ChatEntity extends Model
     /** получить ID группового чата*/
     public function getDiscussionId(string $groupName)
     {
-        return $this->dbQuery->queryPrepared(
-            'select chat_id from chat where chat_name = :groupName',
-            ['groupName' => $groupName],
-            false
-        )[0]['chat_id'];
+        $sql = 'select id from chats where name = :groupName';
+        $args = ['groupName' => $groupName];
+        $id = $this->dbQuery->queryPrepared($sql, $args)['id'];
+
+        return $id;
+    }
+
+    // получить имя чата
+    public function getName(int $id)
+    {
+        $sql = 'select name from chats where id = :id';
+        $args = ['id' => $id];
+        $name = $this->dbQuery->queryPrepared($sql, $args)['name'];
+
+        return $name;
     }
 
     // возвращает групповые чаты пользователя
@@ -80,18 +107,9 @@ class ChatEntity extends Model
     {
         $this->dbQuery->exec("delete from chat_participants where chat_id = $chatId");
         $this->dbQuery->exec("delete from messages where chat_id = $chatId");
-        $isDeleted = $this->dbQuery->exec("delete from chats where chat_id = $chatId");
+        $isDeleted = $this->dbQuery->exec("delete from chats where id = $chatId");
 
         return $isDeleted > 0;
-    }
-
-    // создать групповой чат
-    public function createDiscussion(int $userHostId)
-    {
-        $groupId = $this->dbQuery->executeProcedure("create_discussion($userHostId, @info)", '@info');
-        $sql = 'select chat_id as chat, chat_name as name from chat where chat_id = :groupId';
-
-        return $this->dbQuery->queryPrepared($sql, ['groupId' => $groupId]);
     }
 
     // возвращает создателя группового чата

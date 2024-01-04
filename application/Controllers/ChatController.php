@@ -25,11 +25,12 @@ class ChatController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->messages = new MessageEntity();
-        $this->users = new UserEntity();
         $this->chats = new ChatEntity();
         $this->contacts = new ContactEntity();
         $this->groupContacts = new GroupContactEntity();
+        $this->messages = new MessageEntity();
+        $this->users = new UserEntity();
+
         $this->authUserEmail = UserController::getAuthUserEmail();
         $this->authUserId = $this->users->getIdByName($this->authUserEmail);
     }
@@ -124,8 +125,17 @@ class ChatController extends Controller
 
     public function createGroup()
     {
-        $groupId = $this->messages->createDiscussion($this->authUserId);
-        echo json_encode($groupId);
+        $groupId = $this->chats->add('discussion', $this->authUserId);
+        $group_name = $this->chats->getName($groupId);
+
+        $this->contacts->add($groupId, $this->authUserId);
+        $authorPublicName = $this->users->getPublicUsername($this->authUserId);
+
+        echo json_encode([
+            'id' => $groupId,
+            'name' => $group_name,
+            'author' => $authorPublicName,
+        ]);
     }
 
     public function editNoticeShow()

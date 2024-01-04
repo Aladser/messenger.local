@@ -67,7 +67,7 @@ class ContactController extends Controller
         echo json_encode($this->users->getUsersByPhrase($userphrase, $this->authUserEmail));
     }
 
-    public function add()
+    public function create()
     {
         // id контакта
         $contactName = htmlspecialchars($_POST['username']);
@@ -85,18 +85,21 @@ class ContactController extends Controller
     public function remove()
     {
         $type = htmlspecialchars($_POST['type']);
-        $name = htmlspecialchars($_POST['name']);
         if ($type === 'group') {
-            $chatId = $this->messages->getDiscussionId($name);
+            $group_name = htmlspecialchars($_POST['group_name']);
+            $chatId = $this->chats->getDiscussionId($group_name);
+        } elseif ($type === 'contact') {
+            $contact_name = htmlspecialchars($_POST['contact_name']);
+            $contactId = $this->users->getIdByName($contact_name);
+            $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
         } else {
-            $clientName = htmlspecialchars($_POST['clientName']);
-            $clientId = $this->users->getIdByName($clientName);
+            echo 'Ошибка type';
 
-            $contactId = $this->users->getIdByName($name);
-            $chatId = $this->messages->getDialogId($clientId, $contactId);
-            $this->contacts->remove($clientId, $contactId);
+            return;
         }
-        echo json_encode(['response' => $this->messages->removeChat($chatId)]);
+
+        $isDeleted = $this->chats->remove($chatId);
+        echo json_encode(['result' => (int) $isDeleted]);
     }
 
     public function createGroupContact()

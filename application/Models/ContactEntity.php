@@ -71,7 +71,7 @@ class ContactEntity extends Model
         }
     }
 
-    public function add($chatId, $userId)
+    public function add($chatId, $userId): bool
     {
         $participantData = ['chat_id' => $chatId, 'user_id' => $userId];
         $isAdded = $this->dbQuery->insert('chat_participants', $participantData) > 0;
@@ -79,7 +79,7 @@ class ContactEntity extends Model
         return $isAdded;
     }
 
-    public function remove($contactId, $userId)
+    public function remove($contactId, $userId): bool
     {
         $whereCondition = '(cnt_user_id=:userId and cnt_contact_id=:contactId) 
         or (cnt_contact_id=:userId and cnt_user_id=:contactId)';
