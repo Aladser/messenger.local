@@ -56,6 +56,7 @@ class ContactContainer extends TemplateContainer{
 
         // показ найденных пользователей
         let process = data => {
+            console.log(data);
             data = JSON.parse(data);
             this.removeElements();
             data.forEach(contact => this.create(contact));
@@ -70,34 +71,19 @@ class ContactContainer extends TemplateContainer{
         );
     }
 
-    /** поиск контакта и добавление, если отсутствует */
-    find(username) {
-        let urlParams = new URLSearchParams();
-        urlParams.set('contact', username);
-        urlParams.set('CSRF', this.CSRFElement.content);
-
-        let process = (dbContact) => {
-            dbContact = JSON.parse(dbContact);
-            let contact = this.list.find(elem => elem.chat == dbContact.chat_id);
-            if (contact === undefined) {
-                let element = {'name': dbContact.name, 'chat': dbContact.chat, 'notice': dbContact.notice};
-                this.list.push(element);
-            }
-        }
-
-        ServerRequest.execute(
-            '/contact/get-contact',
-            process,
-            "post",
-            null,
-            urlParams
-        );
-    }
-
     /** создать HTML-код контакта  */
     create(contact) {
         // контейнер контакта
         let contactHTMLElement = document.createElement('article');    // блок контакта
+        let contactContent = `
+            <article class="contact position-relative mb-2 text-white" id="chat-10" title="Aladser" data-notice="1">
+                <div class="profile-img">
+                    <img class="contact__img img pe-2" src="http://messenger.local/public/images/ava.png">
+                </div>
+                <span class="contact__name">Aladser</span>
+            </article>
+            `;
+
         let contactImgBlock = document.createElement('div'); // блок изображения профиля
         let img = document.createElement('img'); // фото профиля
         let name = document.createElement('span'); // имя контакта
@@ -169,6 +155,35 @@ class ContactContainer extends TemplateContainer{
                 alert(data);
             }
         });
+    }
+
+    async exists(contactDOMElement) {
+        console.clear();
+        console.log(contactDOMElement);
+    }
+    
+    /** поиск контакта и добавление, если отсутствует */
+    find(username) {
+        let urlParams = new URLSearchParams();
+        urlParams.set('contact', username);
+        urlParams.set('CSRF', this.CSRFElement.content);
+
+        let process = (dbContact) => {
+            dbContact = JSON.parse(dbContact);
+            let contact = this.list.find(elem => elem.chat == dbContact.chat_id);
+            if (contact === undefined) {
+                let element = {'name': dbContact.name, 'chat': dbContact.chat, 'notice': dbContact.notice};
+                this.list.push(element);
+            }
+        }
+
+        ServerRequest.execute(
+            '/contact/get-contact',
+            process,
+            "post",
+            null,
+            urlParams
+        );
     }
 
     backup = () => this.#backupContainer = this.container.innerHTML;

@@ -7,13 +7,37 @@ use App\Core\Model;
 /** класс БД таблицы пользователей */
 class UserEntity extends Model
 {
-    // Проверка существования значения
-    public function exists(string $field, mixed $value)
+    /** Cписок пользователей по шаблону почты или никнейма.
+     *
+     * @param string $phrase фраза
+     */
+    public function getUsersByPhrase(string $phrase, string $notEmail): array
     {
-        $sql = "select count(*) as count from users where $field = :value";
-        $args = ['value' => $value];
+        $phrase = "%$phrase%";
+        // список пользователей, подходящие по шаблону
+        $sql = '
+            select id as user_id, nickname as username, photo 
+            from users 
+            where hide_email = 1 and email != :email and nickname like :phrase
+            union 
+            select id as user_id, email as username, photo 
+            from users 
+            where hide_email = 0 and email != :email and email like :phrase;
+        ';
+        $args = ['email' => $notEmail, 'phrase' => $phrase];
+        $userList = $this->dbQuery->queryPrepared($sql, $args, false);
 
-        return $this->dbQuery->queryPrepared($sql, $args)['count'] > 0;
+        // удаление дублированных значений
+        $cleanedUserList = [];
+        foreach ($userList as $user) {
+            $cleanedUserList[] = [
+                'user_id' => $user['user_id'],
+                'username' => $user['username'],
+                'photo' => $user['photo'],
+            ];
+        }
+
+        return $cleanedUserList;
     }
 
     // Поле строки таблицы
@@ -66,6 +90,15 @@ class UserEntity extends Model
         return $userId;
     }
 
+    // Проверка существования значения
+    public function exists(string $field, mixed $value)
+    {
+        $sql = "select count(*) as count from users where $field = :value";
+        $args = ['value' => $value];
+
+        return $this->dbQuery->queryPrepared($sql, $args)['count'] > 0;
+    }
+
     // Добавить хэш пользователю
     public function addUserHash($email, $hash): bool
     {
@@ -102,29 +135,6 @@ class UserEntity extends Model
         $isHashCorrected = $this->dbQuery->queryPrepared($sql, $args)['count'] === 1;
 
         return $isHashCorrected;
-    }
-
-    /** Cписок пользователей по шаблону почты или никнейма.
-     *
-     * @param string $phrase фраза
-     */
-    public function getUsersByPhrase(string $phrase, string $notEmail): array
-    {
-        $phrase = "%$phrase%";
-        // список пользователей, подходящие по шаблону
-        $sql = '
-            select id as user, nickname as name, photo 
-            from users 
-            where hide_email = 1 and email != :email and nickname like :phrase
-            union 
-            select id as user, email as name, photo 
-            from users 
-            where hide_email = 0 and email != :email and email like :phrase;
-        ';
-        $args = ['email' => $notEmail, 'phrase' => $phrase];
-        $userList = $this->dbQuery->queryPrepared($sql, $args, false);
-
-        return $userList;
     }
 
     // обновить пользовательские данные

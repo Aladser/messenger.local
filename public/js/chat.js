@@ -57,12 +57,12 @@ let messageClassnameList = [
 ];
 
 /** ----- контейнер контактов ----- */
-const contacts = new ContactContainer(
+const contactContainer = new ContactContainer(
     document.querySelector('#contacts'), 
     errorFrame, 
     csrfElement
 );
-contacts.get().forEach(contact => {
+contactContainer.get().forEach(contact => {
     contact.addEventListener('click', setClick(contact, 'dialog'));
 });
 
@@ -78,7 +78,7 @@ groupContainer.get().forEach(group => {
 
 // --- вебсокет ---
 const websocketAddr = document.querySelector("meta[name='websocket']").content;
-const chatWebsocket = new ChatWebsocket(websocketAddr, contacts, groupContainer);
+const chatWebsocket = new ChatWebsocket(websocketAddr, contactContainer, groupContainer);
 
 // --- контейнер сообщений ---
 const messages = new MessageContainer(
@@ -92,7 +92,7 @@ const messages = new MessageContainer(
 //** контекстное меню сообщения */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 //** контекстное меню группы */
-const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfElement, contacts, groupContainer);
+const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfElement, contactContainer, groupContainer);
 
 // ----- ЗАГРУЗКА СТРАНИЦЫ -----
 window.addEventListener('DOMContentLoaded', () => {
@@ -111,9 +111,9 @@ window.addEventListener('DOMContentLoaded', () => {
     chat.onscroll = hideContexMenu;
 
     resetFindContactsBtn.onclick = () => {
-        contacts.isSearch = false;
+        contactContainer.isSearch = false;
         findContactsInput.value = '';
-        contacts.show();
+        contactContainer.show();
     }
 
     // нажатие клавиши в поле ввода сообщения
@@ -175,11 +175,12 @@ function setClick(domElement, type)
             case 'dialog':
                 urlParams.set('contact', name);
                 urlParams.set('CSRF', csrfElement.content);
+                contactContainer.exists(domElement);
                 break;
             case 'discussion':
                 let id = domElement.id;
                 urlParams.set('discussionid', id.substring(id.indexOf('-')+1));
-                groupContainer.click(domElement, contacts);
+                groupContainer.click(domElement, contactContainer);
                 break;
             default:
                 return;
@@ -194,24 +195,24 @@ function setClick(domElement, type)
 
 /** ----- ПОИСК ПОЛЬЗОВАТЕЛЕЙ ----- */
 async function findContacts() {
-    await contacts.findUsers(findContactsInput.value);
+    await contactContainer.findUsers(findContactsInput.value);
     // слушатели событий для найденных пользователей
-    contacts.get().forEach(contact => {
+    contactContainer.get().forEach(contact => {
         contact.addEventListener('click', async function(e){
             findContactsInput.value = '';
 
             // показ контактов пользователя
-            contacts.restore();
+            contactContainer.restore();
             
             // новое навешивание слушателей событий
-            contacts.get().forEach(contact => {
+            contactContainer.get().forEach(contact => {
                 contact.addEventListener('click', setClick(contact, 'dialog'));
             });
             // добавление пользователя в контакты, если отсутствует
             let userName = this.title;
-            if (!contacts.nameList.includes(userName)) {
-                let newContactDBData = await contacts.add(userName);
-                let newContactHTMLElement = contacts.create(newContactDBData);
+            if (!contactContainer.nameList.includes(userName)) {
+                let newContactDBData = await contactContainer.add(userName);
+                let newContactHTMLElement = contactContainer.create(newContactDBData);
                 newContactHTMLElement.addEventListener('click', setClick(this, 'dialog'));
             }
 
