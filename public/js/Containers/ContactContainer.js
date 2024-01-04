@@ -56,8 +56,10 @@ class ContactContainer extends TemplateContainer{
 
         // показ найденных пользователей
         let process = data => {
-            data = JSON.parse(data);
+            // родительский метод
             this.removeElements();
+            
+            data = JSON.parse(data);
             data.forEach(contact => this.create(contact));
         }
 
