@@ -144,10 +144,10 @@ class UserController extends Controller
     {
         $email = self::getAuthUserEmail();
         $data['csrf'] = MainController::createCSRFToken();
-        $data['user-email'] = $email;
-        $data['user_nickname'] = $this->users->get($email, 'user_nickname');
-        $data['user_hide_email'] = $this->users->get($email, 'user_hide_email');
-        $data['user_photo'] = $this->users->get($email, 'user_photo');
+        $data['email'] = $email;
+        $data['nickname'] = $this->users->get($email, 'nickname');
+        $data['hide_email'] = $this->users->get($email, 'hide_email');
+        $data['photo'] = $this->users->get($email, 'photo');
         $csrf = MainController::createCSRFToken();
         $head = "<meta name='csrf' content=$csrf>";
         $this->view->generate(
@@ -165,16 +165,16 @@ class UserController extends Controller
     public function update(): void
     {
         $email = self::getAuthUserEmail();
-        $data['user_email'] = $email;
-        $nickname = trim($_POST['user_nickname']);
-        $data['user_nickname'] = $nickname == '' ? null : $nickname;
-        $data['user_hide_email'] = $_POST['user_hide_email'];
+        $data['email'] = $email;
+        $nickname = trim($_POST['nickname']);
+        $data['nickname'] = $nickname == '' ? null : $nickname;
+        $data['hide_email'] = $_POST['hide_email'];
 
         // перемещение изображения профиля из временой папки в папку изображений профилей
         $tempDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR;
         $downloadDirPath = dirname(__DIR__, 1).DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'profile_photos'.DIRECTORY_SEPARATOR;
 
-        $filename = $_POST['user_photo'];
+        $filename = $_POST['photo'];
         // вырезает название файла без учета регистра
         $filename = mb_substr($filename, 0, mb_strripos($filename, '?'));
 
@@ -189,13 +189,13 @@ class UserController extends Controller
             }
             // переименование файла
             if (rename($fromPath, $toPath)) {
-                $data['user_photo'] = $filename;
+                $data['photo'] = $filename;
                 $rsltUpdated = ['result' => (int) $this->users->setUserData($data)];
             } else {
                 $rsltUpdated = ['result' => 0];
             }
         } else {
-            $data['user_photo'] = $filename;
+            $data['photo'] = $filename;
             $rsltUpdated = ['result' => (int) $this->users->setUserData($data)];
         }
         echo json_encode($rsltUpdated);

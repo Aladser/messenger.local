@@ -2,10 +2,10 @@
     <div class='profile-container'>
         <div class='profile-img-block'>
             <?php
-            if (is_null($data['user_photo'])) {
+            if (is_null($data['photo'])) {
                 $photo = "http://$app_name/public/images/ava_profile.png";
             } else {
-                $photo = "http://$app_name/application/data/profile_photos//".$data['user_photo'];
+                $photo = "http://$app_name/application/data/profile_photos//".$data['photo'];
             }
             ?>
             <img src="<?php echo $photo; ?>" id='profile-img' class="rounded-circle img" alt="Avatar"/>
@@ -15,17 +15,17 @@
             <table class='table'>
                 <tr>
                     <td>Почта:</td>
-                    <td><?php echo $data['user-email']; ?></td>
+                    <td><?php echo $data['email']; ?></td>
                 </tr>
                 <tr>
                     <td data-bs-toggle="tooltip">Никнейм:</td>
-                    <td><input type="text" class='input-nickname' id='input-nickname' value="<?php echo is_null($data['user_nickname']) ? '' : $data['user_nickname']; ?>" disabled>
+                    <td><input type="text" class='input-nickname' id='input-nickname' value="<?php echo is_null($data['nickname']) ? '' : $data['nickname']; ?>" disabled>
                     </td>
                 </tr>
             </table>
             <div class="form-check form-switch mb-3 d-flex justify-content-center d-none" id='hide-email-input-block'>
                 <input class="form-check-input" type="checkbox"
-                       id="hide-email-input" <?php echo $data['user_hide_email'] == 1 ? 'checked' : ''; ?> >
+                       id="hide-email-input" <?php echo $data['hide_email'] == 1 ? 'checked' : ''; ?> >
                 <label class="form-check-label" for="hide-email-input">&nbsp; скрыть почту</label>
             </div>
             <button class='btn btn-bg-theme text-white w-100 d-none' id='save-profile-settings-btn'>Сохранить</button>
