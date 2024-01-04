@@ -7,12 +7,6 @@ use App\Core\Model;
 /** класс БД таблицы сообщений чатов */
 class ChatEntity extends Model
 {
-    /**
-     * @param [type] $type
-     * @param [type] $creatorId
-     *
-     * @return void
-     */
     public function add(string $type, int $creatorId)
     {
         if ($type != 'dialog' && $type != 'discussion') {
@@ -25,9 +19,9 @@ class ChatEntity extends Model
         ];
 
         if ($type === 'discussion') {
-            $sql = "select count(*) as count from chats where type = 'discussion'";
-            $count = $this->dbQuery->query($sql)['count'];
-            $chatData['name'] = 'Группа '.($count + 1);
+            $sql = 'select max(id) as max_id from chats';
+            $index = $this->dbQuery->query($sql)['max_id'];
+            $chatData['name'] = 'Группа '.($index + 1);
         }
 
         $chatId = $this->dbQuery->insert('chats', $chatData);
