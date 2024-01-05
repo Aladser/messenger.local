@@ -236,9 +236,7 @@ async function findContacts() {
     // слушатели событий для найденных пользователей
     contactContainer.get().forEach(contact => {
         contact.addEventListener('click', async function(e){
-            console.log(this.title);
             resetSearch();
-            return;
             // добавление пользователя в контакты, если отсутствует
             let user_name = this.title;
             if (!contactContainer.nameList.includes(user_name)) {

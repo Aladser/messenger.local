@@ -88,7 +88,12 @@ class ContactController extends Controller
         $this->contacts->add($chatId, $this->authUserId);
         $this->contacts->add($chatId, $contactId);
 
-        $userData = ['username' => $contactName, 'chat_id' => $chatId, 'isnotice' => 1];
+        $userData = [
+            'username' => $contactName,
+            'photo' => '/public/images/ava.png',
+            'chat_id' => $chatId,
+            'isnotice' => 1,
+        ];
         echo json_encode($userData);
     }
 

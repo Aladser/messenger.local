@@ -77,7 +77,7 @@ class ContactContainer extends TemplateContainer{
         );
     }
 
-    /** создать HTML-код контакта  */
+    /** создать DOM-узел контакта  */
     create(contact) {
         let contactArticle = document.createElement('article');
         contactArticle.className = "contact position-relative mb-2 text-white";
@@ -108,10 +108,9 @@ class ContactContainer extends TemplateContainer{
 
         let process = (data) => {
             data = JSON.parse(data);
-            data.photo = null;
             let contact = {
-                'name': data.username,
-                'photo': null,
+                'username': data.username,
+                'photo': data.photo,
                 'notice': 1,
                 'id': data.chat_id
 
