@@ -19,7 +19,8 @@ class UserController extends Controller
     {
         parent::__construct();
         $this->users = new UserEntity();
-        $this->authUserEmail = UserController::getAuthUserEmail();
+
+        $this->authUserEmail = self::getAuthUserEmail();
         $this->authUserId = $this->users->getIdByName($this->authUserEmail);
     }
 
@@ -151,7 +152,7 @@ class UserController extends Controller
         $data['nickname'] = $this->users->get($this->authUserEmail, 'nickname');
         $data['hide_email'] = $this->users->get($this->authUserEmail, 'hide_email');
         $data['photo'] = $this->users->get($this->authUserEmail, 'photo');
-        $data['photo'] = $this->getAvatarImagePath($data['photo'], 'profile');
+        $data['photo'] = self::getAvatarImagePath($data['photo'], 'profile');
         $csrf = MainController::createCSRFToken();
         $head = "<meta name='csrf' content=$csrf>";
 
@@ -212,7 +213,7 @@ class UserController extends Controller
         $users = $this->users->getUsersByPhrase($userphrase, $this->authUserEmail);
         // добавление путей аватарок
         for ($i = 0; $i < count($users); ++$i) {
-            $users[$i]['photo'] = $this->getAvatarImagePath($users[$i]['photo'], 'chat');
+            $users[$i]['photo'] = self::getAvatarImagePath($users[$i]['photo'], 'chat');
         }
         echo json_encode($users);
     }
@@ -260,7 +261,7 @@ class UserController extends Controller
     }
 
     // Возвращает путь изображения аватара.
-    private function getAvatarImagePath(mixed $image, string $type): string
+    private static function getAvatarImagePath(mixed $image, string $type): string
     {
         if (empty($image) || $image === 'ava_profile.png') {
             $image = '/public/images/';
