@@ -48,7 +48,7 @@ class Route
         $url = explode('?', $url)[0];
 
         // --- редирект "/chats" или "/profile" без авторизации => "/" ---
-        if (($url === 'chat' || $url === 'profile')
+        if (($url == 'chat' || $url === 'profile')
             && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))
         ) {
             header('Location: /');
