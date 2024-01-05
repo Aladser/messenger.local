@@ -1,7 +1,6 @@
 /** Контейнер контактов */
 class ContactContainer extends TemplateContainer{
     #backupContainer;
-    siteAddr = this.baseSiteName;
     isSearch = false;
     nameList = [];
 
@@ -21,6 +20,10 @@ class ContactContainer extends TemplateContainer{
 
     /** возвращает DOM-узлы контактов */
     get = () => this.container.querySelectorAll('.contact');
+    /** сделать резервную копию DOM содержания контейнера */
+    backup = () => this.#backupContainer = this.container.innerHTML;
+    /** восстановить DOM содержание контейнера из резервной копии */
+    restore = () => this.container.innerHTML = this.#backupContainer;
 
     /** поиск пользователей по фразе
      * 
@@ -39,7 +42,7 @@ class ContactContainer extends TemplateContainer{
             this.removeElements();
             
             let userDataList = JSON.parse(data);
-            userDataList.forEach(userData => this.create(userData));
+            userDataList.forEach(userData => this.createNode(userData));
         }
 
         await ServerRequest.execute(
@@ -80,7 +83,7 @@ class ContactContainer extends TemplateContainer{
     }
 
     /** создать DOM-узел контакта  */
-    create(contactData) {
+    createNode(contactData) {
         let contactArticle = document.createElement('article');
         contactArticle.className = "contact position-relative mb-2 text-white";
         contactArticle.title = contactData.username;
@@ -109,7 +112,7 @@ class ContactContainer extends TemplateContainer{
         requestData.set('type', contactDOMElement.className === 'group' ? 'group' : 'contact');
         requestData.set('CSRF', this.CSRFElement.content);
         
-        fetch('/contact/remove', {method: 'POST', body: requestData}).then(resp => resp.text()).then(data => {
+        let process = (data) => {
             try {
                 data = JSON.parse(data);
                 if (parseInt(data.result) > 0) {
@@ -118,17 +121,16 @@ class ContactContainer extends TemplateContainer{
                     this.backup();
                 }
             } catch (err) {
-                alert(data);
+                alert(err);
             }
-        });
-    }
-    
-    /** сделать резервную копию DOM содержания контейнера */
-    backup() {
-        this.#backupContainer = this.container.innerHTML;
-    }
-     /** восстановить DOM содержание контейнера из резервной копии */
-    restore() {
-        this.container.innerHTML = this.#backupContainer;
+        }
+
+        ServerRequest.execute(
+            '/contact/remove',
+            process,
+            "post",
+            null,
+            requestData
+        );
     }
 }

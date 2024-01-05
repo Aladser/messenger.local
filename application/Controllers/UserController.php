@@ -254,7 +254,7 @@ class UserController extends Controller
     private function getAvatarImagePath(mixed $image): string
     {
         if (empty($image) || $image === 'ava_profile.png') {
-            $image = '/public/images/ava.png';
+            $image = '/public/images/ava_profile.png';
         } else {
             $image = '/application/data/profile_photos/'.$image;
         }
