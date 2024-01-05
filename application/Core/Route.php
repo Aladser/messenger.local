@@ -7,7 +7,7 @@ use App\Controllers\MainController;
 class Route
 {
     // специфичные роуты
-    // роут - действие, $specificRoutes[роут] - контроллер
+    // key - действие, $specificRoutes[key] - контроллер
     private static $specificRoutes = [
      'login' => 'UserController',
      'register' => 'UserController',
