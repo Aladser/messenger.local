@@ -32,7 +32,7 @@
             </form>
 
             <button class='btn btn-bg-theme text-white w-100 mb-2' id='btn-edit-nickname'>Установить имя</button>
-            <a href="\dialogs" class='text-decoration-none'>
+            <a href="\chat" class='text-decoration-none'>
                 <div class='btn-bg-theme text-white w-100 p-2 text-center rounded'>Назад</div>
             </a>
         </div>

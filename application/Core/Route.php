@@ -48,7 +48,7 @@ class Route
         $url = explode('?', $url)[0];
 
         // --- редирект "/chats" или "/profile" без авторизации => "/" ---
-        if (($url === 'dialogs' || $url === 'profile')
+        if (($url === 'chat' || $url === 'profile')
             && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))
         ) {
             header('Location: /');
@@ -57,11 +57,11 @@ class Route
         if ($url === '' && (isset($_SESSION['auth']) || isset($_COOKIE['auth']))
         && !isset($_GET['logout'])
         ) {
-            header('Location: /dialogs');
+            header('Location: /chat');
         }
 
         // ---имя контроллера и метод---
-        if ($url === 'dialogs') {
+        if ($url === 'chat') {
             $controller_name = 'ChatController';
             $action = 'index';
         } elseif (array_key_exists($url, self::$specificRoutes)) {

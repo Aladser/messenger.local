@@ -60,7 +60,7 @@ class UserController extends Controller
                 $_SESSION['email'] = $email;
                 setcookie('auth', 1, time() + 60 * 60 * 24, '/');
                 setcookie('email', $email, time() + 60 * 60 * 24, '/');
-                header('Location: /dialogs');
+                header('Location: /chat');
             } else {
                 header('Location: /login?wrong_password=true');
             }
@@ -132,7 +132,7 @@ class UserController extends Controller
                 $_SESSION['email'] = $email;
                 setcookie('auth', 1, time() + 60 * 60 * 24, '/');
                 setcookie('email', $email, time() + 60 * 60 * 24, '/');
-                header('Location: /dialogs');
+                header('Location: /chat');
             } else {
                 header('Location: /register?add_user_error=1');
             }
