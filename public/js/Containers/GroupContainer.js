@@ -65,6 +65,9 @@ class GroupContainer extends TemplateContainer{
     }
 
     add() {
+        let requestData = new URLSearchParams();
+        requestData.set('CSRF', this.CSRFElement.content);
+
         let process = (data) => {
             try {
                 let group = JSON.parse(data);
@@ -80,7 +83,9 @@ class GroupContainer extends TemplateContainer{
         ServerRequest.execute(
             'chat/create-group',
             process,
-            'get'
+            'post',
+            null,
+            requestData
         );
     }
 
@@ -102,16 +107,25 @@ class GroupContainer extends TemplateContainer{
         urlParams.set('type', 'group');
         urlParams.set('CSRF', this.CSRFElement.content);
 
-        fetch('/contact/remove', {method: 'POST', body: urlParams}).then(r => r.text()).then(data => {
+        let process = (data) => {
             try {
                 data = JSON.parse(data);
                 if (parseInt(data.result) > 0) {
                     group.remove();
                 }
             } catch (err) {
+                console.log(err);
                 this.errorPrg.innerHTML = data;
             }
-        });
+        };
+
+        ServerRequest.execute(
+            'contact/remove',
+            process,
+            'post',
+            null,
+            urlParams
+        );
     }
 
     /** возвращает функцию добавления пользователя в группу

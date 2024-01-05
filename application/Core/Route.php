@@ -23,31 +23,19 @@ class Route
 
     public static function start()
     {
-        session_start();
-
-        // проверка CSRF
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['CSRF'])) {
-                if ($_POST['CSRF'] !== $_SESSION['CSRF']) {
-                    http_response_code(419);
-                    $controller = new MainController();
-                    $controller->error('Access is denied');
-
-                    return;
-                }
-            } else {
-                $controller = new MainController();
-                $controller->error('No csrf');
-
-                return;
-            }
-        }
-
         // ---URL---
         // вырезается "/"
         $url = mb_substr($_SERVER['REQUEST_URI'], 1);
         // вырезаются get-аргументы
         $url = explode('?', $url)[0];
+
+        // --- получение 500 ошибки из JS
+        if ($url == 500) {
+            $controller = new MainController();
+            $controller->error('Access is denied');
+
+            return;
+        }
 
         // --- редирект без авторизации => "/" ---
         if (!in_array($url, self::$noAuthURLs) && !self::isAuth()) {
