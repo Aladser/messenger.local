@@ -151,7 +151,7 @@ class UserController extends Controller
         $data['nickname'] = $this->users->get($this->authUserEmail, 'nickname');
         $data['hide_email'] = $this->users->get($this->authUserEmail, 'hide_email');
         $data['photo'] = $this->users->get($this->authUserEmail, 'photo');
-        $data['photo'] = $this->getAvatarImagePath($data['photo']);
+        $data['photo'] = $this->getAvatarImagePath($data['photo'], 'profile');
         $csrf = MainController::createCSRFToken();
         $head = "<meta name='csrf' content=$csrf>";
 
@@ -205,6 +205,18 @@ class UserController extends Controller
         echo json_encode($rsltUpdated);
     }
 
+    // поиск пользователей по фразе
+    public function find()
+    {
+        $userphrase = htmlspecialchars($_POST['userphrase']);
+        $users = $this->users->getUsersByPhrase($userphrase, $this->authUserEmail);
+        // добавление путей аватарок
+        for ($i = 0; $i < count($users); ++$i) {
+            $users[$i]['photo'] = $this->getAvatarImagePath($users[$i]['photo'], 'chat');
+        }
+        echo json_encode($users);
+    }
+
     // подтверждение почты после регистрации
     public function verifyEmail(): void
     {
@@ -247,14 +259,12 @@ class UserController extends Controller
         echo json_encode(['unique' => (int) !$isExisted]);
     }
 
-    /** Возвращает путь изображения автара.
-     *
-     * @param [string] $image имя файла
-     */
-    private function getAvatarImagePath(mixed $image): string
+    // Возвращает путь изображения аватара.
+    private function getAvatarImagePath(mixed $image, string $type): string
     {
         if (empty($image) || $image === 'ava_profile.png') {
-            $image = '/public/images/ava_profile.png';
+            $image = '/public/images/';
+            $image .= $type === 'chat' ? 'ava_chat.png' : 'ava_profile.png';
         } else {
             $image = '/application/data/profile_photos/'.$image;
         }

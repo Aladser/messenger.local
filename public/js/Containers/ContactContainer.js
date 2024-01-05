@@ -46,7 +46,7 @@ class ContactContainer extends TemplateContainer{
         }
 
         await ServerRequest.execute(
-            'contact/find',
+            'user/find',
             process,
             "post",
             null,

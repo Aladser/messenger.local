@@ -65,18 +65,6 @@ class ContactController extends Controller
         echo json_encode($userContacts);
     }
 
-    public function find()
-    {
-        $userphrase = htmlspecialchars($_POST['userphrase']);
-        $users = $this->users->getUsersByPhrase($userphrase, $this->authUserEmail);
-        // добавление путей аватарок
-        for ($i = 0; $i < count($users); ++$i) {
-            $users[$i]['photo'] = $this->getAvatarImagePath($users[$i]['photo']);
-        }
-        echo json_encode($users);
-    }
-
-    // добавить контакт
     public function add()
     {
         // id контакта
@@ -153,20 +141,5 @@ class ContactController extends Controller
         $contact_id = $this->users->getIdByName($contact_name);
         $chat_id = $this->chats->getDialogId($this->authUserId, $contact_id);
         var_dump($chat_id);
-    }
-
-    /** Возвращает путь изображения автара.
-     *
-     * @param [string] $image имя файла
-     */
-    private function getAvatarImagePath(mixed $image): string
-    {
-        if (empty($image) || $image === 'ava_profile.png') {
-            $image = '/public/images/ava.png';
-        } else {
-            $image = '/application/data/profile_photos/'.$image;
-        }
-
-        return $image;
     }
 }
