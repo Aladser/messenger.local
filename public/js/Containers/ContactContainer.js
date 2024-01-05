@@ -19,19 +19,22 @@ class ContactContainer extends TemplateContainer{
         this.backup();
     }
 
-    get() {
-        return this.container.querySelectorAll('.contact');
-    }
+    /** возвращает DOM-узлы контактов */
+    get = () => this.container.querySelectorAll('.contact');
 
     show() {
         let process = (data) => {
-            console.clear();
-            console.log(data);
             let contacts = JSON.parse(data);
             if (contacts !== undefined) {
+                // родительское удаление контактов из страницы
                 this.removeElements();
+
                 contacts.forEach(contact => {
-                    let element = {'name': contact.username, 'chat': contact.chat, 'notice': contact.notice};
+                    let element = {
+                        'name': contact.username, 
+                        'chat': contact.chat, 
+                        'notice': contact.notice
+                    };
                     this.list.push(element);
                     this.create(contact);
                 });
@@ -168,6 +171,12 @@ class ContactContainer extends TemplateContainer{
         );
     }
 
-    backup = () => this.#backupContainer = this.container.innerHTML;
-    restore = () => this.container.innerHTML = this.#backupContainer;
+    /** сделать резервную копию DOM содержания контейнера */
+    backup() {
+        this.#backupContainer = this.container.innerHTML;
+    }
+     /** восстановить DOM содержание контейнера из резервной копии */
+    restore() {
+        this.container.innerHTML = this.#backupContainer;
+    }
 }

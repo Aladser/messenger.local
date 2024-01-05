@@ -62,9 +62,7 @@ const contactContainer = new ContactContainer(
     errorFrame, 
     csrfElement
 );
-contactContainer.get().forEach(contact => {
-    contact.addEventListener('click', setClick(contact, 'dialog'));
-});
+addContactClickListeners();
 
 // --- контейнер групп --- 
 const groupContainer = new GroupContainer(
@@ -96,25 +94,21 @@ const contactContexMenu = new ContactContexMenu(document.querySelector('#contact
 
 // ----- ЗАГРУЗКА СТРАНИЦЫ -----
 window.addEventListener('DOMContentLoaded', () => {
-    // пересылка сообщения
+    // переслать сообщение
     forwardMessageButton.onclick = forwardMessage;
-    // сброс пересылки сообщения
+    // сбросить пересылу сообщения
     resetForwardtBtn.onclick = resetForwardMessage;
-    // создание группового чата
+    // создать групповой чат
     createGroupOption.onclick = () => groupContainer.add();
-    
-    // ----- Поиск пользователей -----
+    // искать пользователей по фразе
     findContactsInput.oninput = findContacts;
-    
-    document.oncontextmenu = () => false;
+    // сбросить поиск пользователей
+    resetFindContactsBtn.onclick = resetSearch;
+    // отправить сообщение
     sendMsgBtn.onclick = sendMessage;
-    chat.onscroll = hideContexMenu;
 
-    resetFindContactsBtn.onclick = () => {
-        contactContainer.isSearch = false;
-        findContactsInput.value = '';
-        contactContainer.show();
-    }
+    document.oncontextmenu = () => false;
+    chat.onscroll = hideContexMenu;
 
     // нажатие клавиши в поле ввода сообщения
     messageInput.onkeydown = event => {
@@ -140,6 +134,13 @@ window.addEventListener('DOMContentLoaded', () => {
         pressedKeys.splice(pressedKeys.indexOf(event.code), 1);
     };
 });
+
+// ----- НАЖАТЬ ЛЕВОЙ КНОПКОЙ МЫШИ НА СТРАНИЦЕ -----
+window.onclick = event => {
+    if (event.target.className !== 'list-group-item') {
+        hideContexMenu();
+    }
+};
 
 // ----- НАЖАТЬ ПРАВОЙ КНОПКОЙ МЫШИ НА СТРАНИЦЕ -----
 window.oncontextmenu = function(event) {
@@ -178,14 +179,7 @@ window.oncontextmenu = function(event) {
     }
 };
 
-// ----- НАЖАТЬ ЛЕВОЙ КНОПКОЙ МЫШИ НА СТРАНИЦЕ -----
-window.onclick = event => {
-    if (event.target.className !== 'list-group-item') {
-        hideContexMenu();
-    }
-};
-
-/** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
+/** ----- НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ -----
  * @param {*} domElement HTML-элемент контакта или чата
  * @param {*} name имя контакта или группового чата
  * @param {*} type тип диалога
@@ -236,7 +230,7 @@ function setClick(domElement, type)
     };
 }
 
-/** ----- ПОИСК ПОЛЬЗОВАТЕЛЕЙ ----- */
+/** ----- ИСКАТЬ ПОЛЬЗОВАТЕЛЕЙ ПО ФРАЗЕ----- */
 async function findContacts() {
     await contactContainer.findUsers(findContactsInput.value);
     // слушатели событий для найденных пользователей
@@ -260,6 +254,21 @@ async function findContacts() {
             setClick(this, 'dialog')();
         });
     });
+}
+
+/** добавить слушателей кликов контактов */
+function addContactClickListeners() {
+    contactContainer.get().forEach(contact => {
+        contact.addEventListener('click', setClick(contact, 'dialog'));
+    });
+}
+
+/** сбросить поиск пользователей */
+function resetSearch() {
+    contactContainer.isSearch = false;
+    findContactsInput.value = '';
+    contactContainer.restore();
+    addContactClickListeners();
 }
 
 /** Переотправить сообщение */
