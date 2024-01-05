@@ -154,7 +154,7 @@ class ContactController extends Controller
      *
      * @param [string] $image имя файла
      */
-    private function getAvatarImagePath(string $image): string
+    private function getAvatarImagePath(mixed $image): string
     {
         if (empty($image) || $image === 'ava_profile.png') {
             $image = '/public/images/ava.png';
