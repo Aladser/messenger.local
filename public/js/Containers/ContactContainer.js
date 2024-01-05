@@ -22,32 +22,6 @@ class ContactContainer extends TemplateContainer{
     /** возвращает DOM-узлы контактов */
     get = () => this.container.querySelectorAll('.contact');
 
-    show() {
-        let process = (data) => {
-            let contacts = JSON.parse(data);
-            if (contacts !== undefined) {
-                // родительское удаление контактов из страницы
-                this.removeElements();
-
-                contacts.forEach(contact => {
-                    let element = {
-                        'name': contact.username, 
-                        'chat': contact.chat, 
-                        'notice': contact.notice
-                    };
-                    this.list.push(element);
-                    this.create(contact);
-                });
-            }
-        };
-
-        ServerRequest.execute(
-            'contact/get-contacts',
-            process,
-            "get"
-        );
-    }
-
     /** поиск пользователей по фразе
      * 
      * @param {*} userphrase часть имени пользователя
@@ -64,8 +38,8 @@ class ContactContainer extends TemplateContainer{
             // родительский метод
             this.removeElements();
             
-            data = JSON.parse(data);
-            data.forEach(contact => this.create(contact));
+            let userDataList = JSON.parse(data);
+            userDataList.forEach(userData => this.create(userData));
         }
 
         await ServerRequest.execute(
@@ -77,45 +51,22 @@ class ContactContainer extends TemplateContainer{
         );
     }
 
-    /** создать DOM-узел контакта  */
-    create(contact) {
-        let contactArticle = document.createElement('article');
-        contactArticle.className = "contact position-relative mb-2 text-white";
-        contactArticle.title = contact.username;
-        contactArticle.innerHTML = `
-            <div class="profile-img">
-                <img class="contact__img img pe-2" src="${contact.photo}">
-            </div>
-            <span class="contact__name">${contact.username}</span>
-        `;
-        // значок отключения уведомлений
-        if (contact.notice === 0) {
-            contactArticle.setAttribute('data-notice', 0);
-            contactArticle.innerHTML += '<div class="notice-soundless">🔇</div>';
-        } else {
-            contactArticle.setAttribute('data-notice', 1);
-        }
-
-        this.container.append(contactArticle);
-        return contactArticle;
-    }
-
-    // добавить контакт
+    /** добавить контакт */
     async add(username) {
         let requestData = new URLSearchParams();
         requestData.set('username', username);
         requestData.set('CSRF', this.CSRFElement.content);
 
         let process = (data) => {
-            data = JSON.parse(data);
+            let contactData = JSON.parse(data);
             let contact = {
-                'username': data.username,
-                'photo': data.photo,
+                'username': contactData.username,
+                'photo': contactData.photo,
                 'notice': 1,
-                'id': data.chat_id
+                'id': contactData.chat_id
 
             };
-            this.nameList.push(data.username);
+            this.nameList.push(contactData.username);
             return contact;
         }
 
@@ -128,17 +79,43 @@ class ContactContainer extends TemplateContainer{
         );
     }
 
+    /** создать DOM-узел контакта  */
+    create(contactData) {
+        let contactArticle = document.createElement('article');
+        contactArticle.className = "contact position-relative mb-2 text-white";
+        contactArticle.title = contactData.username;
+        contactArticle.innerHTML = `
+            <div class="profile-img">
+                <img class="contact__img img pe-2" src="${contactData.photo}">
+            </div>
+            <span class="contact__name">${contactData.username}</span>
+        `;
+        // значок отключения уведомлений
+        if (contactData.notice === 0) {
+            contactArticle.setAttribute('data-notice', 0);
+            contactArticle.innerHTML += '<div class="notice-soundless">🔇</div>';
+        } else {
+            contactArticle.setAttribute('data-notice', 1);
+        }
+
+        this.container.append(contactArticle);
+        return contactArticle;
+    }
+
+    // удалить контакт
     remove(contactDOMElement) {
-        let urlParams = new URLSearchParams();
-        urlParams.set('contact_name', contactDOMElement.title);
-        urlParams.set('type', contactDOMElement.className === 'group' ? 'group' : 'contact');
-        urlParams.set('CSRF', this.CSRFElement.content);
+        let requestData = new URLSearchParams();
+        requestData.set('contact_name', contactDOMElement.title);
+        requestData.set('type', contactDOMElement.className === 'group' ? 'group' : 'contact');
+        requestData.set('CSRF', this.CSRFElement.content);
         
-        fetch('/contact/remove', {method: 'POST', body: urlParams}).then(resp => resp.text()).then(data => {
+        fetch('/contact/remove', {method: 'POST', body: requestData}).then(resp => resp.text()).then(data => {
             try {
                 data = JSON.parse(data);
                 if (parseInt(data.result) > 0) {
                     contactDOMElement.remove();
+                    // новая сохраненная копия после удаления контакта
+                    this.backup();
                 }
             } catch (err) {
                 alert(data);
@@ -146,30 +123,6 @@ class ContactContainer extends TemplateContainer{
         });
     }
     
-    /** поиск контакта и добавление, если отсутствует */
-    find(username) {
-        let urlParams = new URLSearchParams();
-        urlParams.set('contact', username);
-        urlParams.set('CSRF', this.CSRFElement.content);
-
-        let process = (dbContact) => {
-            dbContact = JSON.parse(dbContact);
-            let contact = this.list.find(elem => elem.chat == dbContact.chat_id);
-            if (contact === undefined) {
-                let element = {'name': dbContact.name, 'chat': dbContact.chat, 'notice': dbContact.notice};
-                this.list.push(element);
-            }
-        }
-
-        ServerRequest.execute(
-            '/contact/get-contact',
-            process,
-            "post",
-            null,
-            urlParams
-        );
-    }
-
     /** сделать резервную копию DOM содержания контейнера */
     backup() {
         this.#backupContainer = this.container.innerHTML;

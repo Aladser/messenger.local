@@ -243,6 +243,8 @@ async function findContacts() {
                 let newContactDBData = await contactContainer.add(user_name);
                 let newContactHTMLElement = contactContainer.create(newContactDBData);
                 newContactHTMLElement.addEventListener('click', setClick(this, 'dialog'));
+                // новая сохраненная копия после добавления нового контакта
+                contactContainer.backup();
             }
 
             setClick(this, 'dialog')();
