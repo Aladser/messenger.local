@@ -12,8 +12,8 @@ use function App\config;
 class UserController extends Controller
 {
     private UserEntity $users;
-    private string $authUserEmail;
-    private int $authUserId;
+    private mixed $authUserEmail;
+    private mixed $authUserId;
 
     public function __construct()
     {

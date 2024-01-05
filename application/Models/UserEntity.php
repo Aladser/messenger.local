@@ -49,8 +49,12 @@ class UserEntity extends Model
     }
 
     // Получить ID пользователя
-    public function getIdByName(string $publicUsername)
+    public function getIdByName(mixed $publicUsername)
     {
+        if (empty($publicUsername)) {
+            return null;
+        }
+
         $sql = 'select id from users 
                 where email = :publicUsername or nickname=:publicUsername';
         $args = ['publicUsername' => $publicUsername];
