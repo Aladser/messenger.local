@@ -58,25 +58,26 @@ class ContactController extends Controller
 
     public function getContacts()
     {
-        echo json_encode($this->contacts->getUserContacts($this->authUserId));
+        $userContacts = $this->contacts->getUserContacts($this->authUserId);
+        for ($i = 0; $i < count($userContacts); ++$i) {
+            $userContacts[$i]['photo'] = $this->getAvatarImagePath($userContacts[$i]['photo']);
+        }
+        echo json_encode($userContacts);
     }
 
     public function find()
     {
         $userphrase = htmlspecialchars($_POST['userphrase']);
         $users = $this->users->getUsersByPhrase($userphrase, $this->authUserEmail);
-        // формирование путей ававтарки
+        // добавление путей аватарок
         for ($i = 0; $i < count($users); ++$i) {
-            if (empty($users[$i]['photo']) || $users[$i]['photo'] === 'ava_profile.png') {
-                $users[$i]['photo'] = '/public/images/ava.png';
-            } else {
-                $users[$i]['photo'] = '/application/data/profile_photos/'.$users[$i]['photo'];
-            }
+            $users[$i]['photo'] = $this->getAvatarImagePath($users[$i]['photo']);
         }
         echo json_encode($users);
     }
 
-    public function create()
+    // добавить контакт
+    public function add()
     {
         // id контакта
         $contactName = htmlspecialchars($_POST['username']);
@@ -139,5 +140,28 @@ class ContactController extends Controller
             'participants' => $this->contacts->getGroupContacts($discussionId),
             'creatorName' => $this->users->getPublicUsername($creatorId),
         ]);
+    }
+
+    public function exists()
+    {
+        $contact_name = $_POST['contact_name'];
+        $contact_id = $this->users->getIdByName($contact_name);
+        $chat_id = $this->chats->getDialogId($this->authUserId, $contact_id);
+        var_dump($chat_id);
+    }
+
+    /** Возвращает путь изображения автара.
+     *
+     * @param [string] $image имя файла
+     */
+    private function getAvatarImagePath(string $image): string
+    {
+        if (empty($image) || $image === 'ava_profile.png') {
+            $image = '/public/images/ava.png';
+        } else {
+            $image = '/application/data/profile_photos/'.$image;
+        }
+
+        return $image;
     }
 }

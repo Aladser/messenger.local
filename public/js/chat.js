@@ -199,18 +199,16 @@ async function findContacts() {
     contactContainer.get().forEach(contact => {
         contact.addEventListener('click', async function(e){
             findContactsInput.value = '';
-
-            // показ контактов пользователя
+            // очистить результаты поиска
             contactContainer.restore();
-            
             // новое навешивание слушателей событий
             contactContainer.get().forEach(contact => {
                 contact.addEventListener('click', setClick(contact, 'dialog'));
             });
             // добавление пользователя в контакты, если отсутствует
-            let userName = this.title;
-            if (!contactContainer.nameList.includes(userName)) {
-                let newContactDBData = await contactContainer.add(userName);
+            let user_name = this.title;
+            if (!contactContainer.nameList.includes(user_name)) {
+                let newContactDBData = await contactContainer.add(user_name);
                 let newContactHTMLElement = contactContainer.create(newContactDBData);
                 newContactHTMLElement.addEventListener('click', setClick(this, 'dialog'));
             }

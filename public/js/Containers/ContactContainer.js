@@ -24,12 +24,14 @@ class ContactContainer extends TemplateContainer{
     }
 
     show() {
-        let process = (contacts) => {
-            contacts = JSON.parse(contacts);
+        let process = (data) => {
+            console.clear();
+            console.log(data);
+            let contacts = JSON.parse(data);
             if (contacts !== undefined) {
                 this.removeElements();
                 contacts.forEach(contact => {
-                    let element = {'name': contact.name, 'chat': contact.chat, 'notice': contact.notice};
+                    let element = {'name': contact.username, 'chat': contact.chat, 'notice': contact.notice};
                     this.list.push(element);
                     this.create(contact);
                 });
@@ -74,21 +76,28 @@ class ContactContainer extends TemplateContainer{
 
     /** создать HTML-код контакта  */
     create(contact) {
-        let contactContent = `
-            <article class="contact position-relative mb-2 text-white" title="${contact.username}" data-notice="1">
+        let contactArticle = document.createElement('article');
+        contactArticle.className = "contact position-relative mb-2 text-white";
+        contactArticle.title = contact.username;
+        contactArticle.innerHTML = `
             <div class="profile-img">
                 <img class="contact__img img pe-2" src="${contact.photo}">
             </div>
             <span class="contact__name">${contact.username}</span>
         `;
-        // значок отключенных уведомлений
+        // значок отключения уведомлений
         if (contact.notice === 0) {
-            contactContent += "<div class='notice-soundless'>&#128263;</div>";
+            contactArticle.setAttribute('data-notice', 0);
+            contactArticle.innerHTML += '<div class="notice-soundless">🔇</div>';
+        } else {
+            contactArticle.setAttribute('data-notice', 1);
         }
-        contactContent += '</article>';
-        this.container.innerHTML += contactContent;
+
+        this.container.append(contactArticle);
+        return contactArticle;
     }
 
+    // добавить контакт
     async add(username) {
         let requestData = new URLSearchParams();
         requestData.set('username', username);

@@ -13,11 +13,11 @@
                 <section id='contacts'>
                     <?php foreach ($data['contacts'] as $contact) { ?>
                         <article class="contact position-relative mb-2 text-white" id="<?php echo 'chat-'.$contact['chat']; ?>" 
-                        title="<?php echo $contact['name']; ?>" data-notice="<?php echo $contact['notice']; ?>">
+                        title="<?php echo $contact['username']; ?>" data-notice="<?php echo $contact['notice']; ?>">
                             <div class="profile-img">
                                 <img class="contact__img img pe-2" src="<?php echo $contact['photo']; ?>">
                             </div>
-                            <span class="contact__name"><?php echo $contact['name']; ?></span>
+                            <span class="contact__name"><?php echo $contact['username']; ?></span>
                             <?php if ($contact['notice'] == 0) { ?>
                                 <div class="notice-soundless">🔇</div>
                             <?php } ?>

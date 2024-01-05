@@ -39,7 +39,7 @@ class ContactEntity extends Model
     {
         $sql = "
             select chat_id as chat, user_id as user, photo as photo,
-            getPublicUserName(email, nickname, hide_email) as name, 
+            getPublicUserName(email, nickname, hide_email) as username, 
             (
                 select notice 
                 from chat_participants 
@@ -56,18 +56,31 @@ class ContactEntity extends Model
                 where user_id = :userId)
             and user_id != :userId";
         $args = ['userId' => $userId];
-        $contactList = $this->dbQuery->queryPrepared($sql, $args, false);
+        $userList = $this->dbQuery->queryPrepared($sql, $args, false);
 
-        // полные данные или только ID
         if ($onlyId) {
-            $contactIdList = [];
-            foreach ($contactList as $contact) {
-                $contactIdList[] = $contact['user_id'];
+            // только ID
+            $userIdList = [];
+            foreach ($userList as $user) {
+                $userIdList[] = $user['user_id'];
             }
 
-            return $contactIdList;
+            return $userIdList;
         } else {
-            return $contactList;
+            // полные данные
+            $cleanedUserList = [];
+            // удаление дублей
+            foreach ($userList as $user) {
+                $cleanedUserList[] = [
+                    'chat' => $user['chat'],
+                    'user' => $user['user'],
+                    'photo' => $user['photo'],
+                    'username' => $user['username'],
+                    'notice' => $user['notice'],
+                ];
+            }
+
+            return $cleanedUserList;
         }
     }
 
