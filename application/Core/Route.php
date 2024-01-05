@@ -60,10 +60,7 @@ class Route
         }
 
         // ---имя контроллера и метод---
-        if ($url === 'chat') {
-            $controller_name = 'ChatController';
-            $action = 'index';
-        } elseif (array_key_exists($url, self::$specificRoutes)) {
+        if (array_key_exists($url, self::$specificRoutes)) {
             $controller_name = self::$specificRoutes[$url];
             $action = self::convertName($url);
         } else {
