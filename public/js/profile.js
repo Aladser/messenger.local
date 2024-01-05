@@ -146,13 +146,14 @@ uploadForm.onsubmit = e => {
 // сохранение измененных данных, и отправка изменений профиля на сервер
 saveBtn.addEventListener('click', () => {
     let data = new URLSearchParams();
-    data.set('user_nickname', inputNickname.value);
-    data.set('user_hide_email', hideEmailInput.checked ? '1' : '0');
+    data.set('nickname', inputNickname.value);
+    data.set('hide_email', hideEmailInput.checked ? '1' : '0');
     data.set('CSRF', inputCsrf.content);
     let filepathArr = document.querySelector('#profile-img').src.split('/');
-    data.set('user_photo', filepathArr[filepathArr.length - 1]);
+    data.set('photo', filepathArr[filepathArr.length - 1]);
 
     let process = (data) => {
+        console.log(data);
         data = JSON.parse(data);
         switch(data.result) {
             case 1:

@@ -141,6 +141,50 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 });
 
+// ----- НАЖАТЬ ПРАВОЙ КНОПКОЙ МЫШИ НА СТРАНИЦЕ -----
+window.oncontextmenu = function(event) {
+    let classNameArray = [... event.target.classList];
+    // найденные классы контакта
+    let foundContactClassnameList = contactClassnameList.filter(className => classNameArray.includes(className));
+    // найденные контакты сообщения
+    let foundMessageClassnameList = messageClassnameList.filter(className => classNameArray.includes(className));
+
+    if (foundMessageClassnameList.length != 0) {
+        // поиск элемента, по которому кликнули
+        chatWebsocket.selectedMessage = event.target.closest('article');
+        // аутентифицированный пользователь
+        let authUsername = chatWebsocket.getSelectedMessageAuthor();
+        // отображение кнопки - изменить сообщение
+        messageContexMenu.editBtn.style.display = authUsername !== publicClientUsername ? 'none' : 'block';
+        // отображение кнопки - удалить сообщение
+        messageContexMenu.removeBtn.style.display = authUsername !== publicClientUsername ? 'none' : 'block'; 
+        if (chatWebsocket.isForwardedSelectedMessage()) {
+            messageContexMenu.editBtn.style.display = 'none';
+        }
+
+        messageContexMenu.show(event);
+    } else if (foundContactClassnameList.length != 0 || classNameArray.includes('notice-soundless')) {
+        // поиск элемента, по которому кликнули
+        contactContexMenu.selectedContact = event.target.closest('article');
+        let isNotice = contactContexMenu.selectedContact.getAttribute('data-notice');
+        // показ кнопки - включение/выключение уведомлений
+        contactContexMenu.editNoticeShowBtn.innerHTML = isNotice == 1 ? 'Отключить уведомления' : 'Включить уведомления';
+        // показ кнопки - удалить группу
+        contactContexMenu.removeContactBtn.innerHTML = event.target.className === 'group' ? 'Удалить группу' : 'Удалить контакт';
+
+        contactContexMenu.show(event);
+    } else {
+        hideContexMenu();
+    }
+};
+
+// ----- НАЖАТЬ ЛЕВОЙ КНОПКОЙ МЫШИ НА СТРАНИЦЕ -----
+window.onclick = event => {
+    if (event.target.className !== 'list-group-item') {
+        hideContexMenu();
+    }
+};
+
 /** НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ
  * @param {*} domElement HTML-элемент контакта или чата
  * @param {*} name имя контакта или группового чата
@@ -258,50 +302,6 @@ function sendMessage()
         chatWebsocket.sendData(messageInput.value, 'NEW');
     }
 }
-
-// ----- НАЖАТЬ ПРАВОЙ КНОПКОЙ МЫШИ НА СТРАНИЦЕ -----
-window.oncontextmenu = function(event) {
-    let classNameArray = [... event.target.classList];
-    // найденные классы контакта
-    let foundContactClassnameList = contactClassnameList.filter(className => classNameArray.includes(className));
-    // найденные контакты сообщения
-    let foundMessageClassnameList = messageClassnameList.filter(className => classNameArray.includes(className));
-
-    if (foundMessageClassnameList.length != 0) {
-        // поиск элемента, по которому кликнули
-        chatWebsocket.selectedMessage = event.target.closest('article');
-        // аутентифицированный пользователь
-        let authUsername = chatWebsocket.getSelectedMessageAuthor();
-        // отображение кнопки - изменить сообщение
-        messageContexMenu.editBtn.style.display = authUsername !== publicClientUsername ? 'none' : 'block';
-        // отображение кнопки - удалить сообщение
-        messageContexMenu.removeBtn.style.display = authUsername !== publicClientUsername ? 'none' : 'block'; 
-        if (chatWebsocket.isForwardedSelectedMessage()) {
-            messageContexMenu.editBtn.style.display = 'none';
-        }
-
-        messageContexMenu.show(event);
-    } else if (foundContactClassnameList.length != 0 || classNameArray.includes('notice-soundless')) {
-        // поиск элемента, по которому кликнули
-        contactContexMenu.selectedContact = event.target.closest('article');
-        let isNotice = contactContexMenu.selectedContact.getAttribute('data-notice');
-        // показ кнопки - включение/выключение уведомлений
-        contactContexMenu.editNoticeShowBtn.innerHTML = isNotice == 1 ? 'Отключить уведомления' : 'Включить уведомления';
-        // показ кнопки - удалить группу
-        contactContexMenu.removeContactBtn.innerHTML = event.target.className === 'group' ? 'Удалить группу' : 'Удалить контакт';
-
-        contactContexMenu.show(event);
-    } else {
-        hideContexMenu();
-    }
-};
-
-// нажать левой кнопкой мыши на странице
-window.onclick = event => {
-    if (event.target.className !== 'list-group-item') {
-        hideContexMenu();
-    }
-};
 
 /** скрыть контекстные меню */
 function hideContexMenu()

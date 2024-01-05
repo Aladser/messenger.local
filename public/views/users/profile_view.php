@@ -1,14 +1,7 @@
 <container class='container font-roboto mt-4 position-relative' id='container-profile'>
     <div class='profile-container'>
         <div class='profile-img-block'>
-            <?php
-            if (is_null($data['photo'])) {
-                $photo = "http://$app_name/public/images/ava_profile.png";
-            } else {
-                $photo = "http://$app_name/application/data/profile_photos//".$data['photo'];
-            }
-            ?>
-            <img src="<?php echo $photo; ?>" id='profile-img' class="rounded-circle img" alt="Avatar"/>
+            <img src="<?php echo $data['photo']; ?>" id='profile-img' class="rounded-circle img" alt="Avatar"/>
         </div>
 
         <div class='p-4'>

@@ -12,11 +12,15 @@ use function App\config;
 class UserController extends Controller
 {
     private UserEntity $users;
+    private string $authUserEmail;
+    private int $authUserId;
 
     public function __construct()
     {
         parent::__construct();
         $this->users = new UserEntity();
+        $this->authUserEmail = UserController::getAuthUserEmail();
+        $this->authUserId = $this->users->getIdByName($this->authUserEmail);
     }
 
     // станица авторизации
@@ -142,14 +146,15 @@ class UserController extends Controller
     // страница пользователя
     public function profile(): void
     {
-        $email = self::getAuthUserEmail();
         $data['csrf'] = MainController::createCSRFToken();
-        $data['email'] = $email;
-        $data['nickname'] = $this->users->get($email, 'nickname');
-        $data['hide_email'] = $this->users->get($email, 'hide_email');
-        $data['photo'] = $this->users->get($email, 'photo');
+        $data['email'] = $this->authUserEmail;
+        $data['nickname'] = $this->users->get($this->authUserEmail, 'nickname');
+        $data['hide_email'] = $this->users->get($this->authUserEmail, 'hide_email');
+        $data['photo'] = $this->users->get($this->authUserEmail, 'photo');
+        $data['photo'] = $this->getAvatarImagePath($data['photo']);
         $csrf = MainController::createCSRFToken();
         $head = "<meta name='csrf' content=$csrf>";
+
         $this->view->generate(
             'Профиль',
             'template_view.php',
@@ -164,8 +169,7 @@ class UserController extends Controller
     // обновить пользователя в БД
     public function update(): void
     {
-        $email = self::getAuthUserEmail();
-        $data['email'] = $email;
+        $data['email'] = $this->authUserEmail;
         $nickname = trim($_POST['nickname']);
         $data['nickname'] = $nickname == '' ? null : $nickname;
         $data['hide_email'] = $_POST['hide_email'];
@@ -184,7 +188,7 @@ class UserController extends Controller
         // если загружено новое изображение
         if (file_exists($fromPath)) {
             // удаление старых файлов профиля
-            foreach (glob($downloadDirPath.$email.'*') as $file) {
+            foreach (glob($downloadDirPath.$this->authUserEmail.'*') as $file) {
                 unlink($file);
             }
             // переименование файла
@@ -241,5 +245,20 @@ class UserController extends Controller
     {
         $isExisted = $this->users->exists('user_nickname', $_POST['nickname']);
         echo json_encode(['unique' => (int) !$isExisted]);
+    }
+
+    /** Возвращает путь изображения автара.
+     *
+     * @param [string] $image имя файла
+     */
+    private function getAvatarImagePath(mixed $image): string
+    {
+        if (empty($image) || $image === 'ava_profile.png') {
+            $image = '/public/images/ava.png';
+        } else {
+            $image = '/application/data/profile_photos/'.$image;
+        }
+
+        return $image;
     }
 }
