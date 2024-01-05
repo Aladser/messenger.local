@@ -19,6 +19,8 @@ class Route
      'quit' => 'MainController',
     ];
 
+    private static $noAuthURLs = ['', 'login', 'register'];
+
     public static function start()
     {
         session_start();
@@ -47,16 +49,13 @@ class Route
         // вырезаются get-аргументы
         $url = explode('?', $url)[0];
 
-        // --- редирект "/chats" или "/profile" без авторизации => "/" ---
-        if (($url == 'chat' || $url === 'profile')
-            && !(isset($_SESSION['auth']) || isset($_COOKIE['auth']))
-        ) {
+        // --- редирект без авторизации => "/" ---
+        if (!in_array($url, self::$noAuthURLs) && !self::isAuth()) {
             header('Location: /');
         }
+
         // --- авторизация сохраняется в куки и сессии. Если авторизация есть, то "/" => "/chat" ---
-        if ($url === '' && (isset($_SESSION['auth']) || isset($_COOKIE['auth']))
-        && !isset($_GET['logout'])
-        ) {
+        if ($url === '' && self::isAuth()) {
             header('Location: /chat');
         }
 
@@ -118,5 +117,10 @@ class Route
         $name = str_replace(' ', '', $name);
 
         return $name;
+    }
+
+    private static function isAuth(): bool
+    {
+        return isset($_SESSION['auth']) || isset($_COOKIE['auth']);
     }
 }
