@@ -236,13 +236,9 @@ async function findContacts() {
     // слушатели событий для найденных пользователей
     contactContainer.get().forEach(contact => {
         contact.addEventListener('click', async function(e){
-            findContactsInput.value = '';
-            // очистить результаты поиска
-            contactContainer.restore();
-            // новое навешивание слушателей событий
-            contactContainer.get().forEach(contact => {
-                contact.addEventListener('click', setClick(contact, 'dialog'));
-            });
+            console.log(this.title);
+            resetSearch();
+            return;
             // добавление пользователя в контакты, если отсутствует
             let user_name = this.title;
             if (!contactContainer.nameList.includes(user_name)) {
