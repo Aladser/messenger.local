@@ -158,20 +158,24 @@ class ChatController extends Controller
         echo json_encode(['result' => (int) $isDeleted]);
     }
 
+    // сообщения чата
     public function getMessages()
     {
-        // диалоги
-        if (isset($_POST['contact'])) {
-            $contact = htmlspecialchars($_POST['contact']);
-            $contactId = $this->users->getIdByName($contact);
-            $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
-            $type = 'dialog';
-        } elseif (isset($_POST['discussionid'])) {
-            // групповые чаты
-            $chatId = htmlspecialchars($_POST['discussionid']);
-            $type = 'discussion';
-        } else {
-            return;
+        $type = $_POST['type'];
+        if ($type !== 'dialog' && $type !== 'discussion') {
+            exit('ChatController->add: неверный тип группы');
+        }
+
+        $chatName = htmlspecialchars($_POST['chat_name']);
+        switch ($type) {
+            case 'personal':
+                $contactId = $this->users->getIdByName($chatName);
+                $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
+                $type = 'dialog';
+                break;
+            case 'group':
+                $chatId = $this->chats->getDiscussionId($chatName);
+                $type = 'discussion';
         }
 
         $messages = [
@@ -182,7 +186,7 @@ class ChatController extends Controller
         echo json_encode($messages);
     }
 
-    // изменить звук уведомлений
+    // изменить звук уведомлений чата
     public function editNoticeShow()
     {
         $type = $_POST['type'];

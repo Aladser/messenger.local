@@ -33,15 +33,6 @@ class ContactController extends Controller
         $this->chats = new ChatEntity();
     }
 
-    public function getContacts()
-    {
-        $userContacts = $this->contacts->getUserContacts($this->authUserId);
-        for ($i = 0; $i < count($userContacts); ++$i) {
-            $userContacts[$i]['photo'] = $this->getAvatarImagePath($userContacts[$i]['photo']);
-        }
-        echo json_encode($userContacts);
-    }
-
     public function createGroupContact()
     {
         $discussionId = htmlspecialchars($_POST['discussionid']);
@@ -59,16 +50,6 @@ class ContactController extends Controller
             'result' => $isAdded,
             'group' => 'group-'.$discussionId,
             'user' => $username,
-        ]);
-    }
-
-    public function getGroupContacts()
-    {
-        $discussionId = htmlspecialchars($_POST['discussionid']);
-        $creatorId = $this->messages->getDiscussionCreatorId($discussionId);
-        echo json_encode([
-            'participants' => $this->contacts->getGroupContacts($discussionId),
-            'creatorName' => $this->users->getPublicUsername($creatorId),
         ]);
     }
 }

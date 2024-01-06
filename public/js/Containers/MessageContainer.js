@@ -11,6 +11,7 @@ class MessageContainer extends TemplateContainer{
         urlParams.set('CSRF', this.CSRFElement.content);
 
         let process = (data) => {
+            console.log(data);
             data = JSON.parse(data);
             this.removeElements();
     

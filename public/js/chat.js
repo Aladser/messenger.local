@@ -209,14 +209,15 @@ function setClick(domElement, type)
         }
 
         let urlParams = new URLSearchParams();
+        urlParams.set('CSRF', csrfElement.content);
         switch(type) {
             case 'dialog':
-                urlParams.set('contact', name);
-                urlParams.set('CSRF', csrfElement.content);
+                urlParams.set('type', 'personal');
+                urlParams.set('chat_name', name);
                 break;
             case 'discussion':
-                let id = domElement.id;
-                urlParams.set('discussionid', id.substring(id.indexOf('-')+1));
+                urlParams.set('type', 'group');
+                urlParams.set('chat_name', name);
                 groupContainer.click(domElement, contactContainer);
                 break;
             default:
