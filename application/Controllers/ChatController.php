@@ -59,11 +59,7 @@ class ChatController extends Controller
         $contacts = $this->contacts->getUserContacts($this->authUserId);
         // указание путей до аватарок
         for ($i = 0; $i < count($contacts); ++$i) {
-            if ($contacts[$i]['photo'] === 'ava_profile.png' || empty($contacts[$i]['photo'])) {
-                $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/public/images/ava.png';
-            } else {
-                $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/application/data/profile_photos/'.$contacts[$i]['photo'];
-            }
+            $contacts[$i]['photo'] = UserController::getAvatarImagePath(null, 'chat');
         }
         $data['contacts'] = $contacts;
 
