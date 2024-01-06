@@ -22,7 +22,7 @@ class ChatParticipantEntity extends Model
             from chats 
             join chat_participants on chat_id = chats.id
             join users on user_id = users.id
-            where type = 'dialog'
+            where type = 'personal'
             and chat_id in (
                 select chat_id
                 from chat_participants

@@ -62,7 +62,6 @@ class ChatController extends Controller
 
         // группы пользователя
         $groups = $this->chats->getDiscussions($this->authUserId);
-
         for ($i = 0; $i < count($groups); ++$i) {
             $discussionId = $groups[$i]['chat'];
             $creatorId = $this->chats->getDiscussionCreatorId($discussionId);
@@ -97,13 +96,13 @@ class ChatController extends Controller
     {
         // создание чата в зависимости от типа
         $type = $_POST['type'];
-        if ($type !== 'dialog' && $type !== 'discussion') {
+        if ($type !== 'personal' && $type !== 'group') {
             exit('ChatController->add: неверный тип группы');
         }
         $chatId = $this->chats->add($type, $this->authUserId);
 
         switch ($type) {
-            case 'dialog':
+            case 'personal':
                 $contactName = htmlspecialchars($_POST['username']);
                 $contactId = $this->users->getIdByName($contactName);
                 $contactPhoto = $this->users->get($contactId, 'photo');
@@ -119,7 +118,7 @@ class ChatController extends Controller
                 ];
                 echo json_encode($userData);
                 break;
-            case 'discussion':
+            case 'group':
                 $group_name = $this->chats->getName($chatId);
                 $this->chatParticipants->add($chatId, $this->authUserId);
                 $authorPublicName = $this->users->getPublicUsername($this->authUserId);
@@ -136,12 +135,12 @@ class ChatController extends Controller
     public function remove()
     {
         $type = htmlspecialchars($_POST['type']);
-        if ($type !== 'contact' && $type !== 'group') {
+        if ($type !== 'personal' && $type !== 'group') {
             exit('ChatController->remove: неверный тип группы');
         }
 
         switch ($type) {
-            case 'contact':
+            case 'personal':
                 $contact_name = htmlspecialchars($_POST['contact_name']);
                 $contactId = $this->users->getIdByName($contact_name);
                 $chatId = $this->chats->getDialogId($this->authUserId, $contactId);

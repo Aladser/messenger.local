@@ -13,11 +13,11 @@ class ChatEntity extends Model
         $sql = "
             select chat_id from chat_participants 
             join chats on chats.id = chat_participants.chat_id
-            where user_id = :user1Id and type='dialog'
+            where user_id = :user1Id and type='personal'
             intersect
             select chat_id from chat_participants 
             join chats on chats.id = chat_participants.chat_id
-            where user_id = :user2Id and type='dialog'
+            where user_id = :user2Id and type='personal'
         ";
         $args = ['user1Id' => $user1Id, 'user2Id' => $user2Id];
         $chatId = $this->dbQuery->queryPrepared($sql, $args)['chat_id'];
@@ -35,24 +35,6 @@ class ChatEntity extends Model
         return $id;
     }
 
-    public function add(string $type, int $creatorId)
-    {
-        $chatData = [
-            'type' => $type,
-            'creator_id' => $creatorId,
-        ];
-
-        if ($type === 'discussion') {
-            $sql = 'select max(id) as max_id from chats';
-            $index = $this->dbQuery->query($sql)['max_id'];
-            $chatData['name'] = 'Группа '.($index + 1);
-        }
-
-        $chatId = $this->dbQuery->insert('chats', $chatData);
-
-        return $chatId;
-    }
-
     // получить имя чата
     // используется при создании группового чата
     public function getName(int $id)
@@ -64,6 +46,24 @@ class ChatEntity extends Model
         return $name;
     }
 
+    public function add(string $type, int $creatorId)
+    {
+        $chatData = [
+            'type' => $type,
+            'creator_id' => $creatorId,
+        ];
+
+        if ($type === 'group') {
+            $sql = 'select max(id) as max_id from chats';
+            $index = $this->dbQuery->query($sql)['max_id'];
+            $chatData['name'] = 'Группа '.($index + 1);
+        }
+
+        $chatId = $this->dbQuery->insert('chats', $chatData);
+
+        return $chatId;
+    }
+
     // возвращает групповые чаты пользователя
     public function getDiscussions(int $userId)
     {
@@ -71,7 +71,7 @@ class ChatEntity extends Model
             select chat_id as chat, name, notice       
             from chat_participants
             join chats on chat_participants.chat_id = chats.id
-            where type = 'discussion' and user_id = :userId
+            where type = 'group' and user_id = :userId
         ";
         $args = ['userId' => $userId];
 

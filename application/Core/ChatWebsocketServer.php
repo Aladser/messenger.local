@@ -3,7 +3,7 @@
 namespace App\Core;
 
 use App\Models\ChatEntity;
-use App\Models\ContactEntity;
+use App\Models\ChatParticipantEntity;
 use App\Models\MessageEntity;
 use App\Models\UserEntity;
 use Ratchet\ConnectionInterface;
@@ -20,19 +20,20 @@ class ChatWebsocketServer implements MessageComponentInterface
     private MessageEntity $messageEntity;
     // пользователи
     private UserEntity $userEntity;
-    // контакты
-    private ContactEntity $сontactEntity;
+    // чаты
     private ChatEntity $chats;
+    // участники чатов
+    private ChatParticipantEntity $chatParticipants;
 
     public function __construct()
     {
         $this->connections = [];
         $this->connectionUsers = [];
 
+        $this->chats = new ChatEntity();
+        $this->chatParticipants = new ChatParticipantEntity();
         $this->messageEntity = new MessageEntity();
         $this->userEntity = new UserEntity();
-        $this->contactEntity = new ContactEntity();
-        $this->chats = new ChatEntity();
     }
 
     /** Открыть соединение.
@@ -58,10 +59,10 @@ class ChatWebsocketServer implements MessageComponentInterface
         unset($this->connectionUsers[$userId]);
 
         // рассылка контактам пользователя и себе о подключении
-        $contactIdList = $this->contactEntity->getUserContacts($userId, true);
+        $userChatMembersIdList = $this->chatParticipants->getUserChatMembers($userId, true);
         $publicUsername = $this->userEntity->getPublicUsername($userId);
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
-        $this->sendMessage($contactIdList, $message);
+        $this->sendMessage($userChatMembersIdList, $message);
 
         echo "$publicUsername не в сети\n";
     }
@@ -85,9 +86,9 @@ class ChatWebsocketServer implements MessageComponentInterface
             }
 
             // рассылка контактам пользователя и себе о подключении
-            $contactIdList = $this->contactEntity->getUserContacts($userId, true);
+            $userChatMembersIdList = $this->chatParticipants->getUserChatMembers($userId, true);
             $message = json_encode($data);
-            $this->sendMessage($contactIdList, $message);
+            $this->sendMessage($userChatMembersIdList, $message);
             $from->send($message);
 
             echo "$data->author в сети\n";
@@ -139,14 +140,14 @@ class ChatWebsocketServer implements MessageComponentInterface
 
     /** Отправить сообщение списку пользователей.
      *
-     * @param array  $contactIdList список id получателей
-     * @param string $message       сообщение
+     * @param array  $userChatMembersIdList список id получателей
+     * @param string $message               сообщение
      */
-    private function sendMessage(array $contactIdList, string $message): void
+    private function sendMessage(array $userChatMembersIdList, string $message): void
     {
-        foreach ($contactIdList as $contactId) {
-            if (array_key_exists($contactId, $this->connectionUsers)) {
-                $connId = $this->connectionUsers[$contactId];
+        foreach ($userChatMembersIdList as $memberId) {
+            if (array_key_exists($memberId, $this->connectionUsers)) {
+                $connId = $this->connectionUsers[$memberId];
                 $this->connections[$connId]->send($message);
             }
         }

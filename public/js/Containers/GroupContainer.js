@@ -67,14 +67,16 @@ class GroupContainer extends TemplateContainer{
     add() {
         let requestData = new URLSearchParams();
         requestData.set('CSRF', this.CSRFElement.content);
-        requestData.set('type', 'discussion');
+        requestData.set('type', 'group');
 
         let process = (data) => {
+            console.clear();
+            console.log(data);
             try {
                 let group = JSON.parse(data);
                 this.createDOM(group, 'START');
                 this.addGroupToList({'name': group.name, 'chat':group.chat, 'notice': 1});
-                return 'group-' + group.id;
+                return group.name;
             } catch (err) {
                 console.log(err);
                 console.log();
@@ -92,25 +94,15 @@ class GroupContainer extends TemplateContainer{
         );
     }
 
-    // создать DOM-элемент группы
-    createDOM(group) {
-        let groupDOMElement = `
-            <article class="group text-white" id="group-${group.id}" title="${group.name}" data-notice="1">
-                ${group.name}                      
-                <div class="group__contacts d-none">
-                    <p class="group__contact">${group.author}</p>
-                </div>
-            </article>`;
-        this.container.innerHTML += groupDOMElement;
-    }
-
     remove(group) {
         let urlParams = new URLSearchParams();
-        urlParams.set('group_name', group.title);
-        urlParams.set('type', 'group');
         urlParams.set('CSRF', this.CSRFElement.content);
+        urlParams.set('type', 'group');
+        urlParams.set('group_name', group.title);
 
         let process = (data) => {
+            console.clear();
+            console.log(data);
             try {
                 data = JSON.parse(data);
                 if (parseInt(data.result) > 0) {
@@ -129,6 +121,18 @@ class GroupContainer extends TemplateContainer{
             null,
             urlParams
         );
+    }
+
+    // создать DOM-элемент группы
+    createDOM(group) {
+        let groupDOMElement = `
+            <article class="group text-white" id="group-${group.id}" title="${group.name}" data-notice="1">
+                ${group.name}                      
+                <div class="group__contacts d-none">
+                    <p class="group__contact">${group.author}</p>
+                </div>
+            </article>`;
+        this.container.innerHTML += groupDOMElement;
     }
 
     /** возвращает функцию добавления пользователя в группу

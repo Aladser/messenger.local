@@ -1,85 +1,74 @@
-drop table if exists connections;
-drop table if exists chat_message;
-drop table if exists chat_participant;
-drop table if exists chat;
-drop table if exists contacts;
-drop view if exists unhidden_emails;
-DROP VIEW IF EXISTS extended_chat;
+drop table if exists messages;
+drop table if exists chat_participants;
+drop table if exists chats;
 drop table if exists users;
 
 # -- пользователи --
 # -- предполагается доработка, что пользователь может сменить почту
 create table users
 (
-    user_id              int AUTO_INCREMENT PRIMARY KEY,
-    user_email           varchar(100) UNIQUE,
-    user_nickname        varchar(100) unique,
-    user_password        varchar(255) not null,
-    user_hash            varchar(255),
-    user_email_confirmed boolean default false,
-    user_hide_email      int(1)  default 0,
-    user_photo           varchar(255)
+    id              int AUTO_INCREMENT PRIMARY KEY,
+    email           varchar(100) UNIQUE not null,
+    nickname        varchar(100) unique,
+    password        varchar(255) not null,
+    hash            varchar(255),
+    email_confirmed boolean default false,
+    hide_email      int(1)  default 0,
+    photo           varchar(255)
 );
-insert into users(user_email, user_nickname, user_password)
-values ('aladser@mail.ru', 'Admin', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
-insert into users(user_email, user_nickname, user_password)
-values ('aladser@gmail.com', 'Aladser', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
-insert into users(user_email, user_nickname, user_password)
-values ('lauxtec@gmail.com', 'Lauxtec', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
-insert into users(user_email, user_nickname, user_password)
-values ('sendlyamobile@gmail.com', 'Barashka', '$2y$10$H09UQUYdkD3uTmEXQsYQuukJNjF2XA1BGaBF0Deq0mu1qPLSEFZWe');
-update users set user_email_confirmed = 1 where user_id < 5;
-
-# -- контакты пользователя --
-create table contacts
-(
-    cnt_id         int auto_increment primary key,
-    cnt_user_id    int not null,
-    cnt_contact_id int not null,
-    CONSTRAINT contacts_fk_userid foreign key (cnt_user_id) references users (user_id) ON DELETE cascade,
-    CONSTRAINT contacts_fk_contactid foreign key (cnt_contact_id) references users (user_id) ON DELETE CASCADE
-);
-
-# -- соединения --
-create table connections
-(
-    connection_ws_id  int not null primary key,
-    connection_userid int unique,
-    CONSTRAINT fk_userid foreign key (connection_userid) references users (user_id) ON DELETE CASCADE
-);
+insert into users(email, nickname, password)
+values ('aladser@mail.ru', 'Admin', '$2y$10$s8hnPlQkLrwNCA94.j6UoOTjrK6iZqTvP2Mhidgt.i9vA1GbebeXa');
+insert into users(email, nickname, password)
+values ('aladser@gmail.com', 'Aladser', '$2y$10$s8hnPlQkLrwNCA94.j6UoOTjrK6iZqTvP2Mhidgt.i9vA1GbebeXa');
+insert into users(email, nickname, password)
+values ('lauxtec@gmail.com', 'Lauxtec', '$2y$10$s8hnPlQkLrwNCA94.j6UoOTjrK6iZqTvP2Mhidgt.i9vA1GbebeXa');
+insert into users(email, nickname, password)
+values ('sendlyamobile@gmail.com', 'Barashka', '$2y$10$s8hnPlQkLrwNCA94.j6UoOTjrK6iZqTvP2Mhidgt.i9vA1GbebeXa');
+update users set email_confirmed = 1 where id < 5;
 
 # --  ЧАТЫ  --
-create table chat
+create table chats
 (
-    chat_id        int auto_increment primary key,
-    chat_type      varchar(10) not null,
-    chat_name      varchar(30),
-    chat_creatorid int,
-    CONSTRAINT check_creatorid foreign key (chat_creatorid) references users (user_id) ON DELETE cascade
+    id        int auto_increment primary key,
+    type      enum('personal', 'group') not null,
+    name      varchar(100),
+    creator_id int,
+    CONSTRAINT check_creator_id foreign key (creator_id) references users (id) ON DELETE cascade
 );
-create table chat_participant
+insert into chats(type, creator_id) values ('personal', 1);
+insert into chats(type, creator_id) values ('personal', 1);
+insert into chats(type, name, creator_id) values ('group', 'групповой чат 1', 1);
+insert into chats(type, name, creator_id) values ('group', 'групповой чат 2', 2);
+
+create table chat_participants
 (
-    chat_participant_chatid   int,
-    chat_participant_userid   int,
-    chat_participant_isnotice int(1) default 1,
-    PRIMARY KEY (chat_participant_chatid, chat_participant_userid),
-    CONSTRAINT check_participant_chatid foreign key (chat_participant_chatid) references chat (chat_id) ON DELETE CASCADE,
-    CONSTRAINT check_participant_userid foreign key (chat_participant_userid) references users (user_id) ON DELETE CASCADE
+	id int auto_increment primary key,
+    chat_id   int,
+    user_id   int,
+    notice int(1) default 1,
+    constraint unique_user_chat unique index (chat_id, user_id),
+    CONSTRAINT check_prt_chat_id foreign key (chat_id) references chats (id) ON DELETE CASCADE,
+    CONSTRAINT check_prt_user_id foreign key (user_id) references users (id) ON DELETE CASCADE
 );
-create table chat_message
+insert into chat_participants(chat_id, user_id) values (1, 1);
+insert into chat_participants(chat_id, user_id) values (1, 2);
+insert into chat_participants(chat_id, user_id) values (2, 1);
+insert into chat_participants(chat_id, user_id) values (2, 3);
+insert into chat_participants(chat_id, user_id) values (3, 1);
+insert into chat_participants(chat_id, user_id) values (4, 2);
+insert into chat_participants(chat_id, user_id) values (4, 3);
+
+create table messages
 (
-    chat_message_id        int auto_increment primary key,
-    chat_message_chatid    int,
-    chat_message_text      text not null,
-    chat_message_creatorid int,
-    chat_message_time      datetime,
-    chat_message_forward   int(1) default 0,
-    CONSTRAINT check_message_chatid foreign key (chat_message_chatid) references chat (chat_id) ON DELETE cascade,
-    CONSTRAINT check_message_creator foreign key (chat_message_creatorid) references users (user_id) ON DELETE cascade
+    id        int auto_increment primary key,
+    chat_id    int,
+    creator_user_id int,
+    content    text not null,
+    time      datetime DEFAULT CURRENT_TIMESTAMP,
+    forward   int(1) default 0,
+    CONSTRAINT check_msg_chat_id foreign key (chat_id) references chats (id) ON DELETE cascade,
+    CONSTRAINT check_msg_creator foreign key (creator_user_id) references users (id) ON DELETE cascade
 );
 
-# -- виртуальная таблица неподтвержденных пользователей --
-create view unhidden_emails as
-select user_email
-from users
-where user_hide_email = 0;
+insert into messages(chat_id, content, creator_user_id) values (1, 'первое сообщение.', 1);
+insert into messages(chat_id, content, creator_user_id) values (1, 'второе сообщение.', 2);

@@ -25,43 +25,16 @@ class ContactContainer extends TemplateContainer{
     /** восстановить DOM содержание контейнера из резервной копии */
     restore = () => this.container.innerHTML = this.#backupContainer;
 
-    /** поиск пользователей по фразе
-     * 
-     * @param {*} userphrase часть имени пользователя
-     */
-    async findUsers(userphrase) {
-        this.isSearch = true;
-
-        let urlParams = new URLSearchParams();
-        urlParams.set('userphrase', userphrase);
-        urlParams.set('CSRF', this.CSRFElement.content);
-
-        // показ найденных пользователей
-        let process = data => {
-            // родительский метод
-            this.removeElements();
-            
-            let userDataList = JSON.parse(data);
-            userDataList.forEach(userData => this.createNode(userData));
-        }
-
-        await ServerRequest.execute(
-            'user/find',
-            process,
-            "post",
-            null,
-            urlParams
-        );
-    }
-
     /** добавить контакт */
     async add(username) {
         let requestData = new URLSearchParams();
         requestData.set('username', username);
         requestData.set('CSRF', this.CSRFElement.content);
-        requestData.set('type', 'dialog');
+        requestData.set('type', 'personal');
 
         let process = (data) => {
+            console.clear();
+            console.log(data);
             let contactData = JSON.parse(data);
             let contact = {
                 'username': contactData.username,
@@ -76,6 +49,37 @@ class ContactContainer extends TemplateContainer{
 
         return await ServerRequest.execute(
             '/chat/add',
+            process,
+            "post",
+            null,
+            requestData
+        );
+    }
+
+    // удалить контакт
+    remove(contactDOMElement) {
+        let requestData = new URLSearchParams();
+        requestData.set('contact_name', contactDOMElement.title);
+        requestData.set('type', contactDOMElement.className === 'group' ? 'group' : 'personal');
+        requestData.set('CSRF', this.CSRFElement.content);
+        
+        let process = (data) => {
+            console.clear();
+            console.log(data);
+            try {
+                data = JSON.parse(data);
+                if (parseInt(data.result) > 0) {
+                    contactDOMElement.remove();
+                    // новая сохраненная копия после удаления контакта
+                    this.backup();
+                }
+            } catch (err) {
+                alert(err);
+            }
+        }
+
+        ServerRequest.execute(
+            '/chat/remove',
             process,
             "post",
             null,
@@ -106,32 +110,32 @@ class ContactContainer extends TemplateContainer{
         return contactArticle;
     }
 
-    // удалить контакт
-    remove(contactDOMElement) {
-        let requestData = new URLSearchParams();
-        requestData.set('contact_name', contactDOMElement.title);
-        requestData.set('type', contactDOMElement.className === 'group' ? 'group' : 'contact');
-        requestData.set('CSRF', this.CSRFElement.content);
-        
-        let process = (data) => {
-            try {
-                data = JSON.parse(data);
-                if (parseInt(data.result) > 0) {
-                    contactDOMElement.remove();
-                    // новая сохраненная копия после удаления контакта
-                    this.backup();
-                }
-            } catch (err) {
-                alert(err);
-            }
+    /** поиск пользователей по фразе
+     * 
+     * @param {*} userphrase часть имени пользователя
+     */
+    async findUsers(userphrase) {
+        this.isSearch = true;
+
+        let urlParams = new URLSearchParams();
+        urlParams.set('userphrase', userphrase);
+        urlParams.set('CSRF', this.CSRFElement.content);
+
+        // показ найденных пользователей
+        let process = data => {
+            // родительский метод
+            this.removeElements();
+            
+            let userDataList = JSON.parse(data);
+            userDataList.forEach(userData => this.createNode(userData));
         }
 
-        ServerRequest.execute(
-            '/chat/remove',
+        await ServerRequest.execute(
+            'user/find',
             process,
             "post",
             null,
-            requestData
+            urlParams
         );
     }
 }
