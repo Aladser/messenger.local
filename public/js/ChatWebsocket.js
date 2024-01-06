@@ -56,20 +56,18 @@ class ChatWebsocket
             this.errorPrg.innerHTML = `${data.user} не в сети`;
         } else {
             // --- сообщение с сервера
-            console.clear();
-            console.log(data);
 
             // уведомления о новых сообщениях чатов
-            if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== this.publicUsername) {
-                // для неоткрытых чатов визуальное уведомление
-                let domElem = document.querySelector(`[title='${chat.name}']`);
+            if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.author !== this.publicUsername) {
+                let senderDOMNode = document.querySelector(`article[title='${data.author}']`);
+                // визуальное уведомление
                 if (this.openChatId !== data.chat) {
-                    domElem.classList.add('isnewmessage');
+                    senderDOMNode.classList.add('isnewmessage');
                 }
-
                 // звуковое уведомление
                 // сделано специально множественное создание объектов звука
-                if (chat.notice == 1) {
+                let senderChatNotice = senderDOMNode.getAttribute('data-notice');
+                if (senderChatNotice == 1) {
                     let notice = new Audio(this.baseSiteName + '/public/notice.wav');
                     notice.autoplay = true;
                 }
