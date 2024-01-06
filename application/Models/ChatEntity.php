@@ -9,10 +9,6 @@ class ChatEntity extends Model
 {
     public function add(string $type, int $creatorId)
     {
-        if ($type != 'dialog' && $type != 'discussion') {
-            throw new \Exception('Неверный тип чата');
-        }
-
         $chatData = [
             'type' => $type,
             'creator_id' => $creatorId,
