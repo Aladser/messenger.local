@@ -7,24 +7,6 @@ use App\Core\Model;
 /** класс БД таблицы сообщений чатов */
 class ChatEntity extends Model
 {
-    public function add(string $type, int $creatorId)
-    {
-        $chatData = [
-            'type' => $type,
-            'creator_id' => $creatorId,
-        ];
-
-        if ($type === 'discussion') {
-            $sql = 'select max(id) as max_id from chats';
-            $index = $this->dbQuery->query($sql)['max_id'];
-            $chatData['name'] = 'Группа '.($index + 1);
-        }
-
-        $chatId = $this->dbQuery->insert('chats', $chatData);
-
-        return $chatId;
-    }
-
     // получить ID диалога
     public function getDialogId($user1Id, $user2Id)
     {
@@ -51,6 +33,24 @@ class ChatEntity extends Model
         $id = $this->dbQuery->queryPrepared($sql, $args)['id'];
 
         return $id;
+    }
+
+    public function add(string $type, int $creatorId)
+    {
+        $chatData = [
+            'type' => $type,
+            'creator_id' => $creatorId,
+        ];
+
+        if ($type === 'discussion') {
+            $sql = 'select max(id) as max_id from chats';
+            $index = $this->dbQuery->query($sql)['max_id'];
+            $chatData['name'] = 'Группа '.($index + 1);
+        }
+
+        $chatId = $this->dbQuery->insert('chats', $chatData);
+
+        return $chatId;
     }
 
     // получить имя чата

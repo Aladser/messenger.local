@@ -35,25 +35,19 @@ class ContactContexMenu extends ContexMenu
      * @param {*} inputCsrf  CSRF
      */
     editNoticeShow() {
-        // создание пакета с id чата, значением статуса показа уведомлений
-        let data = {};
+        let isGroup = this.selectedContact.classList.contains('group');
+        let type = isGroup ? 'group' : 'personal';
+        //инвертирование значения уведомления. Это значение будет записано в БД
+        let noticeAttr = this.selectedContact.getAttribute('data-notice');
+        let notice = noticeAttr == 1 ? 0 : 1;  
 
-        if (this.selectedContact.classList.contains('group')) {
-            // поиск выбранного группового чата
-            data.chat = this.groupContainer.list.find(el => el.name === this.selectedContact.title).chat;
-        } else {
-            //  поиск выбранного контакта
-            let name = this.selectedContact.querySelector('.contact__name').innerHTML;
-            data.chat = this.contactContainer.list.find(el => el.name === name).chat;
-        }
-        data.notice = this.selectedContact.getAttribute('data-notice') == 1 ? 0 : 1; //инвертирование значения. Это значение будет записано в БД
         this.hide();
 
         // отправка данных на сервер
         let urlParams = new URLSearchParams();
-        urlParams.set('chat_id', data.chat);
-        urlParams.set('notice', data.notice);
-        urlParams.set('username', this.clientUsername);
+        urlParams.set('type', type);
+        urlParams.set('notice', notice);
+        urlParams.set('chat_name', this.selectedContact.title);
         urlParams.set('CSRF', this.csrfInput.content);
 
         let process = (notice) => {

@@ -37,8 +37,8 @@ class ChatController extends Controller
 
     public function index()
     {
-        $userId = $this->users->getIdByName($this->authUserEmail);
-        $publicUsername = $this->users->getPublicUsername($userId);
+        $contactId = $this->users->getIdByName($this->authUserEmail);
+        $publicUsername = $this->users->getPublicUsername($contactId);
         // head
         $websocket = config('WEBSOCKET_ADDR');
         $csrf = MainController::createCSRFToken();
@@ -182,14 +182,27 @@ class ChatController extends Controller
         echo json_encode($messages);
     }
 
+    // изменить звук уведомлений
     public function editNoticeShow()
     {
-        $username = htmlspecialchars($_POST['username']);
+        $type = $_POST['type'];
+        if ($type !== 'personal' && $type !== 'group') {
+            exit('ChatController->editNoticeShow: неверный тип группы');
+        }
+
+        $chatName = htmlspecialchars($_POST['chat_name']);
+        switch ($type) {
+            case 'personal':
+                $contactId = $this->users->getIdByName($chatName);
+                $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
+                break;
+            case 'group':
+                $chatId = $this->chats->getDiscussionId($chatName);
+        }
+
         $notice = htmlspecialchars($_POST['notice']);
         $notice = intval($notice);
-        $chatid = htmlspecialchars($_POST['chat_id']);
-        $isEdited = $this->chats->setNoticeShow($chatid, $this->authUserId, $notice);
-
+        $isEdited = $this->chats->setNoticeShow($chatId, $this->authUserId, $notice);
         echo json_encode(['responce' => $isEdited]);
     }
 }

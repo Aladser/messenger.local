@@ -42,7 +42,10 @@
             <!--группы -->
             <section class='groups pt-2 text-center' id='group-chats'>
                 <?php foreach ($data['groups'] as $group) { ?>
-                    <article class="group text-white" id="<?php echo 'group-'.$group['chat']; ?>" title="<?php echo $group['name']; ?>" data-notice="<?php echo $group['notice']; ?>">
+                    <article class="group text-white" 
+                    title="<?php echo $group['name']; ?>" 
+                    data-notice="<?php echo $group['notice']; ?>"
+                    >
                         <?php echo $group['name']; ?>
                         <div class='group__contacts d-none'>
                         <?php foreach ($group['members'] as $members) {?>
