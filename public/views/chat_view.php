@@ -49,7 +49,7 @@
                         <?php echo $group['name']; ?>
                         <div class='group__contacts d-none'>
                         <?php foreach ($group['members'] as $members) {?>
-                            <p class='group__contact'><?php echo $members['publicname']; ?></p>
+                            <p class='group__contact'><?php echo $members['username']; ?></p>
                         <?php } ?>
                         </div>
                         <?php if ($group['notice'] == 0) { ?>
