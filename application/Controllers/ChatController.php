@@ -162,7 +162,7 @@ class ChatController extends Controller
     public function getMessages()
     {
         $type = $_POST['type'];
-        if ($type !== 'dialog' && $type !== 'discussion') {
+        if ($type !== 'personal' && $type !== 'group') {
             exit('ChatController->add: неверный тип группы');
         }
 
@@ -171,11 +171,9 @@ class ChatController extends Controller
             case 'personal':
                 $contactId = $this->users->getIdByName($chatName);
                 $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
-                $type = 'dialog';
                 break;
             case 'group':
                 $chatId = $this->chats->getDiscussionId($chatName);
-                $type = 'discussion';
         }
 
         $messages = [
