@@ -72,6 +72,7 @@ class ChatParticipantEntity extends Model
         return $groupChatMembers;
     }
 
+    // добавить участника чата
     public function add($chatId, $userId): bool
     {
         $participantData = ['chat_id' => $chatId, 'user_id' => $userId];
@@ -80,6 +81,7 @@ class ChatParticipantEntity extends Model
         return $isAdded;
     }
 
+    // проверить существование пользователя в чате
     public function exists($chatId, $userId)
     {
         $sql = '

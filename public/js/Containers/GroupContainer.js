@@ -77,6 +77,8 @@ class GroupContainer extends TemplateContainer{
                 return 'group-' + group.id;
             } catch (err) {
                 console.log(err);
+                console.log();
+                console.log(data);
                 return null;
             }
         };

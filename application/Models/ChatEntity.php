@@ -54,6 +54,7 @@ class ChatEntity extends Model
     }
 
     // получить имя чата
+    // используется при создании группового чата
     public function getName(int $id)
     {
         $sql = 'select name from chats where id = :id';
