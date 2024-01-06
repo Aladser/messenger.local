@@ -67,6 +67,7 @@ class GroupContainer extends TemplateContainer{
     add() {
         let requestData = new URLSearchParams();
         requestData.set('CSRF', this.CSRFElement.content);
+        requestData.set('type', 'discussion');
 
         let process = (data) => {
             try {
@@ -81,7 +82,7 @@ class GroupContainer extends TemplateContainer{
         };
 
         ServerRequest.execute(
-            'chat/create-group',
+            'chat/add',
             process,
             'post',
             null,

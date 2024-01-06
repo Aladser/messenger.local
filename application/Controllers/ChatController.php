@@ -119,51 +119,43 @@ class ChatController extends Controller
         echo json_encode($messages);
     }
 
-    public function createGroup()
-    {
-        $groupId = $this->chats->add('discussion', $this->authUserId);
-        $group_name = $this->chats->getName($groupId);
-
-        $this->contacts->add($groupId, $this->authUserId);
-        $authorPublicName = $this->users->getPublicUsername($this->authUserId);
-
-        echo json_encode([
-            'id' => $groupId,
-            'name' => $group_name,
-            'author' => $authorPublicName,
-        ]);
-    }
-
-    public function editNoticeShow()
-    {
-        $username = htmlspecialchars($_POST['username']);
-        $notice = htmlspecialchars($_POST['notice']);
-        $notice = intval($notice);
-        $chatid = htmlspecialchars($_POST['chat_id']);
-        $isEdited = $this->chats->setNoticeShow($chatid, $this->authUserId, $notice);
-
-        echo json_encode(['responce' => $isEdited]);
-    }
-
-    // добавить новый чат
+    // создать чат
     public function add()
     {
-        // id контакта
-        $contactName = htmlspecialchars($_POST['username']);
-        $contactId = $this->users->getIdByName($contactName);
-        // создаем чат
-        $chatId = $this->chats->add('dialog', $this->authUserId);
-        // создаем участников чата
-        $this->contacts->add($chatId, $this->authUserId);
-        $this->contacts->add($chatId, $contactId);
+        // создание чата в зависимости от типа
+        $type = $_POST['type'];
+        if ($type !== 'dialog' && $type !== 'discussion') {
+            return 'Ошибка создания чата: неверный тип';
+        }
+        $chatId = $this->chats->add($type, $this->authUserId);
 
-        $userData = [
-            'username' => $contactName,
-            'photo' => '/public/images/ava.png',
-            'chat_id' => $chatId,
-            'isnotice' => 1,
-        ];
-        echo json_encode($userData);
+        switch ($type) {
+            case 'dialog':
+                $contactName = htmlspecialchars($_POST['username']);
+                $contactId = $this->users->getIdByName($contactName);
+                // создаем участников чата
+                $this->contacts->add($chatId, $this->authUserId);
+                $this->contacts->add($chatId, $contactId);
+
+                $userData = [
+                    'username' => $contactName,
+                    'photo' => UserController::getAvatarImagePath(null, 'chat'),
+                    'chat_id' => $chatId,
+                    'isnotice' => 1,
+                ];
+                echo json_encode($userData);
+                break;
+            case 'discussion':
+                $group_name = $this->chats->getName($chatId);
+                $this->contacts->add($chatId, $this->authUserId);
+                $authorPublicName = $this->users->getPublicUsername($this->authUserId);
+
+                echo json_encode([
+                    'id' => $chatId,
+                    'name' => $group_name,
+                    'author' => $authorPublicName,
+                ]);
+        }
     }
 
     // удалить чат
@@ -185,5 +177,16 @@ class ChatController extends Controller
 
         $isDeleted = $this->chats->remove($chatId);
         echo json_encode(['result' => (int) $isDeleted]);
+    }
+
+    public function editNoticeShow()
+    {
+        $username = htmlspecialchars($_POST['username']);
+        $notice = htmlspecialchars($_POST['notice']);
+        $notice = intval($notice);
+        $chatid = htmlspecialchars($_POST['chat_id']);
+        $isEdited = $this->chats->setNoticeShow($chatid, $this->authUserId, $notice);
+
+        echo json_encode(['responce' => $isEdited]);
     }
 }

@@ -59,6 +59,7 @@ class ContactContainer extends TemplateContainer{
         let requestData = new URLSearchParams();
         requestData.set('username', username);
         requestData.set('CSRF', this.CSRFElement.content);
+        requestData.set('type', 'dialog');
 
         let process = (data) => {
             let contactData = JSON.parse(data);
