@@ -77,7 +77,7 @@ class ChatEntity extends Model
     public function getUserPersonalChats(int $userId, bool $onlyId = false): array
     {
         $sql = "
-                select chat_id as chat, user_id as user, photo as photo,
+                select chat_id as chat, user_id as user, photo,
                 getPublicUserName(email, nickname, hide_email) as username, 
                 (
                     select notice 
@@ -101,7 +101,7 @@ class ChatEntity extends Model
             // только ID
             $personalChatIDList = [];
             foreach ($personalChatList as $user) {
-                $personalChatIDList[] = $user['user_id'];
+                $personalChatIDList[] = $user['user'];
             }
 
             return $personalChatIDList;

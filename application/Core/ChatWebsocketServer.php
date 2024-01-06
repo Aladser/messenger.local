@@ -70,29 +70,20 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $message)
     {
         $data = json_decode($message);
+        $userId = $this->userEntity->getIdByName($data->author);
+        $userChatMembersIdList = $this->chats->getUserPersonalChats($userId, true);
 
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
-            $userId = $this->userEntity->getIdByName($data->author);
-            $data->author = $this->userEntity->getPublicUsername($userId);
 
+            $data->author = $this->userEntity->getPublicUsername($userId);
             // добавление подключения пользователя в массив подключений
             if (!array_key_exists($userId, $this->connectionUsers)) {
                 $this->connectionUsers[$userId] = $data->wsId;
             }
-
-            // рассылка контактам пользователя и себе о подключении
-            $userChatMembersIdList = $this->chats->getUserPersonalChats($userId, true);
-            $message = json_encode($data);
-            $this->sendMessage($userChatMembersIdList, $message);
-            $from->send($message);
-
             echo "$data->author в сети\n";
         } elseif ($data->message) {
             // отправляется сообщение
-
-            // id участников чата
-            $participantsIds = $this->chats->getChatParticipantIds($data->chat);
 
             // формирование сообщения
             switch ($data->messageType) {
@@ -115,12 +106,12 @@ class ChatWebsocketServer implements MessageComponentInterface
                     $data->message = $this->messageEntity->addForwarded($data);
                     unset($data->author_id);
             }
-
-            // рассылка сообщения участникам чата
-            $message = json_encode($data);
-            echo "$message\n";
-            $this->sendMessage($participantsIds, $message);
+            echo json_encode($data)."\n";
         }
+
+        $message = json_encode($data);
+        $from->send($message);
+        $this->sendMessage($userChatMembersIdList, $message);
     }
 
     /** Ошибка подключения.
