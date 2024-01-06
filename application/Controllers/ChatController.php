@@ -95,30 +95,6 @@ class ChatController extends Controller
         );
     }
 
-    public function getMessages()
-    {
-        // диалоги
-        if (isset($_POST['contact'])) {
-            $contact = htmlspecialchars($_POST['contact']);
-            $contactId = $this->users->getIdByName($contact);
-            $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
-            $type = 'dialog';
-        } elseif (isset($_POST['discussionid'])) {
-            // групповые чаты
-            $chatId = htmlspecialchars($_POST['discussionid']);
-            $type = 'discussion';
-        } else {
-            return;
-        }
-
-        $messages = [
-            'current_chat' => $chatId,
-            'type' => $type,
-            'messages' => $this->messages->getMessages($chatId),
-        ];
-        echo json_encode($messages);
-    }
-
     // создать чат
     public function add()
     {
@@ -180,6 +156,30 @@ class ChatController extends Controller
 
         $isDeleted = $this->chats->remove($chatId);
         echo json_encode(['result' => (int) $isDeleted]);
+    }
+
+    public function getMessages()
+    {
+        // диалоги
+        if (isset($_POST['contact'])) {
+            $contact = htmlspecialchars($_POST['contact']);
+            $contactId = $this->users->getIdByName($contact);
+            $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
+            $type = 'dialog';
+        } elseif (isset($_POST['discussionid'])) {
+            // групповые чаты
+            $chatId = htmlspecialchars($_POST['discussionid']);
+            $type = 'discussion';
+        } else {
+            return;
+        }
+
+        $messages = [
+            'current_chat' => $chatId,
+            'type' => $type,
+            'messages' => $this->messages->getMessages($chatId),
+        ];
+        echo json_encode($messages);
     }
 
     public function editNoticeShow()

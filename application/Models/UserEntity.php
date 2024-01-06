@@ -7,6 +7,43 @@ use App\Core\Model;
 /** класс БД таблицы пользователей */
 class UserEntity extends Model
 {
+    // Получить свойство пользователя
+    public function get(string $id, string $field): mixed
+    {
+        $sql = "select $field from users where id = :id";
+        $args = ['id' => $id];
+        $field = $this->dbQuery->queryPrepared($sql, $args)[$field];
+
+        return $field;
+    }
+
+    // Получить ID пользователя
+    public function getIdByName(mixed $publicUsername): mixed
+    {
+        if (empty($publicUsername)) {
+            return null;
+        }
+
+        $sql = 'select id from users 
+                where email = :publicUsername or nickname=:publicUsername';
+        $args = ['publicUsername' => $publicUsername];
+        $id = $this->dbQuery->queryPrepared($sql, $args)['id'];
+
+        return $id;
+    }
+
+    // Получить публичное имя пользователя
+    public function getPublicUsername(int $userId): string
+    {
+        $sql = '
+            select getPublicUserName(email, nickname, hide_email) as username 
+            from users where id = :userId';
+        $args = ['userId' => $userId];
+        $username = $this->dbQuery->queryPrepared($sql, $args)['username'];
+
+        return $username;
+    }
+
     /** Cписок пользователей по шаблону почты или никнейма.
      *
      * @param string $phrase фраза
@@ -39,43 +76,6 @@ class UserEntity extends Model
         return $cleanedUserList;
     }
 
-    // получить свойство пользователя
-    public function get(string $id, string $field): mixed
-    {
-        $sql = "select $field from users where id = :id";
-        $args = ['id' => $id];
-        $field = $this->dbQuery->queryPrepared($sql, $args)[$field];
-
-        return $field;
-    }
-
-    // Получить ID пользователя
-    public function getIdByName(mixed $publicUsername)
-    {
-        if (empty($publicUsername)) {
-            return null;
-        }
-
-        $sql = 'select id from users 
-                where email = :publicUsername or nickname=:publicUsername';
-        $args = ['publicUsername' => $publicUsername];
-        $id = $this->dbQuery->queryPrepared($sql, $args)['id'];
-
-        return $id;
-    }
-
-    // Получить публичное имя пользователя
-    public function getPublicUsername(int $userId)
-    {
-        $sql = '
-            select getPublicUserName(email, nickname, hide_email) as username 
-            from users where id = :userId';
-        $args = ['userId' => $userId];
-        $username = $this->dbQuery->queryPrepared($sql, $args)['username'];
-
-        return $username;
-    }
-
     // Проверка авторизации
     public function verify(string $email, string $password): bool
     {
@@ -96,12 +96,13 @@ class UserEntity extends Model
     }
 
     // Проверка существования значения
-    public function exists(string $field, mixed $value)
+    public function exists(string $field, mixed $value): bool
     {
         $sql = "select count(*) as count from users where $field = :value";
         $args = ['value' => $value];
+        $existed = $this->dbQuery->queryPrepared($sql, $args)['count'] > 0;
 
-        return $this->dbQuery->queryPrepared($sql, $args)['count'] > 0;
+        return $existed;
     }
 
     // Добавить хэш пользователю
@@ -119,7 +120,7 @@ class UserEntity extends Model
     }
 
     /** Подтвердить почту */
-    public function confirmEmail($email)
+    public function confirmEmail($email): bool
     {
         $fieldArray = ['email_confirmed' => 1, 'hash' => null];
         $condition = [
