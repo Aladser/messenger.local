@@ -121,7 +121,7 @@ class GroupContainer extends TemplateContainer{
         };
 
         ServerRequest.execute(
-            'contact/remove',
+            'chat/remove',
             process,
             'post',
             null,

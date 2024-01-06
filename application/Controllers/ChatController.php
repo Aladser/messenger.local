@@ -125,7 +125,7 @@ class ChatController extends Controller
         // создание чата в зависимости от типа
         $type = $_POST['type'];
         if ($type !== 'dialog' && $type !== 'discussion') {
-            return 'Ошибка создания чата: неверный тип';
+            exit('ChatController->add: неверный тип группы');
         }
         $chatId = $this->chats->add($type, $this->authUserId);
 
@@ -162,17 +162,19 @@ class ChatController extends Controller
     public function remove()
     {
         $type = htmlspecialchars($_POST['type']);
-        if ($type === 'group') {
-            $group_name = htmlspecialchars($_POST['group_name']);
-            $chatId = $this->chats->getDiscussionId($group_name);
-        } elseif ($type === 'contact') {
-            $contact_name = htmlspecialchars($_POST['contact_name']);
-            $contactId = $this->users->getIdByName($contact_name);
-            $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
-        } else {
-            echo 'Ошибка type';
+        if ($type !== 'contact' && $type !== 'group') {
+            exit('ChatController->remove: неверный тип группы');
+        }
 
-            return;
+        switch ($type) {
+            case 'contact':
+                $contact_name = htmlspecialchars($_POST['contact_name']);
+                $contactId = $this->users->getIdByName($contact_name);
+                $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
+                break;
+            case 'group':
+                $group_name = htmlspecialchars($_POST['group_name']);
+                $chatId = $this->chats->getDiscussionId($group_name);
         }
 
         $isDeleted = $this->chats->remove($chatId);
