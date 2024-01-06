@@ -240,8 +240,11 @@ async function findContacts() {
             // добавление пользователя в контакты, если отсутствует
             let user_name = this.title;
             if (!contactContainer.nameList.includes(user_name)) {
+                // добавление пользователя в контакты
                 let newContactDBData = await contactContainer.add(user_name);
+                // создание DOM-узла нового контакта
                 let newContactHTMLElement = contactContainer.createNode(newContactDBData);
+                // новые слушатели клика контакта
                 newContactHTMLElement.addEventListener('click', setClick(this, 'dialog'));
                 // новая сохраненная копия после добавления нового контакта
                 contactContainer.backup();

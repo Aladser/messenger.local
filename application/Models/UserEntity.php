@@ -48,6 +48,15 @@ class UserEntity extends Model
         return $this->dbQuery->queryPrepared($sql, $args)[$field];
     }
 
+    public function getById(string $id, string $field): mixed
+    {
+        $sql = "select $field from users where id = :id";
+        $args = ['id' => $id];
+        $field = $this->dbQuery->queryPrepared($sql, $args)[$field];
+
+        return $field;
+    }
+
     // Получить ID пользователя
     public function getIdByName(mixed $publicUsername)
     {
