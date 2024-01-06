@@ -28,6 +28,8 @@ class ChatWebsocket
     onMessage(e)
     {
         let data = JSON.parse(e.data);
+        console.clear();
+        console.log(data);
         
         if (data.onconnection) {
             // --- сообщение от сервера о подключении текущего пользователя
@@ -54,35 +56,22 @@ class ChatWebsocket
             this.errorPrg.innerHTML = `${data.user} не в сети`;
         } else {
             // --- сообщение с сервера
-
             console.clear();
             console.log(data);
 
             // уведомления о новых сообщениях чатов
-            // Веб-сервер широковещательно рассылает все сообщения. Поэтому ищутся сообщения для чатов пользователя-клиента
             if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.fromuser !== this.publicUsername) {
+                // для неоткрытых чатов визуальное уведомление
+                let domElem = document.querySelector(`[title='${chat.name}']`);
+                if (this.openChatId !== data.chat) {
+                    domElem.classList.add('isnewmessage');
+                }
 
-                let foundedContactChat = this.contacts.list.find(el => el.chat == data.chat); // поиск чата среди списка чатов контактов
-                let foundedGroupChat = this.groups.list.find(el => el.chat == data.chat);     // поиск чата среди групповых чатов
-    
-                let isChat = (foundedContactChat !== undefined) || (foundedGroupChat !== undefined);
-                if (isChat) {
-                    // поиск контакта/группы в списке контактов/групп
-                    let chat = foundedContactChat !== undefined ? foundedContactChat : foundedGroupChat;
-    
-                    // для неоткрытых чатов визуальное уведомление
-                    // DOM-элемент  контакта или группового чата
-                    let domElem = document.querySelector(`[title='${chat.name}']`);
-                    if (this.openChatId !== data.chat) {
-                        domElem.classList.add('isnewmessage');
-                    }
-    
-                    // звуковое уведомление
-                    // сделано специально множественное создание объектов звука
-                    if (chat.notice == 1 && data.author !== this.publicUsername) {
-                        let notice = new Audio(this.baseSiteName + '/public/notice.wav');
-                        notice.autoplay = true;
-                    }
+                // звуковое уведомление
+                // сделано специально множественное создание объектов звука
+                if (chat.notice == 1) {
+                    let notice = new Audio(this.baseSiteName + '/public/notice.wav');
+                    notice.autoplay = true;
                 }
             }
     

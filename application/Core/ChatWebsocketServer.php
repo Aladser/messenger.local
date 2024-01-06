@@ -70,16 +70,16 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $message)
     {
         $data = json_decode($message);
-        $userId = $this->userEntity->getIdByName($data->author);
-        $userChatMembersIdList = $this->chats->getUserPersonalChats($userId, true);
+        $senderId = $this->userEntity->getIdByName($data->author);
+        $userChatMembersIdList = $this->chats->getUserPersonalChats($senderId, true);
 
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
 
-            $data->author = $this->userEntity->getPublicUsername($userId);
+            $data->author = $this->userEntity->getPublicUsername($senderId);
             // добавление подключения пользователя в массив подключений
-            if (!array_key_exists($userId, $this->connectionUsers)) {
-                $this->connectionUsers[$userId] = $data->wsId;
+            if (!array_key_exists($senderId, $this->connectionUsers)) {
+                $this->connectionUsers[$senderId] = $data->wsId;
             }
             echo "$data->author в сети\n";
         } elseif ($data->message) {
@@ -89,10 +89,11 @@ class ChatWebsocketServer implements MessageComponentInterface
             switch ($data->messageType) {
                 case 'NEW':
                     $data->time = date('Y-m-d H:i:s');
-                    $data->author_id = $this->userEntity->getIdByName($data->author);
+                    $data->author_id = $senderId;
                     $data->msg = $this->messageEntity->add($data);
                     $data->forward = 0;
                     unset($data->author_id);
+
                     break;
                 case 'EDIT':
                     $data = $this->messageEntity->editMessage($data->message, $data->msgId);
@@ -102,7 +103,7 @@ class ChatWebsocketServer implements MessageComponentInterface
                     break;
                 case 'FORWARD':
                     $data->time = date('Y-m-d H:i:s');
-                    $data->author_id = $this->userEntity->getIdByName($data->author);
+                    $data->author_id = $senderId;
                     $data->message = $this->messageEntity->addForwarded($data);
                     unset($data->author_id);
             }
