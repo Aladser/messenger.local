@@ -261,7 +261,7 @@ class UserController extends Controller
     }
 
     // Возвращает путь изображения аватара.
-    public static function getAvatarImagePath(mixed $image, string $type): string
+    private static function getAvatarImagePath(mixed $image, string $type): string
     {
         if (empty($image) || $image === 'ava_profile.png') {
             $image = '/public/images/';

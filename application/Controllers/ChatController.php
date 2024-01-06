@@ -17,8 +17,8 @@ class ChatController extends Controller
     private UserEntity $users;
     private ChatEntity $chats;
     private MessageEntity $messages;
-    private ContactEntity $personalChats;
-    private GroupContactEntity $groupChats;
+    private ContactEntity $contacts;
+    private GroupContactEntity $groupContacts;
     private string $authUserEmail;
     private int $authUserId;
 
@@ -26,8 +26,8 @@ class ChatController extends Controller
     {
         parent::__construct();
         $this->chats = new ChatEntity();
-        $this->personalChats = new ContactEntity();
-        $this->groupChats = new GroupContactEntity();
+        $this->contacts = new ContactEntity();
+        $this->groupContacts = new GroupContactEntity();
         $this->messages = new MessageEntity();
         $this->users = new UserEntity();
 
@@ -56,10 +56,14 @@ class ChatController extends Controller
         $data['userhostId'] = $this->authUserId;
 
         // контакты пользователя
-        $contacts = $this->personalChats->getUserContacts($this->authUserId);
+        $contacts = $this->contacts->getUserContacts($this->authUserId);
         // указание путей до аватарок
         for ($i = 0; $i < count($contacts); ++$i) {
-            $contacts[$i]['photo'] = UserController::getAvatarImagePath($contacts[$i]['photo'], 'chat');
+            if ($contacts[$i]['photo'] === 'ava_profile.png' || empty($contacts[$i]['photo'])) {
+                $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/public/images/ava.png';
+            } else {
+                $contacts[$i]['photo'] = config('SITE_ADDRESS_ORIGIN').'/application/data/profile_photos/'.$contacts[$i]['photo'];
+            }
         }
         $data['contacts'] = $contacts;
 
@@ -69,7 +73,7 @@ class ChatController extends Controller
         for ($i = 0; $i < count($groups); ++$i) {
             $discussionId = $groups[$i]['chat'];
             $creatorId = $this->chats->getDiscussionCreatorId($discussionId);
-            $groups[$i]['members'] = $this->groupChats->get($discussionId);
+            $groups[$i]['members'] = $this->groupContacts->get($discussionId);
         }
         $data['groups'] = $groups;
 
@@ -124,7 +128,7 @@ class ChatController extends Controller
         $groupId = $this->chats->add('discussion', $this->authUserId);
         $group_name = $this->chats->getName($groupId);
 
-        $this->personalChats->add($groupId, $this->authUserId);
+        $this->contacts->add($groupId, $this->authUserId);
         $authorPublicName = $this->users->getPublicUsername($this->authUserId);
 
         echo json_encode([
