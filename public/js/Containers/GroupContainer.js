@@ -23,10 +23,10 @@ class GroupContainer extends TemplateContainer{
     /** переключить видимость членов группы */
     click(group, contactContainer) {
         // dom-элементы контактов
-        let contactsDomList = contactContainer.get();
+        let personalChatDomList = contactContainer.get();
         // скрыть членов другой открытой группы
         if(this.groupOpened) {
-            if (this.groupOpened.id != group.id) {
+            if (this.groupOpened.title != group.title) {
                 this.switchGroupUsersVisibility(this.groupOpened);
                 this.removeAddUserToGroupButtons();
                 this.groupOpened = false;
@@ -44,15 +44,15 @@ class GroupContainer extends TemplateContainer{
                 this.currentGroupParticipants.push(contact.textContent);
             });
             // поиск контактов, которых нет в открытой группе
-            for (let i = 0; i < contactsDomList.length; i++) {
-                if (!this.currentGroupParticipants.includes(contactsDomList[i].title)) {
-                    contactsDomList[i].innerHTML += "<span class='btn-add-to-group px-1 position-absolute end-0' title='добавить в группу'>+</span>";
+            for (let i = 0; i < personalChatDomList.length; i++) {
+                if (!this.currentGroupParticipants.includes(personalChatDomList[i].title)) {
+                    personalChatDomList[i].innerHTML += "<span class='btn-add-to-group px-1 position-absolute end-0' title='добавить в группу'>+</span>";
                 }
             }
             // события для кнопок добавления
             contactContainer.container.querySelectorAll('.btn-add-to-group').forEach(btn => {
                 let userName = btn.closest('.contact').title;
-                let groupName = this.groupOpened.id;
+                let groupName = this.groupOpened.title;
                 btn.onclick = this.setAddUserToGroup(userName, groupName);
             });
         } else {
@@ -138,18 +138,18 @@ class GroupContainer extends TemplateContainer{
      */
     setAddUserToGroup(username, groupName) {
         let csrf = this.CSRFElement.content;
+        let container = this.container;
         return function () {
-            let discussionId = groupName.substring(groupName.indexOf('-')+1);
             let requestData = new URLSearchParams();
             requestData.set('username', username);
-            requestData.set('discussionid', discussionId);
+            requestData.set('chat_name', groupName);
             requestData.set('CSRF', csrf);
 
             let process = (data) => {
-                console.log(data);
                 data = JSON.parse(data);
                 if (data.result == 1) {
-                    let group = document.querySelector('#'+data.group);
+                    let group = container.querySelector(`article[title='${data.group}']`);
+                    console.log(group);
                     // добавление в список участников группы
                     group.querySelector('.group__contacts').innerHTML += `<p class="group__contact">${data.user}</p>`;
                     // удаление кнопки добавления в группу у пользователя
@@ -160,7 +160,7 @@ class GroupContainer extends TemplateContainer{
             }
 
             ServerRequest.execute(
-                '/contact/create-group-contact',
+                '/chat/create-group-contact',
                 process,
                 "post",
                 null,

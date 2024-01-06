@@ -207,4 +207,27 @@ class ChatController extends Controller
         $isEdited = $this->chats->setNoticeShow($chatId, $this->authUserId, $notice);
         echo json_encode(['responce' => $isEdited]);
     }
+
+    // добавить нового участника в группу
+    public function createGroupContact()
+    {
+        $chatName = htmlspecialchars($_POST['chat_name']);
+        $chatId = $this->chats->getDiscussionId($chatName);
+
+        $username = htmlspecialchars($_POST['username']);
+        $userId = $this->users->getIdByName($username);
+
+        $gcExisted = $this->groupContacts->exists($chatId, $userId);
+        if (!$gcExisted) {
+            $isAdded = (int) $this->groupContacts->add($chatId, $userId);
+        } else {
+            $isAdded = 1;
+        }
+
+        echo json_encode([
+            'result' => $isAdded,
+            'group' => $chatName,
+            'user' => $username,
+        ]);
+    }
 }
