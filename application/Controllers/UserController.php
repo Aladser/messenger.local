@@ -149,9 +149,11 @@ class UserController extends Controller
     {
         $data['csrf'] = MainController::createCSRFToken();
         $data['email'] = $this->authUserEmail;
-        $data['nickname'] = $this->users->get($this->authUserEmail, 'nickname');
-        $data['hide_email'] = $this->users->get($this->authUserEmail, 'hide_email');
-        $data['photo'] = $this->users->get($this->authUserEmail, 'photo');
+
+        $data['nickname'] = $this->users->get($this->authUserId, 'nickname');
+        $data['hide_email'] = $this->users->get($this->authUserId, 'hide_email');
+        $data['photo'] = $this->users->get($this->authUserId, 'photo');
+
         $data['photo'] = self::getAvatarImagePath($data['photo'], 'profile');
         $csrf = MainController::createCSRFToken();
         $head = "<meta name='csrf' content=$csrf>";

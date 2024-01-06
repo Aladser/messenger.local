@@ -133,7 +133,7 @@ class ChatController extends Controller
             case 'dialog':
                 $contactName = htmlspecialchars($_POST['username']);
                 $contactId = $this->users->getIdByName($contactName);
-                $contactPhoto = $this->users->getById($contactId, 'photo');
+                $contactPhoto = $this->users->get($contactId, 'photo');
                 // создаем участников чата
                 $this->contacts->add($chatId, $this->authUserId);
                 $this->contacts->add($chatId, $contactId);

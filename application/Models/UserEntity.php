@@ -39,16 +39,8 @@ class UserEntity extends Model
         return $cleanedUserList;
     }
 
-    // Поле строки таблицы
-    public function get(string $email, string $field): mixed
-    {
-        $sql = "select $field from users where email = :email";
-        $args = ['email' => $email];
-
-        return $this->dbQuery->queryPrepared($sql, $args)[$field];
-    }
-
-    public function getById(string $id, string $field): mixed
+    // получить свойство пользователя
+    public function get(string $id, string $field): mixed
     {
         $sql = "select $field from users where id = :id";
         $args = ['id' => $id];
@@ -87,7 +79,8 @@ class UserEntity extends Model
     // Проверка авторизации
     public function verify(string $email, string $password): bool
     {
-        $passHash = $this->get($email, 'password');
+        $userId = $this->getIdByName($email);
+        $passHash = $this->get($userId, 'password');
 
         return password_verify($password, $passHash) == 1;
     }
