@@ -7,56 +7,6 @@ use App\Core\Model;
 /** Участники чатов */
 class ChatParticipantEntity extends Model
 {
-    // получить личные чаты пользователя
-    public function getUserChatMembers(int $userId, bool $onlyId = false): array
-    {
-        $sql = "
-            select chat_id as chat, user_id as user, photo as photo,
-            getPublicUserName(email, nickname, hide_email) as username, 
-            (
-                select notice 
-                from chat_participants 
-                where chat_id = chats.id 
-                and user_id = :userId
-            ) as notice
-            from chats 
-            join chat_participants on chat_id = chats.id
-            join users on user_id = users.id
-            where type = 'personal'
-            and chat_id in (
-                select chat_id
-                from chat_participants
-                where user_id = :userId)
-            and user_id != :userId";
-        $args = ['userId' => $userId];
-        $personalChatList = $this->dbQuery->queryPrepared($sql, $args, false);
-
-        if ($onlyId) {
-            // только ID
-            $personalChatIDList = [];
-            foreach ($personalChatList as $user) {
-                $personalChatIDList[] = $user['user_id'];
-            }
-
-            return $personalChatIDList;
-        } else {
-            // полные данные
-            $cleanedPersonalChatList = [];
-            // удаление дублей
-            foreach ($personalChatList as $user) {
-                $cleanedPersonalChatList[] = [
-                    'chat' => $user['chat'],
-                    'user' => $user['user'],
-                    'photo' => $user['photo'],
-                    'username' => $user['username'],
-                    'notice' => $user['notice'],
-                ];
-            }
-
-            return $cleanedPersonalChatList;
-        }
-    }
-
     // получить участников группы
     public function getGroupChatMembers($chatId): array
     {

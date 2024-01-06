@@ -33,8 +33,6 @@ class ContactContainer extends TemplateContainer{
         requestData.set('type', 'personal');
 
         let process = (data) => {
-            console.clear();
-            console.log(data);
             let contactData = JSON.parse(data);
             let contact = {
                 'username': contactData.username,
@@ -64,8 +62,6 @@ class ContactContainer extends TemplateContainer{
         requestData.set('CSRF', this.CSRFElement.content);
         
         let process = (data) => {
-            console.clear();
-            console.log(data);
             try {
                 data = JSON.parse(data);
                 if (parseInt(data.result) > 0) {

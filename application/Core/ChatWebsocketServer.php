@@ -3,7 +3,6 @@
 namespace App\Core;
 
 use App\Models\ChatEntity;
-use App\Models\ChatParticipantEntity;
 use App\Models\MessageEntity;
 use App\Models\UserEntity;
 use Ratchet\ConnectionInterface;
@@ -22,8 +21,6 @@ class ChatWebsocketServer implements MessageComponentInterface
     private UserEntity $userEntity;
     // чаты
     private ChatEntity $chats;
-    // участники чатов
-    private ChatParticipantEntity $chatParticipants;
 
     public function __construct()
     {
@@ -31,7 +28,6 @@ class ChatWebsocketServer implements MessageComponentInterface
         $this->connectionUsers = [];
 
         $this->chats = new ChatEntity();
-        $this->chatParticipants = new ChatParticipantEntity();
         $this->messageEntity = new MessageEntity();
         $this->userEntity = new UserEntity();
     }
@@ -59,7 +55,7 @@ class ChatWebsocketServer implements MessageComponentInterface
         unset($this->connectionUsers[$userId]);
 
         // рассылка контактам пользователя и себе о подключении
-        $userChatMembersIdList = $this->chatParticipants->getUserChatMembers($userId, true);
+        $userChatMembersIdList = $this->chats->getUserPersonalChats($userId, true);
         $publicUsername = $this->userEntity->getPublicUsername($userId);
         $message = json_encode(['offconnection' => 1, 'user' => $publicUsername]);
         $this->sendMessage($userChatMembersIdList, $message);
@@ -86,7 +82,7 @@ class ChatWebsocketServer implements MessageComponentInterface
             }
 
             // рассылка контактам пользователя и себе о подключении
-            $userChatMembersIdList = $this->chatParticipants->getUserChatMembers($userId, true);
+            $userChatMembersIdList = $this->chats->getUserPersonalChats($userId, true);
             $message = json_encode($data);
             $this->sendMessage($userChatMembersIdList, $message);
             $from->send($message);

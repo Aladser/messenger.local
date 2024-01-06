@@ -70,8 +70,6 @@ class GroupContainer extends TemplateContainer{
         requestData.set('type', 'group');
 
         let process = (data) => {
-            console.clear();
-            console.log(data);
             try {
                 let group = JSON.parse(data);
                 this.createDOM(group, 'START');
@@ -101,8 +99,6 @@ class GroupContainer extends TemplateContainer{
         urlParams.set('group_name', group.title);
 
         let process = (data) => {
-            console.clear();
-            console.log(data);
             try {
                 data = JSON.parse(data);
                 if (parseInt(data.result) > 0) {
@@ -155,7 +151,6 @@ class GroupContainer extends TemplateContainer{
                 data = JSON.parse(data);
                 if (data.result == 1) {
                     let group = container.querySelector(`article[title='${data.group}']`);
-                    console.log(group);
                     // добавление в список участников группы
                     group.querySelector('.group__contacts').innerHTML += `<p class="group__contact">${data.user}</p>`;
                     // удаление кнопки добавления в группу у пользователя

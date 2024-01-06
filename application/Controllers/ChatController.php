@@ -53,12 +53,12 @@ class ChatController extends Controller
         $data['userhostId'] = $this->authUserId;
 
         // контакты пользователя
-        $chatParticipants = $this->chatParticipants->getUserChatMembers($this->authUserId);
+        $personalChats = $this->chats->getUserPersonalChats($this->authUserId);
         // указание путей до аватарок
-        for ($i = 0; $i < count($chatParticipants); ++$i) {
-            $chatParticipants[$i]['photo'] = UserController::getAvatarImagePath($chatParticipants[$i]['photo'], 'chat');
+        for ($i = 0; $i < count($personalChats); ++$i) {
+            $personalChats[$i]['photo'] = UserController::getAvatarImagePath($personalChats[$i]['photo'], 'chat');
         }
-        $data['contacts'] = $chatParticipants;
+        $data['contacts'] = $personalChats;
 
         // группы пользователя
         $groups = $this->chats->getDiscussions($this->authUserId);
