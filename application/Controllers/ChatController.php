@@ -59,7 +59,7 @@ class ChatController extends Controller
         $contacts = $this->contacts->getUserContacts($this->authUserId);
         // указание путей до аватарок
         for ($i = 0; $i < count($contacts); ++$i) {
-            $contacts[$i]['photo'] = UserController::getAvatarImagePath(null, 'chat');
+            $contacts[$i]['photo'] = UserController::getAvatarImagePath($contacts[$i]['photo'], 'chat');
         }
         $data['contacts'] = $contacts;
 
@@ -143,5 +143,47 @@ class ChatController extends Controller
         $isEdited = $this->chats->setNoticeShow($chatid, $this->authUserId, $notice);
 
         echo json_encode(['responce' => $isEdited]);
+    }
+
+    // добавить новый чат
+    public function add()
+    {
+        // id контакта
+        $contactName = htmlspecialchars($_POST['username']);
+        $contactId = $this->users->getIdByName($contactName);
+        // создаем чат
+        $chatId = $this->chats->add('dialog', $this->authUserId);
+        // создаем участников чата
+        $this->contacts->add($chatId, $this->authUserId);
+        $this->contacts->add($chatId, $contactId);
+
+        $userData = [
+            'username' => $contactName,
+            'photo' => '/public/images/ava.png',
+            'chat_id' => $chatId,
+            'isnotice' => 1,
+        ];
+        echo json_encode($userData);
+    }
+
+    // удалить чат
+    public function remove()
+    {
+        $type = htmlspecialchars($_POST['type']);
+        if ($type === 'group') {
+            $group_name = htmlspecialchars($_POST['group_name']);
+            $chatId = $this->chats->getDiscussionId($group_name);
+        } elseif ($type === 'contact') {
+            $contact_name = htmlspecialchars($_POST['contact_name']);
+            $contactId = $this->users->getIdByName($contact_name);
+            $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
+        } else {
+            echo 'Ошибка type';
+
+            return;
+        }
+
+        $isDeleted = $this->chats->remove($chatId);
+        echo json_encode(['result' => (int) $isDeleted]);
     }
 }

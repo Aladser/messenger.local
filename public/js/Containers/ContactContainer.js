@@ -74,7 +74,7 @@ class ContactContainer extends TemplateContainer{
         }
 
         return await ServerRequest.execute(
-            '/contact/add',
+            '/chat/add',
             process,
             "post",
             null,
@@ -126,7 +126,7 @@ class ContactContainer extends TemplateContainer{
         }
 
         ServerRequest.execute(
-            '/contact/remove',
+            '/chat/remove',
             process,
             "post",
             null,
