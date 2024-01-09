@@ -7,8 +7,14 @@ use App\Core\Model;
 /** класс БД таблицы сообщений чатов */
 class ChatEntity extends Model
 {
-    // получить ID персонального чата
-    public function getPersonalChatId($user1Id, $user2Id)
+    /** получить ID персонального чата.
+     *
+     * @param int $user1Id id пользователя
+     * @param int $user2Id id пользователя
+     *
+     * @return int id чата
+     */
+    public function getPersonalChatId(int $user1Id, int $user2Id): int
     {
         $sql = "
             select chat_id from chat_participants 
@@ -25,8 +31,13 @@ class ChatEntity extends Model
         return $queryResult ? $queryResult['chat_id'] : false;
     }
 
-    /** получить ID группового чата*/
-    public function getGroupChatId(string $groupName)
+    /** получить ID группового чата.
+     *
+     * @param string $groupName имя чата
+     *
+     * @return int id чата
+     */
+    public function getGroupChatId(string $groupName): int
     {
         $sql = 'select id from chats where name = :groupName';
         $args = ['groupName' => $groupName];
@@ -35,9 +46,15 @@ class ChatEntity extends Model
         return $queryResult ? $queryResult['id'] : false;
     }
 
-    // получить имя чата
-    // используется при создании группового чата
-    public function getName(int $id)
+    /** получить имя чата.
+     *
+     * используется при создании группового чата
+     *
+     * @param int $id id
+     *
+     * @return string имя
+     */
+    public function getName(int $id): string
     {
         $sql = 'select name from chats where id = :id';
         $args = ['id' => $id];
