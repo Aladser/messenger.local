@@ -63,46 +63,6 @@ class ChatEntity extends Model
         return $queryResult ? $queryResult['name'] : false;
     }
 
-    /** добавить.
-     *
-     * @param string $type      тип чата : personal, group
-     * @param int    $creatorId создатель чата
-     *
-     * @return void id чата
-     */
-    public function add(string $type, int $creatorId): int
-    {
-        $chatData = [
-            'type' => $type,
-            'creator_id' => $creatorId,
-        ];
-
-        if ($type === 'group') {
-            $sql = 'select max(id) as max_id from chats';
-            $index = $this->dbQuery->query($sql)['max_id'];
-            $chatData['name'] = 'Группа '.($index + 1);
-        }
-
-        $chatId = $this->dbQuery->insert('chats', $chatData);
-
-        return $chatId;
-    }
-
-    /** удалить.
-     *
-     * @param int $chatId id чата
-     *
-     * @return bool удален?
-     */
-    public function remove(int $chatId): bool
-    {
-        $whereCondition = 'id = :id';
-        $args = ['id' => $chatId];
-        $isDeleted = $this->dbQuery->delete('chats', $whereCondition, $args) > 0;
-
-        return $isDeleted;
-    }
-
     /** получить личные чаты пользователя.
      *
      * @param int  $userId id чата
@@ -175,7 +135,7 @@ class ChatEntity extends Model
      *               notice уведомления чата
      *               ]
      */
-    public function getGroupChats(int $userId): array
+    public function getUserGroupChats(int $userId): array
     {
         $sql = "
             select chat_id as chat, name, notice       
@@ -187,6 +147,46 @@ class ChatEntity extends Model
         $chatList = $this->dbQuery->queryPrepared($sql, $args, false);
 
         return $chatList;
+    }
+
+    /** добавить.
+     *
+     * @param string $type      тип чата : personal, group
+     * @param int    $creatorId создатель чата
+     *
+     * @return void id чата
+     */
+    public function add(string $type, int $creatorId): int
+    {
+        $chatData = [
+            'type' => $type,
+            'creator_id' => $creatorId,
+        ];
+
+        if ($type === 'group') {
+            $sql = 'select max(id) as max_id from chats';
+            $index = $this->dbQuery->query($sql)['max_id'];
+            $chatData['name'] = 'Группа '.($index + 1);
+        }
+
+        $chatId = $this->dbQuery->insert('chats', $chatData);
+
+        return $chatId;
+    }
+
+    /** удалить.
+     *
+     * @param int $chatId id чата
+     *
+     * @return bool удален?
+     */
+    public function remove(int $chatId): bool
+    {
+        $whereCondition = 'id = :id';
+        $args = ['id' => $chatId];
+        $isDeleted = $this->dbQuery->delete('chats', $whereCondition, $args) > 0;
+
+        return $isDeleted;
     }
 
     // установить показ уведомлений чатов

@@ -61,7 +61,7 @@ class ChatController extends Controller
         $data['contacts'] = $personalChats;
 
         // группы пользователя
-        $groups = $this->chats->getGroupChats($this->authUserId);
+        $groups = $this->chats->getUserGroupChats($this->authUserId);
         for ($i = 0; $i < count($groups); ++$i) {
             $groupId = $groups[$i]['chat'];
             $groups[$i]['members'] = $this->chatParticipants->getGroupChatMembers($groupId);
