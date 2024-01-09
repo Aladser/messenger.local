@@ -26,7 +26,7 @@ class ChatEntity extends Model
     }
 
     /** получить ID группового чата*/
-    public function getDiscussionId(string $groupName)
+    public function getGroupChatId(string $groupName)
     {
         $sql = 'select id from chats where name = :groupName';
         $args = ['groupName' => $groupName];

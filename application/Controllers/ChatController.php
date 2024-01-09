@@ -147,7 +147,7 @@ class ChatController extends Controller
                 break;
             case 'group':
                 $group_name = htmlspecialchars($_POST['group_name']);
-                $chatId = $this->chats->getDiscussionId($group_name);
+                $chatId = $this->chats->getGroupChatId($group_name);
         }
 
         $isDeleted = $this->chats->remove($chatId);
@@ -169,7 +169,7 @@ class ChatController extends Controller
                 $chatId = $this->chats->getPersonalChatId($this->authUserId, $contactId);
                 break;
             case 'group':
-                $chatId = $this->chats->getDiscussionId($chatName);
+                $chatId = $this->chats->getGroupChatId($chatName);
         }
 
         $messages = [
@@ -195,7 +195,7 @@ class ChatController extends Controller
                 $chatId = $this->chats->getPersonalChatId($this->authUserId, $contactId);
                 break;
             case 'group':
-                $chatId = $this->chats->getDiscussionId($chatName);
+                $chatId = $this->chats->getGroupChatId($chatName);
         }
 
         $notice = htmlspecialchars($_POST['notice']);
@@ -208,7 +208,7 @@ class ChatController extends Controller
     public function createGroupContact()
     {
         $chatName = htmlspecialchars($_POST['chat_name']);
-        $chatId = $this->chats->getDiscussionId($chatName);
+        $chatId = $this->chats->getGroupChatId($chatName);
 
         $username = htmlspecialchars($_POST['username']);
         $userId = $this->users->getIdByName($username);
