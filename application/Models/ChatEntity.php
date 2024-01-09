@@ -70,7 +70,7 @@ class ChatEntity extends Model
      *
      * @return void id чата
      */
-    public function add(string $type, int $creatorId)
+    public function add(string $type, int $creatorId): int
     {
         $chatData = [
             'type' => $type,
@@ -103,7 +103,19 @@ class ChatEntity extends Model
         return $isDeleted;
     }
 
-    // получить личные чаты пользователя
+    /** получить личные чаты пользователя.
+     *
+     * @param int  $userId id чата
+     * @param bool $onlyId только id?
+     *
+     * @return array [
+     *               chat - id чата,
+     *               user - id контакта,
+     *               photo - фото контакта,
+     *               username - публичное имя контакта,
+     *               notice - уведомления этого контакта
+     *               ]
+     */
     public function getUserPersonalChats(int $userId, bool $onlyId = false): array
     {
         $sql = "
@@ -153,8 +165,17 @@ class ChatEntity extends Model
         }
     }
 
-    // возвращает групповые чаты пользователя
-    public function getGroupChats(int $userId)
+    /** возвращает групповые чаты пользователя.
+     *
+     * @param int $userId id пользователя
+     *
+     * @return array [
+     *               chat id чата
+     *               name имя чата
+     *               notice уведомления чата
+     *               ]
+     */
+    public function getGroupChats(int $userId): array
     {
         $sql = "
             select chat_id as chat, name, notice       
@@ -163,18 +184,9 @@ class ChatEntity extends Model
             where type = 'group' and user_id = :userId
         ";
         $args = ['userId' => $userId];
+        $chatList = $this->dbQuery->queryPrepared($sql, $args, false);
 
-        return $this->dbQuery->queryPrepared($sql, $args, false);
-    }
-
-    // возвращает создателя группового чата
-    public function getDiscussionCreatorId($chatId)
-    {
-        $sql = 'select creator_id from chats where id = :chatId';
-        $args = ['chatId' => $chatId];
-        $queryResult = $this->dbQuery->queryPrepared($sql, $args);
-
-        return $queryResult ? $queryResult['creator_id'] : false;
+        return $chatList;
     }
 
     // установить показ уведомлений чатов
