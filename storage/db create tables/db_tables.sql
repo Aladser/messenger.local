@@ -61,8 +61,8 @@ insert into chat_participants(chat_id, user_id) values (4, 3);
 create table messages
 (
     id        int auto_increment primary key,
-    chat_id    int,
-    creator_user_id int,
+    chat_id    int not null,
+    creator_user_id int not null,
     content    text not null,
     time      datetime DEFAULT CURRENT_TIMESTAMP,
     forward   int(1) default 0,
@@ -72,3 +72,18 @@ create table messages
 
 insert into messages(chat_id, content, creator_user_id) values (1, 'первое сообщение.', 1);
 insert into messages(chat_id, content, creator_user_id) values (1, 'второе сообщение.', 2);
+
+DROP FUNCTION IF EXISTS getPublicUserName; 
+DELIMITER //
+CREATE FUNCTION getPublicUserName(email varchar(100), nickname varchar(100), hide_email int(1))
+    returns varchar(100)
+    DETERMINISTIC
+begin
+    IF hide_email = 1 THEN
+        return nickname;
+    ELSE
+        return email;
+    END IF;
+END;
+//
+DELIMITER ;
