@@ -143,7 +143,7 @@ class ChatController extends Controller
             case 'personal':
                 $contact_name = htmlspecialchars($_POST['contact_name']);
                 $contactId = $this->users->getIdByName($contact_name);
-                $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
+                $chatId = $this->chats->getPersonalChatId($this->authUserId, $contactId);
                 break;
             case 'group':
                 $group_name = htmlspecialchars($_POST['group_name']);
@@ -166,7 +166,7 @@ class ChatController extends Controller
         switch ($type) {
             case 'personal':
                 $contactId = $this->users->getIdByName($chatName);
-                $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
+                $chatId = $this->chats->getPersonalChatId($this->authUserId, $contactId);
                 break;
             case 'group':
                 $chatId = $this->chats->getDiscussionId($chatName);
@@ -192,7 +192,7 @@ class ChatController extends Controller
         switch ($type) {
             case 'personal':
                 $contactId = $this->users->getIdByName($chatName);
-                $chatId = $this->chats->getDialogId($this->authUserId, $contactId);
+                $chatId = $this->chats->getPersonalChatId($this->authUserId, $contactId);
                 break;
             case 'group':
                 $chatId = $this->chats->getDiscussionId($chatName);

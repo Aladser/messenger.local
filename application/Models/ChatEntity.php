@@ -7,8 +7,8 @@ use App\Core\Model;
 /** класс БД таблицы сообщений чатов */
 class ChatEntity extends Model
 {
-    // получить ID диалога
-    public function getDialogId($user1Id, $user2Id)
+    // получить ID персонального чата
+    public function getPersonalChatId($user1Id, $user2Id)
     {
         $sql = "
             select chat_id from chat_participants 
