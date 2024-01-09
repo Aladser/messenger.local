@@ -71,7 +71,7 @@ const groupContainer = new GroupContainer(
     csrfElement
 );
 groupContainer.get().forEach(group => {
-    group.addEventListener('click', setClick(group, 'discussion'));
+    group.addEventListener('click', setClick(group, 'group'));
 });
 
 // --- вебсокет ---
@@ -211,11 +211,11 @@ function setClick(domElement, type)
         let urlParams = new URLSearchParams();
         urlParams.set('CSRF', csrfElement.content);
         switch(type) {
-            case 'dialog':
+            case 'personal':
                 urlParams.set('type', 'personal');
                 urlParams.set('chat_name', name);
                 break;
-            case 'discussion':
+            case 'group':
                 urlParams.set('type', 'group');
                 urlParams.set('chat_name', name);
                 groupContainer.click(domElement, contactContainer);
@@ -246,12 +246,12 @@ async function findContacts() {
                 // создание DOM-узла нового контакта
                 let newContactHTMLElement = contactContainer.createNode(newContactDBData);
                 // новые слушатели клика контакта
-                newContactHTMLElement.addEventListener('click', setClick(this, 'dialog'));
+                newContactHTMLElement.addEventListener('click', setClick(this, 'personal'));
                 // новая сохраненная копия после добавления нового контакта
                 contactContainer.backup();
             }
 
-            setClick(this, 'dialog')();
+            setClick(this, 'personal')();
         });
     });
 }
@@ -259,7 +259,7 @@ async function findContacts() {
 /** добавить слушателей кликов контактов */
 function addContactClickListeners() {
     contactContainer.get().forEach(contact => {
-        contact.addEventListener('click', setClick(contact, 'dialog'));
+        contact.addEventListener('click', setClick(contact, 'personal'));
     });
 }
 

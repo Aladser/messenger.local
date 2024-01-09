@@ -7,7 +7,7 @@ class MessageContainer extends TemplateContainer{
         this.chatOpened = false;
     }
 
-    show(urlParams, dbChatName, type, publicClientUsername) {
+    show(urlParams, chatName, type, publicClientUsername) {
         urlParams.set('CSRF', this.CSRFElement.content);
 
         let process = (data) => {
@@ -18,7 +18,6 @@ class MessageContainer extends TemplateContainer{
             this.chatWebsocket.openChatId = data.current_chat;
 
             let chatHeader = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
-            let chatName = dbChatName;
             this.title.innerHTML = `
                 <p class='messages-container__title'>
                     <span id='chat-title' class='text-white'>${chatHeader}</span>

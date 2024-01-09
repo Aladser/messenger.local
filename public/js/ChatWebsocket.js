@@ -8,6 +8,7 @@ class ChatWebsocket
     forwardedMessageRecipientName = null;
     chatType = null;
     openChatId = -1;
+    openChatName = null;
 
     constructor(websocketAddr, contacts, groups, messages)
     {
@@ -28,8 +29,8 @@ class ChatWebsocket
     onMessage(e)
     {
         let data = JSON.parse(e.data);
-        console.clear();
-        console.log(data);
+        //console.clear();
+        //console.log(data);
         
         if (data.onconnection) {
             // --- сообщение от сервера о подключении текущего пользователя
@@ -121,6 +122,8 @@ class ChatWebsocket
                 data.chat = this.contacts.list.find(el => el.name === this.forwardedMessageRecipientName).chat; // чат, куда пересылается
                 delete data['chatType'];
             }
+            console.clear();
+            console.log(data);
             this.websocket.send(JSON.stringify(data));
         }
         this.messageInput.value = '';
