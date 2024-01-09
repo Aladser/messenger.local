@@ -20,9 +20,12 @@ class ChatEntity extends Model
             where user_id = :user2Id and type='personal'
         ";
         $args = ['user1Id' => $user1Id, 'user2Id' => $user2Id];
-        $chatId = $this->dbQuery->queryPrepared($sql, $args)['chat_id'];
-
-        return $chatId;
+        $queryResult = $this->dbQuery->queryPrepared($sql, $args);
+        if ($queryResult) {
+            return $queryResult['chat_id'];
+        } else {
+            return false;
+        }
     }
 
     /** получить ID группового чата*/
@@ -30,9 +33,12 @@ class ChatEntity extends Model
     {
         $sql = 'select id from chats where name = :groupName';
         $args = ['groupName' => $groupName];
-        $id = $this->dbQuery->queryPrepared($sql, $args)['id'];
-
-        return $id;
+        $queryResult = $this->dbQuery->queryPrepared($sql, $args);
+        if ($queryResult) {
+            return $queryResult['id'];
+        } else {
+            return false;
+        }
     }
 
     // получить имя чата
