@@ -154,7 +154,7 @@ class ChatEntity extends Model
     }
 
     // возвращает групповые чаты пользователя
-    public function getDiscussions(int $userId)
+    public function getGroupChats(int $userId)
     {
         $sql = "
             select chat_id as chat, name, notice       
