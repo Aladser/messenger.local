@@ -21,11 +21,8 @@ class ChatEntity extends Model
         ";
         $args = ['user1Id' => $user1Id, 'user2Id' => $user2Id];
         $queryResult = $this->dbQuery->queryPrepared($sql, $args);
-        if ($queryResult) {
-            return $queryResult['chat_id'];
-        } else {
-            return false;
-        }
+
+        return $queryResult ? $queryResult['chat_id'] : false;
     }
 
     /** получить ID группового чата*/
@@ -34,11 +31,8 @@ class ChatEntity extends Model
         $sql = 'select id from chats where name = :groupName';
         $args = ['groupName' => $groupName];
         $queryResult = $this->dbQuery->queryPrepared($sql, $args);
-        if ($queryResult) {
-            return $queryResult['id'];
-        } else {
-            return false;
-        }
+
+        return $queryResult ? $queryResult['id'] : false;
     }
 
     // получить имя чата
@@ -47,11 +41,12 @@ class ChatEntity extends Model
     {
         $sql = 'select name from chats where id = :id';
         $args = ['id' => $id];
-        $name = $this->dbQuery->queryPrepared($sql, $args)['name'];
+        $queryResult = $this->dbQuery->queryPrepared($sql, $args);
 
-        return $name;
+        return $queryResult ? $queryResult['name'] : false;
     }
 
+    // добавить
     public function add(string $type, int $creatorId)
     {
         $chatData = [
@@ -70,6 +65,7 @@ class ChatEntity extends Model
         return $chatId;
     }
 
+    // удалить
     public function remove($chatId)
     {
         $this->dbQuery->exec("delete from chat_participants where chat_id = $chatId");
@@ -147,8 +143,10 @@ class ChatEntity extends Model
     public function getDiscussionCreatorId($chatId)
     {
         $sql = 'select creator_id from chats where id = :chatId';
+        $args = ['chatId' => $chatId];
+        $queryResult = $this->dbQuery->queryPrepared($sql, $args);
 
-        return $this->dbQuery->queryPrepared($sql, ['chatId' => $chatId])['creator_id'];
+        return $queryResult ? $queryResult['creator_id'] : false;
     }
 
     // установить показ уведомлений чатов
