@@ -96,7 +96,7 @@ const contactContexMenu = new ContactContexMenu(document.querySelector('#contact
 window.addEventListener('DOMContentLoaded', () => {
     // переслать сообщение
     forwardMessageButton.onclick = forwardMessage;
-    // сбросить пересылу сообщения
+    // сбросить пересылку сообщения
     resetForwardtBtn.onclick = resetForwardMessage;
     // создать групповой чат
     createGroupOption.onclick = () => groupContainer.add();

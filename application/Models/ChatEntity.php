@@ -46,7 +46,13 @@ class ChatEntity extends Model
         return $queryResult ? $queryResult['name'] : false;
     }
 
-    // добавить
+    /** добавить.
+     *
+     * @param string $type      тип чата : personal, group
+     * @param int    $creatorId создатель чата
+     *
+     * @return void id чата
+     */
     public function add(string $type, int $creatorId)
     {
         $chatData = [
@@ -65,14 +71,19 @@ class ChatEntity extends Model
         return $chatId;
     }
 
-    // удалить
-    public function remove($chatId)
+    /** удалить.
+     *
+     * @param int $chatId id чата
+     *
+     * @return bool удален?
+     */
+    public function remove(int $chatId): bool
     {
-        $this->dbQuery->exec("delete from chat_participants where chat_id = $chatId");
-        $this->dbQuery->exec("delete from messages where chat_id = $chatId");
-        $isDeleted = $this->dbQuery->exec("delete from chats where id = $chatId");
+        $whereCondition = 'id = :id';
+        $args = ['id' => $chatId];
+        $isDeleted = $this->dbQuery->delete('chats', $whereCondition, $args) > 0;
 
-        return $isDeleted > 0;
+        return $isDeleted;
     }
 
     // получить личные чаты пользователя
