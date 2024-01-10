@@ -116,6 +116,22 @@ class DBQuery
         return $id;
     }
 
+    /** DELETE.
+     *
+     * @param string $tableName      имя таблицы
+     * @param string $whereCondition условие WHERE
+     * @param array  $args           внешние данные
+     */
+    public function delete(string $tableName, string $whereCondition, array $args): bool
+    {
+        $sql = "delete from $tableName where $whereCondition";
+        $stmt = $this->dbConnection->prepare($sql);
+        $stmt->execute($args);
+        $rowCount = $stmt->rowCount();
+
+        return $rowCount > 0;
+    }
+
     /** UPDATE.
      *
      * @param string $tableName  имя таблицы
@@ -150,15 +166,27 @@ class DBQuery
         return $rowCount > 0;
     }
 
-    /** DELETE.
-     *
-     * @param string $tableName      имя таблицы
-     * @param string $whereCondition условие WHERE
-     * @param array  $args           внешние данные
-     */
-    public function delete(string $tableName, string $whereCondition, array $args): bool
-    {
-        $sql = "delete from $tableName where $whereCondition";
+    public function updateDiffCondition(
+        string $tableName,
+        array $fieldArray,
+        array $condition = null,
+        array $conditionValuesArray = null
+    ): bool {
+        // sql
+        $sql = "update $tableName set ";
+
+        foreach (array_keys($fieldArray) as $fieldName) {
+            $sql .= "$fieldName = :$fieldName, ";
+        }
+        $sql = mb_substr($sql, 0, strlen($sql) - 2);
+
+        if (!empty($condition)) {
+            $sql .= " where $condition";
+            $args = array_merge($fieldArray, $conditionValuesArray);
+        } else {
+            $args = $fieldArray;
+        }
+
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($args);
         $rowCount = $stmt->rowCount();
