@@ -125,7 +125,7 @@ class ChatEntity extends Model
         }
     }
 
-    /** возвращает групповые чаты пользователя.
+    /** получить групповые чаты пользователя.
      *
      * @param int $userId id пользователя
      *
@@ -187,21 +187,5 @@ class ChatEntity extends Model
         $isDeleted = $this->dbQuery->delete('chats', $whereCondition, $args) > 0;
 
         return $isDeleted;
-    }
-
-    // установить показ уведомлений чатов
-    public function setNoticeShow($chatid, $userid, $notice)
-    {
-        $sql = "update chat_participants set notice = $notice 
-        where chat_id = :chatid and user_id = :userid";
-        $args = ['chatid' => $chatid, 'userid' => $userid];
-        $this->dbQuery->queryPrepared($sql, $args);
-
-        $sql = 'select notice from chat_participants 
-        where chat_id = :chatid and user_id = :userid';
-        $args = ['chatid' => $chatid, 'userid' => $userid];
-        $notice = $this->dbQuery->queryPrepared($sql, $args)['notice'];
-
-        return $notice;
     }
 }

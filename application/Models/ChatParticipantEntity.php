@@ -44,4 +44,20 @@ class ChatParticipantEntity extends Model
 
         return $isExisted;
     }
+
+    // обновить показ уведомлений чатов
+    public function updateNoticeShow($chatid, $userid, $notice)
+    {
+        $sql = "update chat_participants set notice = $notice 
+            where chat_id = :chatid and user_id = :userid";
+        $args = ['chatid' => $chatid, 'userid' => $userid];
+        $this->dbQuery->queryPrepared($sql, $args);
+
+        $sql = 'select notice from chat_participants 
+            where chat_id = :chatid and user_id = :userid';
+        $args = ['chatid' => $chatid, 'userid' => $userid];
+        $notice = $this->dbQuery->queryPrepared($sql, $args)['notice'];
+
+        return $notice;
+    }
 }

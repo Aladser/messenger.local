@@ -199,7 +199,7 @@ class ChatController extends Controller
 
         $notice = htmlspecialchars($_POST['notice']);
         $notice = intval($notice);
-        $isEdited = $this->chats->setNoticeShow($chatId, $this->authUserId, $notice);
+        $isEdited = $this->chatParticipants->updateNoticeShow($chatId, $this->authUserId, $notice);
         echo json_encode(['responce' => $isEdited]);
     }
 
