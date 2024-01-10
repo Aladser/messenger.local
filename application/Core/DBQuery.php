@@ -166,27 +166,8 @@ class DBQuery
         return $rowCount > 0;
     }
 
-    public function updateDiffCondition(
-        string $tableName,
-        array $fieldArray,
-        array $condition = null,
-        array $conditionValuesArray = null
-    ): bool {
-        // sql
-        $sql = "update $tableName set ";
-
-        foreach (array_keys($fieldArray) as $fieldName) {
-            $sql .= "$fieldName = :$fieldName, ";
-        }
-        $sql = mb_substr($sql, 0, strlen($sql) - 2);
-
-        if (!empty($condition)) {
-            $sql .= " where $condition";
-            $args = array_merge($fieldArray, $conditionValuesArray);
-        } else {
-            $args = $fieldArray;
-        }
-
+    public function updateDiffCondition(string $sql, array $args): bool
+    {
         $stmt = $this->dbConnection->prepare($sql);
         $stmt->execute($args);
         $rowCount = $stmt->rowCount();

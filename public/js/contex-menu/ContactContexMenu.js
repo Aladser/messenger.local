@@ -50,31 +50,31 @@ class ContactContexMenu extends ContexMenu
         urlParams.set('chat_name', this.selectedContact.title);
         urlParams.set('CSRF', this.csrfInput.content);
 
-        let process = (notice) => {
-            notice = JSON.parse(notice);
+        let process = (data) => {
+            try{
+                let isUpdated = JSON.parse(data).result == 1;
+                if(isUpdated) {
+                    this.selectedContact.setAttribute('data-notice', notice);
+                }
+                let elem;
+                if (this.selectedContact.classList.contains('contact')) {
+                    // если контакт, то изменяем значение в массиве контактов
+                    elem = this.contactContainer.list.find(el => el.name === this.selectedContact.title);
+                } else if (this.selectedContact.classList.contains('group')) {
+                    // если групповой чат, то изменяем значение в массиве групповых чатов
+                    elem = this.groupContainer.list.find(el => el.name === this.selectedContact.title);
+                }
+                elem.notice = notice;
 
-            if (notice === undefined) {
-                return;
-            } else {
-                notice = notice.responce;
-            }
-            this.selectedContact.setAttribute('data-notice', notice);
-            
-            let elem;
-            if (this.selectedContact.classList.contains('contact')) {
-                // если контакт, то изменяем значение в массиве контактов
-                elem = this.contactContainer.list.find(el => el.name === this.selectedContact.title);
-            } else if (this.selectedContact.classList.contains('group')) {
-                // если групповой чат, то изменяем значение в массиве групповых чатов
-                elem = this.groupContainer.list.find(el => el.name === this.selectedContact.title);
-            }
-            elem.notice = notice;
-
-            // изменение визуального уведомления
-            if (notice === 1) {
-                this.selectedContact.querySelector('.notice-soundless').remove();
-            } else {
-                this.selectedContact.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
+                // изменение визуального уведомления
+                if (notice === 1) {
+                    this.selectedContact.querySelector('.notice-soundless').remove();
+                } else {
+                    this.selectedContact.innerHTML += "<div class='notice-soundless'>&#128263;</div>";
+                }
+            } catch (err) {
+                console.log(data);
+                console.log(err);
             }
         };
 
