@@ -12,8 +12,8 @@ class MessageContainer extends TemplateContainer{
 
     // показать сообщения текущего чата
     show(chatName, type) {
-        this.chatType = chatName;
-        this.chatName = type;
+        this.chatType = type;
+        this.chatName = chatName;
         let urlParams = new URLSearchParams();
         urlParams.set('CSRF', this.getCSRF());
         urlParams.set('chat_name', chatName);

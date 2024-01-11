@@ -57,6 +57,8 @@ class ChatWebsocket
             this.errorPrg.innerHTML = `${data.user} не в сети`;
         } else {
             // --- сообщение с сервера
+            console.clear();
+            console.log(data);
 
             // уведомления о новых сообщениях чатов
             if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.author !== this.publicUsername) {
@@ -120,8 +122,6 @@ class ChatWebsocket
                 data.chat = this.contacts.list.find(el => el.name === this.forwardedMessageRecipientName).chat; // чат, куда пересылается
                 delete data['chatType'];
             }
-            console.clear();
-            console.log(data);
             this.websocket.send(JSON.stringify(data));
         }
         this.messageInput.value = '';

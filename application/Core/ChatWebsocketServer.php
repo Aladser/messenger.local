@@ -80,18 +80,42 @@ class ChatWebsocketServer implements MessageComponentInterface
                 $this->connectionUsers[$senderId] = $data->wsId;
             }
             echo "$data->author в сети\n";
-        } elseif ($data->message) {
+        } elseif ($data->message_text) {
+            var_dump($data);
             // отправляется сообщение
+            $senderId = array_search($from->resourceId, $this->connectionUsers);
+            $senderPublicName = false;
+            if (!$senderId) {
+                echo "Подключение $from->resourceId не найдено";
 
-            // формирование сообщения
-            switch ($data->messageType) {
+                return;
+            } else {
+                $senderPublicName = $this->userEntity->getPublicUsername($senderId);
+            }
+
+            switch ($data->message_type) {
                 case 'NEW':
                     $data->time = date('Y-m-d H:i:s');
                     $data->author_id = $senderId;
-                    $data->msg = $this->messageEntity->add($data);
+
+                    switch ($data->chat_type) {
+                        case 'personal':
+                            $contactId = $this->userEntity->getIdByName($data->chat_name);
+                            $chatId = $this->chats->getPersonalChatId($senderId, $contactId);
+                            break;
+                        case 'group':
+                            $chatId = $this->chats->getGroupChatId($data->chat_name);
+                            break;
+                        default:
+                            throw "Неверный chat_type = $chat_type";
+                    }
+
+                    $data->chat_id = $chatId;
+                    $data->message_id = $this->messageEntity->add($data);
+                    $data->author_name = $senderPublicName;
                     $data->forward = 0;
                     unset($data->author_id);
-
+                    unset($data->chat_id);
                     break;
                 case 'EDIT':
                     $data = $this->messageEntity->editMessage($data->message, $data->msgId);

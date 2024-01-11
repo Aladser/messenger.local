@@ -28,8 +28,8 @@ class MessageEntity extends Model
     public function add($message)
     {
         $userData = [
-            'chat_id' => $message->chat,
-            'content' => $message->message,
+            'chat_id' => $message->chat_id,
+            'content' => $message->message_text,
             'creator_user_id' => $message->author_id,
         ];
         $messageId = $this->dbQuery->insert('messages', $userData);
