@@ -7,25 +7,33 @@ class MessageContainer extends TemplateContainer{
         this.chatOpened = false;
     }
 
-    show(urlParams, chatName, type, publicClientUsername) {
+    show(urlParams, chatName, type) {
         urlParams.set('CSRF', this.CSRFElement.content);
 
         let process = (data) => {
-            data = JSON.parse(data);
+            let chat;
+            try {
+                chat = JSON.parse(data);
+            } catch(err) {
+                console.log(err);
+                console.log(data)
+                return;
+            }
             this.removeElements();
     
-            this.chatWebsocket.chatType = data.type;
-            this.chatWebsocket.openChatId = data.current_chat;
-
-            let chatHeader = type === 'dialog' ? 'Чат с пользователем ' : 'Обсуждение ';
+            let authUserName = chat.auth_username;
+            this.chatWebsocket.chatType = chat.chat_type;
+            this.chatWebsocket.openChatName = chat.chat_name;
+            let chatHeader = type === 'personal' ? 'Чат с пользователем ' : 'Обсуждение ';
             this.title.innerHTML = `
                 <p class='messages-container__title'>
                     <span id='chat-title' class='text-white'>${chatHeader}</span>
                     <span class='chat-username text-white' id='chat-username'>${chatName}</span>
-                </p>`;
+                </p>
+            `;
 
             // сообщения
-            data.messages.forEach(elem => this.createDOMNode(type, elem, publicClientUsername));
+            chat.message_arr.forEach(message => this.createDOMNode(type, message, authUserName));
             // прокрутка сообщений в конец
             this.container.scrollTo(0, this.container.scrollHeight);
         };
@@ -39,7 +47,7 @@ class MessageContainer extends TemplateContainer{
         );
     };
 
-    createDOMNode(chatType, data, clientUsername) {
+    createDOMNode(chatType, data, username) {
         // показ местного времени
         // YYYY.MM.DD HH:ii:ss
         let timeInMs = Date.parse(data.time);
@@ -62,8 +70,8 @@ class MessageContainer extends TemplateContainer{
         let msgBlock = document.createElement('article');
         let msgTable = document.createElement('table');
 
-        msgBlock.className = data.author !== clientUsername ? 'msg d-flex justify-content-end' : 'msg';
-        msgTable.className = data.author !== clientUsername ? 'msg__table msg__table-contact text-white' : 'msg__table';
+        msgBlock.className = data.author !== username ? 'msg d-flex justify-content-end' : 'msg';
+        msgTable.className = data.author !== username ? 'msg__table msg__table-contact text-white' : 'msg__table';
         msgBlock.setAttribute('data-msg', data.msg);
         msgBlock.setAttribute('data-author', data.author);
         msgBlock.setAttribute('data-forward', data.forward ? data.forward : 0);
@@ -75,7 +83,7 @@ class MessageContainer extends TemplateContainer{
         // текст сообщения
         msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`;
         // время сообщения
-        let timeClassname = data.author !== clientUsername ? "msg__time text-theme-gray" : "msg__time";
+        let timeClassname = data.author !== username ? "msg__time text-theme-gray" : "msg__time";
         msgTable.innerHTML += `<tr><td class="${timeClassname}">${localTime}</td></tr>`;
         if (chatType === 'discussion') {
             // показ автора сообщения в групповом чате

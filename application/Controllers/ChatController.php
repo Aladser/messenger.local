@@ -156,12 +156,12 @@ class ChatController extends Controller
     // сообщения чата
     public function getMessages()
     {
-        $type = $_POST['type'];
+        $type = htmlspecialchars($_POST['type']);
+        $chatName = htmlspecialchars($_POST['chat_name']);
         if ($type !== 'personal' && $type !== 'group') {
             exit('ChatController->add: неверный тип группы');
         }
 
-        $chatName = htmlspecialchars($_POST['chat_name']);
         switch ($type) {
             case 'personal':
                 $contactId = $this->users->getIdByName($chatName);
@@ -170,13 +170,14 @@ class ChatController extends Controller
             case 'group':
                 $chatId = $this->chats->getGroupChatId($chatName);
         }
+        $messageArr = $this->messages->getMessages($chatId);
 
-        $messages = [
-            'current_chat' => $chatId,
-            'type' => $type,
-            'messages' => $this->messages->getMessages($chatId),
+        $chat = [
+            'chat_name' => $chatName,
+            'chat_type' => $type,
+            'message_arr' => $messageArr,
         ];
-        echo json_encode($messages);
+        echo json_encode($chat);
     }
 
     // изменить звук уведомлений чата
