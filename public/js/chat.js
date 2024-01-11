@@ -74,18 +74,17 @@ groupContainer.get().forEach(group => {
     group.addEventListener('click', setClick(group, 'group'));
 });
 
-// --- вебсокет ---
-const websocketAddr = document.querySelector("meta[name='websocket']").content;
-const chatWebsocket = new ChatWebsocket(websocketAddr, contactContainer, groupContainer);
-
 // --- контейнер сообщений ---
-const messages = new MessageContainer(
+const messageContainer = new MessageContainer(
     document.querySelector("#messages"),
     errorFrame,
     csrfElement,
-    chatWebsocket,
     document.querySelector('.messages-container__title')
 );
+
+// --- вебсокеты ---
+const websocketAddr = document.querySelector("meta[name='websocket']").content;
+const chatWebsocket = new ChatWebsocket(websocketAddr, contactContainer, groupContainer, messageContainer);
 
 //** контекстное меню сообщения */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
@@ -200,7 +199,7 @@ function setClick(DOMNode, type)
 
         // если пересылается сообщение, то показать, кому пересылается
         if (messageContexMenu.option == 'FORWARD') {
-            forwardedMessageRecipientElement = messages.showForwardedMessageRecipient(DOMNode);
+            forwardedMessageRecipientElement = messageContainer.showForwardedMessageRecipient(DOMNode);
             if (forwardedMessageRecipientElement) {
                 forwardMessageButton.disabled = false;
             }
@@ -213,9 +212,9 @@ function setClick(DOMNode, type)
 
         // --- показ сообщений
         let chatName = DOMNode.title;
-        messages.show(chatName, type);
-        chatWebsocket.chatOpenedType = messages.chatType;
-        chatWebsocket.chatOpenedName = messages.chatName;
+        messageContainer.show(chatName, type);
+        chatWebsocket.chatOpenedType = messageContainer.chatType;
+        chatWebsocket.chatOpenedName = messageContainer.chatName;
         
         messageInput.disabled = false;
         sendMsgBtn.disabled = false;

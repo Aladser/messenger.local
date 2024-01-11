@@ -75,17 +75,22 @@ class ChatWebsocket
     
             // сообщения открытого чата
             if (this.chatOpenedName === data.chat_name) {
-                // изменение сообщения
-                if (data.message_type === 'EDIT') {
-                    let messageDOMNode = document.querySelector(`article[data-msg="${data.message_id}"]`);
-                    messageDOMNode.querySelector('.msg__text').textContent = data.message_text;
-                } else if (data.message_type === 'REMOVE') {
-                    // удаление сообщения
-                    let messageDOMElem = document.querySelector(`article[data-msg="${data.message_id}"]`);
-                    messageDOMElem.remove();
-                } else {
-                    // новое сообщение
-                    messages.createDOMNode(this.chatOpenedType, data, this.publicUsername);
+                switch(data.message_type) {
+                    case 'NEW':
+                        // новое сообщение
+                        this.messages.createDOMNode(data, this.publicUsername);
+                    case 'EDIT':
+                        // изменение сообщения
+                        let messageDOMNode = document.querySelector(`article[data-msg="${data.message_id}"]`);
+                        messageDOMNode.querySelector('.msg__text').textContent = data.message_text;
+                        break;
+                    case 'REMOVE':
+                         // удаление сообщения
+                        let messageDOMElem = document.querySelector(`article[data-msg="${data.message_id}"]`);
+                        messageDOMElem.remove();
+                        break;
+                    default:
+                        throw 'Неверный тип сообщения';
                 }
             }
         }

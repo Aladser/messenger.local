@@ -3,9 +3,8 @@ class MessageContainer extends TemplateContainer{
     chatType = false;
     chatName = false;
 
-    constructor(container, errorPrg, CSRFElement, chatWebsocket, msgContainerTitle) {
-        super(container, errorPrg, CSRFElement);
-        this.chatWebsocket = chatWebsocket;
+    constructor(container, errorPrgDOMNode, CSRFElement, msgContainerTitle) {
+        super(container, errorPrgDOMNode, CSRFElement);
         this.title = msgContainerTitle;
         this.chatOpened = false;
     }
@@ -123,7 +122,6 @@ class MessageContainer extends TemplateContainer{
     {
         let contactNameElem = contactDomElem.querySelector('.contact__name');
         if (contactNameElem) {
-            this.chatWebsocket.forwardedMessageRecipientName = contactNameElem.innerHTML.trim();
             let contactRecipient = document.querySelector('.contact-recipient');
             if (contactRecipient) {
                 contactRecipient.classList.remove('contact-recipient');
