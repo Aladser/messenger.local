@@ -6,9 +6,9 @@ class ChatWebsocket
     messageInput = document.querySelector("#message-input");
     selectedMessage = null;
     forwardedMessageRecipientName = null;
-    chatType = null;
-    openChatId = -1;
-    openChatName = null;
+    chatOpenedType = null;
+    chatOpenedId = -1;
+    chatOpenedName = null;
 
     constructor(websocketAddr, contacts, groups, messages)
     {
@@ -62,7 +62,7 @@ class ChatWebsocket
             if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.author !== this.publicUsername) {
                 let senderDOMNode = document.querySelector(`article[title='${data.author}']`);
                 // визуальное уведомление
-                if (this.openChatId !== data.chat) {
+                if (this.chatOpenedId !== data.chat) {
                     senderDOMNode.classList.add('isnewmessage');
                 }
                 // звуковое уведомление
@@ -75,7 +75,7 @@ class ChatWebsocket
             }
     
             // сообщения открытого чата
-            if (this.openChatId == data.chat) {
+            if (this.chatOpenedId == data.chat) {
                 // изменение сообщения
                 if (data.messageType === 'EDIT') {
                     let messageDOMElem = document.querySelector(`[data-msg="${data.msg}"]`);
@@ -86,18 +86,17 @@ class ChatWebsocket
                     messageDOMElem.remove();
                 } else {
                     // новое сообщение
-                    messages.createDOMNode(this.chatType, data, this.publicUsername);
+                    messages.createDOMNode(this.chatOpenedType, data, this.publicUsername);
                 }
             }
         }
     }
 
     /** Отправить сообщение на сервер
-     * @param message текст сообщения
-     * @param messageType тип сообщения: NEW, EDIT, REMOVE или FORWARD
+     * @param message_text текст сообщения
+     * @param message_type тип сообщения: NEW, EDIT, REMOVE или FORWARD
      */
-    sendData(message, messageType)
-    {
+    sendData(message_text, message_type) {
         // проверка сокета
         if (this.websocket.readyState !== 1) {
             alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
@@ -105,20 +104,19 @@ class ChatWebsocket
         }
     
         // отправка сообщения на сервер
-        if (message !== '') {
+        if (message_text !== '') {
             let data = {
-                'messageType': messageType,
-                'message': message,
-                'author': this.publicUsername,
-                'chat': this.openChatId,
-                'chatType': this.chatType
+                'message_type': message_type,
+                'message_text': message_text,
+                'chat_type': this.chatOpenedType,
+                'chat_name': this.chatOpenedName,
             };
             // для старых сообщений добавляется id сообщения
-            if (['EDIT', 'REMOVE'].includes(messageType)) {
+            if (['EDIT', 'REMOVE'].includes(message_type)) {
                 data.msgId = parseInt(this.selectedMessage.getAttribute('data-msg'));
             }
     
-            if (messageType === 'FORWARD') {
+            if (message_type === 'FORWARD') {
                 data.chat = this.contacts.list.find(el => el.name === this.forwardedMessageRecipientName).chat; // чат, куда пересылается
                 delete data['chatType'];
             }
