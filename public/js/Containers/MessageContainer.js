@@ -55,7 +55,6 @@ class MessageContainer extends TemplateContainer{
     };
 
     createDOMNode(chatType, data, username) {
-        console.log(data);
         // показ местного времени
         // YYYY.MM.DD HH:ii:ss
         let timeInMs = Date.parse(data.time);
@@ -71,35 +70,41 @@ class MessageContainer extends TemplateContainer{
         // показ переводов строки на странице
         let brIndex = data.message_text.indexOf('\n');
         while (brIndex > -1) {
-            data.message = data.message.replace('\n', '<br>');
-            brIndex = data.message.indexOf('\n');
+            data.message_text = data.message_text.replace('\n', '<br>');
+            brIndex = data.message_text.indexOf('\n');
         }
 
-        let msgBlock = document.createElement('article');
-        let msgTable = document.createElement('table');
-
-        msgBlock.className = data.author_name !== username ? 'msg d-flex justify-content-end' : 'msg';
-        msgTable.className = data.author_name !== username ? 'msg__table msg__table-contact text-white' : 'msg__table';
-        msgBlock.setAttribute('data-msg', data.message_id);
-        msgBlock.setAttribute('data-author', data.author_name);
-        msgBlock.setAttribute('data-forward', data.forward ? data.forward : 0);
-
-        // надпись о пересланном сообщении
-        if (data.forward == 1 || data.message_type === 'FORWARD') {
-            msgTable.innerHTML += `<tr><td class='msg__forward'>Переслано</td></tr>`;
-        }
-        // текст сообщения
-        msgTable.innerHTML += `<tr><td class="msg__text">${data.message_text}</td></tr>`;
-        // время сообщения
+        let articleClassname = data.author_name !== username ? 'msg d-flex justify-content-end' : 'msg';
+        let tableClassname = data.author_name !== username ? 'msg__table msg__table-contact text-white' : 'msg__table';
+        let forwardValue = data.forward ? data.forward : 0;
         let timeClassname = data.author_name !== username ? "msg__time text-theme-gray" : "msg__time";
-        msgTable.innerHTML += `<tr><td class="${timeClassname}">${localTime}</td></tr>`;
+
+        let articleContent = `
+            <article class="${articleClassname}" data-msg=${data.message_id} data-author="${data.author_name}" data-forward=${forwardValue}>
+                <table class="${tableClassname}">
+        `;
+
+        if (data.forward == 1 || data.message_type === 'FORWARD') {
+            // надпись о пересланном сообщении
+            articleContent += `<tr><td class='msg__forward'>Переслано</td></tr>`;
+        }
+
+        articleContent += `
+                    <tr><td class="msg__text">${data.message_text}</td></tr>
+                    <tr><td class="${timeClassname}">${localTime}</td></tr>
+        `;
+
         if (chatType === 'group') {
             // показ автора сообщения в групповом чате
-            msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.author_name}</td></tr>`;
+            articleContent += `<tr class='msg__tr-author'><td class='msg__author'>${data.author_name}</td></tr>`;
         }
 
-        msgBlock.append(msgTable);
-        this.container.append(msgBlock);
+        articleContent += `       
+                </table>
+            </article>
+        `;
+
+        this.container.innerHTML += articleContent;
     }
 
     /** показать на странице получателя пересылаемого сообщения
