@@ -25,10 +25,9 @@ class MessageContainer extends TemplateContainer{
                 </p>`;
 
             // сообщения
-            data.messages.forEach(elem => {
-                this.createDOMNode(type, elem, publicClientUsername);
-            });
-            this.container.scrollTo(0, this.container.scrollHeight); // прокрутка сообщений в конец
+            data.messages.forEach(elem => this.createDOMNode(type, elem, publicClientUsername));
+            // прокрутка сообщений в конец
+            this.container.scrollTo(0, this.container.scrollHeight);
         };
 
         ServerRequest.execute(
