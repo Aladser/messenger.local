@@ -1,5 +1,8 @@
 /** Контейнер сообщений */
 class MessageContainer extends TemplateContainer{
+    chatType = false;
+    chatName = false;
+
     constructor(container, errorPrg, CSRFElement, chatWebsocket, msgContainerTitle) {
         super(container, errorPrg, CSRFElement);
         this.chatWebsocket = chatWebsocket;
@@ -7,11 +10,14 @@ class MessageContainer extends TemplateContainer{
         this.chatOpened = false;
     }
 
+    // показать сообщения текущего чата
     show(chatName, type) {
+        this.chatType = chatName;
+        this.chatName = type;
         let urlParams = new URLSearchParams();
-        urlParams.set('CSRF', this.CSRFElement.content);
-        urlParams.set('type', type);
+        urlParams.set('CSRF', this.getCSRF());
         urlParams.set('chat_name', chatName);
+        urlParams.set('type', type);
 
         let process = (data) => {
             let chat;
@@ -24,9 +30,7 @@ class MessageContainer extends TemplateContainer{
             }
             this.removeElements();
     
-            let authUserName = chat.auth_username;
-            this.chatWebsocket.chatType = chat.chat_type;
-            this.chatWebsocket.openChatName = chat.chat_name;
+            let authUserName = chat.public_auth_username;
             let chatHeader = type === 'personal' ? 'Чат с пользователем ' : 'Обсуждение ';
             this.title.innerHTML = `
                 <p class='messages-container__title'>
@@ -88,7 +92,7 @@ class MessageContainer extends TemplateContainer{
         // время сообщения
         let timeClassname = data.author !== username ? "msg__time text-theme-gray" : "msg__time";
         msgTable.innerHTML += `<tr><td class="${timeClassname}">${localTime}</td></tr>`;
-        if (chatType === 'discussion') {
+        if (chatType === 'group') {
             // показ автора сообщения в групповом чате
             msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.author}</td></tr>`;
         }

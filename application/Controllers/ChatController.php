@@ -17,8 +17,10 @@ class ChatController extends Controller
     private ChatEntity $chats;
     private MessageEntity $messages;
     private ChatParticipantEntity $chatParticipants;
+
     private string $authUserEmail;
     private int $authUserId;
+    private string $publicAuthUsername;
 
     public function __construct()
     {
@@ -30,12 +32,11 @@ class ChatController extends Controller
 
         $this->authUserEmail = UserController::getAuthUserEmail();
         $this->authUserId = $this->users->getIdByName($this->authUserEmail);
+        $this->publicAuthUsername = $this->users->getPublicUsername($this->authUserId);
     }
 
     public function index()
     {
-        $contactId = $this->users->getIdByName($this->authUserEmail);
-        $publicUsername = $this->users->getPublicUsername($contactId);
         // head
         $websocket = config('WEBSOCKET_ADDR');
         $csrf = MainController::createCSRFToken();
@@ -49,7 +50,7 @@ class ChatController extends Controller
         }
 
         $data['user-email'] = $this->authUserEmail;
-        $data['publicUsername'] = $publicUsername;
+        $data['publicUsername'] = $this->publicAuthUsername;
         $data['userhostId'] = $this->authUserId;
 
         // контакты пользователя
@@ -120,12 +121,11 @@ class ChatController extends Controller
             case 'group':
                 $group_name = $this->chats->getName($chatId);
                 $this->chatParticipants->add($chatId, $this->authUserId);
-                $authorPublicName = $this->users->getPublicUsername($this->authUserId);
 
                 echo json_encode([
                     'id' => $chatId,
                     'name' => $group_name,
-                    'author' => $authorPublicName,
+                    'author' => $this->publicAuthUsername,
                 ]);
         }
     }
@@ -173,9 +173,8 @@ class ChatController extends Controller
         $messageArr = $this->messages->getMessages($chatId);
 
         $chat = [
-            'chat_name' => $chatName,
-            'chat_type' => $type,
             'message_arr' => $messageArr,
+            'public_auth_username' => $this->publicAuthUsername,
         ];
         echo json_encode($chat);
     }

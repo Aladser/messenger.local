@@ -214,6 +214,9 @@ function setClick(DOMNode, type)
         // --- показ сообщений
         let chatName = DOMNode.title;
         messages.show(chatName, type);
+        chatWebsocket.chatType = messages.chatType;
+        chatWebsocket.chatName = messages.chatName;
+        
         messageInput.disabled = false;
         sendMsgBtn.disabled = false;
     };

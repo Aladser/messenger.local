@@ -13,4 +13,9 @@ class TemplateContainer {
     removeElements() {
         this.container.innerHTML = '';
     }
+
+    /** CSRF-токен */
+    getCSRF() {
+        return this.CSRFElement.content;
+    }
 }
