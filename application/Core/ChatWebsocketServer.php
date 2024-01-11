@@ -70,12 +70,10 @@ class ChatWebsocketServer implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $message)
     {
         $data = json_decode($message);
-        $senderId = $this->userEntity->getIdByName($data->author);
-        $userChatMembersIdList = $this->chats->getUserPersonalChats($senderId, true);
-
         if (property_exists($data, 'messageOnconnection')) {
             // после соединения пользователь отправляет пакет messageOnconnection.
 
+            $senderId = $this->userEntity->getIdByName($data->author);
             $data->author = $this->userEntity->getPublicUsername($senderId);
             // добавление подключения пользователя в массив подключений
             if (!array_key_exists($senderId, $this->connectionUsers)) {
@@ -110,6 +108,7 @@ class ChatWebsocketServer implements MessageComponentInterface
             echo json_encode($data)."\n";
         }
 
+        $userChatMembersIdList = $this->chats->getUserPersonalChats($senderId, true);
         $message = json_encode($data);
         $from->send($message);
         $this->sendMessage($userChatMembersIdList, $message);
