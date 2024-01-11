@@ -7,7 +7,6 @@ class ChatWebsocket
     selectedMessage = null;
     forwardedMessageRecipientName = null;
     chatOpenedType = null;
-    chatOpenedId = -1;
     chatOpenedName = null;
 
     constructor(websocketAddr, contacts, groups, messages)
@@ -29,8 +28,6 @@ class ChatWebsocket
     onMessage(e)
     {
         let data = JSON.parse(e.data);
-        //console.clear();
-        //console.log(data);
         
         if (data.onconnection) {
             // --- сообщение от сервера о подключении текущего пользователя
@@ -46,25 +43,25 @@ class ChatWebsocket
 
             if (data.author) {
                 let username = data.author === this.publicUsername ? 'Вы' : data.author;
-                this.errorPrg.innerHTML = `${username} в сети`;
+                this.errorPrg.textContent = `${username} в сети`;
             } else {
                 // ошибки подключения
-                this.errorPrg.innerHTML = `${data.systeminfo}`;
+                this.errorPrg.textContent = `${data.systeminfo}`;
             }
         } else if (data.offconnection && data.user != null) {
             // --- сообщение контактам пользователя об отключении
 
-            this.errorPrg.innerHTML = `${data.user} не в сети`;
+            this.errorPrg.textContent = `${data.user} не в сети`;
         } else {
             // --- сообщение с сервера
             console.clear();
             console.log(data);
 
             // уведомления о новых сообщениях чатов
-            if ((data.messageType === 'NEW' || data.messageType === 'FORWARD') && data.author !== this.publicUsername) {
-                let senderDOMNode = document.querySelector(`article[title='${data.author}']`);
+            if ((data.message_type === 'NEW' || data.message_type === 'FORWARD') && data.author_name !== this.publicUsername) {
+                let senderDOMNode = document.querySelector(`article[title='${data.author_name}']`);
                 // визуальное уведомление
-                if (this.chatOpenedId !== data.chat) {
+                if (this.chatOpenedName !== data.chat_name) {
                     senderDOMNode.classList.add('isnewmessage');
                 }
                 // звуковое уведомление
@@ -77,14 +74,14 @@ class ChatWebsocket
             }
     
             // сообщения открытого чата
-            if (this.chatOpenedId == data.chat) {
+            if (this.chatOpenedName === data.chat_name) {
                 // изменение сообщения
-                if (data.messageType === 'EDIT') {
-                    let messageDOMElem = document.querySelector(`[data-msg="${data.msg}"]`);
-                    messageDOMElem.querySelector('.msg__text').innerHTML = data.message;
-                } else if (data.messageType === 'REMOVE') {
+                if (data.message_type === 'EDIT') {
+                    let messageDOMElem = document.querySelector(`[data-msg="${data.message_id}"]`);
+                    messageDOMElem.querySelector('.msg__text').innerHTML = data.message_text;
+                } else if (data.message_type === 'REMOVE') {
                     // удаление сообщения
-                    let messageDOMElem = document.querySelector(`[data-msg="${data.msg}"]`);
+                    let messageDOMElem = document.querySelector(`[data-msg="${data.message_id}"]`);
                     messageDOMElem.remove();
                 } else {
                     // новое сообщение
@@ -115,11 +112,12 @@ class ChatWebsocket
             };
             // для старых сообщений добавляется id сообщения
             if (['EDIT', 'REMOVE'].includes(message_type)) {
-                data.msgId = parseInt(this.selectedMessage.getAttribute('data-msg'));
+                data.message_id = parseInt(this.selectedMessage.getAttribute('data-msg'));
             }
     
             if (message_type === 'FORWARD') {
-                data.chat = this.contacts.list.find(el => el.name === this.forwardedMessageRecipientName).chat; // чат, куда пересылается
+                // чат, куда пересылается
+                data.chat = this.contacts.list.find(el => el.name === this.forwardedMessageRecipientName).chat;
                 delete data['chatType'];
             }
             this.websocket.send(JSON.stringify(data));

@@ -55,6 +55,7 @@ class MessageContainer extends TemplateContainer{
     };
 
     createDOMNode(chatType, data, username) {
+        console.log(data);
         // показ местного времени
         // YYYY.MM.DD HH:ii:ss
         let timeInMs = Date.parse(data.time);
@@ -68,7 +69,7 @@ class MessageContainer extends TemplateContainer{
         }).replace(',', '');
 
         // показ переводов строки на странице
-        let brIndex = data.message.indexOf('\n');
+        let brIndex = data.message_text.indexOf('\n');
         while (brIndex > -1) {
             data.message = data.message.replace('\n', '<br>');
             brIndex = data.message.indexOf('\n');
@@ -77,24 +78,24 @@ class MessageContainer extends TemplateContainer{
         let msgBlock = document.createElement('article');
         let msgTable = document.createElement('table');
 
-        msgBlock.className = data.author !== username ? 'msg d-flex justify-content-end' : 'msg';
-        msgTable.className = data.author !== username ? 'msg__table msg__table-contact text-white' : 'msg__table';
-        msgBlock.setAttribute('data-msg', data.msg);
-        msgBlock.setAttribute('data-author', data.author);
+        msgBlock.className = data.author_name !== username ? 'msg d-flex justify-content-end' : 'msg';
+        msgTable.className = data.author_name !== username ? 'msg__table msg__table-contact text-white' : 'msg__table';
+        msgBlock.setAttribute('data-msg', data.message_id);
+        msgBlock.setAttribute('data-author', data.author_name);
         msgBlock.setAttribute('data-forward', data.forward ? data.forward : 0);
 
         // надпись о пересланном сообщении
-        if (data.forward == 1 || data.messageType === 'FORWARD') {
+        if (data.forward == 1 || data.message_type === 'FORWARD') {
             msgTable.innerHTML += `<tr><td class='msg__forward'>Переслано</td></tr>`;
         }
         // текст сообщения
-        msgTable.innerHTML += `<tr><td class="msg__text">${data.message}</td></tr>`;
+        msgTable.innerHTML += `<tr><td class="msg__text">${data.message_text}</td></tr>`;
         // время сообщения
-        let timeClassname = data.author !== username ? "msg__time text-theme-gray" : "msg__time";
+        let timeClassname = data.author_name !== username ? "msg__time text-theme-gray" : "msg__time";
         msgTable.innerHTML += `<tr><td class="${timeClassname}">${localTime}</td></tr>`;
         if (chatType === 'group') {
             // показ автора сообщения в групповом чате
-            msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.author}</td></tr>`;
+            msgTable.innerHTML += `<tr class='msg__tr-author'><td class='msg__author'>${data.author_name}</td></tr>`;
         }
 
         msgBlock.append(msgTable);

@@ -11,17 +11,29 @@ class MessageEntity extends Model
     public function getMessages(int $chatId)
     {
         $sql = '
-            select messages.id as msg, 
-            chat_id as chat, 
-            getPublicUserName(email, nickname, hide_email) as author, 
-            content as message, 
+            select messages.id as messages_id, 
+            getPublicUserName(email, nickname, hide_email) as author_name, 
+            content as message_text, 
             time, forward
             from messages join users on users.id = creator_user_id
             where chat_id = :chatId
             order by time
         ';
 
-        return $this->dbQuery->queryPrepared($sql, ['chatId' => $chatId], false);
+        $rows = $this->dbQuery->queryPrepared($sql, ['chatId' => $chatId], false);
+        $messageArr = [];
+        // фильтрация данных
+        foreach ($rows as $row) {
+            $messageArr[] = [
+                'author_name' => $row['author_name'],
+                'forward' => $row['forward'],
+                'message_text' => $row['message_text'],
+                'message_id' => $row['messages_id'],
+                'time' => $row['time'],
+            ];
+        }
+
+        return $messageArr;
     }
 
     // Добавить сообщение
@@ -70,17 +82,10 @@ class MessageEntity extends Model
     }
 
     // удалить сообщение
-    public function removeMessage(int $msgId)
+    public function removeMessage(int $msgId): bool
     {
-        // получим удаляемую строку
-        $sql = 'select id as msg, chat_id as chat 
-        from messages where id = :msgId';
-        $args = ['msgId' => $msgId];
-        $rowDeleted = $this->dbQuery->queryPrepared($sql, $args);
-        $rowDeleted['messageType'] = 'REMOVE';
-        // удаляем
-        $this->dbQuery->exec("delete from messages where id = $msgId");
+        $rowsDeleted = $this->dbQuery->exec("delete from messages where id = $msgId");
 
-        return $rowDeleted;
+        return $rowsDeleted > 0;
     }
 }

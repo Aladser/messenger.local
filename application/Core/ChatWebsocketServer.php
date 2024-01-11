@@ -80,9 +80,10 @@ class ChatWebsocketServer implements MessageComponentInterface
                 $this->connectionUsers[$senderId] = $data->wsId;
             }
             echo "$data->author в сети\n";
-        } elseif ($data->message_text) {
-            var_dump($data);
+        } elseif ($data->message_type) {
             // отправляется сообщение
+            var_dump($data);
+
             $senderId = array_search($from->resourceId, $this->connectionUsers);
             $senderPublicName = false;
             if (!$senderId) {
@@ -121,7 +122,12 @@ class ChatWebsocketServer implements MessageComponentInterface
                     $data = $this->messageEntity->editMessage($data->message, $data->msgId);
                     break;
                 case 'REMOVE':
-                    $data = $this->messageEntity->removeMessage($data->msgId);
+                    $isDeleted = $this->messageEntity->removeMessage($data->message_id);
+                    if ($isDeleted) {
+                        unset($data->message_text);
+                    } else {
+                        $data = ['error' => 'Ошибка удаления сообщения'];
+                    }
                     break;
                 case 'FORWARD':
                     $data->time = date('Y-m-d H:i:s');
