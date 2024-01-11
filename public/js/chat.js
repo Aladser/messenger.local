@@ -9,7 +9,7 @@ const clientNamePrg = document.querySelector('#clientuser');
 /** почта пользователя-хоста */
 const clientUsername = clientNamePrg.innerHTML.trim();
 /** публичное имя пользователя-хоста */
-const publicClientUsername = clientNamePrg.getAttribute('data-clientuser-publicname');
+const publicAuthUsername = clientNamePrg.getAttribute('data-clientuser-publicname');
 /** контейнер сообщений */
 const chat = document.querySelector("#messages");
 /** элемент начальной подписи чата */
@@ -90,7 +90,7 @@ const messages = new MessageContainer(
 //** контекстное меню сообщения */
 const messageContexMenu = new MessageContexMenu(document.querySelector('#msg-context-menu'),  chatWebsocket);
 //** контекстное меню группы */
-const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicClientUsername, csrfElement, contactContainer, groupContainer);
+const contactContexMenu = new ContactContexMenu(document.querySelector('#contact-context-menu'), chatWebsocket, publicAuthUsername, csrfElement, contactContainer, groupContainer);
 
 // ----- ЗАГРУЗКА СТРАНИЦЫ -----
 window.addEventListener('DOMContentLoaded', () => {
@@ -156,9 +156,9 @@ window.oncontextmenu = function(event) {
         // аутентифицированный пользователь
         let authUsername = chatWebsocket.getSelectedMessageAuthor();
         // отображение кнопки - изменить сообщение
-        messageContexMenu.editBtn.style.display = authUsername !== publicClientUsername ? 'none' : 'block';
+        messageContexMenu.editBtn.style.display = authUsername !== publicAuthUsername ? 'none' : 'block';
         // отображение кнопки - удалить сообщение
-        messageContexMenu.removeBtn.style.display = authUsername !== publicClientUsername ? 'none' : 'block'; 
+        messageContexMenu.removeBtn.style.display = authUsername !== publicAuthUsername ? 'none' : 'block'; 
         if (chatWebsocket.isForwardedSelectedMessage()) {
             messageContexMenu.editBtn.style.display = 'none';
         }
@@ -180,12 +180,12 @@ window.oncontextmenu = function(event) {
 };
 
 /** ----- НАЖАТИЕ МЫШИ НА КОНТАКТЕ ИЛИ ГРУППОВОМ ЧАТЕ -----
- * @param {*} domElement HTML-элемент контакта или чата
+ * @param {*} DOMNode HTML-элемент контакта или чата
  * @param {*} name имя контакта или группового чата
  * @param {*} type тип диалога
  * @returns
  */
-function setClick(domElement, type)
+function setClick(DOMNode, type)
 {
     return function (event) {
         // прекращение всплытия кнопки добавления пользователя в группу
@@ -195,37 +195,25 @@ function setClick(domElement, type)
             }
         }
         
-        let name = domElement.title;
         // удаляется уведомление о новом сообщении
-        domElement.classList.remove('isnewmessage');
+        DOMNode.classList.remove('isnewmessage');
 
-        // если пересылается сообщение, показать, кому пересылается
+        // если пересылается сообщение, то показать, кому пересылается
         if (messageContexMenu.option == 'FORWARD') {
-            forwardedMessageRecipientElement = messages.showForwardedMessageRecipient(domElement);
+            forwardedMessageRecipientElement = messages.showForwardedMessageRecipient(DOMNode);
             if (forwardedMessageRecipientElement) {
                 forwardMessageButton.disabled = false;
             }
             return;
         }
-
-        let urlParams = new URLSearchParams();
-        urlParams.set('CSRF', csrfElement.content);
-        switch(type) {
-            case 'personal':
-                urlParams.set('type', 'personal');
-                urlParams.set('chat_name', name);
-                break;
-            case 'group':
-                urlParams.set('type', 'group');
-                urlParams.set('chat_name', name);
-                groupContainer.click(domElement, contactContainer);
-                break;
-            default:
-                return;
+        // скрытие или показ контактов
+        if (type === 'group') {
+            groupContainer.click(DOMNode, contactContainer);
         }
 
-        // показ сообщений
-        messages.show(urlParams, name, type, publicClientUsername);
+        // --- показ сообщений
+        let chatName = DOMNode.title;
+        messages.show(chatName, type);
         messageInput.disabled = false;
         sendMsgBtn.disabled = false;
     };

@@ -7,8 +7,11 @@ class MessageContainer extends TemplateContainer{
         this.chatOpened = false;
     }
 
-    show(urlParams, chatName, type) {
+    show(chatName, type) {
+        let urlParams = new URLSearchParams();
         urlParams.set('CSRF', this.CSRFElement.content);
+        urlParams.set('type', type);
+        urlParams.set('chat_name', chatName);
 
         let process = (data) => {
             let chat;
