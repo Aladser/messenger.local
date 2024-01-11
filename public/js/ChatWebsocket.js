@@ -86,7 +86,7 @@ class ChatWebsocket
                     messageDOMElem.remove();
                 } else {
                     // новое сообщение
-                    messages.add(this.chatType, data, this.publicUsername);
+                    messages.createDOMNode(this.chatType, data, this.publicUsername);
                 }
             }
         }

@@ -26,7 +26,7 @@ class MessageContainer extends TemplateContainer{
 
             // сообщения
             data.messages.forEach(elem => {
-                this.add(type, elem, publicClientUsername);
+                this.createDOMNode(type, elem, publicClientUsername);
             });
             this.container.scrollTo(0, this.container.scrollHeight); // прокрутка сообщений в конец
         };
@@ -40,7 +40,7 @@ class MessageContainer extends TemplateContainer{
         );
     };
 
-    add(chatType, data, clientUsername) {
+    createDOMNode(chatType, data, clientUsername) {
         // показ местного времени
         // YYYY.MM.DD HH:ii:ss
         let timeInMs = Date.parse(data.time);
