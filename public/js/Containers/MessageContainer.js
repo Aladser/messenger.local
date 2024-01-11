@@ -40,7 +40,7 @@ class MessageContainer extends TemplateContainer{
             `;
 
             // сообщения
-            chat.message_arr.forEach(message => this.createDOMNode(type, message, authUserName));
+            chat.message_arr.forEach(messageData => this.createDOMNode(messageData, authUserName));
             // прокрутка сообщений в конец
             this.container.scrollTo(0, this.container.scrollHeight);
         };
@@ -54,10 +54,10 @@ class MessageContainer extends TemplateContainer{
         );
     };
 
-    createDOMNode(chatType, data, username) {
+    createDOMNode(messageData, username) {
         // показ местного времени
         // YYYY.MM.DD HH:ii:ss
-        let timeInMs = Date.parse(data.time);
+        let timeInMs = Date.parse(messageData.time);
         let newDate = new Date(timeInMs);
         let localTime = newDate.toLocaleString("ru", {
             year: 'numeric',
@@ -68,35 +68,42 @@ class MessageContainer extends TemplateContainer{
         }).replace(',', '');
 
         // показ переводов строки на странице
-        let brIndex = data.message_text.indexOf('\n');
+        let brIndex = messageData.message_text.indexOf('\n');
         while (brIndex > -1) {
-            data.message_text = data.message_text.replace('\n', '<br>');
-            brIndex = data.message_text.indexOf('\n');
+            messageData.message_text = messageData.message_text.replace('\n', '<br>');
+            brIndex = messageData.message_text.indexOf('\n');
         }
 
-        let articleClassname = data.author_name !== username ? 'msg d-flex justify-content-end' : 'msg';
-        let tableClassname = data.author_name !== username ? 'msg__table msg__table-contact text-white' : 'msg__table';
-        let forwardValue = data.forward ? data.forward : 0;
-        let timeClassname = data.author_name !== username ? "msg__time text-theme-gray" : "msg__time";
+        let articleClassname, tableClassname, timeClassname;
+        if (messageData.author_name === username) {
+            articleClassname = 'msg';
+            tableClassname = 'msg__table';
+            timeClassname = 'msg__time';
+        } else {
+            articleClassname = 'msg d-flex justify-content-end';
+            tableClassname = 'msg__table msg__table-contact text-white';
+            timeClassname = 'msg__time text-theme-gray';
+        }
+        let forwardValue = messageData.forward ? messageData.forward : 0;
 
         let articleContent = `
-            <article class="${articleClassname}" data-msg=${data.message_id} data-author="${data.author_name}" data-forward=${forwardValue}>
+            <article class="${articleClassname}" data-msg=${messageData.message_id} data-author=${messageData.author_name} data-forward=${forwardValue}>
                 <table class="${tableClassname}">
         `;
 
-        if (data.forward == 1 || data.message_type === 'FORWARD') {
+        if (messageData.forward == 1 || messageData.message_type === 'FORWARD') {
             // надпись о пересланном сообщении
             articleContent += `<tr><td class='msg__forward'>Переслано</td></tr>`;
         }
 
         articleContent += `
-                    <tr><td class="msg__text">${data.message_text}</td></tr>
+                    <tr><td class="msg__text">${messageData.message_text}</td></tr>
                     <tr><td class="${timeClassname}">${localTime}</td></tr>
         `;
 
-        if (chatType === 'group') {
+        if (messageData.chat_type === 'group') {
             // показ автора сообщения в групповом чате
-            articleContent += `<tr class='msg__tr-author'><td class='msg__author'>${data.author_name}</td></tr>`;
+            articleContent += `<tr class='msg__tr-author'><td class='msg__author'>${messageData.author_name}</td></tr>`;
         }
 
         articleContent += `       
