@@ -54,6 +54,7 @@ class MessageContainer extends TemplateContainer{
         );
     };
 
+    // создать DOM-узел сообщения
     createDOMNode(messageData, username) {
         // показ местного времени
         // YYYY.MM.DD HH:ii:ss

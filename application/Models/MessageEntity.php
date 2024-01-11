@@ -75,11 +75,13 @@ class MessageEntity extends Model
         // изменяем строку
         $this->dbQuery->exec("update messages set content = '$msg' where id = $msgId");
         // возвращаем строку
-        $sql = 'select id as msg, chat_id as chat, content as message, time 
-        from messages where id = :msgId';
+        $sql = 'select messages.id as message_id, 
+            content as message_text, time 
+            from messages
+            where messages.id = :msgId
+        ';
         $args = ['msgId' => $msgId];
         $rslt = $this->dbQuery->queryPrepared($sql, $args);
-        $rslt['messageType'] = 'EDIT';
 
         return $rslt;
     }

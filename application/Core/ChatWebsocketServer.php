@@ -119,9 +119,13 @@ class ChatWebsocketServer implements MessageComponentInterface
                     unset($data->chat_id);
                     break;
                 case 'EDIT':
-                    $data = $this->messageEntity->editMessage($data->message, $data->msgId);
+                    $chat_name = $data->chat_name;
+                    $data = $this->messageEntity->editMessage($data->message_text, $data->message_id);
+                    $data['chat_name'] = $chat_name;
+                    $data['message_type'] = 'EDIT';
                     break;
                 case 'REMOVE':
+                    echo 'REMOVE';
                     $isDeleted = $this->messageEntity->removeMessage($data->message_id);
                     if ($isDeleted) {
                         unset($data->message_text);

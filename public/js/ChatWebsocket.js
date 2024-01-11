@@ -77,11 +77,11 @@ class ChatWebsocket
             if (this.chatOpenedName === data.chat_name) {
                 // изменение сообщения
                 if (data.message_type === 'EDIT') {
-                    let messageDOMElem = document.querySelector(`[data-msg="${data.message_id}"]`);
-                    messageDOMElem.querySelector('.msg__text').innerHTML = data.message_text;
+                    let messageDOMNode = document.querySelector(`article[data-msg="${data.message_id}"]`);
+                    messageDOMNode.querySelector('.msg__text').textContent = data.message_text;
                 } else if (data.message_type === 'REMOVE') {
                     // удаление сообщения
-                    let messageDOMElem = document.querySelector(`[data-msg="${data.message_id}"]`);
+                    let messageDOMElem = document.querySelector(`article[data-msg="${data.message_id}"]`);
                     messageDOMElem.remove();
                 } else {
                     // новое сообщение
