@@ -39,8 +39,18 @@ class MessageEntity extends Model
         return $messageArr;
     }
 
+    public function getContent($id)
+    {
+        $sql = 'select content from messages where id = :id';
+        $args = ['id' => $id];
+        $queryResult = $this->dbQuery->queryPrepared($sql, $args);
+        $content = $queryResult ? $queryResult['content'] : false;
+
+        return $content;
+    }
+
     // Добавить сообщение
-    public function add($message)
+    public function add($message, $isForwarded = false)
     {
         $userData = [
             'chat_id' => $message->chat_id,
@@ -55,18 +65,15 @@ class MessageEntity extends Model
     // Добавить пересылаемое сообщение
     public function addForwarded($message)
     {
-        // добавить копию сообщения в указанный чат
-        $messageId = $this->add($message);
-        // установить флаг "пересылка сообщения"
-        $fieldArray = ['forward' => 1];
-        $condition = [
-            'condition_field_name' => 'id',
-            'condition_sign' => '=',
-            'condition_field_value' => $messageId,
+        $userData = [
+            'chat_id' => $message->chat_id,
+            'content' => $message->message_text,
+            'creator_user_id' => $message->author_id,
+            'forward' => 1,
         ];
-        $isUpdated = $this->dbQuery->update('messages', $fieldArray, $condition);
+        $messageId = $this->dbQuery->insert('messages', $userData);
 
-        return $isUpdated;
+        return $messageId;
     }
 
     // изменить сообщение

@@ -90,7 +90,8 @@ class ChatWebsocket
                         messageDOMElem.remove();
                         break;
                     case 'FORWARD':
-                        console.log(data);
+                        this.messages.createDOMNode(data, this.publicUsername);
+                        break;
                     default:
                         throw 'Неверный тип сообщения';
                 }
@@ -123,7 +124,7 @@ class ChatWebsocket
             }
     
             if (message_type === 'FORWARD') {
-                data.message_id = message_text;
+                data.message_id = parseInt(message_text);
                 data.chat_type = chat_type;
                 data.chat_name = chat_name;
                 delete data.message_text;

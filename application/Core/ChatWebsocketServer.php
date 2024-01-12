@@ -136,8 +136,25 @@ class ChatWebsocketServer implements MessageComponentInterface
                 case 'FORWARD':
                     $data->time = date('Y-m-d H:i:s');
                     $data->author_id = $senderId;
-                    $data->message = $this->messageEntity->addForwarded($data);
+
+                    switch ($data->chat_type) {
+                        case 'personal':
+                            $contactId = $this->userEntity->getIdByName($data->chat_name);
+                            $chatId = $this->chats->getPersonalChatId($senderId, $contactId);
+                            break;
+                        case 'group':
+                            $chatId = $this->chats->getGroupChatId($data->chat_name);
+                            break;
+                        default:
+                            throw "Неверный chat_type = $chat_type";
+                    }
+
+                    $data->chat_id = $chatId;
+                    $data->message_text = $this->messageEntity->getContent($data->message_id);
+                    $data->message_id = $this->messageEntity->addForwarded($data);
+                    $data->author_name = $senderPublicName;
                     unset($data->author_id);
+                    unset($data->chat_id);
             }
             echo json_encode($data)."\n";
         }
