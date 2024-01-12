@@ -103,7 +103,6 @@ class ChatWebsocket
      * @param message_type тип сообщения: NEW, EDIT, REMOVE или FORWARD
      */
     sendData(message_text, message_type, chat_type = false, chat_name = false) {
-        console.log(message_text);
         // проверка сокета
         if (this.websocket.readyState !== 1) {
             alert('sendData(msgType): вебсокет не готов к обмену сообщениями');
@@ -124,9 +123,10 @@ class ChatWebsocket
             }
     
             if (message_type === 'FORWARD') {
-                data.message_id = parseInt(this.selectedMessage.getAttribute('data-msg'));
+                data.message_id = message_text;
                 data.chat_type = chat_type;
                 data.chat_name = chat_name;
+                delete data.message_text;
             }
             this.websocket.send(JSON.stringify(data));
         }

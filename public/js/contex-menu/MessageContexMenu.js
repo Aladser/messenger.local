@@ -2,10 +2,7 @@
 // ***** Контекстное меню *****
 class MessageContexMenu extends ContexMenu
 {
-    // выбранное сообщение
     #selectedMessage = false;
-    // получатель пересылаемого сообщения
-    messageForwardedRecipientChatName = false;
 
     constructor(contexMenuDOM, chatWS)
     {
@@ -55,14 +52,7 @@ class MessageContexMenu extends ContexMenu
     getSelectedMessageContent() {
         return this.#selectedMessage.querySelector('.msg__text').textContent;
     }
-    getSelectedMessageType() {
-        let classList = this.#selectedMessage.classList;
-        if (classList.contains('contact')) {
-            return 'personal'
-        } else if(classList.contains('group')) {
-            return 'group';
-        } else {
-            throw 'Неверный тип сообщения';
-        }
+    getSelectedMessageId() {
+        return this.#selectedMessage.getAttribute('data-msg');
     }
 }

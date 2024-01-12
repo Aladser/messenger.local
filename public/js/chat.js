@@ -32,8 +32,11 @@ const forwardBtnArticle = document.querySelector('#btn-resend-block');
 const forwardMessageButton = document.querySelector('#btn-resend');
 /** кнопка отмены пересылки сообщения */
 const resetForwardtBtn = document.querySelector('#btn-resend-reset');
-/** DOM-элемент получателя пересланного письма*/
-let forwardedMessageRecipientDOMNode = null;
+
+/** тип выбранного чата для пересылки сообщения */
+let forwardedMessageRecipientChatType = null;
+/** имя выбранного чата для пересылки сообщения */
+let forwardedMessageRecipientChatName = null;
 
 /** список участников выбранной группы */
 let groupContacts = [];
@@ -200,11 +203,14 @@ function setClick(DOMNode, type)
 
         // если пересылается сообщение, то показать, кому пересылается
         if (messageContexMenu.option == 'FORWARD') {
+            // изменение интерфейса
             forwardMessageButton.classList.remove('border-secondary');
             forwardMessageButton.classList.remove('text-black-50');
             forwardMessageButton.classList.add('text-light');
             forwardMessageButton.disabled = false;
-            messageContexMenu.messageForwardedRecipientChatName = chatName;
+            // данные
+            forwardedMessageRecipientChatType = type;
+            forwardedMessageRecipientChatName = chatName;
         }
 
         // скрытие или показ контактов
@@ -265,10 +271,12 @@ function resetSearch() {
 /** Переотправить сообщение */
 function forwardMessage()
 {
-    let messageText = messageContexMenu.getSelectedMessageContent();
-    let chatName = messageContexMenu.messageForwardedRecipientChatName;
-    chatWebsocket.sendData(messageText, 'FORWARD', chatName);
-    messageContexMenu.option = false;
+    let chatType = forwardedMessageRecipientChatType;
+    let chatName = forwardedMessageRecipientChatName;
+    let message_id = messageContexMenu.getSelectedMessageId();
+
+    chatWebsocket.sendData(message_id, 'FORWARD', chatType, chatName);
+
     // скрыть блок кнопок переотправки
     forwardBtnArticle.classList.remove('btn-resend-block_active');
 }
