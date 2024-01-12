@@ -122,6 +122,11 @@ class ChatWebsocket
             if (['EDIT', 'REMOVE'].includes(message_type)) {
                 data.message_id = parseInt(this.selectedMessage.getAttribute('data-msg'));
             }
+
+            if (message_type === 'REMOVE') {
+                data.message_id = parseInt(this.selectedMessage.getAttribute('data-msg'));
+                delete data.message_text;
+            }
     
             if (message_type === 'FORWARD') {
                 data.message_id = parseInt(message_text);

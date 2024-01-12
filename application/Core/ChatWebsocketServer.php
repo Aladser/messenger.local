@@ -81,80 +81,63 @@ class ChatWebsocketServer implements MessageComponentInterface
             }
             echo "$data->author в сети\n";
         } elseif ($data->message_type) {
-            // отправляется сообщение
+            // --- пришло сообщение
             var_dump($data);
 
+            // поиск имени отправителя
             $senderId = array_search($from->resourceId, $this->connectionUsers);
             $senderPublicName = false;
-            if (!$senderId) {
-                echo "Подключение $from->resourceId не найдено";
-
-                return;
-            } else {
+            if ($senderId) {
                 $senderPublicName = $this->userEntity->getPublicUsername($senderId);
+            } else {
+                throw "Подключение $from->resourceId не найдено";
             }
 
-            switch ($data->message_type) {
-                case 'NEW':
-                    $data->time = date('Y-m-d H:i:s');
-                    $data->author_id = $senderId;
+            // обработка сообщения
+            echo $data->message_type.': ';
+            if ($data->message_type === 'NEW' || $data->message_type === 'FORWARD') {
+                $data->time = date('Y-m-d H:i:s');
+                $data->author_id = $senderId;
 
-                    switch ($data->chat_type) {
-                        case 'personal':
-                            $contactId = $this->userEntity->getIdByName($data->chat_name);
-                            $chatId = $this->chats->getPersonalChatId($senderId, $contactId);
-                            break;
-                        case 'group':
-                            $chatId = $this->chats->getGroupChatId($data->chat_name);
-                            break;
-                        default:
-                            throw "Неверный chat_type = $chat_type";
-                    }
+                switch ($data->chat_type) {
+                    case 'personal':
+                        $contactId = $this->userEntity->getIdByName($data->chat_name);
+                        $chatId = $this->chats->getPersonalChatId($senderId, $contactId);
+                        break;
+                    case 'group':
+                        $chatId = $this->chats->getGroupChatId($data->chat_name);
+                        break;
+                    default:
+                        throw "Неверный chat_type = $chat_type";
+                }
 
-                    $data->chat_id = $chatId;
+                $data->chat_id = $chatId;
+                if ($data->message_type === 'NEW') {
                     $data->message_id = $this->messageEntity->add($data);
-                    $data->author_name = $senderPublicName;
                     $data->forward = 0;
-                    unset($data->author_id);
-                    unset($data->chat_id);
-                    break;
-                case 'EDIT':
-                    $chat_name = $data->chat_name;
-                    $data = $this->messageEntity->editMessage($data->message_text, $data->message_id);
-                    $data['chat_name'] = $chat_name;
-                    $data['message_type'] = 'EDIT';
-                    break;
-                case 'REMOVE':
-                    echo 'REMOVE';
-                    $isDeleted = $this->messageEntity->removeMessage($data->message_id);
-                    if ($isDeleted) {
-                        unset($data->message_text);
-                    } else {
-                        $data = ['error' => 'Ошибка удаления сообщения'];
-                    }
-                    break;
-                case 'FORWARD':
-                    $data->time = date('Y-m-d H:i:s');
-                    $data->author_id = $senderId;
-
-                    switch ($data->chat_type) {
-                        case 'personal':
-                            $contactId = $this->userEntity->getIdByName($data->chat_name);
-                            $chatId = $this->chats->getPersonalChatId($senderId, $contactId);
-                            break;
-                        case 'group':
-                            $chatId = $this->chats->getGroupChatId($data->chat_name);
-                            break;
-                        default:
-                            throw "Неверный chat_type = $chat_type";
-                    }
-
-                    $data->chat_id = $chatId;
+                } else {
                     $data->message_text = $this->messageEntity->getContent($data->message_id);
                     $data->message_id = $this->messageEntity->addForwarded($data);
-                    $data->author_name = $senderPublicName;
-                    unset($data->author_id);
-                    unset($data->chat_id);
+                }
+                $data->author_name = $senderPublicName;
+
+                unset($data->author_id);
+                unset($data->chat_id);
+            } elseif ($data->message_type === 'EDIT') {
+                $chat_name = $data->chat_name;
+                $data = $this->messageEntity->editMessage($data->message_text, $data->message_id);
+                $data['chat_name'] = $chat_name;
+                $data['message_type'] = 'EDIT';
+            } elseif ($data->message_type === 'REMOVE') {
+                // удаление сообщения
+                $isDeleted = $this->messageEntity->removeMessage($data->message_id);
+                if ($isDeleted) {
+                    unset($data->message_text);
+                } else {
+                    throw 'Ошибка удаления сообщения';
+                }
+            } else {
+                throw 'Неверный тип сообщения';
             }
             echo json_encode($data)."\n";
         }
