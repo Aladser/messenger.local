@@ -82,7 +82,6 @@ class ChatWebsocketServer implements MessageComponentInterface
             echo "$data->author в сети\n";
         } elseif ($data->message_type) {
             // --- пришло сообщение
-            var_dump($data);
 
             // поиск имени отправителя
             $senderId = array_search($from->resourceId, $this->connectionUsers);
@@ -90,7 +89,7 @@ class ChatWebsocketServer implements MessageComponentInterface
             if ($senderId) {
                 $senderPublicName = $this->userEntity->getPublicUsername($senderId);
             } else {
-                throw "Подключение $from->resourceId не найдено";
+                throw new \Exception("Подключение $from->resourceId не найдено");
             }
 
             // обработка сообщения
@@ -108,7 +107,7 @@ class ChatWebsocketServer implements MessageComponentInterface
                         $chatId = $this->chats->getGroupChatId($data->chat_name);
                         break;
                     default:
-                        throw "Неверный chat_type = $chat_type";
+                        throw new \Exception("Неверный chat_type = $chat_type");
                 }
 
                 $data->chat_id = $chatId;
@@ -131,13 +130,11 @@ class ChatWebsocketServer implements MessageComponentInterface
             } elseif ($data->message_type === 'REMOVE') {
                 // удаление сообщения
                 $isDeleted = $this->messageEntity->removeMessage($data->message_id);
-                if ($isDeleted) {
-                    unset($data->message_text);
-                } else {
-                    throw 'Ошибка удаления сообщения';
+                if (!$isDeleted) {
+                    throw new \Exception('Ошибка удаления сообщения');
                 }
             } else {
-                throw 'Неверный тип сообщения';
+                throw new \Exception('Неверный тип сообщения');
             }
             echo json_encode($data)."\n";
         }
