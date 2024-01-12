@@ -89,6 +89,8 @@ class ChatWebsocket
                         let messageDOMElem = document.querySelector(`article[data-msg="${data.message_id}"]`);
                         messageDOMElem.remove();
                         break;
+                    case 'FORWARD':
+                        console.log(data);
                     default:
                         throw 'Неверный тип сообщения';
                 }
@@ -101,6 +103,7 @@ class ChatWebsocket
      * @param message_type тип сообщения: NEW, EDIT, REMOVE или FORWARD
      */
     sendData(message_text, message_type) {
+        console.log(message_text);
         // проверка сокета
         if (this.websocket.readyState !== 1) {
             alert('sendData(msgType): вебсокет не готов к обмену сообщениями');

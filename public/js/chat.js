@@ -264,7 +264,8 @@ function resetSearch() {
 /** Переотправить сообщение */
 function forwardMessage()
 {
-    chatWebsocket.sendData(chatWebsocket.getSelectedMessageText(), 'FORWARD');
+    let messageText = messageContexMenu.getSelectedMessageContent();
+    chatWebsocket.sendData(messageText, 'FORWARD');
     // скрыть блок кнопок переотправки
     forwardBtnBlock.classList.remove('btn-resend-block_active');
      // убрать выделение

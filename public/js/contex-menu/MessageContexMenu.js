@@ -2,14 +2,18 @@
 // ***** Контекстное меню *****
 class MessageContexMenu extends ContexMenu
 {
-    messageInput = document.querySelector("#message-input");
-    forwardBtnBlock = document.querySelector('#btn-resend-block');
-    option = false;
+    // выбранное сообщение
+    #selectedMessage = false;
 
     constructor(contexMenuDOM, chatWS)
     {
         super(contexMenuDOM);
+
+        this.messageInput = document.querySelector("#message-input");
+        this.forwardBtnBlock = document.querySelector('#btn-resend-block');
         this.chatWS = chatWS;
+        // выбранный пункт меню
+        this.option = false;
         
         this.editBtn = contexMenuDOM.querySelector('#edit-msg');
         this.removeBtn = contexMenuDOM.querySelector('#remove-msg');
@@ -31,6 +35,7 @@ class MessageContexMenu extends ContexMenu
     /** переотправить сообщение */
     forwardMessage()
     {
+        this.#selectedMessage = this.clickDOMNode.closest('.msg');
         this.option = 'FORWARD';
         this.forwardBtnBlock.classList.add('btn-resend-block_active');
         this.hide();
@@ -43,5 +48,9 @@ class MessageContexMenu extends ContexMenu
         this.chatWS.sendData(msg, 'REMOVE');
         this.chatWS.selectedMessage = null;
         this.hide();
+    }
+
+    getSelectedMessageContent() {
+        return this.#selectedMessage.querySelector('.msg__text').textContent;
     }
 }
