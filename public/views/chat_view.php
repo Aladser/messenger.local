@@ -28,8 +28,8 @@
                 </section>
                 
                 <!-- блок пересылки сообщений -->
-                <div class='btn-resend-block' id='btn-resend-block'>
-                    <button class='btn-resend border border-light text-light' id='btn-resend' disabled>
+                <article class='btn-resend-block' id='btn-resend-block'>
+                    <button class='btn-resend border border-secondary text-black-50' id='btn-resend' disabled>
                         <div class='btn-resend__img-block'><img src="application/images/resend.png" class='img' title='Переслать'></div>
                         <span class='btn-resend__name'>Переслать</span>
                     </button>
@@ -37,7 +37,7 @@
                         <div class='btn-resend__img-block'><img src="application/images/cancel.png" class='img' title='Отменить'></div>
                         <span class='btn-resend__name'>Отменить</span>
                     </button>
-                </div>
+                </article>
             </div>
             <!--группы -->
             <section class='groups pt-2 text-center' id='group-chats'>

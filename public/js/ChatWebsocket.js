@@ -102,7 +102,7 @@ class ChatWebsocket
      * @param message_text текст сообщения
      * @param message_type тип сообщения: NEW, EDIT, REMOVE или FORWARD
      */
-    sendData(message_text, message_type) {
+    sendData(message_text, message_type, chat_type = false, chat_name = false) {
         console.log(message_text);
         // проверка сокета
         if (this.websocket.readyState !== 1) {
@@ -124,9 +124,9 @@ class ChatWebsocket
             }
     
             if (message_type === 'FORWARD') {
-                // чат, куда пересылается
-                data.chat = this.contacts.list.find(el => el.name === this.forwardedMessageRecipientName).chat;
-                delete data['chatType'];
+                data.message_id = parseInt(this.selectedMessage.getAttribute('data-msg'));
+                data.chat_type = chat_type;
+                data.chat_name = chat_name;
             }
             this.websocket.send(JSON.stringify(data));
         }

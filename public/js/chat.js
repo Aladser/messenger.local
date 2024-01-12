@@ -27,13 +27,13 @@ const resetFindContactsBtn = document.querySelector('#reset-find-contacts-btn');
 /** кнопка отправить сообщение */
 const sendMsgBtn = document.querySelector("#send-msg-btn");
 /** блок кнопок пересылки сообщения  */
-const forwardBtnBlock = document.querySelector('#btn-resend-block');
+const forwardBtnArticle = document.querySelector('#btn-resend-block');
 /** кнопка пересылки сообщения */
 const forwardMessageButton = document.querySelector('#btn-resend');
 /** кнопка отмены пересылки сообщения */
 const resetForwardtBtn = document.querySelector('#btn-resend-reset');
 /** DOM-элемент получателя пересланного письма*/
-let forwardedMessageRecipientElement = null;
+let forwardedMessageRecipientDOMNode = null;
 
 /** список участников выбранной группы */
 let groupContacts = [];
@@ -193,25 +193,26 @@ function setClick(DOMNode, type)
                 return;
             }
         }
-        
+    
+        let chatName = DOMNode.title;
         // удаляется уведомление о новом сообщении
         DOMNode.classList.remove('isnewmessage');
 
         // если пересылается сообщение, то показать, кому пересылается
         if (messageContexMenu.option == 'FORWARD') {
-            forwardedMessageRecipientElement = messageContainer.showForwardedMessageRecipient(DOMNode);
-            if (forwardedMessageRecipientElement) {
-                forwardMessageButton.disabled = false;
-            }
-            return;
+            forwardMessageButton.classList.remove('border-secondary');
+            forwardMessageButton.classList.remove('text-black-50');
+            forwardMessageButton.classList.add('text-light');
+            forwardMessageButton.disabled = false;
+            messageContexMenu.messageForwardedRecipientChatName = chatName;
         }
+
         // скрытие или показ контактов
         if (type === 'group') {
             groupContainer.click(DOMNode, contactContainer);
         }
 
         // --- показ сообщений
-        let chatName = DOMNode.title;
         messageContainer.show(chatName, type);
         chatWebsocket.chatOpenedType = messageContainer.chatType;
         chatWebsocket.chatOpenedName = messageContainer.chatName;
@@ -265,20 +266,17 @@ function resetSearch() {
 function forwardMessage()
 {
     let messageText = messageContexMenu.getSelectedMessageContent();
-    chatWebsocket.sendData(messageText, 'FORWARD');
-    // скрыть блок кнопок переотправки
-    forwardBtnBlock.classList.remove('btn-resend-block_active');
-     // убрать выделение
-    forwardedMessageRecipientElement.classList.remove('contact-recipient');
-
+    let chatName = messageContexMenu.messageForwardedRecipientChatName;
+    chatWebsocket.sendData(messageText, 'FORWARD', chatName);
     messageContexMenu.option = false;
-    forwardedMessageRecipientElement = null;
+    // скрыть блок кнопок переотправки
+    forwardBtnArticle.classList.remove('btn-resend-block_active');
 }
 
 /** Отменяет пересылку сообщения */
 function resetForwardMessage()
 {
-    forwardBtnBlock.classList.remove('btn-resend-block_active');
+    forwardBtnArticle.classList.remove('btn-resend-block_active');
     messageContexMenu.option = false;
 
     chatWebsocket.selectedMessage = null;
