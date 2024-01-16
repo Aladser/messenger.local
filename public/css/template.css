@@ -21,9 +21,6 @@ html {
     width: 30rem;
 }
 
-/* ширина контейнера авторизации */
-.auth-container-width {width: 900px;}
-
 .hidden {display: none;}
 .font-roboto {font-family: 'Roboto', sans-serif;}
 .m-0 {margin: 0;}
@@ -34,10 +31,4 @@ a {text-decoration: none;}
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-@media (max-width: 900px) {
-    .auth-container-width {
-        width: 100%;
-    }
 }
