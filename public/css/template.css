@@ -1,17 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-.bg-theme {background-color: #03a2ff;}
-.bg-theme-softer {background-color: #66c7ff;}
-.bg-theme-darker {background-color: #0066a2;}
-.btn-bg-theme {background-color: #03a2ff;}
+html {
+    --theme-color: #03a2ff;
+    --theme-color-softer: #66c7ff;
+    --theme-color-darker: #0066a2;
+}
+
+.bg-theme {background-color: var(--theme-color);}
+.bg-theme-softer {background-color: var(--theme-color-softer);}
+.bg-theme-darker {background-color: var(--theme-color-darker);}
+.btn-bg-theme {background-color: var(--theme-color);}
 .btn-bg-theme:hover {opacity: 0.5;}
-.text-theme { color: #03a2ff;}
-.border-color-theme {border: 1px solid #0066a2;}
-.border-color-theme::placeholder {color: #0066a2;}
-.border-color-theme:focus {outline: 1px solid #0066a2;}
+.text-theme { color: var(--theme-color);}
+.border-color-theme {border: 1px solid var(--theme-color-darker);}
+.border-color-theme::placeholder {color: var(--theme-color-darker);}
+.border-color-theme:focus {outline: 1px solid var(--theme-color-darker);}
 
 /* стандартная ширина кнопок */
-.btn-width {width: 30rem;}
+.theme-width-30 {
+    width: 30rem;
+}
+
 /* ширина контейнера авторизации */
 .auth-container-width {width: 900px;}
 

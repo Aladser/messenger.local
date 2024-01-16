@@ -13,7 +13,7 @@
 }
 
 .isnewmessage {
-  background-color: #0066a2;
+  background-color: var(--theme-color-darker);
 }
 
 .chat-container {
@@ -57,7 +57,7 @@
 }
 
 .context-menu li:hover {
-  background-color: #03a2ff;
+  background-color: var(--theme-color);
   color:white;
 }
 
@@ -71,13 +71,13 @@
 }
 
 .contact-recipient {
-  background-color: #03a2ff;
+  background-color: var(--theme-color);
   color: white;
 }
 
 .contact:hover {
   font-weight: bolder;
-  background-color: #03a2ff;
+  background-color: var(--theme-color);
 }
 
 .contact-addgroup {
@@ -108,11 +108,11 @@
   border: 1px solid black;
   width: 7rem;
   padding: 0.25rem 0;
-  background-color: #03a2ff;
+  background-color: var(--theme-color);
 }
 
 .btn-resend:hover {
-  background-color: #58c2ff;
+  background-color: var(--theme-color-softer);
 }
 
 /* групповые чаты */
@@ -134,7 +134,7 @@
 
 .group:hover {
   font-weight: bolder;
-  background-color: #03a2ff;
+  background-color: var(--theme-color);
 }
 
 .group__contact {
@@ -167,7 +167,7 @@
 }
 
 .messages-container__message-input:disabled {
-  background-color: #66c7ff;
+  background-color: var(--theme-color-softer);
 }
 
 .msg__table {
@@ -178,7 +178,7 @@
 }
 
 .msg__table-contact {
-  background-color: #1588e1;
+  background-color: var(--theme-color-darker);
 }
 
 .msg__text {
