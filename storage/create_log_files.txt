@@ -1,0 +1,1 @@
+touch /var/www/forum.local/logs/error.log & touch /var/www/forum.local/logs/access.log 
