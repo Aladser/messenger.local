@@ -2,3 +2,4 @@ application/data/profile_photos/*
 application/data/temp/*
 application/vendor/*
 application/composer.lock
+logs/*
