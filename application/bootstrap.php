@@ -6,7 +6,7 @@ use App\Controllers\MainController;
 use App\Core\Route;
 use App\Core\ScriptLinuxProcess;
 
-require_once __DIR__.'/vendor/autoload.php';
+require dirname(__DIR__, 1).'/vendor/autoload.php';
 
 // проверка CSRF
 session_start();

@@ -1,13 +1,14 @@
 {
   "autoload": {
-    "files": ["config.php"],
+    "files": ["\\application\\config.php"],
     "psr-4": {
-      "App\\": "\\"
+      "App\\": "\\application"
     }
   },
   "require": {
     "cboden/ratchet": "^0.4.4",
     "phpmailer/phpmailer": "^6.8",
+    "friendsofphp/php-cs-fixer": "^3.47",
     "ext-json": "*",
     "ext-pdo": "*"
   }
