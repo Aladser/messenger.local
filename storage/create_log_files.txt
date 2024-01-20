@@ -1,1 +1,2 @@
-touch /var/www/forum.local/logs/error.log & touch /var/www/forum.local/logs/access.log 
+touch /var/www/messenger.local/logs/error.log & touch /var/www/messenger.local/logs/access.log
+touch /var/www/messenger.local/logs/pids.log & touch /var/www/messenger.local/logs/websocket.log 
