@@ -16,7 +16,7 @@ class Route
      'is_nickname_unique' => 'UserController',
      'verify-email' => 'UserController',
      'upload-file' => 'MainController',
-     'quit' => 'MainController',
+     'quit' => 'UserController',
     ];
 
     private static $noAuthURLs = ['', 'login', 'register'];

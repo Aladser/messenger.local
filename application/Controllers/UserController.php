@@ -70,6 +70,16 @@ class UserController extends Controller
         }
     }
 
+    // выход из системы пользователем
+    public function quit()
+    {
+        session_destroy();
+        foreach ($_COOKIE as $key => $value) {
+            setcookie($key, '', time() - 3600, '/');
+        }
+        header('Location: /');
+    }
+
     // страница регистрации
     public function register(): void
     {

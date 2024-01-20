@@ -17,15 +17,6 @@ class MainController extends Controller
         );
     }
 
-    // выход из системы пользователем
-    public function quit()
-    {
-        setcookie('email', '', time() - 3600, '/');
-        setcookie('auth', '', time() - 3600, '/');
-        session_destroy();
-        header('Location: /');
-    }
-
     // страница ошибок
     public function error($errorDescription): void
     {
